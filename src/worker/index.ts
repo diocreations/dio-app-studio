@@ -218,6 +218,29 @@ function notFoundPage(): string {
 
 app.get('/', (c) => c.html(marketingPage()))
 
+app.get('/robots.txt', (c) => {
+  const origin = new URL(c.req.url).origin
+  return c.body(
+    `User-agent: *\nAllow: /\nDisallow: /studio\nDisallow: /p/\nDisallow: /api/\n\nSitemap: ${origin}/sitemap.xml\n`,
+    200,
+    { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' },
+  )
+})
+
+// Only the three pages anyone may land on; build links stay unlisted, and are
+// already disallowed to crawlers.
+app.get('/sitemap.xml', (c) => {
+  const origin = new URL(c.req.url).origin
+  const urls = ['/', '/brief', '/privacy']
+    .map((page) => `  <url><loc>${origin}${page}</loc></url>`)
+    .join('\n')
+  return c.body(
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+    200,
+    { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600' },
+  )
+})
+
 app.get('/privacy', (c) => c.html(legalPage(c.env.CONTACT_EMAIL)))
 
 // The terms live on the same page: one short document, one link to share.

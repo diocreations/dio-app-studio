@@ -42,6 +42,9 @@ prose. `/brief` links to it from the website panel.
 | ---------------------------------- | ----------------------------------------------------- |
 | `GET /`                            | Studio marketing page, switchable live demo builds    |
 | `GET /brief`                       | Business type, features, free-text ask, live quote    |
+| `GET /privacy`                     | Privacy and terms, with the deletion contact          |
+| `GET /robots.txt`                  | Crawl rules; keeps `/studio`, `/p/` and `/api/` out   |
+| `GET /sitemap.xml`                 | The three public pages, absolute to the asking origin |
 | `POST /api/import`                 | Read a customer's website into a draft brief          |
 | `POST /api/projects`               | Create a build, returns a private token               |
 | `POST /api/quote`                  | Price a feature/platform/plan combination             |
