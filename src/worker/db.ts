@@ -429,8 +429,9 @@ export async function spendImportBudget(
     .bind(day)
     .first<{ used: number }>()
   const used = row?.used ?? 1
-  // First import of a new day: yesterday's counters have no further use.
-  if (used === 1) await pruneDailyBudgets(db, day).catch(pruneError)
+  // The upsert is atomic, so exactly one request sees `used === 1` per day and
+  // sweeps; two isolates crossing midnight cannot both be the "first".
+  if (used === 1) await pruneDailyBudgets(db, day)
   return used
 }
 
@@ -438,18 +439,27 @@ export async function spendImportBudget(
  * Drops counters from earlier days so the two budget tables stay small. Both
  * key on the ISO date, which sorts before every longer key for the same day,
  * so one comparison clears every old bucket.
+ *
+ * Each table is guarded on its own: a failure is logged and retried by the
+ * next day's first request, and never fails the build or import that triggered
+ * it. A request that started yesterday can recreate one stale row after the
+ * sweep; the following day removes it.
  */
 export async function pruneDailyBudgets(
   db: D1Database,
   day = new Date().toISOString().slice(0, 10),
 ): Promise<void> {
-  await db.prepare('DELETE FROM daily_budget WHERE key < ?').bind(`${day}:`).run()
-  await db.prepare('DELETE FROM import_budget WHERE day < ?').bind(day).run()
-}
-
-// Cleanup must never fail the build or import it rides along with.
-function pruneError(error: unknown): void {
-  console.error('plattr_prune_error', error)
+  const sweeps = [
+    ['daily_budget', 'DELETE FROM daily_budget WHERE key < ?', `${day}:`],
+    ['import_budget', 'DELETE FROM import_budget WHERE day < ?', day],
+  ] as const
+  for (const [table, sql, cutoff] of sweeps) {
+    try {
+      await db.prepare(sql).bind(cutoff).run()
+    } catch (error) {
+      console.error('plattr_prune_error', table, error)
+    }
+  }
 }
 
 /**
@@ -473,7 +483,7 @@ export async function spendDailyBudget(
     .bind(`${day}:${bucket}`, limit)
     .first<{ used: number }>()
   // The shared build bucket is created once per day; use that as the cue.
-  if (row?.used === 1 && bucket === 'all') await pruneDailyBudgets(db, day).catch(pruneError)
+  if (row?.used === 1 && bucket === 'all') await pruneDailyBudgets(db, day)
   return Boolean(row)
 }
 

@@ -39,6 +39,38 @@ describe('daily counters do not pile up', () => {
     expect(await keys(db, 'import_budget')).toEqual([])
   })
 
+  test('a failed sweep is logged and never fails the spend', async () => {
+    const inner = new MemoryD1() as unknown as D1Database
+    const db = new Proxy(inner, {
+      get(target, property) {
+        if (property === 'prepare') {
+          return (sql: string) => {
+            if (sql.startsWith('DELETE FROM')) throw new Error('prune down')
+            return (target as unknown as D1Database).prepare(sql)
+          }
+        }
+        const value = (target as unknown as Record<string, unknown>)[property as string]
+        return typeof value === 'function' ? value.bind(target) : value
+      },
+    }) as D1Database
+
+    const logged: unknown[][] = []
+    const original = console.error
+    console.error = (...args: unknown[]) => logged.push(args)
+    try {
+      // The spend itself must succeed even though both deletes throw.
+      expect(await spendImportBudget(db, '2026-11-17')).toBe(1)
+      expect(await spendImportBudget(db, '2026-11-18')).toBe(1)
+    } finally {
+      console.error = original
+    }
+
+    // One log per table per attempt, and the old rows survive for a retry.
+    expect(logged.length).toBe(4)
+    expect(logged.every((entry) => entry[0] === 'plattr_prune_error')).toBe(true)
+    expect(await keys(inner, 'import_budget')).toHaveLength(2)
+  })
+
   test('a visitor bucket alone does not trigger a sweep', async () => {
     const db = new MemoryD1() as unknown as D1Database
     await spendDailyBudget(db, 'visitor:old', 3, '2026-11-17')

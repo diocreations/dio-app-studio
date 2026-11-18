@@ -190,6 +190,11 @@ Limits, stated plainly:
   there was no reason to tune it separately from the shared cap. A link is checked against the same scheme
   and host guard as the crawler before it is counted, so junk requests cannot
   drain the day's allowance.
+- Counter rows are kept per UTC day. The first shared build or the first import
+  of a new day deletes every older row from `daily_budget` and `import_budget`,
+  so the tables hold today plus at most a stray row recreated by a request that
+  began before midnight. A failed sweep is logged and left for the next day; it
+  never fails the build or import that triggered it.
 
 ## Deliberate limits
 
@@ -199,7 +204,7 @@ Limits, stated plainly:
   logic that needs a real backend (stock reservations, POS sync, ticketing) is
   quoted as custom work.
 - Builds are metered before anything is written: three a day per visitor and
-  forty a day for the studio (`project_budget` in D1). The visitor key is a
+  forty a day for the studio (`daily_budget` in D1). The visitor key is a
   hash of Cloudflare's `cf-connecting-ip`; `X-Forwarded-For` is ignored on
   purpose, because a caller can choose it and would otherwise get a fresh
   allowance per header value. Requests with no connecting-IP (local dev) share
