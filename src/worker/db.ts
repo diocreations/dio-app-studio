@@ -117,7 +117,7 @@ const SCHEMA = [
     day TEXT PRIMARY KEY,
     used INTEGER NOT NULL
   )`,
-  `CREATE TABLE IF NOT EXISTS project_budget (
+  `CREATE TABLE IF NOT EXISTS daily_budget (
     key TEXT PRIMARY KEY,
     used INTEGER NOT NULL
   )`,
@@ -432,11 +432,11 @@ export async function spendImportBudget(
 }
 
 /**
- * Counts one build against a daily bucket and says whether it fits. Keys are
- * `<day>:<bucket>` so yesterday's rows never block today, and a visitor's
- * bucket is a hash rather than an address.
+ * Counts one build or import against a daily bucket and says whether it fits.
+ * Keys are `<day>:<bucket>` so yesterday's rows never block today, and a
+ * visitor's bucket is a hash rather than an address.
  */
-export async function spendProjectBudget(
+export async function spendDailyBudget(
   db: D1Database,
   bucket: string,
   limit: number,
@@ -445,7 +445,7 @@ export async function spendProjectBudget(
   await ensureSchema(db)
   const row = await db
     .prepare(
-      `INSERT INTO project_budget (key, used) VALUES (?, 1)
+      `INSERT INTO daily_budget (key, used) VALUES (?, 1)
          ON CONFLICT(key) DO UPDATE SET used = used + 1 WHERE used < ?
          RETURNING used`,
     )

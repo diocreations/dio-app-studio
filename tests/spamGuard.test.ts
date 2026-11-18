@@ -1,7 +1,7 @@
 import { Database } from 'bun:sqlite'
 import { describe, expect, test } from 'bun:test'
 import app, { visitorBucket } from '../src/worker/index'
-import { spendProjectBudget } from '../src/worker/db'
+import { spendDailyBudget } from '../src/worker/db'
 
 /** The real SQL against an in-memory SQLite, as the db suite does. */
 class MemoryD1 {
@@ -65,12 +65,12 @@ describe('the build endpoints are metered', () => {
   test('a bucket allows its limit, then refuses, and the next day is fresh', async () => {
     const db = new MemoryD1() as unknown as D1Database
     for (let index = 0; index < 3; index++) {
-      expect(await spendProjectBudget(db, 'visitor:abc', 3, '2026-11-18')).toBe(true)
+      expect(await spendDailyBudget(db, 'visitor:abc', 3, '2026-11-18')).toBe(true)
     }
-    expect(await spendProjectBudget(db, 'visitor:abc', 3, '2026-11-18')).toBe(false)
-    expect(await spendProjectBudget(db, 'visitor:abc', 3, '2026-11-19')).toBe(true)
+    expect(await spendDailyBudget(db, 'visitor:abc', 3, '2026-11-18')).toBe(false)
+    expect(await spendDailyBudget(db, 'visitor:abc', 3, '2026-11-19')).toBe(true)
     // Another visitor counts separately.
-    expect(await spendProjectBudget(db, 'visitor:def', 3, '2026-11-18')).toBe(true)
+    expect(await spendDailyBudget(db, 'visitor:def', 3, '2026-11-18')).toBe(true)
   })
 
   test('a visitor over the line is refused before anything is written', async () => {

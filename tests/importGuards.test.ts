@@ -6,6 +6,7 @@ type Env = {
   ASSETS: Fetcher
   STUDIO_KEY?: string
   IMPORT_DAILY_CAP?: string
+  IMPORT_VISITOR_CAP?: string
 }
 
 /** Just enough D1 for the import route: it only counts a unit and reads it back. */
@@ -24,6 +25,19 @@ function stubDb(used: number) {
     },
   } as unknown as D1Database
   return { db, state }
+}
+
+/** A D1 stub whose counter answers can differ per call, in route order. */
+function sequenceDb(...rows: Array<null | { used: number }>) {
+  let calls = 0
+  const statement = {
+    bind: () => statement,
+    run: async () => ({ success: true, meta: {} }),
+    first: async () => rows[Math.min(calls++, rows.length - 1)] ?? null,
+    all: async () => ({ results: [] }),
+  }
+  const db = { prepare: () => statement } as unknown as D1Database
+  return { db }
 }
 
 function post(headers: Record<string, string>, body: string, env: Partial<Env> = {}) {
@@ -82,7 +96,8 @@ describe('the import endpoint refuses work it should not do', () => {
   })
 
   test('the daily cap refuses with its own 429', async () => {
-    const { db, state } = stubDb(4)
+    // Visitor has room, then the shared counter comes back over its cap.
+    const { db } = sequenceDb({ used: 1 }, { used: 4 })
     const response = await post(
       JSON_HEADERS,
       JSON.stringify({ url: 'https://example.com' }),
@@ -90,6 +105,21 @@ describe('the import endpoint refuses work it should not do', () => {
     )
     expect(response.status).toBe(429)
     expect(await code(response)).toBe('daily_budget')
-    expect(state.prepared).toBeGreaterThan(0)
+    expect(Number(response.headers.get('retry-after'))).toBeGreaterThan(0)
+  })
+
+  test('one visitor cannot spend the whole day\'s imports', async () => {
+    // The visitor's own bucket is full; the shared counter is never touched.
+    const { db } = sequenceDb(null)
+    const response = await post(
+      JSON_HEADERS,
+      JSON.stringify({ url: 'https://example.com' }),
+      { DB: db, IMPORT_VISITOR_CAP: '3' },
+    )
+    expect(response.status).toBe(429)
+    expect(Number(response.headers.get('retry-after'))).toBeGreaterThan(0)
+    const payload = (await response.json()) as { error: { code: string; message: string } }
+    expect(payload.error.code).toBe('visitor_budget')
+    expect(payload.error.message).toContain('Fill the brief in by hand')
   })
 })

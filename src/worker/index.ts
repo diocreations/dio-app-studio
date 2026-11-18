@@ -14,7 +14,7 @@ import {
   listProjects,
   saveVersion,
   spendImportBudget,
-  spendProjectBudget,
+  spendDailyBudget,
 } from './db'
 import { bundleFilename, bundleFor } from './export'
 import {
@@ -48,8 +48,10 @@ type Bindings = {
   PEXELS_API_KEY?: string
   /** Operator key for /studio. Unset means the board stays closed. */
   STUDIO_KEY?: string
-  /** Imports allowed per day. Unset uses the default; 0 closes the importer. */
+  /** Imports allowed per day across everyone. Unset uses the default; 0 closes the importer. */
   IMPORT_DAILY_CAP?: string
+  /** Imports one visitor may spend per day. Unset uses the default; 0 closes it for them. */
+  IMPORT_VISITOR_CAP?: string
   /** Published on the privacy page for deletion and data requests. */
   CONTACT_EMAIL?: string
 }
@@ -101,10 +103,21 @@ const TOKEN = /^[0-9a-f]{24}$/
 const DEFAULT_IMPORT_DAILY_CAP = 400
 
 function importCap(env: Bindings): number {
-  const raw = env.IMPORT_DAILY_CAP?.trim()
-  if (!raw) return DEFAULT_IMPORT_DAILY_CAP
-  const cap = Number(raw)
-  return Number.isFinite(cap) && cap >= 0 ? Math.floor(cap) : DEFAULT_IMPORT_DAILY_CAP
+  return capFrom(env.IMPORT_DAILY_CAP, DEFAULT_IMPORT_DAILY_CAP)
+}
+
+/** Imports one visitor may spend in a day, so one browser cannot drain the studio's. */
+const DEFAULT_IMPORT_VISITOR_CAP = 3
+
+function importVisitorCap(env: Bindings): number {
+  return capFrom(env.IMPORT_VISITOR_CAP, DEFAULT_IMPORT_VISITOR_CAP)
+}
+
+function capFrom(raw: string | undefined, fallback: number): number {
+  const value = raw?.trim()
+  if (!value) return fallback
+  const cap = Number(value)
+  return Number.isFinite(cap) && cap >= 0 ? Math.floor(cap) : fallback
 }
 
 function isHttps(url: string): boolean {
@@ -445,7 +458,15 @@ app.post('/api/import', async (c) => {
     // The crawler's own pre-flight checks, run before anything is spent: a junk
     // link costs neither a rate-limit token nor a unit of the day's allowance.
     const url = checkImportUrl(str(body.url, 300))
-    throttleImports('import')
+    const visitor = await visitorBucket(c.req.header('cf-connecting-ip'))
+    // One visitor's curiosity must not close the importer for everyone else.
+    throttleImports(`import:${visitor}`)
+    if (!(await spendDailyBudget(c.env.DB, `import:${visitor}`, importVisitorCap(c.env))))
+      throw new ImportError(
+        'visitor_budget',
+        'This connection has used its site reads for today. Fill the brief in by hand and the studio will read the site when you send it.',
+        429,
+      )
     if ((await spendImportBudget(c.env.DB)) > importCap(c.env))
       throw new ImportError(
         'daily_budget',
@@ -466,6 +487,8 @@ app.post('/api/import', async (c) => {
   } catch (error) {
     if (error instanceof ImportError) {
       if (error.code === 'rate_limited') c.header('Retry-After', '20')
+      else if (error.code === 'visitor_budget' || error.code === 'daily_budget')
+        c.header('Retry-After', String(secondsUntilReset()))
       return c.json({ error: { code: error.code, message: error.message } }, error.status)
     }
     console.error('plattr_import_error', error)
@@ -483,11 +506,11 @@ app.post('/api/projects', async (c) => {
   // Public by design, so builds are metered before any row is written: three a
   // day from one connection, forty a day from everyone.
   const visitor = await visitorBucket(c.req.header('cf-connecting-ip'))
-  if (!(await spendProjectBudget(c.env.DB, `visitor:${visitor}`, PROJECTS_PER_VISITOR))) {
+  if (!(await spendDailyBudget(c.env.DB, `visitor:${visitor}`, PROJECTS_PER_VISITOR))) {
     c.header('Retry-After', String(secondsUntilReset()))
     return fail(c, 429, 'rate_limited', 'This connection has made its builds for today. Try again tomorrow.')
   }
-  if (!(await spendProjectBudget(c.env.DB, 'all', PROJECTS_PER_DAY))) {
+  if (!(await spendDailyBudget(c.env.DB, 'all', PROJECTS_PER_DAY))) {
     c.header('Retry-After', String(secondsUntilReset()))
     return fail(c, 429, 'daily_budget', 'The studio has made its builds for today. Try again tomorrow.')
   }
