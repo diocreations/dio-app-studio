@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#fbf6ee"/>
+  <rect x="0" y="0" width="1200" height="10" fill="#e2522d"/>
+
+  <rect x="80" y="66" width="52" height="52" rx="12" fill="#1b1410"/>
+  <text x="107" y="104" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-weight="600" fill="#fbf6ee">p</text>
+  <text x="150" y="104" font-family="Georgia, 'Times New Roman', serif" font-size="38" font-weight="600" fill="#1b1410">plattr</text>
+
+  <text x="80" y="248" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="600" fill="#1b1410">Apps for any local business,</text>
+  <text x="80" y="332" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="600" fill="#1b1410">from a conversation.</text>
+
+  <text x="80" y="410" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" font-size="27" fill="#3d3129">Restaurants, salons, shops, clinics, garages and 22 more trades.</text>
+  <text x="80" y="450" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" font-size="27" fill="#3d3129">Each gets its own app, its own theme and three home layouts.</text>
+
+  <rect x="80" y="505" width="1040" height="1" fill="#d8cbbb"/>
+  <text x="80" y="556" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" font-size="24" fill="#3d3129">Built in a day</text>
+  <circle cx="262" cy="548" r="4" fill="#e2522d"/>
+  <text x="290" y="556" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" font-size="24" fill="#3d3129">From $1,400</text>
+  <circle cx="452" cy="548" r="4" fill="#e2522d"/>
+  <text x="480" y="556" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" font-size="24" fill="#3d3129">Reviewed by a human before every launch</text>
+</svg>

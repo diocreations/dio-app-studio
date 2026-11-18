@@ -6,7 +6,6 @@ type Env = {
   ASSETS: Fetcher
   STUDIO_KEY?: string
   IMPORT_DAILY_CAP?: string
-  IMPORT_VISITOR_CAP?: string
 }
 
 /** Just enough D1 for the import route: it only counts a unit and reads it back. */
@@ -114,7 +113,7 @@ describe('the import endpoint refuses work it should not do', () => {
     const response = await post(
       JSON_HEADERS,
       JSON.stringify({ url: 'https://example.com' }),
-      { DB: db, IMPORT_VISITOR_CAP: '3' },
+      { DB: db },
     )
     expect(response.status).toBe(429)
     expect(Number(response.headers.get('retry-after'))).toBeGreaterThan(0)

@@ -50,13 +50,56 @@ type Bindings = {
   STUDIO_KEY?: string
   /** Imports allowed per day across everyone. Unset uses the default; 0 closes the importer. */
   IMPORT_DAILY_CAP?: string
-  /** Imports one visitor may spend per day. Unset uses the default; 0 closes it for them. */
-  IMPORT_VISITOR_CAP?: string
   /** Published on the privacy page for deletion and data requests. */
   CONTACT_EMAIL?: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
+
+const SHARE_DESCRIPTION =
+  'Apps for any local business, from a conversation — built in a day and reviewed by a human before every launch.'
+
+/**
+ * Share tags need absolute URLs, which only the request knows. Rather than
+ * thread a URL through every view, read back the page's own title and
+ * description and add the tags once, here.
+ */
+app.use('*', async (c, next) => {
+  await next()
+  const response = c.res
+  if (!response.headers.get('content-type')?.includes('text/html')) return
+  const html = await response.text()
+  if (html.includes('property="og:title"') || !html.includes('</head>')) {
+    c.res = new Response(html, { status: response.status, headers: response.headers })
+    return
+  }
+  const title = /<title>([^<]*)<\/title>/.exec(html)?.[1].trim() || 'Plattr'
+  const description =
+    /<meta name="description" content="([^"]*)"/.exec(html)?.[1] || SHARE_DESCRIPTION
+  const canonical = new URL(c.req.url)
+  canonical.search = ''
+  const image = new URL('/og.png', canonical).href
+  const tags = `
+<meta property="og:site_name" content="Plattr" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="${title}" />
+<meta property="og:description" content="${description}" />
+<meta property="og:url" content="${canonical.href}" />
+<meta property="og:image" content="${image}" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Plattr — apps for any local business, from a conversation" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="${title}" />
+<meta name="twitter:description" content="${description}" />
+<meta name="twitter:image" content="${image}" />`
+  const headers = new Headers(response.headers)
+  headers.delete('content-length')
+  c.res = new Response(html.replace('</head>', `${tags}\n</head>`), {
+    status: response.status,
+    headers,
+  })
+})
 
 /** Builds one visitor may create per day, and the whole studio may create. */
 const PROJECTS_PER_VISITOR = 3
@@ -103,22 +146,14 @@ const TOKEN = /^[0-9a-f]{24}$/
 const DEFAULT_IMPORT_DAILY_CAP = 400
 
 function importCap(env: Bindings): number {
-  return capFrom(env.IMPORT_DAILY_CAP, DEFAULT_IMPORT_DAILY_CAP)
+  const raw = env.IMPORT_DAILY_CAP?.trim()
+  if (!raw) return DEFAULT_IMPORT_DAILY_CAP
+  const cap = Number(raw)
+  return Number.isFinite(cap) && cap >= 0 ? Math.floor(cap) : DEFAULT_IMPORT_DAILY_CAP
 }
 
 /** Imports one visitor may spend in a day, so one browser cannot drain the studio's. */
-const DEFAULT_IMPORT_VISITOR_CAP = 3
-
-function importVisitorCap(env: Bindings): number {
-  return capFrom(env.IMPORT_VISITOR_CAP, DEFAULT_IMPORT_VISITOR_CAP)
-}
-
-function capFrom(raw: string | undefined, fallback: number): number {
-  const value = raw?.trim()
-  if (!value) return fallback
-  const cap = Number(value)
-  return Number.isFinite(cap) && cap >= 0 ? Math.floor(cap) : fallback
-}
+const IMPORTS_PER_VISITOR = 3
 
 function isHttps(url: string): boolean {
   return url.startsWith('https://')
@@ -461,7 +496,7 @@ app.post('/api/import', async (c) => {
     const visitor = await visitorBucket(c.req.header('cf-connecting-ip'))
     // One visitor's curiosity must not close the importer for everyone else.
     throttleImports(`import:${visitor}`)
-    if (!(await spendDailyBudget(c.env.DB, `import:${visitor}`, importVisitorCap(c.env))))
+    if (!(await spendDailyBudget(c.env.DB, `import:${visitor}`, IMPORTS_PER_VISITOR)))
       throw new ImportError(
         'visitor_budget',
         'This connection has used its site reads for today. Fill the brief in by hand and the studio will read the site when you send it.',
@@ -606,11 +641,16 @@ app.post('/api/projects/:token/approve', async (c) => {
 
 /* ------------------------------- fallbacks ----------------------------- */
 
-app.get('/favicon.ico', (c) => c.body(null, 204))
-
-app.notFound((c) => {
+app.notFound(async (c) => {
   if (c.req.path.startsWith('/api/'))
     return c.json({ error: { code: 'not_found', message: 'Endpoint not found.' } }, 404)
+  // Icons and the share card are real files in ./public; let the asset layer
+  // answer for them before falling back to a page.
+  const assets = c.env.ASSETS as Fetcher | undefined
+  if (typeof assets?.fetch === 'function') {
+    const asset = await assets.fetch(c.req.raw)
+    if (asset.status !== 404) return asset
+  }
   return c.html(notFoundPage(), 404)
 })
 

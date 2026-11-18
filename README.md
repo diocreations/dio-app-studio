@@ -181,9 +181,10 @@ Limits, stated plainly:
   with the `IMPORT_DAILY_CAP` variable, `0` closes the importer) and one isolate
   holds a burst of three that refills every 20 seconds, so the most a day can
   spend is bounded even under abuse. One visitor also gets three reads a day
-  (`daily_budget`, keyed by the hash of `cf-connecting-ip`; override with
-  `IMPORT_VISITOR_CAP`), so a single browser cannot drain the shared allowance
-  and leave everyone else filling the brief in by hand. A link is checked against the same scheme
+  (`daily_budget`, keyed by the hash of `cf-connecting-ip`), so a single browser
+  cannot drain the shared allowance and leave everyone else filling the brief
+  in by hand. The per-visitor figure is a constant rather than a variable:
+  there was no reason to tune it separately from the shared cap. A link is checked against the same scheme
   and host guard as the crawler before it is counted, so junk requests cannot
   drain the day's allowance.
 

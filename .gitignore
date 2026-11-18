@@ -14,3 +14,6 @@ dist/
 .cloud-attachments/
 /screens/
 /screenshots/
+
+# intermediate renders; the shipped copies live in public/
+scripts/art/*.png
