@@ -56,6 +56,9 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>()
 
+/** Private trees: token pages and the operator board. */
+const PRIVATE_PATHS = /^\/(p|studio)(\/|$)/
+
 const SHARE_DESCRIPTION =
   'Apps for any local business, from a conversation — built in a day and reviewed by a human before every launch.'
 
@@ -99,6 +102,16 @@ app.use('*', async (c, next) => {
     status: response.status,
     headers,
   })
+})
+
+/**
+ * A manifest, service worker, icon or zip cannot carry a meta tag, and a
+ * redirect or JSON error has no head at all, so every private path also says
+ * noindex in the header.
+ */
+app.use('*', async (c, next) => {
+  await next()
+  if (PRIVATE_PATHS.test(c.req.path)) c.res.headers.set('X-Robots-Tag', 'noindex, nofollow')
 })
 
 /** Builds one visitor may create per day, and the whole studio may create. */

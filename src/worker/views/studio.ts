@@ -147,7 +147,7 @@ export function studioPage(projects: Project[]): string {
 `
   return page({
     title: 'Studio · Plattr',
-    description: 'Every restaurant app build, plan and download in one board.',
+    description: 'Every build, plan and download in one board.',
     body,
     active: 'studio',
     // Customer names, emails, quotes and tokens live here.

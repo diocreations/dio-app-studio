@@ -55,7 +55,7 @@ describe('the private build pages', () => {
 })
 
 describe('the operator board', () => {
-  const { db } = { db: new MemoryD1() as unknown as D1Database }
+  const db = new MemoryD1() as unknown as D1Database
 
   test('the set-up and locked variants ask not to be indexed', async () => {
     const noKey = await app.request(
@@ -93,5 +93,56 @@ describe('the operator board', () => {
     const board = await app.request('https://plattr.example/studio', { headers: { cookie } }, env)
     expect(board.status).toBe(200)
     expect(await board.text()).toContain(NOINDEX)
+  })
+
+  test('a wrong key is noindexed as well', async () => {
+    const wrong = await app.request(
+      'https://plattr.example/studio/unlock',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: 'key=not-the-key',
+      },
+      { DB: db, ASSETS: {} as Fetcher, STUDIO_KEY: 'operator-key' },
+    )
+    expect(wrong.status).toBe(401)
+    expect(await wrong.text()).toContain(NOINDEX)
+  })
+})
+
+describe('responses that have no head to put a tag in', () => {
+  test('every private response carries X-Robots-Tag', async () => {
+    const { db, token } = await customerBuild()
+    const env = { DB: db, ASSETS: {} as Fetcher, STUDIO_KEY: 'operator-key' }
+    // Pages, the app, its manifest and worker, its icon, and a refused zip.
+    const paths = [
+      `/p/${token}`,
+      `/p/${token}/app`,
+      `/p/${token}/manifest.webmanifest`,
+      `/p/${token}/sw.js`,
+      `/p/${token}/icon.svg`,
+      `/p/${token}/export/pwa`,
+      '/studio',
+    ]
+    for (const path of paths) {
+      const response = await app.request(`https://plattr.example${path}`, {}, env)
+      expect(response.headers.get('x-robots-tag'), path).toBe('noindex, nofollow')
+    }
+
+    // A redirect has no body to inspect, but still belongs to the private tree.
+    const lock = await app.request(
+      'https://plattr.example/studio/lock',
+      { method: 'POST' },
+      env,
+    )
+    expect(lock.status).toBe(303)
+    expect(lock.headers.get('x-robots-tag')).toBe('noindex, nofollow')
+  })
+
+  test('public responses do not carry it', async () => {
+    for (const path of ['/', '/brief', '/privacy', '/robots.txt', '/sitemap.xml']) {
+      const response = await app.request(`https://plattr.example${path}`, {}, { ASSETS: {} as Fetcher })
+      expect(response.headers.get('x-robots-tag'), path).toBeNull()
+    }
   })
 })
