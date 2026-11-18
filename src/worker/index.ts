@@ -60,6 +60,14 @@ const app = new Hono<{ Bindings: Bindings }>()
 const PROJECTS_PER_VISITOR = 3
 const PROJECTS_PER_DAY = 40
 
+/** The buckets reset on the UTC date, so say when — not a made-up hour. */
+function secondsUntilReset(): number {
+  const now = Date.now()
+  const midnight = new Date(now)
+  midnight.setUTCHours(24, 0, 0, 0)
+  return Math.max(60, Math.ceil((midnight.getTime() - now) / 1000))
+}
+
 /**
  * A short hash of the caller, so the daily counter never stores an address.
  *
@@ -476,11 +484,11 @@ app.post('/api/projects', async (c) => {
   // day from one connection, forty a day from everyone.
   const visitor = await visitorBucket(c.req.header('cf-connecting-ip'))
   if (!(await spendProjectBudget(c.env.DB, `visitor:${visitor}`, PROJECTS_PER_VISITOR))) {
-    c.header('Retry-After', '3600')
+    c.header('Retry-After', String(secondsUntilReset()))
     return fail(c, 429, 'rate_limited', 'This connection has made its builds for today. Try again tomorrow.')
   }
   if (!(await spendProjectBudget(c.env.DB, 'all', PROJECTS_PER_DAY))) {
-    c.header('Retry-After', '3600')
+    c.header('Retry-After', String(secondsUntilReset()))
     return fail(c, 429, 'daily_budget', 'The studio has made its builds for today. Try again tomorrow.')
   }
 

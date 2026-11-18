@@ -77,6 +77,10 @@ describe('the build endpoints are metered', () => {
     const response = await post(brief, spentDb())
     expect(response.status).toBe(429)
     expect(((await response.json()) as { error: { code: string } }).error.code).toBe('rate_limited')
+    // Sends the caller to the actual reset, not an arbitrary hour from now.
+    const retry = Number(response.headers.get('retry-after'))
+    expect(retry).toBeGreaterThan(0)
+    expect(retry).toBeLessThanOrEqual(86_400)
   })
 
   test('changing X-Forwarded-For does not buy a new allowance', async () => {
