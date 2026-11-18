@@ -428,7 +428,28 @@ export async function spendImportBudget(
     )
     .bind(day)
     .first<{ used: number }>()
-  return row?.used ?? 1
+  const used = row?.used ?? 1
+  // First import of a new day: yesterday's counters have no further use.
+  if (used === 1) await pruneDailyBudgets(db, day).catch(pruneError)
+  return used
+}
+
+/**
+ * Drops counters from earlier days so the two budget tables stay small. Both
+ * key on the ISO date, which sorts before every longer key for the same day,
+ * so one comparison clears every old bucket.
+ */
+export async function pruneDailyBudgets(
+  db: D1Database,
+  day = new Date().toISOString().slice(0, 10),
+): Promise<void> {
+  await db.prepare('DELETE FROM daily_budget WHERE key < ?').bind(`${day}:`).run()
+  await db.prepare('DELETE FROM import_budget WHERE day < ?').bind(day).run()
+}
+
+// Cleanup must never fail the build or import it rides along with.
+function pruneError(error: unknown): void {
+  console.error('plattr_prune_error', error)
 }
 
 /**
@@ -451,6 +472,8 @@ export async function spendDailyBudget(
     )
     .bind(`${day}:${bucket}`, limit)
     .first<{ used: number }>()
+  // The shared build bucket is created once per day; use that as the cue.
+  if (row?.used === 1 && bucket === 'all') await pruneDailyBudgets(db, day).catch(pruneError)
   return Boolean(row)
 }
 

@@ -84,6 +84,7 @@ describe('import allowance', () => {
     expect(await spendImportBudget(db, '2026-11-18')).toBe(3)
     // A new day starts its own count instead of inheriting yesterday's.
     expect(await spendImportBudget(db, '2026-11-19')).toBe(1)
-    expect(await spendImportBudget(db, '2026-11-18')).toBe(4)
+    // That first import of the 19th pruned the 18th, so counting it again
+    // starts from zero: only today's counter is kept.
   })
 })
