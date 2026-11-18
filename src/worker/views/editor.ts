@@ -1,5 +1,6 @@
 import type { Doc } from '../doc'
 import type { Project } from '../db'
+import { directionsFor } from '../directions'
 import { esc } from './shell'
 
 /*
@@ -12,6 +13,12 @@ export function editorPage(options: { project: Project; doc: Doc; origin: string
   const { project, doc, origin } = options
   const token = project.token
   const json = JSON.stringify(doc).replace(/</g, '\\u003c')
+  const directions = directionsFor(project.spec.vertical).map((entry) => ({
+    id: entry.id,
+    label: entry.label,
+    blurb: entry.blurb,
+  }))
+  const directionsJson = JSON.stringify(directions).replace(/</g, '\\u003c')
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -110,6 +117,12 @@ button { cursor: pointer; }
 .right .head { padding: 14px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between; }
 .right .head b { font-family: var(--serif); font-size: 15px; font-weight: 600; }
 .badge { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.dir-grid { display: grid; gap: 6px; }
+.dir { display: grid; gap: 2px; text-align: left; border: 1px solid var(--line-soft); background: #fff; border-radius: 10px; padding: 9px 10px; }
+.dir:hover { border-color: var(--line); }
+.dir.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.dir b { font-size: 11.5px; font-weight: 650; }
+.dir span { color: var(--muted); font-size: 9.5px; line-height: 1.35; }
 .versions { display: grid; gap: 6px; }
 .version { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line-soft); border-radius: 9px; padding: 8px 9px; background: #fff; }
 .version b { flex: 1; font-size: 11.5px; font-weight: 600; }
@@ -207,6 +220,7 @@ button { cursor: pointer; }
 <script>
 const TOKEN = ${JSON.stringify(token)};
 const INITIAL = ${json};
+const DIRECTIONS = ${directionsJson};
 const HAS_SAVED = ${project.doc ? 'true' : 'false'};
 const SECTION_LABELS = { hero:'Hero', featured:'Featured', offers:'Offers', loyalty:'Rewards', visit:'Visit', story:'Story', testimonials:'Testimonials', cta:'Call to action', heading:'Heading', text:'Text', button:'Button', image:'Image', banner:'Banner', productList:'Product list', search:'Search', form:'Contact form', gallery:'Gallery' };
 const SCREEN_LABELS = { home:'Home', catalog:'Catalogue', search:'Search', saved:'Saved', detail:'Details', book:'Booking', quote:'Enquiry', more:'More', contact:'Contact', profile:'Profile', about:'About', custom:'Screen' };
@@ -353,6 +367,7 @@ function renderInspector() {
 }
 function renderScreenInspector() {
   const screen = current();
+  const design = state.doc.design || {};
   $('inspector').innerHTML =
     '<div class="sec">' +
       '<div class="field"><label>Screen name</label><input id="sName" type="text" maxlength="24" value="' + esc(screen.name) + '" /></div>' +
@@ -360,8 +375,28 @@ function renderScreenInspector() {
       '<label><input type="checkbox" id="sInitial" ' + (state.doc.initialScreen === screen.id ? 'checked' : '') + '/> Open the app on this screen</label></div>' +
       '<p class="hint">Up to five navigation items fit. The first five selected are used.</p>' +
     '</div>' +
+    '<div class="sec"><h3>Design direction</h3><div class="dir-grid">' +
+      DIRECTIONS.map((entry) => '<button class="dir ' + (design.direction === entry.id ? 'on' : '') + '" data-direction-value="' + entry.id + '"><b>' + esc(entry.label) + '</b><span>' + esc(entry.blurb) + '</span></button>').join('') +
+    '</div><p class="hint">Direction changes typography, layout, navigation and surfaces together.</p></div>' +
+    '<div class="sec"><h3>Fine tune</h3>' +
+      '<div class="field"><label>Typography</label><select id="dType">' +
+        [['','Direction default'],['editorial','Editorial serif'],['modern','Modern grotesk'],['compact','Compact condensed']].map(([value,label]) => '<option value="' + value + '"' + ((design.typography || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
+      '<div class="field"><label>Navigation</label><select id="dNav">' +
+        [['','Direction default'],['bar','Bar'],['floating','Floating pill'],['dock','Dock']].map(([value,label]) => '<option value="' + value + '"' + ((design.nav || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
+      '<div class="field"><label>Buttons</label><select id="dButtons">' +
+        [['','Direction default'],['square','Square'],['soft','Soft'],['round','Round']].map(([value,label]) => '<option value="' + value + '"' + ((design.buttons || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
+      '<div class="field"><label>Cards</label><select id="dCards">' +
+        [['','Direction default'],['square','Square'],['soft','Soft'],['round','Round']].map(([value,label]) => '<option value="' + value + '"' + ((design.cards || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
+      '<div class="field"><label>Spacing</label><select id="dDensity">' +
+        [['','Direction default'],['cozy','Compact'],['standard','Standard'],['roomy','Generous']].map(([value,label]) => '<option value="' + value + '"' + ((design.density || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
+    '</div>' +
     '<div class="sec"><h3>This screen</h3><p class="empty">' + screen.sections.length + ' component' + (screen.sections.length === 1 ? '' : 's') + '. Add or reorder them on the left, or click one in the app.</p></div>' +
     (screen.kind === 'home' ? '' : '<div class="sec"><button class="btn" id="sDuplicate">Duplicate screen</button> <button class="btn" id="sDelete" style="color:#a13b2b;margin-top:8px">Delete screen</button></div>');
+  const setDesign = (patch) => commit((doc) => { doc.design = Object.assign({}, doc.design, patch); return doc; }, true);
+  document.querySelectorAll('[data-direction-value]').forEach((button) => button.addEventListener('click', () => commit((doc) => { doc.design = { direction: button.dataset.directionValue }; return doc; }, true)));
+  [['dType','typography'],['dNav','nav'],['dButtons','buttons'],['dCards','cards'],['dDensity','density']].forEach(([id,key]) => {
+    const input = $(id); if (input) input.addEventListener('change', () => setDesign({ [key]: input.value || undefined }));
+  });
   $('sName').addEventListener('input', (event) => commit((doc) => { const s = doc.screens.find((x) => x.id === screen.id); if (s) s.name = event.target.value.slice(0,24); return doc; }));
   $('sNav').addEventListener('change', (event) => commit((doc) => { const s = doc.screens.find((x) => x.id === screen.id); if (s) s.nav = event.target.checked; return doc; }, true));
   $('sInitial').addEventListener('change', (event) => { if (event.target.checked) commit((doc) => { doc.initialScreen = screen.id; return doc; }, true); });

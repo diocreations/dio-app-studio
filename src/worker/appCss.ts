@@ -66,6 +66,15 @@ export function appCss(ctx: CssCtx): string {
   --r-media: ${Math.max(12, Math.round(radius * 0.78))}px;
   --edge: inset 0 1px 0 color-mix(in srgb, #fff 14%, transparent);
   --ease: cubic-bezier(0.22, 0.9, 0.24, 1);
+  /* Type and space scales are shared by every direction. A direction changes
+     the family, weight and rhythm, never the underlying steps. */
+  --text-2xs: 10px; --text-xs: 11.5px; --text-sm: 13px; --text-md: 15px;
+  --text-lg: 18px; --text-xl: 24px; --text-2xl: 32px; --text-3xl: clamp(34px, 10vw, 46px);
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 22px; --space-6: 30px; --space-7: 40px;
+  --r-xs: 6px; --r-sm: 10px; --r-md: 16px; --r-lg: 24px; --r-full: 999px;
+  --dur-fast: 140ms; --dur-base: 240ms; --dur-slow: 380ms;
+  --tap: 44px; --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -647,6 +656,19 @@ body[data-nav="floating"] .screen.is-detail { bottom: var(--nav-space); }
 .screen.is-detail > [data-detail-body] { min-height: 100%; display: flex; flex-direction: column; }
 .detail-body h1 { font-size: clamp(26px, 7.6vw, 34px); }
 .detail-body .lede { font-size: 13.5px; color: var(--muted); margin-top: 10px; line-height: 1.65; }
+/* A real next step for a short detail page, not decorative filler. */
+.recs { margin-top: var(--space-6); }
+.recs-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: var(--space-3); }
+.recs-head b { font-family: var(--display); font-size: var(--text-md); font-weight: var(--weight); letter-spacing: var(--tracking); }
+.recs-head span { color: var(--muted); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.12em; }
+.rec-row { display: flex; gap: var(--space-3); overflow-x: auto; padding: 0 0 var(--space-2); scrollbar-width: none; scroll-snap-type: x mandatory; }
+.rec-row::-webkit-scrollbar { display: none; }
+.rec { flex: 0 0 142px; scroll-snap-align: start; text-align: left; display: grid; gap: 7px; background: transparent; padding: 0; }
+.rec-art { aspect-ratio: 1 / 0.9; border-radius: var(--r-sm); }
+.rec-copy { display: grid; gap: 2px; }
+.rec-copy b { font-size: var(--text-xs); font-weight: 650; line-height: 1.3; }
+.rec-price { font-size: var(--text-2xs); color: var(--muted); }
+.rec:active .rec-art { transform: scale(0.98); }
 .detail-line {
   display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 18px 0 8px;
   padding: 0;
@@ -675,7 +697,8 @@ body[data-nav="dock"] .tabbar .tab { flex: 1; }
   color: var(--muted); font-size: 8.5px; font-weight: 750; letter-spacing: 0.1em; text-transform: uppercase;
   position: relative; transition: color 0.2s ease, background 0.2s ease;
 }
-.tab svg { width: 21px; height: 21px; stroke-width: 1.6; }
+.tab { min-height: 48px; align-content: center; font-size: 9.5px; letter-spacing: 0.07em; }
+.tab svg { width: 22px; height: 22px; stroke-width: 1.6; }
 .tab.on { color: var(--ink); }
 .tab.on svg { stroke-width: 1.9; }
 body[data-nav="bar"] .tab.on { background: var(--accent-soft); }
@@ -2188,5 +2211,132 @@ body[data-cards="round"] { --el-panel-r: 26px; }
 body[data-cards] :is(.card, .offer, .info, .loyalty, .status-card, .session, .tile, .stack-card, .seg, .gallery .thumb) {
   border-radius: var(--el-panel-r) !important;
 }
+
+/* ------------------------------------------------ contemporary refinements
+   The first generation leaned on borders and drop shadows for depth. The new
+   default is quieter: one hairline, a tinted surface and spacing to separate
+   groups. Direction blocks below re-cut the same components rather than each
+   trade inventing another card grammar. */
+body { font-size: var(--text-md); }
+.appbar { padding-top: calc(10px + var(--safe-top)); }
+.tabbar { padding-bottom: calc(10px + var(--safe-bottom)); }
+.tile {
+  box-shadow: none; border-color: color-mix(in srgb, var(--hair) 80%, transparent);
+  padding: 5px; transition: transform var(--dur-fast) var(--ease), border-color var(--dur-base) ease;
+}
+.tile:active { transform: scale(0.975); }
+.tile .body { gap: var(--space-1); padding: var(--space-3) var(--space-2) var(--space-3); }
+.tile .name { font-size: 15px; line-height: 1.25; }
+.tile .price { font-size: var(--text-sm); }
+.tile .go { width: var(--tap); height: var(--tap); right: 10px; bottom: 10px; }
+.tile .go svg { width: 14px; height: 14px; }
+.btn { min-height: 42px; transition: transform var(--dur-fast) var(--ease), background var(--dur-base) ease, border-color var(--dur-base) ease; }
+.btn:active { transform: scale(0.975); }
+.chip { min-height: 38px; padding: 8px var(--space-4); box-shadow: none; }
+.iconbtn { width: 38px; height: 38px; box-shadow: none; background: var(--surface); }
+.sect .label { font-size: 21px; letter-spacing: -0.02em; }
+.sect .count { font-size: var(--text-2xs); }
+.screen { padding-inline: var(--space-4); }
+.screen.on { animation-duration: var(--dur-slow); }
+.sheet { transition-duration: var(--dur-slow); }
+.chip, .tab, .slot, .tile { touch-action: manipulation; }
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-2) 25%, color-mix(in srgb, var(--surface-2) 45%, var(--surface)) 40%, var(--surface-2) 60%);
+  background-size: 300% 100%; animation: shimmer 1.4s ease infinite; border-radius: var(--r-sm);
+}
+@keyframes shimmer { from { background-position: 120% 0; } to { background-position: -80% 0; } }
+
+/* ------------------------------------------------------------- directions */
+/* Editorial: imagery and typography carry the page; chrome almost disappears. */
+body[data-direction="editorial"] .app::before { opacity: 0.35; }
+body[data-direction="editorial"] .appbar { background: transparent; border-bottom-color: transparent; }
+body[data-direction="editorial"] .appbar .mark { background: var(--ink); color: var(--bg); box-shadow: none; }
+body[data-direction="editorial"] .tile { border: 0; background: transparent; padding: 0; }
+body[data-direction="editorial"] .tile .thumb { border-radius: var(--r-sm); aspect-ratio: 1 / 1.08; }
+body[data-direction="editorial"] .tile .body { padding: var(--space-3) 2px var(--space-5); }
+body[data-direction="editorial"] .tile .name { font-size: 17px; line-height: 1.15; }
+body[data-direction="editorial"] .tile .go { background: transparent; color: var(--ink); border: 1px solid var(--hair); box-shadow: none; }
+body[data-direction="editorial"] .sect .label { font-family: var(--display-serif); font-size: 26px; font-weight: 500; letter-spacing: -0.02em; }
+body[data-direction="editorial"] .tab { text-transform: none; letter-spacing: 0; font-size: 10.5px; }
+body[data-direction="editorial"] .tab.on { background: transparent; color: var(--ink); }
+body[data-direction="editorial"] .hero h1, body[data-direction="editorial"] .l-hero h1 { font-size: var(--text-3xl); }
+
+/* Modern: crisp modules, tinted panels, almost no decoration. */
+body[data-direction="modern"] .app::before { display: none; }
+body[data-direction="modern"] .appbar { background: var(--bg); border-bottom-color: var(--hair); }
+body[data-direction="modern"] .appbar .kicker { display: none; }
+body[data-direction="modern"] .appbar .title { font-size: 17px; }
+body[data-direction="modern"] .tile { background: var(--surface-2); border: 0; padding: 0; }
+body[data-direction="modern"] .tile .thumb { border-radius: 0; aspect-ratio: 1 / 1; }
+body[data-direction="modern"] .tile .body { padding: var(--space-3); }
+body[data-direction="modern"] .tile .go { width: 32px; height: 32px; right: 12px; bottom: 12px; }
+body[data-direction="modern"] .sect .label { font-size: 17px; letter-spacing: -0.03em; text-transform: none; }
+body[data-direction="modern"] .tab { text-transform: none; letter-spacing: 0; font-size: 10.5px; }
+body[data-direction="modern"] .btn.accent { box-shadow: none; }
+
+/* Luxe: dark, quiet, generous; gold-less warmth comes from the accent. */
+body[data-direction="luxe"] .app::before { opacity: 0.55; height: 560px; }
+body[data-direction="luxe"] .appbar { background: color-mix(in srgb, var(--bg) 72%, transparent); }
+body[data-direction="luxe"] .appbar .mark { border-radius: 50%; box-shadow: none; }
+body[data-direction="luxe"] .tile { background: transparent; border: 0; }
+body[data-direction="luxe"] .tile .thumb { aspect-ratio: 1 / 1.2; border-radius: 2px; }
+body[data-direction="luxe"] .tile .body { padding: var(--space-3) 0 var(--space-5); }
+body[data-direction="luxe"] .tile .name { font-size: 16px; letter-spacing: 0.01em; }
+body[data-direction="luxe"] .tile .price { color: var(--muted); font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; }
+body[data-direction="luxe"] .sect .label { font-size: 27px; letter-spacing: 0.01em; }
+body[data-direction="luxe"] .tabbar { border-radius: 2px; }
+
+/* Minimal: hairlines, row-first lists, no chrome in the way. */
+body[data-direction="minimal"] .app::before { display: none; }
+body[data-direction="minimal"] .appbar { background: var(--bg); }
+body[data-direction="minimal"] .appbar .mark { background: transparent; color: var(--ink); border: 1px solid var(--hair); box-shadow: none; }
+body[data-direction="minimal"] .tile { border: 0; border-bottom: 1px solid var(--hair); border-radius: 0; background: transparent; }
+body[data-direction="minimal"] .tile .thumb { border-radius: 4px; }
+body[data-direction="minimal"] .sect .label { font-size: 16px; text-transform: uppercase; letter-spacing: 0.12em; }
+body[data-direction="minimal"] .tabbar { background: var(--bg); box-shadow: none; }
+body[data-direction="minimal"] .iconbtn { background: transparent; }
+
+/* Gallery: work first, labels set like wall cards. */
+body[data-direction="gallery"] .app::before { display: none; }
+body[data-direction="gallery"] .appbar { background: var(--bg); border-bottom-color: var(--line); }
+body[data-direction="gallery"] .appbar .mark { display: none; }
+body[data-direction="gallery"] .tile { background: transparent; border: 0; box-shadow: none; }
+body[data-direction="gallery"] .tile .thumb { border-radius: 0; }
+body[data-direction="gallery"] .tile .name { font-family: var(--display-serif); font-style: italic; font-weight: 500; font-size: 16px; }
+body[data-direction="gallery"] .tile .price { font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+body[data-direction="gallery"] .tile .go { display: none; }
+
+/* Performance and technical: numbers, labels and tight rhythm. */
+body[data-direction="performance"] .tile, body[data-direction="technical"] .tile { border-radius: 2px; }
+body[data-direction="performance"] .sect .label, body[data-direction="technical"] .sect .label {
+  text-transform: uppercase; letter-spacing: 0.08em; font-size: 14px;
+}
+body[data-direction="performance"] .price, body[data-direction="technical"] .price { font-variant-numeric: tabular-nums; }
+body[data-direction="performance"] .tab, body[data-direction="technical"] .tab { text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* Warm, lifestyle and playful: softer surfaces, not more shadows. */
+body[data-direction="warm"] .tile, body[data-direction="lifestyle"] .tile, body[data-direction="playful"] .tile {
+  border: 0; background: var(--surface);
+}
+body[data-direction="warm"] .tile .thumb, body[data-direction="lifestyle"] .tile .thumb, body[data-direction="playful"] .tile .thumb {
+  border-radius: var(--r-md);
+}
+body[data-direction="playful"] .tile:nth-child(3n + 2) .thumb { border-radius: var(--r-lg) var(--r-sm) var(--r-lg) var(--r-sm); }
+
+/* Clinical: calm, high legibility, nothing competing with booking. */
+body[data-direction="clinical"] .app::before { opacity: 0.25; }
+body[data-direction="clinical"] .tile { box-shadow: none; }
+body[data-direction="clinical"] .sect .label { font-size: 18px; letter-spacing: -0.015em; }
+body[data-direction="clinical"] .tabbar { box-shadow: none; }
+
+/* Bold and cinema: display type does the work. */
+body[data-direction="bold"] .sect .label, body[data-direction="cinema"] .sect .label { font-size: clamp(28px, 8vw, 38px); }
+body[data-direction="bold"] .tile .name { font-size: 18px; }
+body[data-direction="cinema"] .tile .thumb { aspect-ratio: 16 / 10; }
+
+/* Classic: little ornament, confident type, understated controls. */
+body[data-direction="classic"] .app::before { opacity: 0.2; }
+body[data-direction="classic"] .tile { border: 0; border-bottom: 1px solid var(--hair); border-radius: 0; background: transparent; }
+body[data-direction="classic"] .sect .label { font-family: var(--display-serif); font-weight: 500; }
 `
 }

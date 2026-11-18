@@ -1,5 +1,6 @@
 import { sanitizeHex } from './pricing'
-import type { AppSpec } from './types'
+import { directionsFor } from './directions'
+import type { AppSpec, ElementShape } from './types'
 import { themeFor } from './themes'
 import { verticalFor } from './verticals'
 
@@ -129,12 +130,57 @@ export type ScreenNode = {
   sections: DocNode[]
 }
 
+/**
+ * The owner's design choices. They live on the shared document, so the canvas,
+ * the review link and the published app cannot drift apart. A direction is a
+ * named visual system; the remaining fields are deliberate overrides.
+ */
+export type DocDesign = {
+  direction?: string
+  typography?: 'editorial' | 'modern' | 'compact'
+  buttons?: ElementShape
+  cards?: ElementShape
+  nav?: 'bar' | 'floating' | 'dock'
+  density?: 'cozy' | 'standard' | 'roomy'
+}
+
 export type Doc = {
   v: 2
   accent?: string
+  design?: DocDesign
   /** Screen id the app opens on. */
   initialScreen: string
   screens: ScreenNode[]
+}
+
+const SHAPE = (value: unknown): ElementShape | undefined =>
+  value === 'square' || value === 'soft' || value === 'round' ? value : undefined
+
+function sanitizeDesign(value: unknown, spec: AppSpec): DocDesign | undefined {
+  if (!value || typeof value !== 'object') return undefined
+  const raw = value as Record<string, unknown>
+  const allowed = directionsFor(verticalFor(spec.vertical).id).map((entry) => entry.id)
+  const direction =
+    typeof raw.direction === 'string' && allowed.includes(raw.direction) ? raw.direction : undefined
+  const typography =
+    raw.typography === 'editorial' || raw.typography === 'modern' || raw.typography === 'compact'
+      ? raw.typography
+      : undefined
+  const nav =
+    raw.nav === 'bar' || raw.nav === 'floating' || raw.nav === 'dock' ? raw.nav : undefined
+  const density =
+    raw.density === 'cozy' || raw.density === 'standard' || raw.density === 'roomy'
+      ? raw.density
+      : undefined
+  const design: DocDesign = {
+    ...(direction ? { direction } : {}),
+    ...(typography ? { typography } : {}),
+    ...(SHAPE(raw.buttons) ? { buttons: SHAPE(raw.buttons) } : {}),
+    ...(SHAPE(raw.cards) ? { cards: SHAPE(raw.cards) } : {}),
+    ...(nav ? { nav } : {}),
+    ...(density ? { density } : {}),
+  }
+  return Object.keys(design).length ? design : undefined
 }
 
 const KIND_LABEL: Record<SectionKind, string> = {
@@ -308,6 +354,7 @@ export function docFromSpec(spec: AppSpec): Doc {
   return {
     v: 2,
     accent: spec.accent,
+    design: { direction: directionsFor(vertical.id)[0].id },
     initialScreen: initial?.id ?? 'scr_home',
     screens,
   }
@@ -458,7 +505,7 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
     if (!home) screens.unshift(fallback.screens.find((entry) => entry.kind === 'home')!)
     else home.hidden = false
     const initial = screens.find((entry) => entry.id === raw.initialScreen) ?? screens[0]!
-    return { v: 2, accent, initialScreen: initial.id, screens }
+    return { v: 2, accent, design: sanitizeDesign(raw.design, spec), initialScreen: initial.id, screens }
   }
 
   // Version 1: one implicit screen holding the saved sections.
@@ -469,6 +516,7 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
   return {
     v: 2,
     accent,
+    design: sanitizeDesign(raw.design, spec) ?? fallback.design,
     initialScreen: fallback.initialScreen,
     screens,
   }

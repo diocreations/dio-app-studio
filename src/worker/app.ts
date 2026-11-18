@@ -12,6 +12,7 @@ import {
   type ScreenNode,
   type SectionKind,
 } from './doc'
+import { directionFor, themeForDirection, typographyTheme } from './directions'
 import { presetCss, presetFor } from './presets'
 import { CURRENCY_SYMBOLS, inkFor, moneyIn } from './pricing'
 import type { AppSpec, FeatureId, MenuItem, Vocab } from './types'
@@ -822,7 +823,6 @@ function homeBlock(ctx: Ctx): string {
       <div>${featured.slice(0, 3).map((entry) => itemRowEditorial(ctx, entry.item, entry.key)).join('')}</div>`
     return `${heroSection(ctx, lHero(ctx))}
       ${secondaryActions(ctx)}
-      <div class="meta-strip"><span>${esc(spec.hours.split('·')[0])}</span><span>${esc(spec.address)}</span></div>
       ${showcaseBlock(ctx)}
       ${orderedHome(ctx, blocks(selected))}
       ${coda}`
@@ -1014,6 +1014,7 @@ type PreviewOverrides = {
   buttons?: string
   cards?: string
   preset?: string
+  direction?: string
 }
 
 /**
@@ -1122,8 +1123,22 @@ export function renderApp(
   const live = options.live !== false
   const vertical = verticalFor(spec.vertical)
   const vocab: Vocab = vertical.vocab
-  const theme = resolveTheme(themeFor(vertical.id), spec.design)
   const doc = options.doc ? normalizeDoc(options.doc, spec) : null
+  const preview = { ...(spec.layout ?? {}), ...suppliedPreview(options.preview) }
+  // A direction is opt-in through the document, so untouched legacy builds keep
+  // their seeded rendering. New documents carry one from birth; the demo route
+  // may request one explicitly for quality review.
+  const requestedDirection =
+    doc?.design?.direction ?? (typeof preview.direction === 'string' ? preview.direction : undefined)
+  const look = requestedDirection ? directionFor(vertical.id, requestedDirection) : null
+  const themed = look ? themeForDirection(vertical.id, look.id) : themeFor(vertical.id)
+  const withType = doc?.design?.typography
+    ? { ...themed, ...typographyTheme(doc.design.typography) }
+    : themed
+  const theme = resolveTheme(
+    doc?.design?.nav ? { ...withType, nav: doc.design.nav } : withType,
+    spec.design,
+  )
   const shell: ShellId = theme.shell ?? 'standard'
   // A restaurant opens on its menu, a listings app on search. Home is optional.
   // With an application document, the owner chooses the initial screen.
@@ -1139,7 +1154,6 @@ export function renderApp(
   // A design chosen on the brief is part of the spec, so every renderer — the
   // review link, the downloads, a preview iframe — lands on the same structure.
   // Explicit preview axes (the demo route) still win.
-  const preview = { ...(spec.layout ?? {}), ...suppliedPreview(options.preview) }
   const preset = presetFor(preview.preset)
   // Artwork is the default: photography only enters a build once a stock key
   // has actually produced images for it.
@@ -1158,8 +1172,12 @@ export function renderApp(
   const allocated = Number.isFinite(options.slot) ? Math.max(0, Math.floor(options.slot!)) : null
   const cursor = allocated ?? hashSeed(options.token, 11) + version - 1
   const layoutIndex = cursor % layoutCount
-  const variant = (preview.variant ?? layoutIndex % 4) as 0 | 1 | 2 | 3
-  const density = preview.density ?? ['cozy', 'standard', 'roomy'][Math.floor(layoutIndex / 4) % 3]
+  const variant = (preview.variant ?? look?.options.variant ?? layoutIndex % 4) as 0 | 1 | 2 | 3
+  const density =
+    preview.density ??
+    doc?.design?.density ??
+    look?.options.density ??
+    ['cozy', 'standard', 'roomy'][Math.floor(layoutIndex / 4) % 3]
   // Corners move with every build, not only after a layout pass, so adjacent
   // projects also differ in radius. The combined cycle is 6,912 with photos.
   const corners =
@@ -1190,8 +1208,8 @@ export function renderApp(
   // trade's own geometry stays in charge.
   const shape = (value: unknown) =>
     value === 'square' || value === 'soft' || value === 'round' ? value : undefined
-  const buttons = shape(preview.buttons)
-  const cards = shape(preview.cards)
+  const buttons = shape(preview.buttons) ?? doc?.design?.buttons ?? look?.options.buttons
+  const cards = shape(preview.cards) ?? doc?.design?.cards ?? look?.options.cards
   const accent = legibleAccent(doc?.accent || spec.accent, theme.dark)
   const onAccent = inkFor(accent)
   const drawer = spec.structure?.nav === 'drawer'
@@ -1294,7 +1312,7 @@ ${live ? '<link rel="manifest" href="./manifest.webmanifest" />' : ''}
 ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 <style>${CSS(ctx)}${presetCss(preset)}${DOC_CSS}</style>
 </head>
-<body data-trade="${vertical.id}" data-layout="${theme.layout}" data-shell="${shell}" data-variant="${variant}" data-density="${density}" data-corners="${corners}" data-media="${media}" data-nav="${drawer ? 'drawer' : theme.nav}" data-hero="${hero}" data-order="${order}" data-hero-scale="${heroScale}" data-accent-style="${theme.accentStyle}" data-theme="${theme.dark ? 'dark' : 'light'}"${buttons ? ` data-buttons="${buttons}"` : ''}${cards ? ` data-cards="${cards}"` : ''}${preset ? ` data-preset="${preset}"` : ''}${options.editor ? ' data-editor="1"' : ''}>
+<body data-trade="${vertical.id}" data-layout="${theme.layout}" data-shell="${shell}" data-variant="${variant}" data-density="${density}" data-corners="${corners}" data-media="${media}" data-nav="${drawer ? 'drawer' : theme.nav}" data-hero="${hero}" data-order="${order}" data-hero-scale="${heroScale}" data-accent-style="${theme.accentStyle}" data-theme="${theme.dark ? 'dark' : 'light'}"${look ? ` data-direction="${look.id}"` : ''}${doc?.design?.typography ? ` data-type="${doc.design.typography}"` : ''}${buttons ? ` data-buttons="${buttons}"` : ''}${cards ? ` data-cards="${cards}"` : ''}${preset ? ` data-preset="${preset}"` : ''}${options.editor ? ' data-editor="1"' : ''}>
   <div class="app">
     <div class="grain" aria-hidden="true"></div>
     <div class="offline" data-offline hidden>Offline — showing what is already stored</div>
@@ -1557,6 +1575,26 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       return '<img class="photo" src="' + urls[hash % urls.length] + '" alt="" loading="lazy" decoding="async" onerror="this.remove()" />'
     }
 
+    // A short, real recommendation rail: other items from the same catalogue,
+    // never invented content. It gives a sparse detail page a useful next step
+    // instead of a screen of empty space above the action bar.
+    function recsHtml(currentKey) {
+      const picks = []
+      DATA.menu.forEach(function (section, sectionIndex) {
+        section.items.forEach(function (entry, itemIndex) {
+          const key = sectionIndex + '-' + itemIndex
+          if (key !== currentKey && picks.length < 4) picks.push({ item: entry, key: key })
+        })
+      })
+      if (!picks.length) return ''
+      return '<div class="recs"><div class="recs-head"><b>You might also like</b><span>' + esc(DATA.catalogWord) + '</span></div><div class="rec-row">' +
+        picks.map(function (pick) {
+          return '<button class="rec" type="button" data-item="' + pick.key + '">' +
+            '<span class="thumb m-' + DATA.motif + ' rec-art">' + pickShot(pick.item.name, 'photoThumb') + '<span class="mono">' + esc(pick.item.name.slice(0, 1).toUpperCase()) + '</span></span>' +
+            '<span class="rec-copy"><b>' + esc(pick.item.name) + '</b><span class="rec-price">' + (pick.item.price > 0 ? money(pick.item.price) : 'On request') + '</span></span></button>'
+        }).join('') + '</div></div>'
+    }
+
     // Each shell opens an item its own way: a menu line, a class card, a
     // treatment sheet or a property listing — not one shared detail page.
     function detailHtml(item, key, price) {
@@ -1575,6 +1613,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           '<h1 class="menu-title">' + esc(item.name) + '</h1>' +
           (item.desc ? '<p class="lede">' + esc(item.desc) + '</p>' : '') +
           '<div class="menu-price"><span>' + esc(item.meta || 'House') + '</span><i></i><b class="price">' + price + '</b></div>' +
+          recsHtml(key) +
           '<div class="detail-gap" aria-hidden="true"></div>' +
           '<div class="detail-cta">' + (DATA.ordering && item.price > 0
             ? '<button class="btn accent block" type="button" data-add="' + key + '">Add to order</button>'
@@ -1589,6 +1628,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           '<div><b>' + esc(item.meta || '45 min') + '</b><span>Session</span></div>' +
           '<div><b class="price">' + price + '</b><span>Drop-in</span></div>' +
           '</div>' +
+          recsHtml(key) +
           '<div class="detail-gap" aria-hidden="true"></div>' +
           '<div class="detail-cta"><button class="btn accent block" type="button" data-go="book">' + DATA.bookTitle + '</button></div>' +
           '</div>'
@@ -1599,6 +1639,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           '<h1 class="care-title">' + esc(item.name) + '</h1>' +
           (item.desc ? '<p class="lede">' + esc(item.desc) + '</p>' : '') +
           '<div class="care-facts"><div><span>Time</span><b>' + esc(item.meta || '30 min') + '</b></div><div><span>Fee</span><b class="price">' + price + '</b></div></div>' +
+          recsHtml(key) +
           '<div class="detail-gap" aria-hidden="true"></div>' +
           '<div class="detail-cta">' + (DATA.phone ? '<a class="btn ghost" href="tel:' + DATA.phone.replace(/\s/g, '') + '">Call</a>' : '') +
           '<button class="btn accent" type="button" data-go="book">' + DATA.bookTitle + '</button></div>' +
@@ -1622,6 +1663,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           (item.vendor
             ? '<button class="agent store-link" type="button" data-store="' + esc(item.vendor) + '"><span class="thumb m-' + DATA.motif + ' agent-art"><span class="mono">' + esc(item.vendor.slice(0, 2).toUpperCase()) + '</span></span><div><b>' + esc(item.vendor) + '</b><span>Visit store</span></div></button>'
             : '<div class="agent"><span class="thumb m-' + DATA.motif + ' agent-art"><span class="mono">' + esc(DATA.logo) + '</span></span><div><b>' + esc(DATA.brand) + '</b><span>Your viewing agent</span></div></div>') +
+          recsHtml(key) +
           '<div class="detail-gap" aria-hidden="true"></div>' +
           '<div class="detail-cta">' + (DATA.ordering && item.price > 0
             ? '<button class="btn accent block" type="button" data-add="' + key + '">Add to order</button>'

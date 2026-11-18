@@ -481,6 +481,7 @@ app.get('/demo/app', async (c) => {
         buttons: axis('buttons'),
         cards: axis('cards'),
         preset: axis('preset'),
+        direction: axis('direction'),
       },
     }),
   )
