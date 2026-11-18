@@ -39,6 +39,7 @@ export function studioKeyPage(options: { configured: boolean; wrong?: boolean })
     title: 'Studio · Plattr',
     description: 'Operator sign-in for the Plattr build board.',
     body,
+    noindex: true,
   })
 }
 
@@ -149,5 +150,7 @@ export function studioPage(projects: Project[]): string {
     description: 'Every restaurant app build, plan and download in one board.',
     body,
     active: 'studio',
+    // Customer names, emails, quotes and tokens live here.
+    noindex: true,
   })
 }
