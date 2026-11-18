@@ -1,4 +1,4 @@
-import { page } from './shell'
+import { attr, esc, page } from './shell'
 
 /**
  * One short page for both privacy and terms: a brief is a tiny amount of
@@ -6,7 +6,15 @@ import { page } from './shell'
  * longer would be copy nobody reads. Written in the product's own voice, and
  * deliberately honest about what is not wired up yet.
  */
-export function legalPage(): string {
+export function legalPage(contactEmail?: string): string {
+  // A real inbox is published the moment CONTACT_EMAIL is set on the site;
+  // until then deletion runs through whoever sent the build link.
+  // TODO(launch): set CONTACT_EMAIL to a monitored address before announcing.
+  const email = (contactEmail ?? '').trim()
+  const contact = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : ''
+  const deletion = contact
+    ? `To have a build and the contact details attached to it removed, email <a href="mailto:${attr(contact)}">${esc(contact)}</a> with the build link or the business name. Deletion removes the project, its notes and its activity in one step.`
+    : `To have a build and the contact details attached to it removed, ask the person who sent you the build link; deletion removes the project, its notes and its activity in one step.`
   const body = `
   <div class="wrap-narrow" style="padding:54px 0 8px">
     <span class="eyebrow">Privacy &amp; terms</span>
@@ -25,7 +33,7 @@ export function legalPage(): string {
     <p class="small" style="margin-top:8px;color:var(--ink-soft);max-width:72ch">This site sets one cookie, and only after an operator unlocks the studio: an HttpOnly session cookie derived from the operator key. There are no tracking cookies. A generated app stores its cart and saved items in your browser's local storage, on that device only.</p>
 
     <h3 style="margin-top:22px">Who holds it, and for how long</h3>
-    <p class="small" style="margin-top:8px;color:var(--ink-soft);max-width:72ch">Builds and their details are stored in a Cloudflare database for the studio that produced them, and hosted by Cloudflare. A build stays until the operator deletes it. To have a build and the contact details attached to it removed, ask the person who sent you the link; deletion removes the project, its notes and its activity in one step.</p>
+    <p class="small" style="margin-top:8px;color:var(--ink-soft);max-width:72ch">Builds and their details are stored in a Cloudflare database for the studio that produced them, and hosted by Cloudflare. A build stays until the operator deletes it. ${deletion}</p>
 
     <h2 style="margin-top:44px">Terms</h2>
 

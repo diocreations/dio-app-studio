@@ -1,6 +1,6 @@
 import { Database } from 'bun:sqlite'
 import { describe, expect, test } from 'bun:test'
-import app from '../src/worker/index'
+import app, { visitorBucket } from '../src/worker/index'
 import { spendProjectBudget } from '../src/worker/db'
 
 /** The real SQL against an in-memory SQLite, as the db suite does. */
@@ -79,6 +79,30 @@ describe('the build endpoints are metered', () => {
     expect(((await response.json()) as { error: { code: string } }).error.code).toBe('rate_limited')
   })
 
+  test('changing X-Forwarded-For does not buy a new allowance', async () => {
+    const db = new MemoryD1() as unknown as D1Database
+    const call = (spoof: string) =>
+      app.request(
+        'https://plattr.example/api/projects',
+        {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', 'x-forwarded-for': spoof },
+          body: JSON.stringify(brief),
+        },
+        { DB: db, ASSETS: {} as Fetcher },
+      )
+    for (let index = 0; index < 3; index++) expect((await call(`10.0.0.${index}`)).status).toBe(201)
+    // A brand new forwarded address, same caller: still metered.
+    expect((await call('192.0.2.99')).status).toBe(429)
+  })
+
+  test('the bucket is a stable hash, and an absent header has its own', async () => {
+    const first = await visitorBucket('203.0.113.7')
+    expect(await visitorBucket('203.0.113.7')).toBe(first)
+    expect(await visitorBucket('198.51.100.9')).not.toBe(first)
+    expect(await visitorBucket(undefined)).not.toBe(first)
+  })
+
   test('an allowed build still creates a project', async () => {
     const response = await post(brief, new MemoryD1() as unknown as D1Database)
     expect(response.status).toBe(201)
@@ -105,5 +129,29 @@ describe('the published pages a stranger meets', () => {
     const terms = await app.request('https://plattr.example/terms', {}, env)
     expect(terms.status).toBe(301)
     expect(terms.headers.get('location')).toBe('/privacy')
+  })
+
+  test('deletion requests fall back to the operator until an inbox is set', async () => {
+    const env = { DB: new MemoryD1() as unknown as D1Database, ASSETS: {} as Fetcher }
+    const fallback = await (await app.request('https://plattr.example/privacy', {}, env)).text()
+    expect(fallback).toContain('ask the person who sent you the build link')
+    expect(fallback).not.toContain('mailto:')
+
+    const configured = await (
+      await app.request(
+        'https://plattr.example/privacy',
+        {},
+        { ...env, CONTACT_EMAIL: 'privacy@example.com' },
+      )
+    ).text()
+    expect(configured).toContain('mailto:privacy@example.com')
+    expect(configured).toContain('>privacy@example.com<')
+
+    // A malformed secret never becomes a broken link on a public page.
+    const broken = await (
+      await app.request('https://plattr.example/privacy', {}, { ...env, CONTACT_EMAIL: 'not an email' })
+    ).text()
+    expect(broken).not.toContain('mailto:')
+    expect(broken).toContain('ask the person who sent you the build link')
   })
 })

@@ -50,6 +50,8 @@ type Bindings = {
   STUDIO_KEY?: string
   /** Imports allowed per day. Unset uses the default; 0 closes the importer. */
   IMPORT_DAILY_CAP?: string
+  /** Published on the privacy page for deletion and data requests. */
+  CONTACT_EMAIL?: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -58,13 +60,15 @@ const app = new Hono<{ Bindings: Bindings }>()
 const PROJECTS_PER_VISITOR = 3
 const PROJECTS_PER_DAY = 40
 
-/** A short hash of the caller, so the daily counter never stores an address. */
-async function visitorBucket(c: {
-  req: { header: (name: string) => string | undefined }
-}): Promise<string> {
-  const ip =
-    c.req.header('cf-connecting-ip') ?? c.req.header('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local'
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip))
+/**
+ * A short hash of the caller, so the daily counter never stores an address.
+ *
+ * Only Cloudflare's own header is read: `X-Forwarded-For` is whatever the
+ * caller chose to send when the Worker is reachable without Cloudflare in
+ * front, so trusting it would hand out a fresh allowance per header value.
+ */
+export async function visitorBucket(ip: string | undefined): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip ?? 'unattributed'))
   return Array.from(new Uint8Array(digest))
     .slice(0, 8)
     .map((byte) => byte.toString(16).padStart(2, '0'))
@@ -158,7 +162,7 @@ function notFoundPage(): string {
 
 app.get('/', (c) => c.html(marketingPage()))
 
-app.get('/privacy', (c) => c.html(legalPage()))
+app.get('/privacy', (c) => c.html(legalPage(c.env.CONTACT_EMAIL)))
 
 // The terms live on the same page: one short document, one link to share.
 app.get('/terms', (c) => c.redirect('/privacy', 301))
@@ -470,7 +474,7 @@ app.post('/api/projects', async (c) => {
 
   // Public by design, so builds are metered before any row is written: three a
   // day from one connection, forty a day from everyone.
-  const visitor = await visitorBucket(c)
+  const visitor = await visitorBucket(c.req.header('cf-connecting-ip'))
   if (!(await spendProjectBudget(c.env.DB, `visitor:${visitor}`, PROJECTS_PER_VISITOR))) {
     c.header('Retry-After', '3600')
     return fail(c, 429, 'rate_limited', 'This connection has made its builds for today. Try again tomorrow.')

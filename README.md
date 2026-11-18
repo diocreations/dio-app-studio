@@ -191,6 +191,15 @@ Limits, stated plainly:
 - The free-text "anything else" ask is stored and shown, not auto-implemented:
   logic that needs a real backend (stock reservations, POS sync, ticketing) is
   quoted as custom work.
+- Builds are metered before anything is written: three a day per visitor and
+  forty a day for the studio (`project_budget` in D1). The visitor key is a
+  hash of Cloudflare's `cf-connecting-ip`; `X-Forwarded-For` is ignored on
+  purpose, because a caller can choose it and would otherwise get a fresh
+  allowance per header value. Requests with no connecting-IP (local dev) share
+  one bucket.
+- `/privacy` publishes the deletion contact from the `CONTACT_EMAIL` variable.
+  Unset, it tells people to ask whoever sent their build link — set it before
+  announcing the site.
 - `/studio` is gated by a single operator key: the `STUDIO_KEY` Worker secret,
 exchanged for an HMAC session cookie by `/studio/unlock`. With no key set the
 board returns a locked page instead of the customer list. Customer build links
