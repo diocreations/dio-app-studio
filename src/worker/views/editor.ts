@@ -218,6 +218,7 @@ button { cursor: pointer; }
   <button class="iconbtn" id="catalogBtn" title="Catalogue and offers" aria-label="Catalogue and offers">▤</button>
   <button class="iconbtn" id="history" title="Version history" aria-label="Version history">⟲</button>
   <button class="iconbtn" id="panelRight" title="Properties" aria-label="Properties">⚙</button>
+  <a class="btn ghost" href="/p/${esc(token)}/dashboard">Dashboard</a>
   <a class="btn ghost" href="/p/${esc(token)}" target="_blank" rel="noreferrer">Review page</a>
   <a class="btn primary" id="openApp" href="${esc(origin)}/p/${esc(token)}/app" target="_blank" rel="noreferrer">Open app ↗</a>
 </div>

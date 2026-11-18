@@ -1,4 +1,4 @@
-import { Hono } from 'hono'
+import { Hono, type Context } from 'hono'
 import { bodyLimit } from 'hono/body-limit'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
 import { renderApp, renderIcon, renderManifest, renderServiceWorker } from './app'
@@ -30,6 +30,19 @@ import {
 import { buildSpec, quote, sanitizeMenu, type VerticalId } from './pricing'
 import { applyCommand, docFromSpec, normalizeDoc } from './doc'
 import { editorPage } from './views/editor'
+import { dashboardPage } from './views/dashboard'
+import {
+  BusinessError,
+  createBooking,
+  createEnquiry,
+  createOrder,
+  dashboardData,
+  getBooking,
+  getOrder,
+  updateBookingStatus,
+  updateEnquiryStatus,
+  updateOrderStatus,
+} from './business'
 import {
   MediaError,
   deleteMedia,
@@ -908,6 +921,205 @@ app.delete('/api/projects/:token/media/:mediaId', async (c) => {
   } catch (error) {
     return mediaFailure(c, error)
   }
+})
+
+function businessFailure(c: Context, error: unknown): Response {
+  if (error instanceof BusinessError)
+    return c.json({ error: { code: error.code, message: error.message } }, error.status)
+  console.error('plattr_business_error', error)
+  return c.json({ error: { code: 'internal_error', message: 'That could not be saved. Try again.' } }, 500)
+}
+
+/** Customer app writes. Branded JSON only, no payment details, no client prices. */
+app.post(
+  '/p/:token/orders',
+  bodyLimit({ maxSize: 64 * 1024, onError: (c) => fail(c, 413, 'body_too_large', 'That order is too large.') }),
+  async (c) => {
+    const origin = c.req.header('origin')
+    if (origin && origin !== new URL(c.req.url).origin)
+      return fail(c, 403, 'cross_origin', 'Orders are placed from the customer app.')
+    const project = await loadProject(c)
+    if (!project) return fail(c, 404, 'not_found', 'No app with that link.')
+    const body = await readJson(c)
+    if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+    try {
+      const order = await createOrder(c.env.DB, project, body)
+      c.header('Cache-Control', 'private, no-store')
+      return c.json({ order: { id: order.id, number: order.number, status: order.status, total: order.total, createdAt: order.createdAt } }, 201)
+    } catch (error) {
+      return businessFailure(c, error)
+    }
+  },
+)
+
+app.get('/p/:token/orders/:orderId', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.json({ error: { code: 'not_found', message: 'No app with that link.' } }, 404)
+  const order = await getOrder(c.env.DB, project.id, c.req.param('orderId'))
+  if (!order) return c.json({ error: { code: 'not_found', message: 'That order could not be found.' } }, 404)
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({
+    order: {
+      id: order.id,
+      number: order.number,
+      status: order.status,
+      fulfilment: order.fulfilment,
+      total: order.total,
+      items: order.items.map((item) => ({ name: item.name, qty: item.qty })),
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+    },
+  })
+})
+
+app.post(
+  '/p/:token/bookings',
+  bodyLimit({ maxSize: 64 * 1024, onError: (c) => fail(c, 413, 'body_too_large', 'That booking is too large.') }),
+  async (c) => {
+    const origin = c.req.header('origin')
+    if (origin && origin !== new URL(c.req.url).origin)
+      return fail(c, 403, 'cross_origin', 'Bookings are requested from the customer app.')
+    const project = await loadProject(c)
+    if (!project) return fail(c, 404, 'not_found', 'No app with that link.')
+    const body = await readJson(c)
+    if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+    try {
+      const booking = await createBooking(c.env.DB, project, body)
+      c.header('Cache-Control', 'private, no-store')
+      return c.json({ booking: { id: booking.id, number: booking.number, status: booking.status, date: booking.date, slot: booking.slot } }, 201)
+    } catch (error) {
+      return businessFailure(c, error)
+    }
+  },
+)
+
+app.get('/p/:token/bookings/:bookingId', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.json({ error: { code: 'not_found', message: 'No app with that link.' } }, 404)
+  const booking = await getBooking(c.env.DB, project.id, c.req.param('bookingId'))
+  if (!booking) return c.json({ error: { code: 'not_found', message: 'That booking could not be found.' } }, 404)
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({ booking: { id: booking.id, number: booking.number, status: booking.status, date: booking.date, slot: booking.slot, party: booking.party, service: booking.service } })
+})
+
+app.post(
+  '/p/:token/enquiries',
+  bodyLimit({ maxSize: 64 * 1024, onError: (c) => fail(c, 413, 'body_too_large', 'That enquiry is too large.') }),
+  async (c) => {
+    const origin = c.req.header('origin')
+    if (origin && origin !== new URL(c.req.url).origin)
+      return fail(c, 403, 'cross_origin', 'Enquiries are sent from the customer app.')
+    const project = await loadProject(c)
+    if (!project) return fail(c, 404, 'not_found', 'No app with that link.')
+    const body = await readJson(c)
+    if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+    try {
+      const enquiry = await createEnquiry(c.env.DB, project, body)
+      c.header('Cache-Control', 'private, no-store')
+      return c.json({ enquiry: { id: enquiry.id, status: enquiry.status } }, 201)
+    } catch (error) {
+      return businessFailure(c, error)
+    }
+  },
+)
+
+app.get('/p/:token/dashboard', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.html(notFoundPage(), 404)
+  const data = await dashboardData(c.env.DB, project)
+  c.header('Cache-Control', 'private, no-store')
+  return c.html(dashboardPage({ project, data, origin: new URL(c.req.url).origin }))
+})
+
+app.get('/api/projects/:token/dashboard', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  c.header('Cache-Control', 'private, no-store')
+  return c.json(await dashboardData(c.env.DB, project))
+})
+
+app.patch('/api/projects/:token/orders/:orderId', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin) return fail(c, 403, 'cross_origin', 'Update orders from the dashboard.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  try {
+    const order = await updateOrderStatus(c.env.DB, project.id, c.req.param('orderId'), str(body.status, 20))
+    c.header('Cache-Control', 'private, no-store')
+    return c.json({ order: { id: order.id, status: order.status, updatedAt: order.updatedAt } })
+  } catch (error) {
+    return businessFailure(c, error)
+  }
+})
+
+app.patch('/api/projects/:token/bookings/:bookingId', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin) return fail(c, 403, 'cross_origin', 'Update bookings from the dashboard.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  try {
+    const booking = await updateBookingStatus(c.env.DB, project.id, c.req.param('bookingId'), str(body.status, 20))
+    c.header('Cache-Control', 'private, no-store')
+    return c.json({ booking: { id: booking.id, status: booking.status, updatedAt: booking.updatedAt } })
+  } catch (error) {
+    return businessFailure(c, error)
+  }
+})
+
+app.patch('/api/projects/:token/enquiries/:enquiryId', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin) return fail(c, 403, 'cross_origin', 'Update enquiries from the dashboard.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  try {
+    const enquiry = await updateEnquiryStatus(c.env.DB, project.id, c.req.param('enquiryId'), str(body.status, 20))
+    c.header('Cache-Control', 'private, no-store')
+    return c.json({ enquiry: { id: enquiry.id, status: enquiry.status } })
+  } catch (error) {
+    return businessFailure(c, error)
+  }
+})
+
+/** Owner-facing content settings that do not create a new design version. */
+app.put('/api/projects/:token/app-settings', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin) return fail(c, 403, 'cross_origin', 'Settings are saved from the dashboard.')
+  const type = (c.req.header('content-type') ?? '').split(';')[0].trim().toLowerCase()
+  if (type !== 'application/json') return fail(c, 415, 'unsupported_media_type', 'Send a JSON body.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  const name = str(body.name, 60) || project.name
+  if (name.length < 2) return fail(c, 422, 'name_required', 'Add the business name.')
+  const spec = {
+    ...project.spec,
+    name,
+    tagline: str(body.tagline, 90) || project.spec.tagline,
+    story: str(body.story, 600) || project.spec.story,
+    hours: str(body.hours, 90) || project.spec.hours,
+    address: str(body.address, 60) || project.spec.address,
+    phone: str(body.phone, 24) || project.spec.phone,
+    email: str(body.email, 80) || project.spec.email,
+    category: str(body.category, 40) || project.spec.category,
+    staff: str(body.staff, 500)
+      .split(',')
+      .map((person) => person.trim().slice(0, 40))
+      .filter(Boolean)
+      .slice(0, 12),
+  }
+  await c.env.DB
+    .prepare('UPDATE projects SET name = ?, spec = ?, updated_at = ? WHERE id = ?')
+    .bind(name, JSON.stringify(spec), new Date().toISOString(), project.id)
+    .run()
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({ ok: true, spec })
 })
 
 app.put('/api/projects/:token/catalog', async (c) => {

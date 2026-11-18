@@ -112,6 +112,7 @@ export function workspacePage(options: {
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <button class="btn small ghost" type="button" data-copy="${origin}/p/${project.token}">Copy review link</button>
         <a class="btn small primary" href="/p/${project.token}/edit">Customise my app</a>
+        <a class="btn small" href="/p/${project.token}/dashboard">Business dashboard</a>
         <a class="btn small ghost" href="/p/${project.token}/app" target="_blank" rel="noreferrer">Preview application &#8599;</a>
       </div>
     </div>

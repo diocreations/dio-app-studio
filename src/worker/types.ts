@@ -133,6 +133,8 @@ export type AppSpec = {
   loyalty: { goal: number; reward: string }
   /** Free-text requirements that no generator field covered. */
   custom: string
+  /** Named team members a customer may request for an appointment. */
+  staff?: string[]
   /** The design they chose on the brief, so the build matches the preview. */
   layout?: LayoutChoice
   /** The look read from their own site: palette, type, corners, light or dark. */

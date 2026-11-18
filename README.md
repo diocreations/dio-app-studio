@@ -10,7 +10,12 @@ project.
 Every build is an app shell rather than a page: splash, fixed chrome, pushed
 detail screens, bottom sheets, haptics, safe-area insets, and a design system
 that changes with the trade (four layout archetypes, three navigation styles,
-twelve palettes and type pairings).
+twelve palettes and type pairings). Out of the box it also takes real guest
+orders, booking requests and enquiries into D1, and the owner gets a separate
+business dashboard at `/p/:token/dashboard` for the day-to-day work. Payments
+and external notifications stay off until the business's own merchant and
+provider accounts are configured; see `docs/PAYMENTS.md` and
+`docs/NOTIFICATIONS.md`.
 
 ## Run and check
 
@@ -74,11 +79,17 @@ prose. `/brief` links to it from the website panel.
 - `src/worker/db.ts` — D1 schema/migrations, versioning, notes and activity.
 - `src/worker/doc.ts` — the shared section document: model, normalisation, operations, local design commands.
 - `src/worker/media.ts` — R2 media: magic-byte validation, content-addressed WebP variants, D1 metadata, quotas, private delivery and reference-checked deletion.
+- `src/worker/business.ts` — the operating layer: guest orders, bookings, enquiries, customers, status transitions, notification outbox and dashboard analytics.
+- `src/worker/views/dashboard.ts` — the separate business dashboard for orders, bookings, catalogue, customers, enquiries, offers, analytics and settings.
 - `src/worker/views/editor.ts` — the three-pane visual editor and its canvas bridge.
 - `src/worker/views/*` — marketing, brief, customer build page, operator board.
 - `docs/EDITOR.md` — editor architecture, what is shared with the app, and what is next.
 - `docs/MOBILE.md` — the screen application model, PWA vs native distribution, and remaining work.
 - `docs/DESIGN.md` — the generated-app design audit, direction system, tokens and media pipeline.
+- `docs/FUNCTIONAL_AUDIT.md` — honest feature status across all 27 trades.
+- `docs/OPERATIONS.md` — Studio/dashboard/customer-app boundaries, permissions and customer-account assessment.
+- `docs/PAYMENTS.md` — business-owned Razorpay/Stripe ownership, settlement and refund architecture (not yet implemented).
+- `docs/NOTIFICATIONS.md` — notification outbox, consent and delivery-provider assessment (not yet connected).
 
 ## Starting from an existing website
 

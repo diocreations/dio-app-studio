@@ -702,9 +702,13 @@ function addedBlock(ctx: Ctx, node: DocNode): string {
       if (ctx.quoting) return `${quoteBlock(ctx)}`
       return `<div class="card" style="padding:18px;margin:10px 0">
         <b>${esc(title || 'Send a message')}</b>
-        <p class="tiny dim" style="margin:6px 0 12px">Call or email and we will reply the same day.</p>
-        ${ctx.spec.phone ? `<a class="btn ghost block" href="tel:${esc(ctx.spec.phone.replace(/\s/g, ''))}">Call ${esc(ctx.spec.phone)}</a>` : ''}
-        ${ctx.spec.email ? `<a class="btn accent block" href="mailto:${esc(ctx.spec.email)}" style="margin-top:8px">Email us</a>` : ''}
+        <p class="tiny dim" style="margin:6px 0 12px">Goes straight to the business dashboard — no account needed.</p>
+        <div class="field"><label for="contact-name">Your name</label><input id="contact-name" type="text" maxlength="60" data-quote-name placeholder="Name" autocomplete="name" /></div>
+        <div class="field"><label for="contact-contact">Phone or email</label><input id="contact-contact" type="text" maxlength="120" data-quote-contact placeholder="How to reach you" autocomplete="tel" /></div>
+        <div class="field"><label for="contact-message">Message</label><textarea id="contact-message" rows="3" data-quote-message placeholder="How can we help?"></textarea></div>
+        <button class="btn accent block" type="button" data-quote-send>Send message</button>
+        ${ctx.spec.phone ? `<a class="btn ghost block" href="tel:${esc(ctx.spec.phone.replace(/\s/g, ''))}" style="margin-top:8px">Call ${esc(ctx.spec.phone)}</a>` : ''}
+        ${ctx.spec.email ? `<a class="btn ghost block" href="mailto:${esc(ctx.spec.email)}" style="margin-top:8px">Email us</a>` : ''}
       </div>`
     case 'story':
       return storyBlock(ctx)
@@ -897,6 +901,8 @@ function homeBlock(ctx: Ctx): string {
 }
 
 function bookingBlock(ctx: Ctx): string {
+  const services = ctx.spec.menu.flatMap((section) => section.items).filter((item) => item.name)
+  const staff = ctx.spec.staff ?? []
   return `<div class="sect" style="margin-top:4px"><span class="label">${esc(ctx.vocab.partyLabel)}</span></div>
     <div class="card" style="padding:16px;margin-bottom:10px">
       <div class="stepper">
@@ -913,7 +919,23 @@ function bookingBlock(ctx: Ctx): string {
            <div class="slots" data-slots></div>`
         : ''
     }
-    <button class="btn accent block" type="button" data-book style="margin-top:18px">Confirm</button>
+    ${
+      ctx.spec.vertical !== 'restaurant' && services.length
+        ? `<div class="field"><label for="book-service">Service</label><select id="book-service" data-book-service>${services
+            .map((item) => `<option value="${esc(item.name)}">${esc(item.name)}</option>`)
+            .join('')}</select></div>`
+        : ''
+    }
+    ${
+      staff.length
+        ? `<div class="field"><label for="book-staff">Team member</label><select id="book-staff" data-book-staff><option value="">No preference</option>${staff
+            .map((person) => `<option value="${esc(person)}">${esc(person)}</option>`)
+            .join('')}</select></div>`
+        : ''
+    }
+    <div class="field"><label for="book-name">Your name</label><input id="book-name" type="text" maxlength="60" data-book-name placeholder="Name" autocomplete="name" /></div>
+    <div class="field"><label for="book-contact">Phone or email</label><input id="book-contact" type="text" maxlength="120" data-book-contact placeholder="How to reach you" autocomplete="tel" /></div>
+    <button class="btn accent block" type="button" data-book style="margin-top:18px">Request booking</button>
     <p class="tiny dim" style="text-align:center;margin-top:10px">${esc(ctx.spec.hours)}</p>`
 }
 
@@ -924,7 +946,7 @@ function quoteBlock(ctx: Ctx): string {
     <div class="field"><label for="q-contact">Phone or email</label><input id="q-contact" type="text" data-quote-contact placeholder="How to reach you" /></div>
     <div class="field"><label for="q-msg">What do you need?</label><textarea id="q-msg" rows="4" data-quote-message placeholder="A sentence is fine"></textarea></div>
     <button class="btn accent block" type="button" data-quote-send>Send request</button>
-    <p class="tiny dim" style="text-align:center;margin-top:10px">Demo form — nothing leaves this app.</p>`
+    <p class="tiny dim" style="text-align:center;margin-top:10px">Goes straight to the business dashboard. No account needed.</p>`
 }
 
 function moreBlock(ctx: Ctx): string {
@@ -985,6 +1007,11 @@ function moreBlock(ctx: Ctx): string {
       ctx.quoting
         ? `<div class="sect"><span class="label">${esc(ctx.vocab.quoteTitle)}</span></div>
            <button class="btn ghost block" type="button" data-go="quote">Open the form</button>`
+        : ''
+    }
+    ${
+      ctx.ordering || ctx.booking
+        ? `<div class="sect"><span class="label">Your activity</span></div><div data-history></div>`
         : ''
     }
     <div class="sect"><span class="label">Yours</span></div>
@@ -1476,8 +1503,10 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
               .join('')}
           </div>
           <div class="totals" data-totals></div>
+          <div class="field" style="margin-top:12px"><label for="checkout-name">Your name</label><input id="checkout-name" type="text" maxlength="60" data-checkout-name placeholder="Name" autocomplete="name" /></div>
+          <div class="field"><label for="checkout-contact">Phone or email</label><input id="checkout-contact" type="text" maxlength="120" data-checkout-contact placeholder="How the business reaches you" autocomplete="tel" /></div>
           <button class="btn accent block" type="button" data-place style="margin-top:12px">Place order</button>
-          <p class="tiny dim" style="text-align:center;margin-top:9px">Demo checkout — no payment taken.</p>
+          <p class="tiny dim" style="text-align:center;margin-top:9px">No payment is taken in the app. Pay the business on collection or delivery.</p>
         </div>
         <div data-cart-done hidden></div>
       </div>
@@ -1520,12 +1549,21 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     const hadDeadFilter = !!stored && typeof stored === 'object' && 'filter' in stored
     if (hadDeadFilter) delete stored.filter
     const state = Object.assign(
-      { cart: {}, stamps: 0, orderType: DATA.fulfilment[0], party: 2, day: 0, slot: null, stars: 0, saved: {}, recent: [] },
+      { cart: {}, stamps: 0, orderType: DATA.fulfilment[0], party: 2, day: 0, slot: null, stars: 0, saved: {}, recent: [], orders: [], bookings: [], customerName: '', customerContact: '' },
       stored,
     )
     if (!state.saved || typeof state.saved !== 'object') state.saved = {}
     if (!Array.isArray(state.recent)) state.recent = []
+    if (!Array.isArray(state.orders)) state.orders = []
+    if (!Array.isArray(state.bookings)) state.bookings = []
     const save = () => localStorage.setItem(KEY, JSON.stringify(state))
+    const postJson = async (path, body) => {
+      const response = await fetch(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
+      const payload = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error((payload.error && payload.error.message) || 'That could not be sent. Try again.')
+      return payload
+    }
+    const contactFields = (contact) => ({ phone: contact.includes('@') ? '' : contact, email: contact.includes('@') ? contact : '' })
     if (hadDeadFilter) save()
     const $ = (sel) => document.querySelector(sel)
     const all = (sel) => Array.from(document.querySelectorAll(sel))
@@ -1843,6 +1881,41 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         : '<div class="empty">Nothing saved yet.<br />Tap the heart on anything you like and it lives here — on this phone, offline.</div>'
     }
 
+    function renderHistory() {
+      const host = $('[data-history]')
+      if (!host) return
+      const entries = [
+        ...state.orders.map((order) => ({ kind: 'Order', number: order.number, detail: order.status, date: order.createdAt, total: order.total })),
+        ...state.bookings.map((booking) => ({ kind: 'Booking', number: booking.number, detail: booking.status + (booking.date ? ' · ' + booking.date + (booking.slot ? ' ' + booking.slot : '') : ''), date: booking.date, total: null })),
+      ]
+      host.innerHTML = entries.length
+        ? '<div class="info" style="display:grid;gap:8px">' + entries.slice(0, 6).map((entry) =>
+            '<div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline"><span><b>' + esc(entry.kind) + ' #' + esc(entry.number) + '</b><br /><small class="tiny dim">' + esc(entry.detail) + '</small></span>' +
+            (entry.total == null ? '' : '<b class="price">' + money(entry.total) + '</b>') + '</div>').join('') + '</div>'
+        : '<p class="tiny dim">Orders and bookings you make on this device will be listed here. No account is needed to browse or order.</p>'
+    }
+
+    async function refreshHistory() {
+      let changed = false
+      for (const order of state.orders.slice(0, 5)) {
+        try {
+          const response = await fetch('/p/' + DATA.token + '/orders/' + encodeURIComponent(order.id))
+          if (!response.ok) continue
+          const payload = await response.json()
+          if (payload.order && payload.order.status !== order.status) { order.status = payload.order.status; changed = true }
+        } catch (error) {}
+      }
+      for (const booking of state.bookings.slice(0, 5)) {
+        try {
+          const response = await fetch('/p/' + DATA.token + '/bookings/' + encodeURIComponent(booking.id))
+          if (!response.ok) continue
+          const payload = await response.json()
+          if (payload.booking && payload.booking.status !== booking.status) { booking.status = payload.booking.status; changed = true }
+        } catch (error) {}
+      }
+      if (changed) { save(); renderHistory() }
+    }
+
     function searchHits(query) {
       const term = query.trim().toLowerCase()
       if (!term) return []
@@ -1966,25 +2039,44 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       toast((item ? item.name : 'Added') + ' added')
     }
 
-    function placeOrder() {
+    async function placeOrder() {
       const totals = cartTotals()
       if (!totals.lines.length) return
-      const number = 100 + Math.floor(Math.random() * 900)
-      const copy = state.orderType === 'Delivery' ? '35–45 min' : state.orderType === 'Pickup' ? '12–18 min' : '15–20 min'
-      if (DATA.loyalty) state.stamps = Math.min(DATA.goal, state.stamps + 1)
-      state.cart = {}
-      save()
-      renderCart()
-      renderStamps()
-      $('[data-cart]').hidden = true
-      $('[data-cart-foot]').hidden = true
-      const done = $('[data-cart-done]')
-      done.hidden = false
-      done.innerHTML =
-        '<div class="done"><div class="tick">✓</div><h2>Order #' + number + '</h2>' +
-        '<p>' + state.orderType + ' · ready in ' + copy + '<br />' + money(totals.total) + ' · paid on collection</p>' +
-        '<button class="btn block" type="button" data-close-sheet style="margin-top:16px">Done</button></div>'
-      buzz([10, 40, 16])
+      const name = ($('[data-checkout-name]')?.value || '').trim()
+      const contact = ($('[data-checkout-contact]')?.value || '').trim()
+      if (name.length < 2) return toast('Add your name so the business knows who ordered')
+      if (contact.length < 5) return toast('Add a phone number or email address')
+      const button = $('[data-place]')
+      if (button) button.disabled = true
+      try {
+        const payload = await postJson('/p/' + DATA.token + '/orders', {
+          customer: Object.assign({ name }, contactFields(contact)),
+          fulfilment: state.orderType,
+          items: totals.lines.map(([key, qty]) => ({ key, qty })),
+        })
+        const order = payload.order
+        state.orders = [{ id: order.id, number: order.number, status: order.status, total: order.total, createdAt: order.createdAt }, ...state.orders].slice(0, 12)
+        state.customerName = name
+        state.customerContact = contact
+        if (DATA.loyalty) state.stamps = Math.min(DATA.goal, state.stamps + 1)
+        state.cart = {}
+        save()
+        renderCart()
+        renderStamps()
+        renderHistory()
+        $('[data-cart]').hidden = true
+        $('[data-cart-foot]').hidden = true
+        const done = $('[data-cart-done]')
+        done.hidden = false
+        done.innerHTML =
+          '<div class="done"><div class="tick">✓</div><h2>Order #' + esc(order.number) + '</h2>' +
+          '<p>' + esc(state.orderType) + ' · ' + money(order.total) + '<br />Sent to ' + esc(DATA.brand) + '. They will confirm when it is ready.</p>' +
+          '<button class="btn block" type="button" data-close-sheet style="margin-top:16px">Done</button></div>'
+        buzz([10, 40, 16])
+      } catch (error) {
+        toast(error && error.message ? error.message : 'The order could not be sent.')
+        if (button) button.disabled = false
+      }
     }
 
     function buildBooking() {
@@ -2031,14 +2123,63 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       openSheet('note')
     }
 
-    function book() {
+    async function submitEnquiry() {
+      const name = $('[data-quote-name]').value.trim()
+      const contact = $('[data-quote-contact]').value.trim()
+      const message = $('[data-quote-message]').value.trim()
+      if (name.length < 2) return toast('Add your name')
+      if (contact.length < 5) return toast('Add a phone number or email address')
+      if (message.length < 5) return toast('Add a sentence about what you need')
+      const button = $('[data-quote-send]')
+      if (button) button.disabled = true
+      try {
+        await postJson('/p/' + DATA.token + '/enquiries', { name, contact, message })
+        note('<div class="done"><div class="tick">✓</div><h2>Request sent</h2><p>Thanks ' + esc(name) +
+          ' — the business will reply on ' + esc(contact) + '. Your request is now in their dashboard.</p>' +
+          '<button class="btn block" type="button" data-close-sheet style="margin-top:16px">Done</button></div>')
+        $('[data-quote-message]').value = ''
+      } catch (error) {
+        toast(error && error.message ? error.message : 'The request could not be sent.')
+      } finally {
+        if (button) button.disabled = false
+      }
+    }
+
+    async function book() {
       const chip = $('[data-days] .chip.on')
       const dayLabel = chip ? chip.textContent : 'Today'
-      const when = state.slot ? dayLabel + ' at ' + state.slot : dayLabel
-      note('<div class="done"><div class="tick">✓</div><h2>Request confirmed</h2>' +
-        '<p>' + when + ' · ' + state.party + ' ' + DATA.partyLabel.toLowerCase() + '<br />We will text you if anything changes.</p>' +
-        '<button class="btn block" type="button" data-close-sheet style="margin-top:16px">Done</button></div>')
-      buzz([10, 40, 16])
+      const date = new Date()
+      date.setDate(date.getDate() + Number(state.day || 0))
+      const iso = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0')
+      const name = ($('[data-book-name]')?.value || '').trim()
+      const contact = ($('[data-book-contact]')?.value || '').trim()
+      if (name.length < 2) return toast('Add your name so the business can confirm')
+      if (contact.length < 5) return toast('Add a phone number or email address')
+      const button = $('[data-book]')
+      if (button) button.disabled = true
+      try {
+        const payload = await postJson('/p/' + DATA.token + '/bookings', {
+          customer: Object.assign({ name }, contactFields(contact)),
+          date: iso,
+          slot: state.slot || '',
+          party: state.party,
+          service: ($('[data-book-service]')?.value || ''),
+          staff: ($('[data-book-staff]')?.value || ''),
+        })
+        const booking = payload.booking
+        state.bookings = [{ id: booking.id, number: booking.number, status: booking.status, date: booking.date, slot: booking.slot }, ...state.bookings].slice(0, 12)
+        state.customerName = name
+        state.customerContact = contact
+        save()
+        renderHistory()
+        note('<div class="done"><div class="tick">✓</div><h2>Request sent</h2>' +
+          '<p>' + esc(dayLabel) + (state.slot ? ' at ' + esc(state.slot) : '') + ' · ' + state.party + ' ' + DATA.partyLabel.toLowerCase() + '<br />The business will confirm this request. You can check its status in More.</p>' +
+          '<button class="btn block" type="button" data-close-sheet style="margin-top:16px">Done</button></div>')
+        buzz([10, 40, 16])
+      } catch (error) {
+        toast(error && error.message ? error.message : 'The booking could not be sent.')
+        if (button) button.disabled = false
+      }
     }
 
     document.addEventListener('click', (event) => {
@@ -2133,14 +2274,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         }
         return toast('Spot reserved')
       }
-      if (target.dataset.quoteSend !== undefined) {
-        const name = $('[data-quote-name]').value.trim()
-        const contact = $('[data-quote-contact]').value.trim()
-        if (!name || !contact) return toast('Name and a contact, please')
-        return note('<div class="done"><div class="tick">✓</div><h2>Request sent</h2><p>Thanks ' + esc(name) +
-          ' — we will reply on ' + esc(contact) + ' within one working day.</p>' +
-          '<button class="btn block" type="button" data-close-sheet style="margin-top:16px">Done</button></div>')
-      }
+      if (target.dataset.quoteSend !== undefined) return submitEnquiry()
       if (target.matches('.stars span')) {
         const stars = all('.stars span')
         const index = stars.indexOf(target)
@@ -2265,9 +2399,19 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       })
     }
 
+    const checkoutName = $('[data-checkout-name]')
+    const checkoutContact = $('[data-checkout-contact]')
+    if (checkoutName) checkoutName.value = state.customerName || ''
+    if (checkoutContact) checkoutContact.value = state.customerContact || ''
+    const bookingName = $('[data-book-name]')
+    const bookingContact = $('[data-book-contact]')
+    if (bookingName) bookingName.value = state.customerName || ''
+    if (bookingContact) bookingContact.value = state.customerContact || ''
     applyHearts()
     setFilter('all', true)
     renderSaved()
+    renderHistory()
+    refreshHistory()
     renderSearch()
     renderCart()
     renderStamps()
