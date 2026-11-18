@@ -356,6 +356,8 @@ export function workspacePage(options: {
     description: `Live build of ${project.name} — review, edit and package.`,
     body,
     script: workspaceScript(project),
+    // The token is the only way in; this page must never surface in search.
+    noindex: true,
   })
 }
 

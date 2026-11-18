@@ -13,6 +13,7 @@ describe('what a crawler is told', () => {
     expect(body).toContain('Disallow: /studio')
     expect(body).toContain('Disallow: /p/')
     expect(body).toContain('Disallow: /api/')
+    expect(body).toContain('Disallow: /demo/')
     expect(body).toContain('Sitemap: https://plattr.example/sitemap.xml')
     // The share-tag middleware must leave non-HTML alone.
     expect(body).not.toContain('og:title')
@@ -34,6 +35,7 @@ describe('what a crawler is told', () => {
     const robots = await (
       await app.request('https://plattr-studio-67t93q-preview.freebuff.page/robots.txt', {}, env)
     ).text()
-    expect(robots).toContain('https://plattr-studio-67t93q-preview.freebuff.page/sitemap.xml')
+    // A preview is a public copy; it must never be crawled alongside production.
+    expect(robots).toBe('User-agent: *\nDisallow: /\n')
   })
 })

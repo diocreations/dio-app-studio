@@ -219,9 +219,16 @@ function notFoundPage(): string {
 app.get('/', (c) => c.html(marketingPage()))
 
 app.get('/robots.txt', (c) => {
-  const origin = new URL(c.req.url).origin
+  const url = new URL(c.req.url)
+  // A preview copy must never compete with production in search results.
+  if (url.hostname.includes('-preview.'))
+    return c.body('User-agent: *\nDisallow: /\n', 200, {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600',
+    })
+  const origin = url.origin
   return c.body(
-    `User-agent: *\nAllow: /\nDisallow: /studio\nDisallow: /p/\nDisallow: /api/\n\nSitemap: ${origin}/sitemap.xml\n`,
+    `User-agent: *\nAllow: /\nDisallow: /studio\nDisallow: /p/\nDisallow: /api/\nDisallow: /demo/\n\nSitemap: ${origin}/sitemap.xml\n`,
     200,
     { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' },
   )
@@ -329,6 +336,7 @@ app.get('/p/:token/app', async (c) => {
       version: project.version,
       slot: project.variationSlot ?? undefined,
       photos,
+      noindex: true,
     }),
   )
 })

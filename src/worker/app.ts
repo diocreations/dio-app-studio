@@ -872,6 +872,8 @@ export function renderApp(
     preview?: PreviewOverrides
     /** Trade-matched photo URLs, resolved by the server. Omitted means artwork. */
     photos?: { wide?: string[]; thumb?: string[] }
+    /** Customer builds stay out of search; demo builds remain indexable. */
+    noindex?: boolean
   },
 ): string {
   const live = options.live !== false
@@ -1032,6 +1034,7 @@ export function renderApp(
 <title>${esc(`${spec.name} · ${spec.kind}`)}</title>
 <meta name="description" content="${esc(spec.tagline)}" />
 <meta name="theme-color" content="${theme.bg}" />
+${options.noindex ? '<meta name="robots" content="noindex, nofollow" />' : ''}
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="${theme.dark ? 'black-translucent' : 'default'}" />

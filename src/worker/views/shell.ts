@@ -239,6 +239,8 @@ export function page(options: {
   active?: 'home' | 'studio'
   script?: string
   bare?: boolean
+  /** Private pages: keep them out of search results entirely. */
+  noindex?: boolean
 }): string {
   const nav = `
   <nav class="nav">
@@ -262,6 +264,7 @@ export function page(options: {
 <title>${esc(options.title)}</title>
 ${options.description ? `<meta name="description" content="${attr(options.description)}" />` : ''}
 <meta name="theme-color" content="#fbf6ee" />
+${options.noindex ? '<meta name="robots" content="noindex, nofollow" />' : ''}
 <link rel="icon" href="/favicon.ico" sizes="32x32" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
