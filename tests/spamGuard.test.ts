@@ -1,0 +1,109 @@
+import { Database } from 'bun:sqlite'
+import { describe, expect, test } from 'bun:test'
+import app from '../src/worker/index'
+import { spendProjectBudget } from '../src/worker/db'
+
+/** The real SQL against an in-memory SQLite, as the db suite does. */
+class MemoryD1 {
+  private db = new Database(':memory:')
+
+  prepare(sql: string) {
+    const run = (params: unknown[]) => {
+      this.db.prepare(sql).run(...(params as never[]))
+      return { success: true, meta: {} }
+    }
+    const first = (params: unknown[]) => this.db.prepare(sql).get(...(params as never[])) ?? null
+    const all = (params: unknown[]) => ({ results: this.db.prepare(sql).all(...(params as never[])) })
+    const bound = (params: unknown[]) => ({
+      run: async () => run(params),
+      first: async () => first(params),
+      all: async () => all(params),
+    })
+    return {
+      bind: (...params: unknown[]) => bound(params),
+      run: async () => run([]),
+      first: async () => first([]),
+      all: async () => all([]),
+    }
+  }
+}
+
+/** A database whose counters are already spent. */
+function spentDb() {
+  const statement = {
+    bind: () => statement,
+    run: async () => ({ success: true, meta: {} }),
+    first: async () => null,
+    all: async () => ({ results: [] }),
+  }
+  return { prepare: () => statement } as unknown as D1Database
+}
+
+function post(body: unknown, db: D1Database) {
+  return app.request(
+    'https://plattr.example/api/projects',
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+    { DB: db, ASSETS: {} as Fetcher },
+  )
+}
+
+const brief = {
+  name: 'Guard Probe',
+  vertical: 'shop',
+  accent: '#2a5a8f',
+  logo: 'GP',
+  features: ['catalog'],
+  platforms: ['pwa'],
+  plan: 'onetime',
+}
+
+describe('the build endpoints are metered', () => {
+  test('a bucket allows its limit, then refuses, and the next day is fresh', async () => {
+    const db = new MemoryD1() as unknown as D1Database
+    for (let index = 0; index < 3; index++) {
+      expect(await spendProjectBudget(db, 'visitor:abc', 3, '2026-11-18')).toBe(true)
+    }
+    expect(await spendProjectBudget(db, 'visitor:abc', 3, '2026-11-18')).toBe(false)
+    expect(await spendProjectBudget(db, 'visitor:abc', 3, '2026-11-19')).toBe(true)
+    // Another visitor counts separately.
+    expect(await spendProjectBudget(db, 'visitor:def', 3, '2026-11-18')).toBe(true)
+  })
+
+  test('a visitor over the line is refused before anything is written', async () => {
+    const response = await post(brief, spentDb())
+    expect(response.status).toBe(429)
+    expect(((await response.json()) as { error: { code: string } }).error.code).toBe('rate_limited')
+  })
+
+  test('an allowed build still creates a project', async () => {
+    const response = await post(brief, new MemoryD1() as unknown as D1Database)
+    expect(response.status).toBe(201)
+    const body = (await response.json()) as { token: string; quote: { oneTime: number } }
+    expect(body.token).toMatch(/^[0-9a-f]{24}$/)
+    expect(body.quote.oneTime).toBeGreaterThan(0)
+  })
+})
+
+describe('the published pages a stranger meets', () => {
+  test('privacy and terms are one page, linked from the site footer', async () => {
+    const env = { DB: new MemoryD1() as unknown as D1Database, ASSETS: {} as Fetcher }
+    const legal = await app.request('https://plattr.example/privacy', {}, env)
+    expect(legal.status).toBe(200)
+    const html = await legal.text()
+    expect(html).toContain('Privacy')
+    expect(html).toContain('Terms')
+    expect(html).toContain('Last updated')
+    expect(html).toContain('delet')
+
+    const home = await app.request('https://plattr.example/', {}, env)
+    expect(await home.text()).toContain('href="/privacy"')
+
+    const terms = await app.request('https://plattr.example/terms', {}, env)
+    expect(terms.status).toBe(301)
+    expect(terms.headers.get('location')).toBe('/privacy')
+  })
+})

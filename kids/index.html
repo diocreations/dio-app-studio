@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sprout — play &amp; learn</title>
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap");
+
+  * { box-sizing: border-box; }
+  :root {
+    --ink: #2d2350;
+    --ink-soft: #6f6693;
+    --paper: #fffdf8;
+    --coral: #ff7b7b; --coral-soft: #ffe3e3;
+    --sun: #ffc83d; --sun-soft: #fff1cb;
+    --mint: #2fd3af; --mint-soft: #d8f8ef;
+    --grape: #9d7bff; --grape-soft: #ece4ff;
+    --sky: #5ac1ff; --sky-soft: #ddf1ff;
+    --display: "Baloo 2", ui-rounded, "SF Pro Rounded", "Trebuchet MS", sans-serif;
+    --body: "Nunito", ui-rounded, system-ui, sans-serif;
+    --shadow: 0 14px 30px -22px rgba(45, 35, 80, 0.45), inset 0 0 0 1px rgba(45, 35, 80, 0.06);
+  }
+  html, body { margin: 0; }
+  body {
+    min-height: 100dvh;
+    font-family: var(--body);
+    color: var(--ink);
+    background:
+      radial-gradient(700px 420px at 4% -8%, #ffe9b3 0, transparent 62%),
+      radial-gradient(620px 420px at 100% 2%, #d7efff 0, transparent 58%),
+      radial-gradient(760px 520px at 56% 108%, #ffd9e7 0, transparent 62%),
+      #fdf7ee;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    padding: 14px 14px 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: 0.5; z-index: 0;
+    background-image: radial-gradient(rgba(45, 35, 80, 0.14) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(70% 60% at 50% 30%, #000 0%, transparent 100%);
+  }
+  button { font: inherit; color: inherit; }
+  button:focus-visible { outline: 3px solid var(--grape); outline-offset: 3px; }
+
+  .app {
+    position: relative; z-index: 1;
+    width: min(480px, 100%);
+    display: flex; flex-direction: column;
+    min-height: calc(100dvh - 14px);
+    padding-bottom: 104px;
+  }
+
+  /* ---------------------------------------------------------------- header */
+  .topbar { display: flex; align-items: center; gap: 11px; padding: 4px 2px 14px; }
+  .avatar {
+    width: 46px; height: 46px; flex: 0 0 auto; border-radius: 16px;
+    background: linear-gradient(150deg, #fff4d0, #ffe0a8);
+    display: grid; place-items: center;
+    box-shadow: 0 10px 20px -14px rgba(45, 35, 80, 0.6), inset 0 0 0 1px rgba(45, 35, 80, 0.07);
+  }
+  .avatar svg { width: 38px; height: 38px; }
+  .hello { flex: 1; min-width: 0; }
+  .hello .kicker {
+    display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+  .hello h1 {
+    margin: 1px 0 0; font-family: var(--display); font-size: 19px; font-weight: 800; line-height: 1.15;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .star-pill {
+    display: flex; align-items: center; gap: 5px; flex: 0 0 auto;
+    padding: 7px 12px; border-radius: 999px; background: var(--paper);
+    font-family: var(--display); font-weight: 700; font-size: 14px;
+    box-shadow: var(--shadow);
+  }
+  .icon-btn {
+    width: 40px; height: 40px; flex: 0 0 auto; border: 0; border-radius: 14px;
+    background: var(--paper); font-size: 17px; cursor: pointer;
+    box-shadow: var(--shadow); display: grid; place-items: center;
+    transition: transform 0.15s ease;
+  }
+  .icon-btn:active { transform: scale(0.93); }
+  .icon-btn[aria-pressed="false"] { opacity: 0.55; }
+
+  /* ------------------------------------------------------------------ hero */
+  .hero {
+    position: relative; overflow: hidden; isolation: isolate;
+    display: flex; align-items: center; gap: 6px;
+    padding: 20px 18px 20px 20px; border-radius: 30px;
+    background: linear-gradient(132deg, #ffdc79, #ffa07c 48%, #ff7fa9);
+    box-shadow: 0 24px 40px -26px rgba(255, 122, 130, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  }
+  .hero::before {
+    content: ""; position: absolute; z-index: -1; width: 220px; height: 220px; right: -40px; top: -80px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.6), transparent 66%);
+  }
+  .hero::after {
+    content: ""; position: absolute; left: -14%; right: -14%; bottom: -92px; height: 150px;
+    border-radius: 50%; background: rgba(255, 255, 255, 0.16);
+  }
+  .hero-copy { position: relative; z-index: 1; flex: 1; min-width: 0; }
+  .hero .eyebrow {
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(45, 35, 80, 0.62);
+  }
+  .hero h2 {
+    margin: 6px 0 5px; font-family: var(--display); font-weight: 800;
+    font-size: 26px; line-height: 1.02; letter-spacing: -0.015em;
+  }
+  .hero p { margin: 0 0 10px; font-size: 12.5px; font-weight: 700; color: rgba(45, 35, 80, 0.7); max-width: 210px; }
+  .goal { display: grid; gap: 5px; max-width: 210px; margin: 0 0 13px; }
+  .goal span { font-size: 9.5px; font-weight: 800; letter-spacing: 0.03em; color: rgba(45, 35, 80, 0.66); }
+  .goal-track { height: 5px; border-radius: 999px; background: rgba(255, 255, 255, 0.45); overflow: hidden; }
+  .goal-track i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--ink); transition: width 0.4s ease; }
+  .cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 18px; border: 0; border-radius: 999px; cursor: pointer;
+    background: var(--ink); color: #fff9ee;
+    font-family: var(--display); font-weight: 700; font-size: 14px;
+    box-shadow: 0 12px 20px -12px rgba(45, 35, 80, 0.9);
+    transition: transform 0.15s ease;
+  }
+  .cta:active { transform: translateY(2px) scale(0.98); }
+  .cta svg { width: 16px; height: 16px; }
+  .hero-mascot {
+    width: 116px; flex: 0 0 auto; margin-right: -4px; align-self: flex-end;
+    animation: float 4.5s ease-in-out infinite;
+  }
+  .hero-mascot svg { width: 100%; height: auto; display: block; }
+  .blink { animation: blink 5.2s infinite; transform-origin: center; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  @keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.12); } }
+
+  /* --------------------------------------------------------------- sections */
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 22px 4px 10px; }
+  .section-head h3 { margin: 0; font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
+  .section-head span { font-size: 10.5px; font-weight: 800; letter-spacing: 0.04em; color: var(--ink-soft); }
+
+  .worlds { display: grid; gap: 9px; }
+  .world {
+    display: flex; align-items: center; gap: 13px; text-align: left;
+    padding: 12px 14px; border: 0; border-radius: 22px; background: var(--paper);
+    box-shadow: var(--shadow); cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+  .world:active { transform: scale(0.985); }
+  .world-icon {
+    width: 46px; height: 46px; flex: 0 0 auto; border-radius: 16px;
+    background: var(--tint); color: #fff; display: grid; place-items: center;
+    box-shadow: 0 8px 16px -10px var(--tint), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+  .world-icon svg { width: 25px; height: 25px; }
+  .world-body { flex: 1; min-width: 0; }
+  .world-body b { display: block; font-family: var(--display); font-size: 15.5px; letter-spacing: -0.01em; }
+  .world-body small { display: block; margin-top: 1px; font-size: 11px; font-weight: 700; color: var(--ink-soft); }
+  .bar { height: 6px; border-radius: 999px; background: rgba(45, 35, 80, 0.08); margin-top: 7px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--tint); transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .world .chev { color: var(--ink-soft); opacity: 0.5; }
+  .world .chev svg { width: 16px; height: 16px; }
+
+  .sticker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+  .sticker {
+    padding: 10px 4px 8px; border-radius: 18px; text-align: center;
+    background: var(--paper); box-shadow: var(--shadow);
+    transition: transform 0.2s ease;
+  }
+  .sticker .emoji { display: block; font-size: 23px; line-height: 1.2; }
+  .sticker small { display: block; margin-top: 3px; font-size: 9px; font-weight: 800; letter-spacing: 0.01em; color: var(--ink-soft); }
+  .sticker.locked { background: rgba(255, 253, 248, 0.55); box-shadow: inset 0 0 0 1px rgba(45, 35, 80, 0.05); }
+  .sticker.locked .emoji { filter: grayscale(1); opacity: 0.35; }
+  .sticker.just-won { animation: pop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1); }
+  @keyframes pop { 0% { transform: scale(0.7); } 60% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+  /* ----------------------------------------------------------------- views */
+  .view { display: none; }
+  .view.is-active { display: block; animation: viewIn 0.34s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  @keyframes viewIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .screen-title { margin: 2px 2px 12px; }
+  .screen-title h2 { margin: 0; font-family: var(--display); font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+  .screen-title p { margin: 2px 0 0; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+
+  .panel {
+    position: relative; overflow: hidden;
+    border-radius: 28px; padding: 18px; background: var(--paper);
+    box-shadow: 0 18px 34px -24px rgba(45, 35, 80, 0.5), inset 0 0 0 1px rgba(45, 35, 80, 0.05);
+  }
+  .letter-panel { background: linear-gradient(150deg, var(--tint-soft, var(--sun-soft)), var(--paper) 72%); }
+  .letter-top { display: flex; align-items: center; gap: 16px; }
+  .letter-emoji { font-size: 54px; line-height: 1; filter: drop-shadow(0 10px 10px rgba(45, 35, 80, 0.16)); animation: float 5s ease-in-out infinite; }
+  .letter-glyph { font-family: var(--display); font-size: 78px; font-weight: 800; line-height: 0.85; letter-spacing: -0.02em; }
+  .letter-glyph span { font-size: 46px; opacity: 0.4; margin-left: 2px; }
+  .letter-word { margin: 6px 0 0; font-family: var(--display); font-size: 20px; font-weight: 700; }
+  .letter-sentence { margin: 10px 0 0; font-size: 12.5px; font-weight: 700; color: var(--ink-soft); }
+  .speak {
+    margin-left: auto; flex: 0 0 auto; width: 44px; height: 44px; border: 0; border-radius: 50%;
+    background: #fff; cursor: pointer; display: grid; place-items: center;
+    box-shadow: 0 10px 20px -14px rgba(45, 35, 80, 0.8), inset 0 0 0 1px rgba(45, 35, 80, 0.06);
+    transition: transform 0.15s ease;
+  }
+  .speak:active { transform: scale(0.9); }
+  .speak svg { width: 19px; height: 19px; }
+
+  .progress-note { display: flex; align-items: center; justify-content: space-between; margin: 12px 4px 8px; font-size: 11px; font-weight: 800; color: var(--ink-soft); }
+
+  .letter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(51px, 1fr)); gap: 8px; }
+  .letter-tile {
+    position: relative; aspect-ratio: 1; border: 0; border-radius: 16px;
+    background: var(--paper); font-family: var(--display); font-size: 21px; font-weight: 700;
+    color: var(--ink); cursor: pointer;
+    box-shadow: 0 8px 16px -14px rgba(45, 35, 80, 0.6), inset 0 0 0 1px rgba(45, 35, 80, 0.06);
+    transition: transform 0.12s ease, background 0.18s ease, color 0.18s ease;
+  }
+  .letter-tile:active { transform: scale(0.93); }
+  .letter-tile.is-on { background: var(--tint, var(--coral)); color: #fff; box-shadow: 0 12px 20px -14px var(--tint, var(--coral)); }
+  .letter-tile.is-learned::after {
+    content: "✓"; position: absolute; top: 2px; right: 4px; font-family: var(--body);
+    font-size: 9px; font-weight: 800; opacity: 0.65;
+  }
+
+  .number-panel { text-align: center; }
+  .number-panel .speak { margin: 8px auto 0; }
+  .number-big { font-family: var(--display); font-size: 112px; font-weight: 800; line-height: 0.9; letter-spacing: -0.04em; }
+  .number-word { margin: 2px 0 0; font-family: var(--display); font-size: 19px; font-weight: 700; color: var(--ink-soft); }
+  .dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 250px; margin: 12px auto 4px; }
+  .dot { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5); animation: dotIn 0.4s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+  @keyframes dotIn { from { transform: scale(0); } to { transform: scale(1); } }
+  .number-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 14px; }
+  .number-tile {
+    position: relative; padding: 12px 4px; border: 0; border-radius: 16px; cursor: pointer;
+    background: var(--paper); font-family: var(--display); font-size: 20px; font-weight: 700;
+    box-shadow: 0 8px 16px -14px rgba(45, 35, 80, 0.6), inset 0 0 0 1px rgba(45, 35, 80, 0.06);
+    transition: transform 0.12s ease, background 0.18s ease, color 0.18s ease;
+  }
+  .number-tile:active { transform: scale(0.93); }
+  .number-tile.is-on { background: var(--mint); color: #fff; }
+  .number-tile.is-learned::after { content: "✓"; position: absolute; top: 2px; right: 5px; font-size: 9px; opacity: 0.65; }
+
+  .shape-panel { text-align: center; }
+  .shape-big { display: grid; place-items: center; height: 150px; }
+  .shape-big svg { width: 138px; height: 138px; filter: drop-shadow(0 16px 18px rgba(45, 35, 80, 0.18)); animation: float 5.5s ease-in-out infinite; }
+  .shape-name { margin: 2px 0 0; font-family: var(--display); font-size: 22px; font-weight: 800; }
+  .shape-fact { margin: 3px 0 0; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+  .shape-chips { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 8px; margin: 14px 0 0; scrollbar-width: none; }
+  .shape-chip {
+    flex: 0 0 auto; width: 62px; height: 66px; border: 0; border-radius: 18px; background: var(--paper);
+    display: grid; place-items: center; cursor: pointer;
+    box-shadow: 0 8px 16px -14px rgba(45, 35, 80, 0.6), inset 0 0 0 1px rgba(45, 35, 80, 0.06);
+    transition: transform 0.12s ease, box-shadow 0.18s ease;
+  }
+  .shape-chip svg { width: 32px; height: 32px; }
+  .shape-chip.is-on { box-shadow: 0 0 0 3px var(--grape), 0 10px 18px -12px rgba(45, 35, 80, 0.5); }
+  .shape-chip:active { transform: scale(0.94); }
+
+  .find-card {
+    margin-top: 12px; border-radius: 24px; padding: 15px 15px 12px; background: var(--paper);
+    box-shadow: var(--shadow);
+  }
+  .find-prompt { margin: 0 0 10px; font-family: var(--display); font-size: 16px; font-weight: 700; }
+  .find-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .find-btn {
+    aspect-ratio: 1; border: 0; border-radius: 16px; background: #fff; cursor: pointer;
+    display: grid; place-items: center;
+    box-shadow: 0 8px 16px -14px rgba(45, 35, 80, 0.6), inset 0 0 0 1px rgba(45, 35, 80, 0.07);
+    transition: transform 0.12s ease;
+  }
+  .find-btn svg { width: 36px; height: 36px; }
+  .find-btn:active { transform: scale(0.93); }
+  .find-btn.correct { background: var(--mint-soft); box-shadow: inset 0 0 0 2px var(--mint); }
+  .find-btn.wrong { animation: shake 0.32s ease; background: var(--coral-soft); }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+  .play-head { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
+  .stat {
+    display: flex; align-items: center; gap: 5px; padding: 7px 12px; border-radius: 999px;
+    background: var(--paper); font-family: var(--display); font-size: 14px; font-weight: 700;
+    box-shadow: var(--shadow);
+  }
+  .stat small { font-family: var(--body); font-size: 9.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+  .reset { margin-left: auto; border: 0; border-radius: 999px; padding: 8px 13px; background: var(--ink); color: #fff9ee; font-family: var(--display); font-size: 12.5px; font-weight: 700; cursor: pointer; }
+  .reset:active { transform: translateY(1px); }
+
+  .quiz-card { text-align: center; padding: 20px 16px 16px; }
+  .q-title { margin: 0; font-family: var(--display); font-size: 21px; font-weight: 800; line-height: 1.2; }
+  .q-emojis { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; font-size: 33px; margin: 2px 0 10px; line-height: 1.2; }
+  .q-word { font-family: var(--display); font-size: 26px; font-weight: 700; }
+  .options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-top: 14px; }
+  .option {
+    min-height: 78px; border: 0; border-radius: 20px; background: #fff; cursor: pointer;
+    display: grid; place-items: center; font-family: var(--display); font-size: 26px; font-weight: 700;
+    box-shadow: 0 10px 20px -16px rgba(45, 35, 80, 0.65), inset 0 0 0 1px rgba(45, 35, 80, 0.07);
+    transition: transform 0.12s ease, background 0.2s ease;
+  }
+  .option:active { transform: scale(0.96); }
+  .option svg { width: 46px; height: 46px; }
+  .swatch { width: 52px; height: 52px; border-radius: 50%; box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.45); display: block; }
+  .option.correct { background: var(--mint-soft); box-shadow: inset 0 0 0 2px var(--mint); }
+  .option.wrong { background: var(--coral-soft); box-shadow: inset 0 0 0 2px var(--coral); }
+  .option:disabled { cursor: default; }
+  .option:disabled:not(.correct):not(.wrong) { opacity: 0.6; }
+
+  .feedback { min-height: 20px; margin: 12px 0 0; font-weight: 800; font-size: 14px; }
+  .feedback.good { color: #14855f; }
+  .feedback.bad { color: #cc3b5c; }
+
+  /* ------------------------------------------------------------------ dock */
+  .dock {
+    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    width: min(452px, calc(100% - 28px)); z-index: 40;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; padding: 8px;
+    background: rgba(255, 253, 248, 0.86);
+    backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-radius: 26px;
+    box-shadow: 0 22px 44px -22px rgba(45, 35, 80, 0.45), inset 0 1px 0 #fff, inset 0 0 0 1px rgba(45, 35, 80, 0.05);
+  }
+  .dock-tab {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 6px 0 5px; border: 0; border-radius: 18px; background: transparent;
+    color: var(--ink-soft); font-family: var(--body); font-size: 9.5px; font-weight: 800;
+    letter-spacing: 0.03em; cursor: pointer; transition: color 0.18s ease, background 0.18s ease;
+  }
+  .dock-tab svg { width: 21px; height: 21px; }
+  .dock-tab.is-active { color: var(--ink); background: var(--tab-soft); }
+  .dock-tab.is-active .dock-ic { background: var(--tab); color: #fff; transform: translateY(-1px); box-shadow: 0 8px 14px -8px var(--tab); }
+  .dock-ic { width: 34px; height: 30px; display: grid; place-items: center; border-radius: 11px; transition: background 0.18s ease, transform 0.18s ease; }
+
+  /* --------------------------------------------------------------- overlays */
+  .confetti { position: fixed; top: -24px; width: 9px; height: 13px; border-radius: 3px; pointer-events: none; z-index: 60; animation: fall 1.25s ease-in forwards; }
+  @keyframes fall { to { transform: translateY(112vh) rotate(540deg); } }
+  .toast {
+    position: fixed; left: 50%; bottom: 92px; transform: translate(-50%, 18px);
+    display: flex; align-items: center; gap: 9px; z-index: 61;
+    padding: 12px 18px; border-radius: 999px; background: var(--ink); color: #fff9ee;
+    font-size: 12.5px; font-weight: 800; opacity: 0; pointer-events: none;
+    transition: opacity 0.28s ease, transform 0.28s ease;
+    box-shadow: 0 18px 30px -16px rgba(45, 35, 80, 0.7);
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast .emoji { font-size: 19px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blink, .hero-mascot, .letter-emoji, .shape-big svg { animation: none !important; }
+    .confetti { display: none; }
+    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <span class="avatar" aria-hidden="true">
+      <svg viewBox="0 0 120 120">
+        <path d="M60 36c-17 0-29 12-29 29v12c0 12 13 21 29 21s29-9 29-21V65c0-17-12-29-29-29Z" fill="#fff8e6" stroke="#2d2350" stroke-width="5"/>
+        <path d="M61 36c0-12 7-20 20-22-1 13-8 21-20 22Z" fill="#3ed6a8" stroke="#2d2350" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M59 36c1-10-4-17-15-20 0 11 5 18 15 20Z" fill="#22bf95" stroke="#2d2350" stroke-width="5" stroke-linejoin="round"/>
+        <circle cx="50" cy="66" r="3.6" fill="#2d2350"/>
+        <circle cx="70" cy="66" r="3.6" fill="#2d2350"/>
+        <circle cx="43" cy="74" r="5" fill="#ffb3c1" opacity=".85"/>
+        <circle cx="77" cy="74" r="5" fill="#ffb3c1" opacity=".85"/>
+        <path d="M54 76c2 3 5 4 6 4s4-1 6-4" stroke="#2d2350" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <div class="hello">
+      <span class="kicker" id="greeting">Good morning</span>
+      <h1>Little explorer</h1>
+    </div>
+    <div class="star-pill" aria-label="Stars earned">⭐ <b id="starCount">0</b></div>
+    <button class="icon-btn" id="soundBtn" type="button" aria-pressed="true" aria-label="Sound on">🔊</button>
+  </header>
+
+  <main>
+    <!-- ------------------------------------------------------------- home -->
+    <section class="view is-active" id="view-home" aria-label="Home">
+      <article class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">Today's adventure</span>
+          <h2>Grow a curious brain</h2>
+          <p id="heroLine">Play for five minutes today to unlock the Daily Hero sticker.</p>
+          <div class="goal">
+            <span id="goalLabel">Daily goal · 0:00 / 5:00</span>
+            <div class="goal-track" id="goalTrack" role="progressbar" aria-label="Daily goal" aria-valuemin="0" aria-valuemax="300" aria-valuenow="0"><i id="goalBar"></i></div>
+          </div>
+          <button class="cta" type="button" data-goto="play">
+            Start playing
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13"/><path d="m13 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div class="hero-mascot" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <ellipse cx="60" cy="110" rx="30" ry="5" fill="rgba(45,35,80,.14)"/>
+            <path d="M60 34c-18 0-31 13-31 31v13c0 13 14 22 31 22s31-9 31-22V65c0-18-13-31-31-31Z" fill="#fff8e6" stroke="#2d2350" stroke-width="5"/>
+            <path d="M61 34c0-13 8-22 22-24-1 14-9 23-22 24Z" fill="#3ed6a8" stroke="#2d2350" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M59 34c1-11-4-19-16-22 0 12 5 20 16 22Z" fill="#22bf95" stroke="#2d2350" stroke-width="5" stroke-linejoin="round"/>
+            <g class="blink">
+              <circle cx="49" cy="66" r="4" fill="#2d2350"/>
+              <circle cx="71" cy="66" r="4" fill="#2d2350"/>
+            </g>
+            <circle cx="41" cy="75" r="5.5" fill="#ffb3c1" opacity=".9"/>
+            <circle cx="79" cy="75" r="5.5" fill="#ffb3c1" opacity=".9"/>
+            <path d="M53 77c2.4 3.4 5.4 4.6 7 4.6s4.6-1.2 7-4.6" stroke="#2d2350" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </article>
+
+      <div class="section-head"><h3>Pick a world</h3><span id="worldProgress">0 of 3 started</span></div>
+      <div class="worlds">
+        <button class="world" type="button" data-goto="abc" style="--tint: var(--coral)">
+          <span class="world-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="4.5"/><path d="M8 16.5 12 8l4 8.5"/><path d="M9.7 13.4h4.6"/></svg>
+          </span>
+          <span class="world-body">
+            <b>Letter land</b>
+            <small><span id="abcCount">0/26</span> letters learned</small>
+            <span class="bar"><i id="barAbc"></i></span>
+          </span>
+          <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+        </button>
+        <button class="world" type="button" data-goto="numbers" style="--tint: var(--mint)">
+          <span class="world-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h2v10"/><path d="M13.4 17c.3-3.8 3.9-4.2 3.9-6.4a2 2 0 1 0-4 0"/><path d="M20 7h-2.2l-1 6.5h3.2"/></svg>
+          </span>
+          <span class="world-body">
+            <b>Number nook</b>
+            <small><span id="numCount">0/10</span> numbers counted</small>
+            <span class="bar"><i id="barNum"></i></span>
+          </span>
+          <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+        </button>
+        <button class="world" type="button" data-goto="shapes" style="--tint: var(--grape)">
+          <span class="world-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="4.2"/><rect x="11.5" y="11.5" width="8.5" height="8.5" rx="2.5"/></svg>
+          </span>
+          <span class="world-body">
+            <b>Shape garden</b>
+            <small><span id="shapeCount">0/6</span> shapes found</small>
+            <span class="bar"><i id="barShape"></i></span>
+          </span>
+          <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></span>
+        </button>
+      </div>
+
+      <div class="section-head"><h3>Sticker book</h3><span id="stickerCount">0 of 6</span></div>
+      <div class="sticker-grid" id="stickerShelf"></div>
+    </section>
+
+    <!-- -------------------------------------------------------------- abc -->
+    <section class="view" id="view-abc" aria-label="Letter land">
+      <div class="screen-title"><h2>Letter land</h2><p>Tap a letter, hear its sound, meet its friend.</p></div>
+      <div class="panel letter-panel" id="letterPanel">
+        <div class="letter-top">
+          <span class="letter-emoji" id="letterEmoji" aria-hidden="true">🍎</span>
+          <div>
+            <div class="letter-glyph" id="letterGlyph">A<span>a</span></div>
+            <p class="letter-word" id="letterWord">Apple</p>
+          </div>
+          <button class="speak" id="speakLetter" type="button" aria-label="Hear the letter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+          </button>
+        </div>
+        <p class="letter-sentence" id="letterSentence">A is for Apple</p>
+      </div>
+      <div class="progress-note"><span id="abcProgress">0 of 26 letters learned</span></div>
+      <div class="letter-grid" id="letterGrid"></div>
+    </section>
+
+    <!-- ---------------------------------------------------------- numbers -->
+    <section class="view" id="view-numbers" aria-label="Number nook">
+      <div class="screen-title"><h2>Number nook</h2><p>Tap a number to count it out loud.</p></div>
+      <div class="panel number-panel" id="numberPanel">
+        <div class="number-big" id="numberBig">1</div>
+        <p class="number-word" id="numberWord">One</p>
+        <div class="dots" id="numberDots" aria-hidden="true"></div>
+        <button class="speak" id="speakNumber" type="button" aria-label="Say the number">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5H4Z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+        </button>
+      </div>
+      <div class="progress-note"><span id="numProgress">0 of 10 numbers counted</span></div>
+      <div class="number-grid" id="numberGrid"></div>
+    </section>
+
+    <!-- ----------------------------------------------------------- shapes -->
+    <section class="view" id="view-shapes" aria-label="Shape garden">
+      <div class="screen-title"><h2>Shape garden</h2><p>Meet the shapes, then spot them in the wild.</p></div>
+      <div class="panel shape-panel" id="shapePanel">
+        <div class="shape-big" id="shapeBig" aria-hidden="true"></div>
+        <p class="shape-name" id="shapeName">Circle</p>
+        <p class="shape-fact" id="shapeFact">Round and round</p>
+      </div>
+      <div class="shape-chips" id="shapeChips"></div>
+      <div class="find-card">
+        <p class="find-prompt" id="findPrompt">Tap the circle</p>
+        <div class="find-grid" id="findGrid"></div>
+        <p class="feedback" id="findFeedback" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------- play -->
+    <section class="view" id="view-play" aria-label="Play">
+      <div class="screen-title"><h2>Play time</h2><p>A little quiz, a lot of sparkle.</p></div>
+      <div class="play-head">
+        <span class="stat">⭐ <b id="playStars">0</b> <small>stars</small></span>
+        <span class="stat">🔥 <b id="playStreak">0</b> <small>streak</small></span>
+        <button class="reset" id="resetQuiz" type="button">New game</button>
+      </div>
+      <div class="panel quiz-card">
+        <div id="question"></div>
+        <div class="options" id="options"></div>
+        <p class="feedback" id="quizFeedback" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="dock" aria-label="Activities">
+    <button class="dock-tab is-active" type="button" data-goto="home" aria-current="page" style="--tab: var(--sun); --tab-soft: var(--sun-soft)">
+      <span class="dock-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11.3 12 4l8 7.3"/><path d="M6.3 9.8V20h11.4V9.8"/><path d="M10 20v-5.2h4V20"/></svg></span>
+      Home
+    </button>
+    <button class="dock-tab" type="button" data-goto="abc" style="--tab: var(--coral); --tab-soft: var(--coral-soft)">
+      <span class="dock-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="4.5"/><path d="M8 16.5 12 8l4 8.5"/><path d="M9.7 13.4h4.6"/></svg></span>
+      ABC
+    </button>
+    <button class="dock-tab" type="button" data-goto="numbers" style="--tab: var(--mint); --tab-soft: var(--mint-soft)">
+      <span class="dock-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h2v10"/><path d="M13.4 17c.3-3.8 3.9-4.2 3.9-6.4a2 2 0 1 0-4 0"/><path d="M20 7h-2.2l-1 6.5h3.2"/></svg></span>
+      123
+    </button>
+    <button class="dock-tab" type="button" data-goto="shapes" style="--tab: var(--grape); --tab-soft: var(--grape-soft)">
+      <span class="dock-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="4.2"/><rect x="11.5" y="11.5" width="8.5" height="8.5" rx="2.5"/></svg></span>
+      Shapes
+    </button>
+    <button class="dock-tab" type="button" data-goto="play" style="--tab: var(--sky); --tab-soft: var(--sky-soft)">
+      <span class="dock-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3.5 2.5 5.4 5.9.8-4.3 4.1 1.1 5.8-5.2-2.9-5.2 2.9 1.1-5.8L3.6 9.7l5.9-.8Z"/></svg></span>
+      Play
+    </button>
+  </nav>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  /* --------------------------------------------------------------- data */
+  const LETTERS = [
+    ['A', 'Apple', '🍎'], ['B', 'Ball', '⚽'], ['C', 'Cat', '🐱'], ['D', 'Dog', '🐶'],
+    ['E', 'Egg', '🥚'], ['F', 'Fish', '🐟'], ['G', 'Grapes', '🍇'], ['H', 'Hat', '🎩'],
+    ['I', 'Ice cream', '🍦'], ['J', 'Jellyfish', '🪼'], ['K', 'Kite', '🪁'], ['L', 'Lion', '🦁'],
+    ['M', 'Moon', '🌙'], ['N', 'Nest', '🪺'], ['O', 'Orange', '🍊'], ['P', 'Panda', '🐼'],
+    ['Q', 'Queen', '👑'], ['R', 'Rainbow', '🌈'], ['S', 'Sun', '☀️'], ['T', 'Tiger', '🐯'],
+    ['U', 'Umbrella', '☂️'], ['V', 'Violin', '🎻'], ['W', 'Whale', '🐳'], ['X', 'Xylophone', '🎶'],
+    ['Y', 'Yo-yo', '🪀'], ['Z', 'Zebra', '🦓'],
+  ];
+  const TINTS = [
+    ['var(--coral)', 'var(--coral-soft)'], ['var(--sun)', 'var(--sun-soft)'],
+    ['var(--mint)', 'var(--mint-soft)'], ['var(--grape)', 'var(--grape-soft)'],
+    ['var(--sky)', 'var(--sky-soft)'],
+  ];
+  const NUMBER_NAMES = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+  const SHAPES = [
+    { name: 'Circle', colour: '#ff7b7b', fact: 'Round and round', svg: '<circle cx="50" cy="50" r="42"/>' },
+    { name: 'Square', colour: '#5ac1ff', fact: 'Four equal sides', svg: '<rect x="10" y="10" width="80" height="80" rx="14"/>' },
+    { name: 'Triangle', colour: '#ffc83d', fact: 'Three pointy corners', svg: '<polygon points="50,9 92,88 8,88"/>' },
+    { name: 'Star', colour: '#9d7bff', fact: 'Five sparkly points', svg: '<polygon points="50,5 61,37 95,37 67,57 78,92 50,71 22,92 33,57 5,37 39,37"/>' },
+    { name: 'Heart', colour: '#ff8fab', fact: 'A shape full of love', svg: '<path d="M50 89 C18 66 8 47 21 31 C34 16 48 23 50 34 C52 23 66 16 79 31 C92 47 82 66 50 89 Z"/>' },
+    { name: 'Diamond', colour: '#2fd3af', fact: 'A tilted square', svg: '<polygon points="50,5 95,50 50,95 5,50"/>' },
+  ];
+  const COLOURS = [
+    { name: 'red', hex: '#ff7b7b' }, { name: 'blue', hex: '#5ac1ff' },
+    { name: 'green', hex: '#2fd3af' }, { name: 'yellow', hex: '#ffc83d' },
+    { name: 'purple', hex: '#9d7bff' }, { name: 'pink', hex: '#ff8fab' },
+  ];
+  const STICKERS = [
+    { id: 'first', emoji: '🌱', name: 'First Sprout', when: () => state.stars >= 1 },
+    { id: 'letters5', emoji: '🔤', name: 'Letter Friend', when: () => state.learnedLetters.size >= 5 },
+    { id: 'count10', emoji: '🔢', name: 'Count Star', when: () => state.learnedNumbers.size >= 10 },
+    { id: 'shapes6', emoji: '🔺', name: 'Shape Scout', when: () => state.foundShapes.size >= 6 },
+    { id: 'streak3', emoji: '🔥', name: 'Hot Streak', when: () => state.bestStreak >= 3 },
+    { id: 'super15', emoji: '🌟', name: 'Super Star', when: () => state.stars >= 15 },
+    { id: 'daily', emoji: '☀️', name: 'Daily Hero', when: () => dailyDone() },
+  ];
+
+  /* -------------------------------------------------------------- state */
+  const load = (key, fallback) => {
+    try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch { return fallback; }
+  };
+  const save = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} };
+
+  const state = {
+    stars: Number(load('sprout.stars', 0)) || 0,
+    bestStreak: Number(load('sprout.bestStreak', 0)) || 0,
+    sound: load('sprout.sound', true) !== false,
+    learnedLetters: new Set(load('sprout.letters', [])),
+    learnedNumbers: new Set(load('sprout.numbers', [])),
+    foundShapes: new Set(load('sprout.shapes', [])),
+    stickers: new Set(load('sprout.stickers', [])),
+    daily: load('sprout.daily', { date: '', seconds: 0 }),
+  };
+
+  // Five-minute daily goal. Seconds count only while the page is visible, and
+  // the day key resets the clock at midnight while the sticker stays collected.
+  const GOAL_SECONDS = 300;
+  const dayKey = () => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; };
+  state.daily = { date: state.daily?.date ?? '', seconds: Number(state.daily?.seconds) || 0 };
+  if (state.daily.date !== dayKey()) state.daily = { date: dayKey(), seconds: 0 };
+  const dailyDone = () => state.daily.seconds >= GOAL_SECONDS;
+
+  const persist = () => {
+    save('sprout.stars', state.stars);
+    save('sprout.bestStreak', state.bestStreak);
+    save('sprout.sound', state.sound);
+    save('sprout.letters', [...state.learnedLetters]);
+    save('sprout.numbers', [...state.learnedNumbers]);
+    save('sprout.shapes', [...state.foundShapes]);
+    save('sprout.stickers', [...state.stickers]);
+    save('sprout.daily', state.daily);
+  };
+
+  const $ = (selector) => document.querySelector(selector);
+  const shapeSvg = (shape) =>
+    `<svg viewBox="0 0 100 100" fill="${shape.colour}" aria-hidden="true">${shape.svg}</svg>`;
+  const shuffle = (list) => {
+    const copy = [...list];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  };
+
+  /* -------------------------------------------------------------- sound */
+  let audio;
+  function blip(kind = 'tap') {
+    if (!state.sound) return;
+    try {
+      audio ||= new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = audio;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const now = ctx.currentTime;
+      osc.type = 'sine';
+      if (kind === 'good') { osc.frequency.setValueAtTime(660, now); osc.frequency.setValueAtTime(880, now + 0.09); }
+      else if (kind === 'bad') { osc.frequency.setValueAtTime(250, now); osc.frequency.setValueAtTime(190, now + 0.1); }
+      else { osc.frequency.setValueAtTime(520, now); }
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.16, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.24);
+    } catch {}
+  }
+  function speak(text) {
+    if (!state.sound || !('speechSynthesis' in window)) return;
+    try {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.88;
+      utterance.pitch = 1.15;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    } catch {}
+  }
+  const soundBtn = $('#soundBtn');
+  function paintSound() {
+    soundBtn.textContent = state.sound ? '🔊' : '🔇';
+    soundBtn.setAttribute('aria-pressed', String(state.sound));
+    soundBtn.setAttribute('aria-label', state.sound ? 'Sound on' : 'Sound off');
+  }
+  soundBtn.addEventListener('click', () => {
+    state.sound = !state.sound;
+    if (!state.sound && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+    persist();
+    paintSound();
+    if (state.sound) blip('tap');
+  });
+
+  /* ------------------------------------------------------------ feedback */
+  const toast = $('#toast');
+  let toastTimer;
+  function showToast(emoji, text) {
+    toast.innerHTML = `<span class="emoji">${emoji}</span>${text}`;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+  function burst() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const palette = ['#ff7b7b', '#ffc83d', '#2fd3af', '#9d7bff', '#5ac1ff', '#ff8fab'];
+    for (let i = 0; i < 24; i++) {
+      const piece = document.createElement('span');
+      piece.className = 'confetti';
+      piece.style.left = `${Math.random() * 100}vw`;
+      piece.style.background = palette[i % palette.length];
+      piece.style.animationDelay = `${Math.random() * 0.22}s`;
+      document.body.append(piece);
+      setTimeout(() => piece.remove(), 1700);
+    }
+  }
+  function checkStickers() {
+    for (const sticker of STICKERS) {
+      if (state.stickers.has(sticker.id) || !sticker.when()) continue;
+      state.stickers.add(sticker.id);
+      lastWon = sticker.id;
+      persist();
+      showToast(sticker.emoji, `New sticker: ${sticker.name}!`);
+      burst();
+      blip('good');
+    }
+  }
+
+  /* ---------------------------------------------------------------- nav */
+  const views = [...document.querySelectorAll('.view')];
+  const dockTabs = [...document.querySelectorAll('.dock-tab')];
+  function showView(name) {
+    views.forEach((view) => view.classList.toggle('is-active', view.id === `view-${name}`));
+    dockTabs.forEach((tab) => {
+      const on = tab.dataset.goto === name;
+      tab.classList.toggle('is-active', on);
+      if (on) tab.setAttribute('aria-current', 'page');
+      else tab.removeAttribute('aria-current');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.addEventListener('click', (event) => {
+    const trigger = event.target.closest('[data-goto]');
+    if (!trigger) return;
+    blip('tap');
+    showView(trigger.dataset.goto);
+  });
+
+  /* --------------------------------------------------------------- home */
+  let lastWon = null;
+  function renderStickers() {
+    const shelf = $('#stickerShelf');
+    shelf.innerHTML = '';
+    STICKERS.forEach((sticker) => {
+      const owned = state.stickers.has(sticker.id);
+      const tile = document.createElement('div');
+      tile.className = `sticker${owned ? '' : ' locked'}${lastWon === sticker.id ? ' just-won' : ''}`;
+      tile.innerHTML = `<span class="emoji">${owned ? sticker.emoji : '🔒'}</span><small>${owned ? sticker.name : 'Locked'}</small>`;
+      tile.title = owned ? sticker.name : 'Keep playing to unlock';
+      shelf.append(tile);
+    });
+    lastWon = null;
+  }
+  function refresh() {
+    $('#starCount').textContent = String(state.stars);
+    $('#abcCount').textContent = `${state.learnedLetters.size}/26`;
+    $('#numCount').textContent = `${state.learnedNumbers.size}/10`;
+    $('#shapeCount').textContent = `${state.foundShapes.size}/6`;
+    $('#barAbc').style.width = `${(state.learnedLetters.size / 26) * 100}%`;
+    $('#barNum').style.width = `${(state.learnedNumbers.size / 10) * 100}%`;
+    $('#barShape').style.width = `${(state.foundShapes.size / 6) * 100}%`;
+    const started =
+      Number(state.learnedLetters.size > 0) +
+      Number(state.learnedNumbers.size > 0) +
+      Number(state.foundShapes.size > 0);
+    $('#worldProgress').textContent = `${started} of 3 started`;
+    $('#stickerCount').textContent = `${state.stickers.size} of ${STICKERS.length}`;
+    $('#abcProgress').textContent = `${state.learnedLetters.size} of 26 letters learned`;
+    $('#numProgress').textContent = `${state.learnedNumbers.size} of 10 numbers counted`;
+    $('#playStars').textContent = String(state.stars);
+    $('#playStreak').textContent = String(streak);
+    renderStickers();
+    paintGoal();
+  }
+
+  /* ---------------------------------------------------------------- abc */
+  const letterGrid = $('#letterGrid');
+  const letterTiles = [];
+  const letterPanel = $('#letterPanel');
+  let selectedLetter = 0;
+
+  LETTERS.forEach(([letter, word, emoji], index) => {
+    const tile = document.createElement('button');
+    tile.type = 'button';
+    tile.className = 'letter-tile';
+    tile.textContent = letter;
+    tile.setAttribute('aria-label', `${letter} for ${word}`);
+    tile.setAttribute('aria-pressed', String(index === 0));
+    tile.addEventListener('click', () => selectLetter(index));
+    letterGrid.append(tile);
+    letterTiles.push(tile);
+  });
+
+  function selectLetter(index, learn = true) {
+    selectedLetter = index;
+    const [letter, word, emoji] = LETTERS[index];
+    const [tint, soft] = TINTS[index % TINTS.length];
+    letterTiles.forEach((tile, i) => {
+      tile.setAttribute('aria-pressed', String(i === index));
+      tile.classList.toggle('is-on', i === index);
+      tile.classList.toggle('is-learned', state.learnedLetters.has(i));
+      tile.style.setProperty('--tint', TINTS[i % TINTS.length][0]);
+    });
+    letterPanel.style.setProperty('--tint-soft', soft);
+    letterPanel.style.setProperty('--tint', tint);
+    $('#letterEmoji').textContent = emoji;
+    $('#letterGlyph').innerHTML = `${letter}<span>${letter.toLowerCase()}</span>`;
+    $('#letterWord').textContent = word;
+    $('#letterSentence').innerHTML = `<b>${letter}</b> is for <b>${word}</b>`;
+    if (learn && !state.learnedLetters.has(index)) {
+      state.learnedLetters.add(index);
+      persist();
+      blip('tap');
+    }
+    refresh();
+  }
+  $('#speakLetter').addEventListener('click', () => {
+    const [letter, word] = LETTERS[selectedLetter];
+    speak(`${letter}. ${word}.`);
+    blip('tap');
+  });
+
+  /* ------------------------------------------------------------ numbers */
+  const numberGrid = $('#numberGrid');
+  const numberTiles = [];
+  let selectedNumber = 0;
+
+  NUMBER_NAMES.forEach((name, index) => {
+    const tile = document.createElement('button');
+    tile.type = 'button';
+    tile.className = 'number-tile';
+    tile.textContent = String(index + 1);
+    tile.setAttribute('aria-label', name);
+    tile.setAttribute('aria-pressed', String(index === 0));
+    tile.addEventListener('click', () => selectNumber(index));
+    numberGrid.append(tile);
+    numberTiles.push(tile);
+  });
+
+  function selectNumber(index, learn = true) {
+    selectedNumber = index;
+    const value = index + 1;
+    numberTiles.forEach((tile, i) => {
+      tile.setAttribute('aria-pressed', String(i === index));
+      tile.classList.toggle('is-on', i === index);
+      tile.classList.toggle('is-learned', state.learnedNumbers.has(i));
+    });
+    $('#numberBig').textContent = String(value);
+    $('#numberWord').textContent = NUMBER_NAMES[index];
+    const dots = $('#numberDots');
+    dots.innerHTML = '';
+    const palette = ['#ff7b7b', '#ffc83d', '#2fd3af', '#9d7bff', '#5ac1ff'];
+    for (let i = 0; i < value; i++) {
+      const dot = document.createElement('span');
+      dot.className = 'dot';
+      dot.style.background = palette[i % palette.length];
+      dot.style.animationDelay = `${i * 0.04}s`;
+      dots.append(dot);
+    }
+    if (learn && !state.learnedNumbers.has(index)) {
+      state.learnedNumbers.add(index);
+      persist();
+      blip('tap');
+    }
+    refresh();
+  }
+  $('#speakNumber').addEventListener('click', () => {
+    speak(NUMBER_NAMES[selectedNumber]);
+    blip('tap');
+  });
+
+  /* ------------------------------------------------------------- shapes */
+  const shapeChips = $('#shapeChips');
+  const chips = [];
+  SHAPES.forEach((shape, index) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'shape-chip';
+    chip.innerHTML = shapeSvg(shape);
+    chip.setAttribute('aria-label', shape.name);
+    chip.setAttribute('aria-pressed', String(index === 0));
+    chip.addEventListener('click', () => selectShape(index));
+    shapeChips.append(chip);
+    chips.push(chip);
+  });
+
+  function selectShape(index, sound = true) {
+    const shape = SHAPES[index];
+    chips.forEach((chip, i) => {
+      chip.classList.toggle('is-on', i === index);
+      chip.setAttribute('aria-pressed', String(i === index));
+    });
+    $('#shapeBig').innerHTML = shapeSvg(shape);
+    $('#shapeName').textContent = shape.name;
+    $('#shapeFact').textContent = shape.fact;
+    if (sound) blip('tap');
+  }
+
+  /* --------------------------------------------------------- find game */
+  let findTarget = null;
+  function newFindRound() {
+    const target = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+    findTarget = target;
+    $('#findPrompt').innerHTML = `Tap the <b>${target.name.toLowerCase()}</b>`;
+    $('#findFeedback').textContent = '';
+    $('#findFeedback').className = 'feedback';
+    const others = shuffle(SHAPES.filter((shape) => shape.name !== target.name)).slice(0, 3);
+    const grid = $('#findGrid');
+    grid.innerHTML = '';
+    shuffle([target, ...others]).forEach((shape) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'find-btn';
+      button.innerHTML = shapeSvg(shape);
+      button.setAttribute('aria-label', shape.name);
+      button.addEventListener('click', () => {
+        if (button.disabled) return;
+        if (shape.name === findTarget.name) {
+          button.classList.add('correct');
+          [...grid.children].forEach((child) => { child.disabled = true; });
+          $('#findFeedback').textContent = `Yes! ${shape.name}`;
+          $('#findFeedback').className = 'feedback good';
+          state.foundShapes.add(SHAPES.findIndex((item) => item.name === shape.name));
+          persist();
+          blip('good');
+          burst();
+          checkStickers();
+          refresh();
+          setTimeout(newFindRound, 1000);
+        } else {
+          button.classList.add('wrong');
+          blip('bad');
+          setTimeout(() => button.classList.remove('wrong'), 380);
+        }
+      });
+      grid.append(button);
+    });
+  }
+
+  /* -------------------------------------------------------------- quiz */
+  const optionsEl = $('#options');
+  const questionEl = $('#question');
+  const quizFeedback = $('#quizFeedback');
+  let streak = 0;
+  let locked = false;
+  let current = null;
+  let nextTimer;
+
+  function choice(prompt, correct, distractors, render = (value) => String(value), label = String) {
+    const values = shuffle([correct, ...distractors]);
+    return {
+      prompt,
+      answer: values.indexOf(correct),
+      options: values.map((value) => ({ html: render(value), label: label(value) })),
+    };
+  }
+  const countQuestion = () => {
+    const target = 2 + Math.floor(Math.random() * 5);
+    const emoji = ['🍓', '⭐', '🐟', '🌸', '🚗', '🍪'][Math.floor(Math.random() * 6)];
+    const pool = [target - 1, target + 1, target + 2, target - 2, target + 3]
+      .filter((n) => n >= 1 && n <= 9 && n !== target);
+    return choice(
+      `<div class="q-emojis">${emoji.repeat(target)}</div><p class="q-title">How many do you see?</p>`,
+      target,
+      shuffle(pool).slice(0, 2),
+    );
+  };
+  const letterQuestion = () => {
+    const [letter, word, emoji] = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+    const others = LETTERS.map(([other]) => other).filter((other) => other !== letter);
+    return choice(
+      `<p class="q-title">Which letter starts</p><p class="q-word">“${word}” ${emoji}</p>`,
+      letter,
+      shuffle(others).slice(0, 2),
+    );
+  };
+  const colourQuestion = () => {
+    const colour = COLOURS[Math.floor(Math.random() * COLOURS.length)];
+    const others = COLOURS.filter((other) => other !== colour);
+    return choice(
+      `<p class="q-title">Which one is this colour?</p><span class="swatch" style="background:${colour.hex};margin:10px auto 4px"></span>`,
+      colour,
+      shuffle(others).slice(0, 2),
+      (value) => `<span class="swatch" style="background:${value.hex}"></span>`,
+      (value) => value.name,
+    );
+  };
+  const shapeQuestion = () => {
+    const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+    const others = SHAPES.filter((other) => other !== shape);
+    return choice(
+      `<p class="q-title">Tap the <b>${shape.name.toLowerCase()}</b></p>`,
+      shape,
+      shuffle(others).slice(0, 2),
+      (value) => shapeSvg(value),
+      (value) => value.name,
+    );
+  };
+  const nextNumberQuestion = () => {
+    const target = 1 + Math.floor(Math.random() * 9);
+    const pool = [target + 1, target - 1, target + 2, target + 3]
+      .filter((n) => n >= 1 && n <= 10 && n !== target + 1);
+    return choice(
+      `<p class="q-title">What comes after</p><p class="q-word">${target}?</p>`,
+      target + 1,
+      shuffle([...new Set(pool)]).slice(0, 2),
+    );
+  };
+  const KINDS = [countQuestion, letterQuestion, colourQuestion, shapeQuestion, nextNumberQuestion];
+
+  function nextQuestion() {
+    clearTimeout(nextTimer);
+    locked = false;
+    current = KINDS[Math.floor(Math.random() * KINDS.length)]();
+    quizFeedback.textContent = '';
+    quizFeedback.className = 'feedback';
+    questionEl.innerHTML = current.prompt;
+    optionsEl.innerHTML = '';
+    current.options.forEach((option, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'option';
+      button.innerHTML = option.html;
+      button.setAttribute('aria-label', option.label);
+      button.addEventListener('click', () => answer(index, button));
+      optionsEl.append(button);
+    });
+  }
+
+  function answer(index, button) {
+    if (locked) return;
+    locked = true;
+    const buttons = [...optionsEl.children];
+    buttons.forEach((option) => { option.disabled = true; });
+    buttons[current.answer].classList.add('correct');
+    const correct = index === current.answer;
+
+    if (correct) {
+      state.stars += 1;
+      streak += 1;
+      state.bestStreak = Math.max(state.bestStreak, streak);
+      quizFeedback.textContent = 'Yes! ⭐';
+      quizFeedback.className = 'feedback good';
+      burst();
+      blip('good');
+      speak(['Yes!', 'Great job!', 'Wonderful!', 'You got it!'][Math.floor(Math.random() * 4)]);
+    } else {
+      streak = 0;
+      button.classList.add('wrong');
+      quizFeedback.textContent = `It’s ${current.options[current.answer].label}`;
+      quizFeedback.className = 'feedback bad';
+      blip('bad');
+    }
+    persist();
+    checkStickers();
+    refresh();
+    nextTimer = setTimeout(nextQuestion, correct ? 1000 : 1700);
+  }
+
+  $('#resetQuiz').addEventListener('click', () => {
+    streak = 0;
+    locked = false;
+    clearTimeout(nextTimer);
+    refresh();
+    nextQuestion();
+    blip('tap');
+  });
+
+  /* ---------------------------------------------------------------- goal */
+  function formatTime(seconds) {
+    return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+  }
+  function paintGoal() {
+    const done = dailyDone();
+    $('#goalBar').style.width = `${Math.min(100, (state.daily.seconds / GOAL_SECONDS) * 100)}%`;
+    $('#goalTrack').setAttribute('aria-valuenow', String(Math.min(GOAL_SECONDS, state.daily.seconds)));
+    $('#goalLabel').textContent = done ? 'Daily goal complete' : `Daily goal · ${formatTime(state.daily.seconds)} / 5:00`;
+    $('#heroLine').textContent = done
+      ? 'Goal complete. See you tomorrow!'
+      : state.stickers.has('daily')
+        ? 'Five minutes a day keeps your brain growing.'
+        : 'Play for five minutes today to unlock the Daily Hero sticker.';
+  }
+  setInterval(() => {
+    if (document.visibilityState !== 'visible') return;
+    if (state.daily.date !== dayKey()) state.daily = { date: dayKey(), seconds: 0 };
+    if (dailyDone()) return;
+    state.daily.seconds += 1;
+    if (state.daily.seconds % 5 === 0) persist();
+    paintGoal();
+    if (dailyDone()) {
+      persist();
+      checkStickers();
+      refresh();
+      speak('Daily goal complete!');
+    }
+  }, 1000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') persist();
+  });
+
+  /* --------------------------------------------------------------- boot */
+  paintSound();
+  const hour = new Date().getHours();
+  $('#greeting').textContent = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  selectLetter(0, false);
+  selectNumber(0, false);
+  selectShape(0, false);
+  newFindRound();
+  nextQuestion();
+  refresh();
+</script>
+</body>
+</html>

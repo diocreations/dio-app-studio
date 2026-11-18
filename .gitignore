@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.wrangler/
+.env
+.env.*
+.dev.vars
+!.env.example
+
+# local operator key, never committed
+.studio-key
+
+# tool state and working captures, not sources
+.freebuff/
+.cloud-attachments/
+/screens/
+/screenshots/
