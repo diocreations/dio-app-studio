@@ -14,5 +14,11 @@
       "database_id": "6f1d7c52-9a3e-4b18-8c11-2d5f7a9b3c04"
     }
   ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "plattr-media"
+    }
+  ],
   "observability": { "enabled": true }
 }

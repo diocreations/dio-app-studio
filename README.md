@@ -73,11 +73,12 @@ prose. `/brief` links to it from the website panel.
 - `src/worker/export.ts` — store-only ZIP writer and the three package builders.
 - `src/worker/db.ts` — D1 schema/migrations, versioning, notes and activity.
 - `src/worker/doc.ts` — the shared section document: model, normalisation, operations, local design commands.
+- `src/worker/media.ts` — R2 media: magic-byte validation, content-addressed WebP variants, D1 metadata, quotas, private delivery and reference-checked deletion.
 - `src/worker/views/editor.ts` — the three-pane visual editor and its canvas bridge.
 - `src/worker/views/*` — marketing, brief, customer build page, operator board.
 - `docs/EDITOR.md` — editor architecture, what is shared with the app, and what is next.
 - `docs/MOBILE.md` — the screen application model, PWA vs native distribution, and remaining work.
-- `docs/DESIGN.md` — the generated-app design audit, direction system, tokens and media pipeline assessment.
+- `docs/DESIGN.md` — the generated-app design audit, direction system, tokens and media pipeline.
 
 ## Starting from an existing website
 

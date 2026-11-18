@@ -149,7 +149,22 @@ const SCHEMA = [
     doc TEXT NOT NULL,
     created_at TEXT NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS media (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    hash TEXT NOT NULL,
+    width INTEGER NOT NULL,
+    height INTEGER NOT NULL,
+    bytes INTEGER NOT NULL,
+    alt TEXT NOT NULL DEFAULT '',
+    focal_x INTEGER NOT NULL DEFAULT 50,
+    focal_y INTEGER NOT NULL DEFAULT 50,
+    created_at TEXT NOT NULL,
+    variants TEXT NOT NULL DEFAULT '[]',
+    UNIQUE(project_id, hash)
+  )`,
   `CREATE INDEX IF NOT EXISTS notes_by_project ON notes (project_id, created_at)`,
+  `CREATE INDEX IF NOT EXISTS media_by_project ON media (project_id, created_at)`,
   `CREATE INDEX IF NOT EXISTS activity_by_project ON activity (project_id, created_at)`,
   `CREATE INDEX IF NOT EXISTS doc_versions_by_project ON doc_versions (project_id, created_at)`,
 ]

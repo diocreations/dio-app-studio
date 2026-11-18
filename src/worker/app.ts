@@ -176,6 +176,8 @@ type Ctx = {
   heroScale: HeroScale
   /** Trade-matched photos, resolved by the server; empty means artwork only. */
   photos: { wide: string[]; thumb: string[] }
+  /** Token used by owner-uploaded media URLs. */
+  token: string
   timetable: { name: string; when: string; coach: string }[]
   goal: number
   actions: { label: string; screen: string }[]
@@ -655,6 +657,21 @@ function addedBlock(ctx: Ctx, node: DocNode): string {
       return `<div style="margin:10px 0"><button class="btn accent block" type="button" data-go="${esc(appTarget(ctx, action.screen))}">${esc(action.label)}</button></div>`
     }
     case 'image': {
+      if (node.media) {
+        const media = node.media
+        const aspect = media.aspect && media.aspect !== 'auto' ? ` is-${media.aspect}` : ''
+        const ratio = media.width && media.height ? media.width / media.height : 1.6
+        return `<figure class="media-frame${aspect}" style="--media-ratio:${ratio.toFixed(4)};margin:10px 0">
+          <img class="photo media-photo"
+            src="/p/${esc(ctx.token)}/media/${media.id}/640.webp"
+            srcset="/p/${esc(ctx.token)}/media/${media.id}/320.webp 320w, /p/${esc(ctx.token)}/media/${media.id}/640.webp 640w, /p/${esc(ctx.token)}/media/${media.id}/1280.webp 1280w"
+            sizes="(max-width: 620px) calc(100vw - 32px), 620px"
+            alt="${esc(media.alt || title || '')}"
+            ${media.width ? `width="${media.width}"` : ''} ${media.height ? `height="${media.height}"` : ''}
+            loading="lazy" decoding="async"
+            style="object-fit:${media.fit === 'contain' ? 'contain' : 'cover'};object-position:${media.focalX ?? 50}% ${media.focalY ?? 50}%" />
+        </figure>`
+      }
       const shot = showsPhoto(ctx, 'tile') ? photo(ctx, node.id, 'wide') : ''
       return `<div class="card" style="overflow:hidden;margin:10px 0">
         <span class="thumb m-${ctx.theme.motif}" style="height:170px;display:block">${shot}<span class="mono">${esc(title || ctx.spec.logo)}</span></span>
@@ -912,8 +929,12 @@ function quoteBlock(ctx: Ctx): string {
 
 function moreBlock(ctx: Ctx): string {
   const { spec } = ctx
+  // The owner edits the story in the home document. More must show that copy,
+  // not the original seed that the edit replaced.
+  const story =
+    homeSections(ctx.doc).find((node) => node.kind === 'story')?.text?.trim() || spec.story
   return `<div class="sect" style="margin-top:4px"><span class="label">About</span></div>
-    <p style="font-family:var(--display);font-size:16px;line-height:1.5;letter-spacing:var(--tracking)">${esc(spec.story)}</p>
+    <p style="font-family:var(--display);font-size:16px;line-height:1.5;letter-spacing:var(--tracking)">${esc(story)}</p>
     ${hoursBlock(ctx)}
     ${
       spec.features.includes('gallery')
@@ -1255,6 +1276,7 @@ export function renderApp(
     order,
     heroScale,
     photos: { wide: options.photos?.wide ?? [], thumb: options.photos?.thumb ?? [] },
+    token: options.token,
     timetable,
     goal,
     actions: [primary, ...(secondary ? [secondary] : [])],

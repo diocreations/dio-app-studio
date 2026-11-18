@@ -657,6 +657,17 @@ body[data-nav="floating"] .screen.is-detail { bottom: var(--nav-space); }
 .detail-body h1 { font-size: clamp(26px, 7.6vw, 34px); }
 .detail-body .lede { font-size: 13.5px; color: var(--muted); margin-top: 10px; line-height: 1.65; }
 /* A real next step for a short detail page, not decorative filler. */
+/* Owner-uploaded photography. The frame always reserves its ratio, so the
+   first paint does not jump when the lazy image arrives. */
+.media-frame {
+  position: relative; display: block; overflow: hidden; margin: 0;
+  border-radius: var(--r-md); background: var(--surface-2);
+  aspect-ratio: var(--media-ratio, 1.6);
+}
+.media-frame.is-wide { aspect-ratio: 16 / 9; }
+.media-frame.is-square { aspect-ratio: 1 / 1; }
+.media-frame.is-portrait { aspect-ratio: 4 / 5; }
+.media-frame .media-photo { width: 100%; height: 100%; display: block; }
 .recs { margin-top: var(--space-6); }
 .recs-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: var(--space-3); }
 .recs-head b { font-family: var(--display); font-size: var(--text-md); font-weight: var(--weight); letter-spacing: var(--tracking); }

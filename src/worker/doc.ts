@@ -108,12 +108,26 @@ export type SectionStyle = {
 
 export type Responsive = { hideOn: Breakpoint[] }
 
+/** A reference to a stored image, never a URL or credential. */
+export type MediaRef = {
+  id: string
+  alt?: string
+  /** Intrinsic pixels, so the first paint reserves the right space. */
+  width?: number
+  height?: number
+  focalX?: number
+  focalY?: number
+  fit?: 'cover' | 'contain'
+  aspect?: 'auto' | 'wide' | 'square' | 'portrait'
+}
+
 export type DocNode = {
   id: string
   kind: SectionKind
   title?: string
   text?: string
   cta?: { label: string; screen: string }
+  media?: MediaRef
   style: SectionStyle
   responsive: Responsive
   hidden: boolean
@@ -421,9 +435,35 @@ function sanitizeSection(value: unknown, fallbackId: string): DocNode | null {
     ? styleInput.radius
     : undefined
   const id = typeof raw.id === 'string' && SECTION_ID.test(raw.id) ? raw.id : fallbackId
+  const mediaInput = raw.media && typeof raw.media === 'object' ? (raw.media as Record<string, unknown>) : null
+  const mediaId =
+    mediaInput && typeof mediaInput.id === 'string' && /^med_[a-f0-9]{16,40}$/.test(mediaInput.id)
+      ? mediaInput.id
+      : ''
+  const focal = (value: unknown) =>
+    typeof value === 'number' && Number.isFinite(value) ? Math.max(0, Math.min(100, Math.round(value))) : undefined
+  const dimension = (value: unknown) =>
+    typeof value === 'number' && Number.isFinite(value) && value > 0 && value <= 12_000
+      ? Math.round(value)
+      : undefined
+  const media: MediaRef | undefined = mediaId
+    ? {
+        id: mediaId,
+        ...(CLAMP(mediaInput?.alt, 120) ? { alt: CLAMP(mediaInput?.alt, 120) } : {}),
+        ...(dimension(mediaInput?.width) ? { width: dimension(mediaInput?.width) } : {}),
+        ...(dimension(mediaInput?.height) ? { height: dimension(mediaInput?.height) } : {}),
+        ...(focal(mediaInput?.focalX) !== undefined ? { focalX: focal(mediaInput?.focalX) } : {}),
+        ...(focal(mediaInput?.focalY) !== undefined ? { focalY: focal(mediaInput?.focalY) } : {}),
+        ...(mediaInput?.fit === 'cover' || mediaInput?.fit === 'contain' ? { fit: mediaInput.fit } : {}),
+        ...(mediaInput?.aspect === 'auto' || mediaInput?.aspect === 'wide' || mediaInput?.aspect === 'square' || mediaInput?.aspect === 'portrait'
+          ? { aspect: mediaInput.aspect }
+          : {}),
+      }
+    : undefined
   return {
     id,
     kind,
+    ...(media ? { media } : {}),
     title: CLAMP(raw.title, 60) || undefined,
     text: CLAMP(raw.text, 600) || undefined,
     ...(ctaLabel && SCREEN_TARGET.test(screenTarget)
@@ -755,7 +795,7 @@ export function updateSection(
   doc: Doc,
   screenId: string,
   id: string,
-  patch: Partial<Pick<DocNode, 'title' | 'text' | 'hidden' | 'style' | 'responsive' | 'cta'>>,
+  patch: Partial<Pick<DocNode, 'title' | 'text' | 'hidden' | 'style' | 'responsive' | 'cta' | 'media'>>,
 ): Doc {
   return {
     ...doc,
@@ -770,6 +810,7 @@ export function updateSection(
                     ...(patch.title !== undefined ? { title: CLAMP(patch.title, 60) || undefined } : {}),
                     ...(patch.text !== undefined ? { text: CLAMP(patch.text, 600) || undefined } : {}),
                     ...(patch.hidden !== undefined ? { hidden: Boolean(patch.hidden) } : {}),
+                    ...(patch.media !== undefined ? { media: patch.media } : {}),
                     ...(patch.cta
                       ? {
                           cta: {

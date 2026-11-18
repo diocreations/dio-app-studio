@@ -98,17 +98,35 @@ replace it behind the same signature.
   metering, no external call, and the app page remains the only read path.
 - `/p/*` stays noindex in HTML and headers; `/p/:token/edit` inherits both.
 
+## Media and catalogue
+
+Image components carry a `MediaRef` rather than a URL: media id, alt text,
+intrinsic dimensions, focal point, fit and crop aspect. The inspector offers
+replace, upload, library, reposition (drag the focal dot), fill/fit and aspect,
+and every change goes through the document autosave and the live canvas.
+
+Uploads are converted in the browser to 320/640/1280 WebP variants, then
+validated server-side and stored in R2 by content hash. The Photos button opens
+the owner's library with dimensions, format, reuse and deletion; deletion is
+refused while the current document uses an image, and old versions are scrubbed
+so cleanup is still possible. Trade-aware photo briefs suggest what to
+photograph, but never invent business photographs.
+
+The Catalogue button edits the customer-facing catalogue and offers: category
+names, item names, short descriptions, prices and offers. It writes the app spec
+only, so saving content does not create a new document or lose the owner's
+layout work.
+
 ## What this slice is not
 
 Still ahead, in rough order of value:
 
-1. Element-level nodes inside a section (drag text/button/image), inline canvas
-   text editing, image upload and cropping.
-2. Version history for documents (the model has `v`; there is no snapshot table
-   yet) and restore.
-3. A hosted AI model behind `applyCommand` with per-user limits.
-4. Per-breakpoint style overrides beyond show/hide, and saved design presets.
-5. Design-system review for all 27 trades (the themes and three directions already
+1. Element-level nodes inside a section (drag text/button/image) and inline
+   canvas text editing.
+2. A hosted AI model behind `applyCommand` with per-user limits; photo briefs
+   are currently deterministic trade-aware suggestions, not generated images.
+3. Per-breakpoint style overrides beyond show/hide, and saved design presets.
+4. Design-system review for all 27 trades (the themes and three directions already
    exist; they are not yet curated as editor-facing presets).
 
 The editor is intentionally section-first: a restaurant owner can reorder,

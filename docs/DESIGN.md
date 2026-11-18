@@ -153,29 +153,48 @@ trade, distinct signatures, legacy rendering unchanged, document overrides
 reaching the app, and rejection of unknown values. Existing tests were not
 removed.
 
-## 7. Media pipeline assessment (R2)
+## 7. Media pipeline (R2)
 
-Not implemented, and no upload controls are exposed in the editor.
+Implemented in `src/worker/media.ts`, with the editor UI in
+`src/worker/views/editor.ts`. Workers cannot run an image codec, so decoding and
+resizing happen in the owner's browser and the server verifies every byte it
+stores.
 
-A safe pipeline would be:
+1. **Authenticated upload** — `POST /api/projects/:token/media` under the
+   project's private edit token, same-origin checked, 18 MB request ceiling.
+   The browser never receives R2 credentials. The `MEDIA` binding is server-only.
+2. **Validation** — the original is sniffed by magic bytes (PNG/JPEG/WebP only;
+   SVG and forged extensions are rejected), limited to 8 MB and 24 MP. Every
+   stored variant must independently carry a WebP header, match its declared
+   dimensions and stay under 2 MB.
+3. **Normalisation** — the browser uses `createImageBitmap` (auto-orienting),
+   draws 320/640/1280-wide canvases and encodes WebP at quality 0.82. The
+   original file is never stored.
+4. **Storage** — R2 keys are
+   `projects/{projectId}/media/{sha256}/{width}.webp`; D1 stores the media id,
+   dimensions, bytes, alt text, focal point and variant list. A unique
+   `(project_id, hash)` pair deduplicates the same upload.
+5. **Replacement and crops** — the document stores a `MediaRef` (id, alt,
+   intrinsic dimensions, focal X/Y, fit and aspect), never a URL. Replacing,
+   repositioning, fitting and crop shape all persist through the normal doc
+   autosave; the stored photograph is never destructively edited.
+6. **Delivery** — `/p/:token/media/:id/:width.webp` serves the closest stored
+   variant with `image/webp`, `nosniff`, and
+   `Cache-Control: private, max-age=31536000, immutable`. Access requires the
+   app's token, so media stays private to the app link. The renderer emits
+   `srcset` at 320/640/1280 with intrinsic `width`/`height`, `sizes`, lazy
+   loading and async decoding.
+7. **Limits** — 24 files and 40 MB per project, surfaced in the editor; the API
+   returns `quota_files` or `quota_bytes` before writing.
+8. **Deletion** — deletion is refused with `in_use` while the current document
+   references the image. Retained versions are scrubbed of the reference before
+   the R2 objects and D1 row are removed, so a restore shows an empty photo
+   block rather than a broken image. R2 failures return `storage_failed` and
+   leave no metadata behind.
 
-1. **Authenticated upload** — a Worker endpoint under the project's edit token
-   or owner session, same-origin checked, with a per-project quota. No direct
-   browser-to-bucket credentials.
-2. **Validation** — sniff magic bytes (JPEG/PNG/WebP/AVIF), enforce a maximum
-   byte size and pixel count before decoding, reject SVG, strip EXIF.
-3. **Normalisation** — decode in a Worker-compatible image service, auto-orient,
-   emit responsive widths (e.g. 320/640/1280) as WebP with JPEG fallback.
-4. **Storage** — R2 keys namespaced by project and content hash for dedupe and
-   reuse; metadata row in D1 with owner, dimensions, bytes and created time.
-5. **Replacement** — the document stores a media id plus focal point and alt
-   text, not a signed URL; delivery resolves the id.
-6. **Delivery** — same-origin Worker route or signed CDN URL with long cache
-   headers; private until the app is published.
-7. **Limits** — per-project object count and total bytes, enforced on upload and
-   surfaced in the editor.
-8. **Deletion** — removing a media object must check document references before
-   deleting the R2 object.
-
-The current image component and generated artwork remain unchanged until that
-backend exists.
+The media editor also offers trade-aware photo briefs (subject and reason, such
+as "a drink and pastry on the counter" for a café). They are prompts for the
+owner's own photography, never generated photographs or claims about the
+premises. The image inspector exposes replace, upload, library, focal point,
+fit and aspect controls; the catalogue editor covers product names,
+descriptions, prices and offers.

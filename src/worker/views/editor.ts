@@ -19,6 +19,8 @@ export function editorPage(options: { project: Project; doc: Doc; origin: string
     blurb: entry.blurb,
   }))
   const directionsJson = JSON.stringify(directions).replace(/</g, '\\u003c')
+  const catalogJson = JSON.stringify(project.spec.menu).replace(/</g, '\\u003c')
+  const offersJson = JSON.stringify(project.spec.offers).replace(/</g, '\\u003c')
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -117,6 +119,48 @@ button { cursor: pointer; }
 .right .head { padding: 14px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between; }
 .right .head b { font-family: var(--serif); font-size: 15px; font-weight: 600; }
 .badge { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.media-modal { position: fixed; inset: 0; z-index: 40; background: rgba(25,23,19,.45); backdrop-filter: blur(3px); display: grid; place-items: center; padding: 24px; }
+.media-modal[hidden] { display: none; }
+.media-card { width: min(760px, 100%); max-height: min(760px, 90vh); display: flex; flex-direction: column; background: var(--panel); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(0,0,0,.5); }
+.media-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.media-head div { display: grid; gap: 2px; }
+.media-head b { font-family: var(--serif); font-size: 19px; font-weight: 600; }
+.media-head span { color: var(--muted); font-size: 11px; }
+.media-body { overflow-y: auto; padding: 16px 18px 22px; }
+.upload-zone { display: grid; gap: 3px; justify-items: center; text-align: center; border: 1px dashed var(--line); border-radius: 12px; padding: 20px; cursor: pointer; background: var(--paper); }
+.upload-zone:hover { border-color: var(--accent); }
+.upload-zone input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.upload-zone b { font-size: 13px; }
+.upload-zone span { color: var(--muted); font-size: 10.5px; }
+.media-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+.media-item { border: 1px solid var(--line-soft); background: #fff; border-radius: 10px; overflow: hidden; text-align: left; }
+.media-item img { width: 100%; aspect-ratio: 1.25; object-fit: cover; display: block; background: var(--paper); }
+.media-item .meta { padding: 7px 8px 8px; display: grid; gap: 2px; }
+.media-item .meta b { font-size: 10.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.media-item .meta span { color: var(--muted); font-size: 9px; }
+.media-item .actions { display: flex; gap: 4px; padding: 0 8px 8px; }
+.media-item .actions .btn { padding: 4px 8px; font-size: 9.5px; border-radius: 6px; }
+.media-item .actions .del { color: #a13b2b; }
+.suggestions { display: grid; gap: 6px; margin: 4px 0 14px; }
+.suggestion { display: grid; gap: 2px; padding: 9px 10px; border: 1px solid var(--line-soft); border-radius: 9px; background: var(--paper); }
+.suggestion b { font-size: 11px; }
+.suggestion span { color: var(--muted); font-size: 10px; line-height: 1.4; }
+.media-preview { position: relative; border-radius: 9px; overflow: hidden; background: var(--paper); aspect-ratio: 16/10; margin-bottom: 8px; touch-action: none; cursor: crosshair; }
+.media-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.media-preview .focal { position: absolute; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 1px 4px rgba(0,0,0,.4); pointer-events: none; }
+.catalog-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; border-top: 1px solid var(--line); }
+.catalog-foot .hint { margin: 0; }
+.cat-group { border: 1px solid var(--line-soft); border-radius: 10px; padding: 10px; margin-bottom: 10px; background: #fff; }
+.cat-group-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.cat-group-head input { flex: 1; font-weight: 600; }
+.cat-row { display: grid; grid-template-columns: 1.1fr 1.5fr 70px 24px; gap: 6px; margin-bottom: 6px; align-items: center; }
+.cat-row input { min-width: 0; padding: 7px 8px; font-size: 11px; }
+.cat-row .x { border: 0; background: none; color: #a13b2b; cursor: pointer; font-size: 14px; }
+.cat-add { border: 1px dashed var(--line); background: none; border-radius: 7px; padding: 6px 9px; font-size: 10px; color: var(--muted); cursor: pointer; }
+.cat-add:hover { border-color: var(--accent); color: var(--ink); }
+.cat-section-title { font-size: 10.5px; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin: 18px 0 8px; }
+.cat-offer { display: grid; grid-template-columns: 1fr 2fr 24px; gap: 6px; margin-bottom: 6px; }
+.cat-offer input { min-width: 0; padding: 7px 8px; font-size: 11px; }
 .dir-grid { display: grid; gap: 6px; }
 .dir { display: grid; gap: 2px; text-align: left; border: 1px solid var(--line-soft); background: #fff; border-radius: 10px; padding: 9px 10px; }
 .dir:hover { border-color: var(--line); }
@@ -170,6 +214,8 @@ button { cursor: pointer; }
     <button data-device="tablet" title="Tablet check">Tablet</button>
     <button data-device="mobile" class="on" title="Phone">Phone</button>
   </div>
+  <button class="iconbtn" id="mediaBtn" title="Photos" aria-label="Photos">▧</button>
+  <button class="iconbtn" id="catalogBtn" title="Catalogue and offers" aria-label="Catalogue and offers">▤</button>
   <button class="iconbtn" id="history" title="Version history" aria-label="Version history">⟲</button>
   <button class="iconbtn" id="panelRight" title="Properties" aria-label="Properties">⚙</button>
   <a class="btn ghost" href="/p/${esc(token)}" target="_blank" rel="noreferrer">Review page</a>
@@ -216,10 +262,34 @@ button { cursor: pointer; }
     <div id="inspector"></div>
   </aside>
 </div>
+<div class="media-modal" id="mediaModal" hidden>
+  <div class="media-card" role="dialog" aria-modal="true" aria-label="Media library">
+    <div class="media-head"><div><b>Photos</b><span id="mediaSub">Your image library</span></div><button class="iconbtn" id="mediaClose" aria-label="Close">✕</button></div>
+    <div class="media-body">
+      <label class="upload-zone" id="uploadZone">
+        <input id="mediaFile" type="file" accept="image/jpeg,image/png,image/webp" />
+        <b>Upload a photo</b>
+        <span>JPEG, PNG or WebP · up to 8 MB · resized for mobile automatically</span>
+      </label>
+      <p class="hint" id="mediaStatus"></p>
+      <div id="mediaSuggestions"></div>
+      <div class="media-grid" id="mediaGrid"></div>
+    </div>
+  </div>
+</div>
+<div class="media-modal" id="catalogModal" hidden>
+  <div class="media-card" role="dialog" aria-modal="true" aria-label="Catalogue and offers">
+    <div class="media-head"><div><b>Catalogue &amp; offers</b><span>Names, descriptions and prices customers see</span></div><button class="iconbtn" id="catalogClose" aria-label="Close">✕</button></div>
+    <div class="media-body" id="catalogBody"></div>
+    <div class="catalog-foot"><span class="hint" id="catalogStatus">Changes appear in the app after saving.</span><button class="btn primary" id="catalogSave">Save catalogue</button></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 <script>
 const TOKEN = ${JSON.stringify(token)};
 const INITIAL = ${json};
+const CATALOG = ${catalogJson};
+const OFFERS = ${offersJson};
 const DIRECTIONS = ${directionsJson};
 const HAS_SAVED = ${project.doc ? 'true' : 'false'};
 const SECTION_LABELS = { hero:'Hero', featured:'Featured', offers:'Offers', loyalty:'Rewards', visit:'Visit', story:'Story', testimonials:'Testimonials', cta:'Call to action', heading:'Heading', text:'Text', button:'Button', image:'Image', banner:'Banner', productList:'Product list', search:'Search', form:'Contact form', gallery:'Gallery' };
@@ -227,7 +297,7 @@ const SCREEN_LABELS = { home:'Home', catalog:'Catalogue', search:'Search', saved
 const COMPONENTS = ['heading','text','button','image','banner','gallery','productList','search','form','testimonials','cta','offers','loyalty','visit','story','featured'];
 const SINGLE = ['hero','featured','offers','loyalty','visit','story','testimonials','cta','search','form','productList'];
 const SCREENS = [['contact','Contact','Address, hours and a message'],['about','About','Your story and a photo'],['profile','Profile','Account and shortcuts'],['custom','Blank','A new screen']];
-const state = { doc: JSON.parse(JSON.stringify(INITIAL)), screen: INITIAL.initialScreen || INITIAL.screens[0].id, selected: null, device: 'mobile', history: [], future: [], historyMode: false };
+const state = { doc: JSON.parse(JSON.stringify(INITIAL)), screen: INITIAL.initialScreen || INITIAL.screens[0].id, selected: null, device: 'mobile', history: [], future: [], historyMode: false, media: [], mediaTarget: null, mediaBusy: false, catalog: [], offers: [] };
 const $ = (id) => document.getElementById(id);
 const frame = $('frame');
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
@@ -351,6 +421,7 @@ function renderInspector() {
       (node.kind === 'button' || node.kind === 'banner' || node.kind === 'cta' ? '<div class="field"><label>Button label</label><input id="pCta" type="text" maxlength="28" value="' + esc((node.cta && node.cta.label) || '') + '" /></div><div class="field"><label>Button opens</label><select id="pTarget">' + state.doc.screens.map((s) => '<option value="' + s.id + '"' + (node.cta && node.cta.screen === s.id ? ' selected' : '') + '>' + esc(s.name) + '</option>').join('') + '</select></div>' : '') +
     (node.kind === 'hero' ? '' : '<div class="field"><label>Move to another screen</label><select id="pMoveTo"><option value="">Choose a screen…</option>' + state.doc.screens.filter((s) => s.id !== state.screen).map((s) => '<option value="' + s.id + '">' + esc(s.name) + '</option>').join('') + '</select></div>') +
     '</div>' +
+    (node.kind === 'image' ? '<div class="sec"><h3>Photograph</h3>' + mediaInspector(node) + '</div>' : '') +
     '<div class="sec"><h3>Design</h3>' +
       '<div class="field"><label>Alignment</label><div class="seg"><button data-align="left" class="' + (style.align !== 'center' ? 'on' : '') + '">Left</button><button data-align="center" class="' + (style.align === 'center' ? 'on' : '') + '">Centred</button></div></div>' +
       '<div class="field"><label>Background</label><div class="swatches">' +
@@ -406,6 +477,34 @@ function renderScreenInspector() {
 function bindInspector(node) {
   $('pTitle').addEventListener('input', (event) => commit((doc) => patchNode(doc, node.id, { title: event.target.value })));
   $('pText').addEventListener('input', (event) => commit((doc) => patchNode(doc, node.id, { text: event.target.value })));
+  const pick = $('pPick');
+  if (pick) pick.addEventListener('click', () => openMedia(node.id));
+  const alt = $('pAlt');
+  if (alt) alt.addEventListener('change', () => patchMedia(node.id, { alt: alt.value.trim().slice(0, 120) }));
+  const fit = $('pFit');
+  if (fit) fit.addEventListener('change', () => patchMedia(node.id, { fit: fit.value }));
+  const aspect = $('pAspect');
+  if (aspect) aspect.addEventListener('change', () => patchMedia(node.id, { aspect: aspect.value }));
+  const removePhoto = $('pRemove');
+  if (removePhoto) removePhoto.addEventListener('click', () => patchMedia(node.id, null));
+  const preview = $('pMediaPreview');
+  if (preview) {
+    let dragging = false;
+    const point = (event) => {
+      const rect = preview.getBoundingClientRect();
+      const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+      const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
+      const image = preview.querySelector('img');
+      const dot = preview.querySelector('.focal');
+      if (image) image.style.objectPosition = x + '% ' + y + '%';
+      if (dot) { dot.style.left = x + '%'; dot.style.top = y + '%'; }
+      return { x: Math.round(x), y: Math.round(y) };
+    };
+    preview.addEventListener('pointerdown', (event) => { dragging = true; preview.setPointerCapture && preview.setPointerCapture(event.pointerId); point(event); });
+    preview.addEventListener('pointermove', (event) => { if (dragging) point(event); });
+    preview.addEventListener('pointerup', (event) => { if (!dragging) return; dragging = false; const at = point(event); patchMedia(node.id, { focalX: at.x, focalY: at.y }); });
+    preview.addEventListener('pointercancel', () => { dragging = false; });
+  }
   const moveTo = $('pMoveTo');
   if (moveTo) moveTo.addEventListener('change', (event) => { if (event.target.value) moveComponentTo(event.target.value, node.id); });
   const cta = $('pCta'), target = $('pTarget');
@@ -437,6 +536,145 @@ function patchNode(doc, id, patch) {
   if (patch.cta !== undefined) node.cta = { label: (patch.cta.label || 'Continue').slice(0,28), screen: patch.cta.screen };
   if (patch.style) node.style = Object.assign({}, node.style, patch.style);
   return doc;
+}
+function mediaSrc(item, width) { return '/p/' + TOKEN + '/media/' + item.id + '/' + width + '.webp'; }
+function mediaInspector(node) {
+  const media = node.media;
+  if (!media) return '<p class="empty">No photo yet. A real photograph of the work will always beat generated artwork.</p><button class="btn primary" id="pPick">Choose a photo</button>';
+  const src = mediaSrc(media, 320);
+  return '<div class="media-preview" id="pMediaPreview"><img src="' + src + '" alt="' + esc(media.alt || '') + '" style="object-fit:' + (media.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (media.focalX ?? 50) + '% ' + (media.focalY ?? 50) + '%" /><span class="focal" style="left:' + (media.focalX ?? 50) + '%;top:' + (media.focalY ?? 50) + '%"></span></div>' +
+    '<div class="field"><label>Describe the photo</label><input id="pAlt" type="text" maxlength="120" value="' + esc(media.alt || '') + '" placeholder="What is in this image?" /></div>' +
+    '<div class="field"><label>Image fitting</label><select id="pFit"><option value="cover"' + (media.fit !== 'contain' ? ' selected' : '') + '>Fill the frame</option><option value="contain"' + (media.fit === 'contain' ? ' selected' : '') + '>Fit inside</option></select></div>' +
+    '<div class="field"><label>Crop shape</label><select id="pAspect"><option value="wide"' + (media.aspect === 'wide' || !media.aspect ? ' selected' : '') + '>Wide 16:9</option><option value="square"' + (media.aspect === 'square' ? ' selected' : '') + '>Square</option><option value="portrait"' + (media.aspect === 'portrait' ? ' selected' : '') + '>Portrait 4:5</option><option value="auto"' + (media.aspect === 'auto' ? ' selected' : '') + '>Original shape</option></select></div>' +
+    '<p class="hint">Drag the dot to reposition the crop. This changes what stays in frame, never the stored photograph.</p>' +
+    '<div class="actions"><button class="btn" id="pPick">Replace photo</button><button class="btn" id="pRemove" style="color:#a13b2b">Remove</button></div>';
+}
+function patchMedia(id, patch) {
+  commit((doc) => {
+    const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc;
+    const node = screen.sections.find((s) => s.id === id); if (!node) return doc;
+    if (patch === null) delete node.media;
+    else node.media = Object.assign({}, node.media, patch);
+    return doc;
+  }, true);
+}
+function openMedia(targetId) {
+  state.mediaTarget = targetId || null;
+  $('mediaSub').textContent = targetId ? 'Choose a photo for this block' : 'Your image library';
+  $('mediaModal').hidden = false;
+  loadMedia();
+}
+function closeMedia() { $('mediaModal').hidden = true; state.mediaTarget = null; state.mediaBusy = false; $('mediaStatus').textContent = ''; }
+function loadMedia() {
+  fetch('/api/projects/' + TOKEN + '/media').then((r) => r.json().then((payload) => { if (!r.ok) throw new Error('media'); return payload; })).then((payload) => {
+    state.media = payload.media || [];
+    renderMedia(payload.suggestions || []);
+  }).catch(() => { $('mediaGrid').innerHTML = '<p class="empty">The media library could not be loaded. Check the local R2 binding.</p>'; });
+}
+function renderMedia(suggestions) {
+  const grid = $('mediaGrid');
+  grid.innerHTML = state.media.length ? state.media.map((item) => '<div class="media-item">' +
+    '<img src="' + mediaSrc(item, 320) + '" alt="' + esc(item.alt || 'Uploaded image') + '" loading="lazy" decoding="async" />' +
+    '<div class="meta"><b>' + esc(item.alt || 'Untitled photo') + '</b><span>' + item.width + ' × ' + item.height + ' · WebP</span></div>' +
+    '<div class="actions"><button class="btn" data-media-use="' + item.id + '">' + (state.mediaTarget ? 'Use photo' : 'Add to screen') + '</button><button class="btn del" data-media-delete="' + item.id + '">Delete</button></div></div>').join('')
+    : '<p class="empty">No photos yet. Upload one — it is resized to mobile widths automatically and never published at full resolution.</p>';
+  const suggestionsEl = $('mediaSuggestions');
+  suggestionsEl.innerHTML = suggestions.length ? '<h3 style="font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:0 0 7px">Where photos would help</h3><div class="suggestions">' +
+    suggestions.map((entry) => '<div class="suggestion"><b>' + esc(entry.slot) + ' — ' + esc(entry.subject) + '</b><span>' + esc(entry.reason) + '</span></div>').join('') + '</div>' : '';
+}
+function applyMedia(record, nodeId) {
+  commit((doc) => {
+    const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc;
+    let node = nodeId ? screen.sections.find((s) => s.id === nodeId) : screen.sections.find((s) => s.kind === 'image');
+    if (!node) {
+      let id = 'sec_image'; let index = 2; while (screen.sections.some((s) => s.id === id)) { id = 'sec_image_' + index; index += 1; }
+      node = { id, kind: 'image', title: record.alt || 'Photo', style: {}, responsive: { hideOn: [] }, hidden: false };
+      screen.sections.push(node);
+    }
+    node.media = { id: record.id, width: record.width, height: record.height, alt: record.alt || node.title || '', focalX: record.focalX ?? 50, focalY: record.focalY ?? 50, fit: (node.media && node.media.fit) || 'cover', aspect: (node.media && node.media.aspect) || 'wide' };
+    state.selected = node.id;
+    return doc;
+  }, true);
+  closeMedia(); toast('Photo added');
+}
+async function uploadPhoto(file) {
+  if (!file) return;
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) return toast('Use a JPEG, PNG or WebP image.');
+  if (file.size > 8 * 1024 * 1024) return toast('That image is larger than 8 MB.');
+  state.mediaBusy = true; $('mediaStatus').textContent = 'Preparing mobile sizes…';
+  try {
+    const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' }).catch(() => createImageBitmap(file));
+    if (bitmap.width * bitmap.height > 24_000_000) throw new Error('That image has too many pixels. Try a smaller photograph.');
+    const widths = [...new Set([320, 640, 1280].map((width) => Math.min(width, bitmap.width)))].filter((width) => width > 0);
+    const form = new FormData();
+    form.append('file', file, file.name || 'photo');
+    form.append('alt', '');
+    for (const width of widths) {
+      const height = Math.max(1, Math.round((bitmap.height / bitmap.width) * width));
+      const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
+      const context = canvas.getContext('2d'); context.imageSmoothingQuality = 'high'; context.drawImage(bitmap, 0, 0, width, height);
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', 0.82));
+      if (!blob) throw new Error('This browser could not prepare a WebP image.');
+      form.append('variant', blob, width + '.webp');
+    }
+    if (bitmap.close) bitmap.close();
+    $('mediaStatus').textContent = 'Uploading…';
+    const response = await fetch('/api/projects/' + TOKEN + '/media', { method: 'POST', body: form });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error((payload.error && payload.error.message) || 'Upload failed.');
+    $('mediaStatus').textContent = '';
+    if (state.mediaTarget) return applyMedia(payload.media, state.mediaTarget);
+    await loadMedia(); toast('Photo uploaded');
+  } catch (error) {
+    $('mediaStatus').textContent = error && error.message ? error.message : 'Upload failed.';
+  } finally { state.mediaBusy = false; }
+}
+function deleteMediaItem(id) {
+  if (!confirm('Delete this photo? Images used by the app or a saved version cannot be deleted.')) return;
+  fetch('/api/projects/' + TOKEN + '/media/' + id, { method: 'DELETE' }).then((response) => response.json().then((payload) => { if (!response.ok) throw new Error((payload.error && payload.error.message) || 'Could not delete.'); return payload; })).then(() => { toast('Photo deleted'); loadMedia(); }).catch((error) => toast(error.message));
+}
+function openCatalog() {
+  state.catalog = clone(CATALOG); state.offers = clone(OFFERS);
+  $('catalogStatus').textContent = 'Changes appear in the app after saving.';
+  $('catalogModal').hidden = false; renderCatalog();
+}
+function closeCatalog() { $('catalogModal').hidden = true; }
+function renderCatalog() {
+  const body = $('catalogBody');
+  body.innerHTML = (state.catalog.length ? state.catalog.map((section, sectionIndex) => '<div class="cat-group">' +
+    '<div class="cat-group-head"><input data-cat-section="' + sectionIndex + '" value="' + esc(section.name) + '" maxlength="40" aria-label="Category name" /><button class="cat-add" data-cat-add="' + sectionIndex + '">+ Item</button></div>' +
+    ((section.items || []).length ? section.items.map((item, itemIndex) => '<div class="cat-row">' +
+      '<input data-cat-field="menu" data-sec="' + sectionIndex + '" data-item="' + itemIndex + '" data-field="name" value="' + esc(item.name) + '" maxlength="60" placeholder="Name" aria-label="Item name" />' +
+      '<input data-cat-field="menu" data-sec="' + sectionIndex + '" data-item="' + itemIndex + '" data-field="desc" value="' + esc(item.desc || '') + '" maxlength="120" placeholder="Short description" aria-label="Item description" />' +
+      '<input data-cat-field="menu" data-sec="' + sectionIndex + '" data-item="' + itemIndex + '" data-field="price" type="number" min="0" step="0.01" value="' + ((item.price || 0) / 100).toFixed(2) + '" aria-label="Price" />' +
+      '<button class="x" data-cat-remove="' + sectionIndex + ':' + itemIndex + '" title="Remove item">✕</button></div>').join('')
+      : '<p class="hint">No items yet. Add the first one.</p>') + '</div>').join('')
+    : '<p class="empty">No catalogue categories yet. Add one and fill in your real products or services.</p>') +
+    '<button class="cat-add" data-cat-add-section="1">+ Add category</button>' +
+    '<h3 class="cat-section-title">Offers</h3>' +
+    (state.offers.length ? state.offers.map((offer, index) => '<div class="cat-offer"><input data-offer="' + index + '" data-field="title" value="' + esc(offer.title) + '" maxlength="60" placeholder="Offer title" aria-label="Offer title" /><input data-offer="' + index + '" data-field="body" value="' + esc(offer.body) + '" maxlength="160" placeholder="What the customer gets" aria-label="Offer details" /><button class="x" data-offer-remove="' + index + '" title="Remove offer">✕</button></div>').join('')
+      : '<p class="hint">No offers. Leave this empty rather than promising something you cannot honour.</p>') +
+    '<button class="cat-add" data-offer-add="1" style="margin-top:6px">+ Add offer</button>';
+}
+function catalogInput(event) {
+  const input = event.target;
+  if (input.dataset.catSection !== undefined) { state.catalog[Number(input.dataset.catSection)].name = input.value; return; }
+  if (input.dataset.catField === 'menu') {
+    const item = state.catalog[Number(input.dataset.sec)]?.items[Number(input.dataset.item)]; if (!item) return;
+    if (input.dataset.field === 'price') item.price = Math.max(0, Math.round(Number(input.value || 0) * 100));
+    else item[input.dataset.field] = input.value;
+    return;
+  }
+  if (input.dataset.offer !== undefined) {
+    const offer = state.offers[Number(input.dataset.offer)]; if (offer) offer[input.dataset.field] = input.value;
+  }
+}
+function saveCatalog() {
+  $('catalogStatus').textContent = 'Saving…';
+  fetch('/api/projects/' + TOKEN + '/catalog', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ menu: state.catalog, offers: state.offers }) })
+    .then((response) => response.json().then((payload) => { if (!response.ok) throw new Error((payload.error && payload.error.message) || 'Could not save the catalogue.'); return payload; }))
+    .then((payload) => { state.catalog = payload.menu; state.offers = payload.offers; CATALOG.splice(0, CATALOG.length, ...payload.menu); OFFERS.splice(0, OFFERS.length, ...payload.offers); closeCatalog(); toast('Catalogue saved'); reloadFrame(); })
+    .catch((error) => { $('catalogStatus').textContent = error.message; });
 }
 function renderHistory() {
   $('selectionLabel').textContent = 'Versions';
@@ -519,6 +757,8 @@ function removeScreen(id) {
   }, true);
 }
 document.addEventListener('click', (event) => {
+  const mediaUse = event.target.closest('[data-media-use]'); if (mediaUse) { const record = state.media.find((item) => item.id === mediaUse.dataset.mediaUse); if (record) applyMedia(record, state.mediaTarget); return; }
+  const mediaDelete = event.target.closest('[data-media-delete]'); if (mediaDelete) { deleteMediaItem(mediaDelete.dataset.mediaDelete); return; }
   const screenAdd = event.target.closest('[data-add-screen]'); if (screenAdd) { addScreen(screenAdd.dataset.addScreen); return; }
   const componentAdd = event.target.closest('[data-add-component]'); if (componentAdd) { addComponent(componentAdd.dataset.addComponent); return; }
   const open = event.target.closest('[data-open]'); if (open) { state.screen = open.dataset.open; state.selected = null; render(); reloadFrame(); return; }
@@ -543,6 +783,27 @@ document.querySelectorAll('[data-device]').forEach((button) => button.addEventLi
   state.device = button.dataset.device;
   $('phone').className = 'phone ' + state.device;
 }));
+$('mediaBtn').addEventListener('click', () => openMedia(null));
+$('mediaClose').addEventListener('click', closeMedia);
+$('mediaModal').addEventListener('click', (event) => { if (event.target === $('mediaModal')) closeMedia(); });
+$('mediaFile').addEventListener('change', (event) => { const file = event.target.files && event.target.files[0]; event.target.value = ''; if (file) uploadPhoto(file); });
+$('catalogBtn').addEventListener('click', openCatalog);
+$('catalogClose').addEventListener('click', closeCatalog);
+$('catalogModal').addEventListener('click', (event) => { if (event.target === $('catalogModal')) closeCatalog(); });
+$('catalogSave').addEventListener('click', saveCatalog);
+$('catalogBody').addEventListener('input', catalogInput);
+$('catalogBody').addEventListener('click', (event) => {
+  const addItem = event.target.closest('[data-cat-add]');
+  if (addItem) { state.catalog[Number(addItem.dataset.catAdd)].items.push({ name: '', desc: '', price: 0 }); renderCatalog(); return; }
+  const addSection = event.target.closest('[data-cat-add-section]');
+  if (addSection) { state.catalog.push({ name: 'New category', items: [{ name: '', desc: '', price: 0 }] }); renderCatalog(); return; }
+  const remove = event.target.closest('[data-cat-remove]');
+  if (remove) { const [section, item] = remove.dataset.catRemove.split(':').map(Number); state.catalog[section].items.splice(item, 1); renderCatalog(); return; }
+  const addOffer = event.target.closest('[data-offer-add]');
+  if (addOffer) { state.offers.push({ title: '', body: '' }); renderCatalog(); return; }
+  const removeOffer = event.target.closest('[data-offer-remove]');
+  if (removeOffer) { state.offers.splice(Number(removeOffer.dataset.offerRemove), 1); renderCatalog(); }
+});
 $('history').addEventListener('click', () => { state.historyMode = !state.historyMode; if (state.historyMode) state.selected = null; render(); $('right').classList.add('open'); });
 $('panelLeft').addEventListener('click', () => $('left').classList.toggle('open'));
 $('panelRight').addEventListener('click', () => $('right').classList.toggle('open'));

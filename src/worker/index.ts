@@ -30,6 +30,16 @@ import {
 import { buildSpec, quote, sanitizeMenu, type VerticalId } from './pricing'
 import { applyCommand, docFromSpec, normalizeDoc } from './doc'
 import { editorPage } from './views/editor'
+import {
+  MediaError,
+  deleteMedia,
+  listMedia,
+  mediaSuggestions,
+  mediaView,
+  serveMedia,
+  uploadMedia,
+  type MediaBucket,
+} from './media'
 import type { VideoLink } from './types'
 import { cleanLayout, designsFor, readPrompt } from './prompt'
 import { sampleSpec } from './proof'
@@ -50,6 +60,8 @@ import { esc, page } from './views/shell'
 type Bindings = {
   DB: D1Database
   ASSETS: Fetcher
+  /** Private R2 bucket for owner-uploaded images. */
+  MEDIA?: R2Bucket
   PEXELS_API_KEY?: string
   /** Operator key for /studio. Unset means the board stays closed. */
   STUDIO_KEY?: string
@@ -146,17 +158,19 @@ export async function visitorBucket(ip: string | undefined): Promise<string> {
     .join('')
 }
 
-app.use(
-  '/api/*',
-  bodyLimit({
+// Uploads stream to their own route with a larger ceiling; every other API
+// keeps the tight JSON limit.
+app.use('/api/*', async (c, next) => {
+  if (/\/media$/.test(c.req.path)) return next()
+  return bodyLimit({
     maxSize: 256 * 1024,
     onError: (c) =>
       c.json(
         { error: { code: 'body_too_large', message: 'That payload is too large.' } },
         413,
       ),
-  }),
-)
+  })(c, next)
+})
 
 const TOKEN = /^[0-9a-f]{24}$/
 
@@ -178,8 +192,13 @@ function isHttps(url: string): boolean {
 }
 
 function fail(
-  c: { json: (body: unknown, status: 400 | 401 | 403 | 404 | 415 | 422 | 429 | 500 | 502) => Response },
-  status: 400 | 401 | 403 | 404 | 415 | 422 | 429 | 500 | 502,
+  c: {
+    json: (
+      body: unknown,
+      status: 400 | 401 | 403 | 404 | 409 | 413 | 415 | 422 | 429 | 500 | 502 | 503,
+    ) => Response
+  },
+  status: 400 | 401 | 403 | 404 | 409 | 413 | 415 | 422 | 429 | 500 | 502 | 503,
   code: string,
   message: string,
 ): Response {
@@ -376,6 +395,33 @@ app.get('/p/:token/app', async (c) => {
       screen: c.req.query('editor') === '1' ? c.req.query('screen')?.slice(0, 40) : undefined,
     }),
   )
+})
+
+app.get('/p/:token/media/:mediaId/:file', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.text('Not found', 404)
+  const width = Number((c.req.param('file') ?? '').replace('.webp', ''))
+  if (!/^\d{2,4}\.webp$/.test(c.req.param('file') ?? '') || !Number.isFinite(width))
+    return c.text('Not found', 404)
+  if (!c.env.MEDIA) return c.text('Image storage unavailable', 503)
+  try {
+    const result = await serveMedia(
+      c.env.DB,
+      c.env.MEDIA as unknown as MediaBucket,
+      project.id,
+      c.req.param('mediaId'),
+      width,
+    )
+    if (!result || !result.body) return c.text('Not found', 404)
+    c.header('Content-Type', 'image/webp')
+    c.header('Content-Length', String(result.variant.bytes))
+    c.header('Cache-Control', 'private, max-age=31536000, immutable')
+    c.header('X-Content-Type-Options', 'nosniff')
+    if (result.etag) c.header('ETag', result.etag)
+    return c.body(result.body as ReadableStream)
+  } catch {
+    return c.text('Image storage unavailable', 503)
+  }
 })
 
 app.get('/p/:token/manifest.webmanifest', async (c) => {
@@ -767,6 +813,130 @@ app.post('/api/projects/:token/doc/versions/:versionId/restore', async (c) => {
   await saveDoc(c.env.DB, project, doc)
   c.header('Cache-Control', 'private, no-store')
   return c.json({ ok: true, doc })
+})
+
+function mediaFailure(
+  c: Parameters<typeof fail>[0],
+  error: unknown,
+): Response {
+  if (error instanceof MediaError)
+    return fail(c, error.status as Parameters<typeof fail>[1], error.code, error.message)
+  return fail(c, 502, 'storage_failed', 'Image storage is unavailable. Try again in a moment.')
+}
+
+app.get('/api/projects/:token/media', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const media = await listMedia(c.env.DB, project.id)
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({
+    media: media.map(mediaView),
+    limits: { files: 24, bytes: 40 * 1024 * 1024, maxBytes: 8 * 1024 * 1024 },
+    suggestions: mediaSuggestions(project.spec.vertical, project.name),
+  })
+})
+
+app.post(
+  '/api/projects/:token/media',
+  bodyLimit({
+    maxSize: 18 * 1024 * 1024,
+    onError: (c) => fail(c, 413, 'body_too_large', 'That upload is too large. Use an image under 8 MB.'),
+  }),
+  async (c) => {
+    const origin = c.req.header('origin')
+    if (origin && origin !== new URL(c.req.url).origin)
+      return fail(c, 403, 'cross_origin', 'Images are uploaded from the editor.')
+    const project = await loadProject(c)
+    if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+    if (!c.env.MEDIA)
+      return fail(c, 503, 'media_unavailable', 'Image storage is not configured for this environment.')
+
+    let form: FormData
+    try {
+      form = await c.req.formData()
+    } catch {
+      return fail(c, 400, 'invalid_image', 'That upload could not be read.')
+    }
+    const original = form.get('file')
+    if (!original || typeof original === 'string')
+      return fail(c, 400, 'invalid_image', 'Choose a JPEG, PNG or WebP image.')
+    const variants = form
+      .getAll('variant')
+      .filter((entry): entry is File => typeof entry !== 'string')
+
+    try {
+      const originalBytes = new Uint8Array(await original.arrayBuffer())
+      const variantInputs = await Promise.all(
+        variants.map(async (entry) => ({ bytes: new Uint8Array(await entry.arrayBuffer()) })),
+      )
+      const result = await uploadMedia(
+        c.env.DB,
+        c.env.MEDIA as unknown as MediaBucket,
+        project,
+        {
+          original: { bytes: originalBytes, type: original.type, name: original.name },
+          variants: variantInputs,
+          alt: typeof form.get('alt') === 'string' ? String(form.get('alt')) : '',
+          focalX: Number(form.get('focalX') ?? 50),
+          focalY: Number(form.get('focalY') ?? 50),
+        },
+      )
+      c.header('Cache-Control', 'private, no-store')
+      return c.json({ media: mediaView(result.media), existing: result.existing }, result.existing ? 200 : 201)
+    } catch (error) {
+      return mediaFailure(c, error)
+    }
+  },
+)
+
+app.delete('/api/projects/:token/media/:mediaId', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Images are deleted from the editor.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!c.env.MEDIA)
+    return fail(c, 503, 'media_unavailable', 'Image storage is not configured for this environment.')
+  try {
+    await deleteMedia(
+      c.env.DB,
+      c.env.MEDIA as unknown as MediaBucket,
+      project,
+      c.req.param('mediaId'),
+    )
+    return c.json({ ok: true })
+  } catch (error) {
+    return mediaFailure(c, error)
+  }
+})
+
+app.put('/api/projects/:token/catalog', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Catalogue edits are saved from the editor.')
+  const type = (c.req.header('content-type') ?? '').split(';')[0].trim().toLowerCase()
+  if (type !== 'application/json') return fail(c, 415, 'unsupported_media_type', 'Send a JSON body.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  const menu = Array.isArray(body.menu) ? sanitizeMenu(body.menu) : project.spec.menu
+  const offers = Array.isArray(body.offers)
+    ? body.offers
+        .slice(0, 8)
+        .map((entry) => ({
+          title: str((entry as Record<string, unknown>)?.title, 60),
+          body: str((entry as Record<string, unknown>)?.body, 160),
+        }))
+        .filter((entry) => entry.title)
+    : project.spec.offers
+  const spec = { ...project.spec, menu, offers }
+  await c.env.DB
+    .prepare('UPDATE projects SET spec = ?, updated_at = ? WHERE id = ?')
+    .bind(JSON.stringify(spec), new Date().toISOString(), project.id)
+    .run()
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({ ok: true, menu, offers })
 })
 
 app.post('/api/projects/:token/notes', async (c) => {
