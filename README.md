@@ -76,6 +76,7 @@ prose. `/brief` links to it from the website panel.
 - `src/worker/views/editor.ts` — the three-pane visual editor and its canvas bridge.
 - `src/worker/views/*` — marketing, brief, customer build page, operator board.
 - `docs/EDITOR.md` — editor architecture, what is shared with the app, and what is next.
+- `docs/MOBILE.md` — the screen application model, PWA vs native distribution, and remaining work.
 
 ## Starting from an existing website
 

@@ -1,10 +1,15 @@
 import { appCss } from './appCss'
 import {
+  appScreenId,
+  homeSections,
+  initialAppScreen,
+  navScreens,
   normalizeDoc,
-  sectionFor,
-  visibleSections,
+  screenFor,
   type Doc,
   type DocNode,
+  type ScreenKind,
+  type ScreenNode,
   type SectionKind,
 } from './doc'
 import { presetCss, presetFor } from './presets'
@@ -179,12 +184,18 @@ type Ctx = {
 
 /** A section heading the customer renamed in the editor, else the design's. */
 function sectionTitle(ctx: Ctx, kind: SectionKind, fallback: string): string {
-  return sectionFor(ctx.doc, kind)?.title || fallback
+  return homeSections(ctx.doc).find((node) => node.kind === kind)?.title || fallback
+}
+
+/** A document screen reference becomes the DOM id the app shell navigates to. */
+function appTarget(ctx: Ctx, target: string): string {
+  const screen = ctx.doc?.screens.find((entry) => entry.id === target)
+  return screen ? appScreenId(screen) : target
 }
 
 /** The hero's words come from the document, so inline edits show everywhere. */
 function heroCopy(ctx: Ctx): { name: string; tagline: string; cta?: { label: string; screen: string } } {
-  const hero = sectionFor(ctx.doc, 'hero')
+  const hero = homeSections(ctx.doc).find((node) => node.kind === 'hero')
   return {
     name: hero?.title || ctx.spec.name,
     tagline: hero?.text || ctx.spec.tagline,
@@ -310,6 +321,16 @@ function tabsFor(ctx: Ctx, shell: ShellId): Tab[] {
     ...(ctx.quoting && !ctx.booking ? [screen('quote', 'Quote', icon('quote'))] : []),
     screen('more', 'More', icon('dots')),
   ].slice(0, 5)
+}
+
+/** Navigation comes from the application document, not the seeded deck. */
+function tabsFromDoc(doc: Doc): Tab[] {
+  return navScreens(doc).map((entry) => ({
+    id: appScreenId(entry),
+    label: entry.name,
+    glyph: icon(entry.icon),
+    kind: 'screen' as const,
+  }))
 }
 
 /** The first screen a trade opens on, and the strip above its home content. */
@@ -609,27 +630,98 @@ const HOME_ORDER: Record<HomeOrder, (keyof HomeBlocks)[]> = {
 }
 
 function storyBlock(ctx: Ctx): string {
-  const story = (sectionFor(ctx.doc, 'story')?.text ?? ctx.spec.story ?? '').trim()
+  const story = (homeSections(ctx.doc).find((node) => node.kind === 'story')?.text ?? ctx.spec.story ?? '').trim()
   if (!story) return ''
   return `<p class="home-story">${esc(story)}</p>`
 }
 
-/** A section that exists only because the editor added it. */
+/** A section the editor added, rendered as a real mobile component. */
 function addedBlock(ctx: Ctx, node: DocNode): string {
-  const title = node.title || (node.kind === 'cta' ? 'Ready when you are' : 'Kind words')
-  if (node.kind === 'testimonials') {
-    return `<div class="sect"><span class="label">${esc(title)}</span></div>
-      <div class="card" style="padding:18px">
-        <p style="font-family:var(--display);font-size:16px;line-height:1.5">“${esc(node.text || 'A line from a happy customer belongs here.')}”</p>
-        <p class="tiny dim" style="margin-top:10px">— A regular, ${esc(ctx.spec.name)}</p>
+  const title = node.title || ''
+  switch (node.kind) {
+    case 'testimonials':
+      return `<div class="sect"><span class="label">${esc(title || 'Kind words')}</span></div>
+        <div class="card" style="padding:18px">
+          <p style="font-family:var(--display);font-size:16px;line-height:1.5">“${esc(node.text || 'A line from a happy customer belongs here.')}”</p>
+          <p class="tiny dim" style="margin-top:10px">— A regular, ${esc(ctx.spec.name)}</p>
+        </div>`
+    case 'heading':
+      return `<h2 class="display" style="font-size:24px;line-height:1.15;margin:10px 0 4px;${node.style.align === 'center' ? 'text-align:center' : ''}">${esc(title || 'Heading')}</h2>`
+    case 'text':
+      return `<p class="dim" style="font-size:14px;line-height:1.6;margin:6px 0 10px">${esc(node.text || 'Add a sentence about this screen.')}</p>`
+    case 'button': {
+      const action = node.cta ?? { label: title || 'Continue', screen: 'home' }
+      return `<div style="margin:10px 0"><button class="btn accent block" type="button" data-go="${esc(appTarget(ctx, action.screen))}">${esc(action.label)}</button></div>`
+    }
+    case 'image': {
+      const shot = showsPhoto(ctx, 'tile') ? photo(ctx, node.id, 'wide') : ''
+      return `<div class="card" style="overflow:hidden;margin:10px 0">
+        <span class="thumb m-${ctx.theme.motif}" style="height:170px;display:block">${shot}<span class="mono">${esc(title || ctx.spec.logo)}</span></span>
       </div>`
+    }
+    case 'gallery':
+      return `<div class="sect"><span class="label">${esc(title || 'Gallery')}</span></div>
+        <div class="gallery">${[0, 1, 2, 3]
+          .map((index) => motif(ctx.theme, '✳', '', ctx.media === 'photo' ? photo(ctx, `gallery-${index}`, 'thumb') : ''))
+          .join('')}</div>`
+    case 'banner': {
+      const action = node.cta
+      return `<div class="card" style="padding:18px;margin:10px 0">
+        <b style="font-family:var(--display);font-size:18px">${esc(title || ctx.spec.tagline)}</b>
+        ${node.text ? `<p class="tiny dim" style="margin-top:5px">${esc(node.text)}</p>` : ''}
+        ${action ? `<button class="btn accent" type="button" data-go="${esc(appTarget(ctx, action.screen))}" style="margin-top:12px">${esc(action.label)}</button>` : ''}
+      </div>`
+    }
+    case 'productList': {
+      const entries = ctx.spec.menu.flatMap((section) => section.items).slice(0, 4)
+      if (!entries.length) return `<div class="empty">The catalogue is being written.</div>`
+      return `<div class="sect"><span class="label">${esc(title || ctx.vocab.catalog)}</span></div>
+        <div class="tiles">${entries.map((item, index) => itemTile(ctx, item, `0-${index}`)).join('')}</div>`
+    }
+    case 'search':
+      return `<button class="search-pill" type="button" data-go="search" style="width:100%;margin:8px 0">${icon('search')}<span>${esc(title || `Search the ${ctx.vocab.catalog.toLowerCase()}`)}</span></button>`
+    case 'form':
+      if (ctx.quoting) return `${quoteBlock(ctx)}`
+      return `<div class="card" style="padding:18px;margin:10px 0">
+        <b>${esc(title || 'Send a message')}</b>
+        <p class="tiny dim" style="margin:6px 0 12px">Call or email and we will reply the same day.</p>
+        ${ctx.spec.phone ? `<a class="btn ghost block" href="tel:${esc(ctx.spec.phone.replace(/\s/g, ''))}">Call ${esc(ctx.spec.phone)}</a>` : ''}
+        ${ctx.spec.email ? `<a class="btn accent block" href="mailto:${esc(ctx.spec.email)}" style="margin-top:8px">Email us</a>` : ''}
+      </div>`
+    case 'story':
+      return storyBlock(ctx)
+    case 'visit':
+      return hoursBlock(ctx)
+    case 'offers':
+      return offersBlock(ctx)
+    case 'loyalty':
+      return loyaltyBlock(ctx)
+    case 'featured':
+      return catalogBlock(ctx)
+    default: {
+      const action = node.cta ?? ctx.actions[0]
+      return `<div class="card" style="padding:22px 18px;text-align:center">
+        <h3 style="font-family:var(--display);font-size:20px">${esc(title || 'Ready when you are')}</h3>
+        <p class="tiny dim" style="margin:8px 0 14px">${esc(node.text || '')}</p>
+        ${action ? `<button class="btn accent" type="button" data-go="${esc(appTarget(ctx, action.screen))}">${esc(node.cta?.label || 'Get in touch')}</button>` : ''}
+      </div>`
+    }
   }
-  const action = node.cta ?? ctx.actions[0]
-  return `<div class="card" style="padding:22px 18px;text-align:center">
-    <h3 style="font-family:var(--display);font-size:20px">${esc(title)}</h3>
-    <p class="tiny dim" style="margin:8px 0 14px">${esc(node.text || '')}</p>
-    ${action ? `<button class="btn accent" type="button" data-go="${esc(action.screen)}">${esc(node.cta?.label || 'Get in touch')}</button>` : ''}
-  </div>`
+}
+
+/** A screen the editor created, rendered inside the same app shell. */
+function customScreen(ctx: Ctx, screen: ScreenNode, active = false): string {
+  const sections = screen.sections
+    .filter((node) => !node.hidden)
+    .map((node) => docSection(ctx, node, {} as HomeBlocks))
+    .join('')
+  return `<section class="screen${active ? ' on' : ''}" data-screen="${esc(screen.id)}" data-title="${esc(screen.name)}">
+    <div class="detail-body" style="padding:16px 16px 110px">
+      <span class="eyebrow">${esc(screen.name)}</span>
+      <h1 class="display" style="font-size:28px;margin:4px 0 12px">${esc(screen.name)}</h1>
+      ${sections || `<p class="empty">This screen is ready for its first component.</p>`}
+    </div>
+  </section>`
 }
 
 /** Wraps one section with its stable id and responsive rules. */
@@ -655,15 +747,15 @@ function docSection(ctx: Ctx, node: DocNode, blocks: HomeBlocks): string {
 
 /** The hero is composed by each layout, but is still a selectable section. */
 function heroSection(ctx: Ctx, html: string): string {
-  const hero = sectionFor(ctx.doc, 'hero')
+  const hero = homeSections(ctx.doc).find((node) => node.kind === 'hero')
   return hero ? wrapDoc({ ...hero, hidden: false }, html) : html
 }
 
 function orderedHome(ctx: Ctx, blocks: HomeBlocks): string {
   // With a document, its order and visibility win over the seeded composition.
   if (ctx.doc) {
-    return visibleSections(ctx.doc)
-      .filter((node) => node.kind !== 'hero')
+    return homeSections(ctx.doc)
+      .filter((node) => !node.hidden && node.kind !== 'hero')
       .map((node) => docSection(ctx, node, blocks))
       .join('')
   }
@@ -987,6 +1079,10 @@ body[data-editor="1"] .doc-section { cursor: pointer; }
       if (id && id !== section.dataset.sec) send({ type: 'move', id, before: section.dataset.sec })
     })
   }
+  document.addEventListener('click', (event) => {
+    const go = event.target.closest('[data-go]')
+    if (go) setTimeout(() => send({ type: 'screen', id: go.dataset.go }), 60)
+  }, true)
   addEventListener('message', (event) => {
     const message = event.data
     if (!message || message.source !== 'plattr-editor') return
@@ -1019,6 +1115,8 @@ export function renderApp(
     doc?: Doc
     /** Adds the editor bridge (selection and drag) to the rendered page. */
     editor?: boolean
+    /** Editor-only: open on this screen instead of the document's initial one. */
+    screen?: string
   },
 ): string {
   const live = options.live !== false
@@ -1028,7 +1126,14 @@ export function renderApp(
   const doc = options.doc ? normalizeDoc(options.doc, spec) : null
   const shell: ShellId = theme.shell ?? 'standard'
   // A restaurant opens on its menu, a listings app on search. Home is optional.
-  const initial = shell === 'menu' || shell === 'listing' ? 'catalog' : 'home'
+  // With an application document, the owner chooses the initial screen.
+  const initial = options.screen
+    ? options.screen
+    : doc
+      ? initialAppScreen(doc)
+      : shell === 'menu' || shell === 'listing'
+        ? 'catalog'
+        : 'home'
   // Only a catalogue with sellers needs a store screen to open on to.
   const hasVendors = spec.menu.some((section) => section.items.some((item) => item.vendor))
   // A design chosen on the brief is part of the spec, so every renderer — the
@@ -1138,7 +1243,7 @@ export function renderApp(
     doc,
   }
 
-  const tabs = tabsFor(ctx, shell)
+  const tabs = doc ? tabsFromDoc(doc) : tabsFor(ctx, shell)
   // The chrome names the screen the way its tab does, so a restored heading
   // reads "Visit" rather than the generic "More".
   const moreTitle = tabs.find((tab) => tab.id === 'more')?.label ?? 'More'
@@ -1253,7 +1358,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
       ${
         booking
-          ? `<section class="screen is-booking" data-screen="book" data-title="${esc(vocab.bookTitle)}">
+          ? `<section class="screen is-booking${initial === 'book' ? ' on' : ''}" data-screen="book" data-title="${esc(vocab.bookTitle)}">
                ${timetableBlock(ctx)}
                ${bookingBlock(ctx)}
              </section>`
@@ -1262,13 +1367,13 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
       ${
         quoting
-          ? `<section class="screen" data-screen="quote" data-title="${esc(vocab.quoteTitle)}">
+          ? `<section class="screen${initial === 'quote' ? ' on' : ''}" data-screen="quote" data-title="${esc(vocab.quoteTitle)}">
                ${quoteBlock(ctx)}
              </section>`
           : ''
       }
 
-      <section class="screen" data-screen="more" data-title="${esc(moreTitle)}">
+      <section class="screen${initial === 'more' ? ' on' : ''}" data-screen="more" data-title="${esc(moreTitle)}">
         <div class="detail-body" style="padding-top:6px">
           <h1 class="display">${esc(spec.name)}</h1>
           <p class="dim" style="margin-top:6px;font-size:13px">${esc(spec.tagline)}</p>
@@ -1287,6 +1392,17 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       <section class="screen is-detail" data-screen="detail" data-title="Details" data-detail>
         <div data-detail-body></div>
       </section>
+
+      ${doc
+        ? doc.screens
+            .filter(
+              (entry) =>
+                !entry.hidden &&
+                (entry.kind === 'contact' || entry.kind === 'profile' || entry.kind === 'about' || entry.kind === 'custom'),
+            )
+            .map((entry) => customScreen(ctx, entry, initial === entry.id))
+            .join('')
+        : ''}
     </main>
 
     <nav class="tabbar">

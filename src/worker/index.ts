@@ -329,7 +329,9 @@ app.get('/p/:token/edit', async (c) => {
   return c.html(
     editorPage({
       project,
-      doc: project.doc ?? docFromSpec(project.spec),
+      // An editor session always opens the v2 screen model, even for a build
+      // whose saved document predates screens.
+      doc: normalizeDoc(project.doc ?? docFromSpec(project.spec), project.spec),
       origin: new URL(c.req.url).origin,
     }),
   )
@@ -369,6 +371,7 @@ app.get('/p/:token/app', async (c) => {
       doc: project.doc ?? undefined,
       // The editor's canvas opts in; a published app never carries the bridge.
       editor: c.req.query('editor') === '1',
+      screen: c.req.query('editor') === '1' ? c.req.query('screen')?.slice(0, 40) : undefined,
     }),
   )
 })
@@ -693,7 +696,7 @@ app.get('/api/projects/:token/doc', async (c) => {
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
   c.header('Cache-Control', 'private, no-store')
   return c.json({
-    doc: project.doc ?? docFromSpec(project.spec),
+    doc: normalizeDoc(project.doc ?? docFromSpec(project.spec), project.spec),
     saved: Boolean(project.doc),
     version: project.version,
   })

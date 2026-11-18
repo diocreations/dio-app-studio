@@ -438,7 +438,7 @@ export async function saveDoc(db: D1Database, project: Project, doc: Doc): Promi
     .prepare('UPDATE projects SET doc = ?, updated_at = ? WHERE id = ?')
     .bind(JSON.stringify(doc), new Date().toISOString(), project.id)
     .run()
-  await log(db, project.id, 'edit', 'Design edited', `${doc.sections.length} sections`)
+  await log(db, project.id, 'edit', 'Design edited', `${doc.screens.length} screens`)
 }
 
 /**
