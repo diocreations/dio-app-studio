@@ -53,6 +53,10 @@ prose. `/brief` links to it from the website panel.
 | `POST /api/projects/:token/notes`  | Free-text change request                              |
 | `POST /api/projects/:token/approve`| Sign off, marks open requests handled                 |
 | `GET /p/:token/app`                | The generated app (server-rendered, interactive)      |
+| `GET /p/:token/edit`               | Visual editor: sections, properties, live canvas      |
+| `GET /api/projects/:token/doc`     | The stored section document (synthesised if absent)   |
+| `PUT /api/projects/:token/doc`     | Autosave the document; normalised server-side         |
+| `POST /api/projects/:token/doc/ai` | Preview an AI edit; nothing saved until accepted      |
 | `GET /p/:token/export/:kind`       | `pwa` · `android` · `ios` zips (approved builds only) |
 | `GET /demo/app?biz=salon`          | Live demo build for any trade                         |
 | `GET /proof/app`                   | The app built from the captured real import           |
@@ -68,7 +72,10 @@ prose. `/brief` links to it from the website panel.
 - `src/worker/app.ts` — the generated app (one self-contained document that adapts to the spec), manifest, icon, service worker.
 - `src/worker/export.ts` — store-only ZIP writer and the three package builders.
 - `src/worker/db.ts` — D1 schema/migrations, versioning, notes and activity.
+- `src/worker/doc.ts` — the shared section document: model, normalisation, operations, local design commands.
+- `src/worker/views/editor.ts` — the three-pane visual editor and its canvas bridge.
 - `src/worker/views/*` — marketing, brief, customer build page, operator board.
+- `docs/EDITOR.md` — editor architecture, what is shared with the app, and what is next.
 
 ## Starting from an existing website
 

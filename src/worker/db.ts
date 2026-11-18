@@ -17,6 +17,7 @@ import {
   type SiteInfo,
   type VerticalId,
 } from './pricing'
+import type { Doc } from './doc'
 import type { VideoLink } from './types'
 import { verticalFor } from './verticals'
 
@@ -40,6 +41,8 @@ export type Project = {
   logo: string
   quote: Quote
   spec: AppSpec
+  /** The editable section document; null until the editor first saves one. */
+  doc: Doc | null
   status: ProjectStatus
   version: number
   /** Deck position for the current build; each rebuild claims a new slot. */
@@ -80,6 +83,7 @@ type ProjectRow = {
   logo: string
   quote: string
   spec: string
+  doc?: string
   status: string
   version: number
   variation_slot: number | null
@@ -103,6 +107,7 @@ const SCHEMA = [
     logo TEXT NOT NULL DEFAULT 'AP',
     quote TEXT NOT NULL DEFAULT '{}',
     spec TEXT NOT NULL DEFAULT '{}',
+    doc TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL DEFAULT 'in_review',
     version INTEGER NOT NULL DEFAULT 1,
     variation_slot INTEGER,
@@ -147,6 +152,7 @@ const MIGRATIONS = [
   `ALTER TABLE projects ADD COLUMN vertical TEXT NOT NULL DEFAULT 'restaurant'`,
   `ALTER TABLE projects ADD COLUMN custom TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE projects ADD COLUMN variation_slot INTEGER`,
+  `ALTER TABLE projects ADD COLUMN doc TEXT NOT NULL DEFAULT ''`,
   `CREATE UNIQUE INDEX IF NOT EXISTS projects_variation_slot ON projects (variation_slot)`,
   // Legacy rows get a stable slot before the counter is seeded past them.
   `UPDATE projects SET variation_slot = rowid - 1 WHERE variation_slot IS NULL`,
@@ -237,6 +243,7 @@ function toProject(row: ProjectRow): Project {
       features: normalizeFeatures(spec.features ?? []),
       custom: row.custom ?? spec.custom ?? '',
     },
+    doc: row.doc ? parseJson<Doc | null>(row.doc, null) : null,
     status:
       row.status === 'approved'
         ? 'approved'
@@ -410,6 +417,28 @@ export async function getProject(
     .bind(token)
     .first<ProjectRow>()
   return row ? toProject(row) : null
+}
+
+export async function getProjectById(
+  db: D1Database,
+  id: string,
+): Promise<Project | null> {
+  await ensureSchema(db)
+  const row = await db.prepare('SELECT * FROM projects WHERE id = ?').bind(id).first<ProjectRow>()
+  return row ? toProject(row) : null
+}
+
+/**
+ * Autosaves the editor's document. It does not bump the build version: an
+ * editor session is continuous work, and versions are for approved builds.
+ */
+export async function saveDoc(db: D1Database, project: Project, doc: Doc): Promise<void> {
+  await ensureSchema(db)
+  await db
+    .prepare('UPDATE projects SET doc = ?, updated_at = ? WHERE id = ?')
+    .bind(JSON.stringify(doc), new Date().toISOString(), project.id)
+    .run()
+  await log(db, project.id, 'edit', 'Design edited', `${doc.sections.length} sections`)
 }
 
 /**

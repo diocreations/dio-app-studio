@@ -45,8 +45,10 @@ and `og.png`.
 - `/p/not-a-token` → 404 **with** `X-Robots-Tag: noindex, nofollow`
 - `/studio` → 401 (not 503: that would mean `STUDIO_KEY` did not attach) and the
   board must not render any customer row without the key
-- Create one build from `/brief`, confirm it opens at its `/p/:token` link, then
-  delete it from `/studio` and clear its counters if it was a probe
+- Create one build from `/brief`, confirm it opens at its `/p/:token` link, open
+  `/p/:token/edit`, add a section, confirm autosave says Saved, reload and see
+  the section still there; then delete the probe from `/studio` and clear its
+  counters
 
 ## 5. If something is wrong
 

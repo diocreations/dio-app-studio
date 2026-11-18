@@ -1,4 +1,12 @@
 import { appCss } from './appCss'
+import {
+  normalizeDoc,
+  sectionFor,
+  visibleSections,
+  type Doc,
+  type DocNode,
+  type SectionKind,
+} from './doc'
 import { presetCss, presetFor } from './presets'
 import { CURRENCY_SYMBOLS, inkFor, moneyIn } from './pricing'
 import type { AppSpec, FeatureId, MenuItem, Vocab } from './types'
@@ -165,6 +173,23 @@ type Ctx = {
   timetable: { name: string; when: string; coach: string }[]
   goal: number
   actions: { label: string; screen: string }[]
+  /** The editable document, or null for a build that predates the editor. */
+  doc: Doc | null
+}
+
+/** A section heading the customer renamed in the editor, else the design's. */
+function sectionTitle(ctx: Ctx, kind: SectionKind, fallback: string): string {
+  return sectionFor(ctx.doc, kind)?.title || fallback
+}
+
+/** The hero's words come from the document, so inline edits show everywhere. */
+function heroCopy(ctx: Ctx): { name: string; tagline: string; cta?: { label: string; screen: string } } {
+  const hero = sectionFor(ctx.doc, 'hero')
+  return {
+    name: hero?.title || ctx.spec.name,
+    tagline: hero?.text || ctx.spec.tagline,
+    cta: hero?.cta,
+  }
 }
 
 const CSS = (ctx: Ctx) => appCss(ctx)
@@ -189,12 +214,13 @@ function heroClass(ctx: Ctx, base: string): string {
 function lHero(ctx: Ctx): string {
   const hours = (ctx.spec.hours ?? '').split('·')[0].trim()
   const primary = ctx.actions[0]
+  const copy = heroCopy(ctx)
   return `<div class="${heroClass(ctx, 'l-hero')}">
     <span class="hero-art m-${ctx.theme.motif}" aria-hidden="true">${showsPhoto(ctx, 'hero') ? photo(ctx, 'hero', 'wide') : ''}<span class="mono">${esc(ctx.spec.logo)}</span></span>
     <div class="hero-in">
       <span class="eyebrow">${esc(ctx.label)}</span>
-      <h1>${esc(ctx.spec.name)}</h1>
-      <p>${esc(ctx.spec.tagline)}</p>
+      <h1>${esc(copy.name)}</h1>
+      <p>${esc(copy.tagline)}</p>
       <div class="hero-foot">
         ${primary ? `<button class="btn hero-cta" type="button" data-go="${primary.screen}">${esc(primary.label)}</button>` : ''}
         ${hours ? `<span class="hero-meta">${esc(hours)}</span>` : ''}
@@ -205,13 +231,14 @@ function lHero(ctx: Ctx): string {
 
 /** A magazine cover: the trade's artwork, its name set large. */
 function cover(ctx: Ctx, meta: string[] = []): string {
+  const copy = heroCopy(ctx)
   return `<div class="${heroClass(ctx, 'cover')}">
     <span class="cover-art m-${ctx.theme.motif}" aria-hidden="true">${showsPhoto(ctx, 'hero') ? photo(ctx, 'cover', 'wide') : ''}</span>
     <span class="mono" aria-hidden="true">${esc(ctx.spec.logo)}</span>
     <div class="cover-in">
       <span class="eyebrow">${esc(ctx.label)}</span>
-      <h1>${esc(ctx.spec.name)}</h1>
-      <p>${esc(ctx.spec.tagline)}</p>
+      <h1>${esc(copy.name)}</h1>
+      <p>${esc(copy.tagline)}</p>
       ${meta.filter(Boolean).length ? `<div class="cover-rule"></div><div class="cover-meta">${meta.filter(Boolean).map((line) => `<span>${esc(line)}</span>`).join('')}</div>` : ''}
     </div>
   </div>`
@@ -333,7 +360,7 @@ function menuMasthead(ctx: Ctx): string {
 
 function offersBlock(ctx: Ctx, limit = 2): string {
   if (!ctx.spec.features.includes('offers') || !ctx.spec.offers.length) return ''
-  return `<div class="sect"><span class="label">Right now</span><span class="tiny dim">${ctx.spec.offers.length} live</span></div>
+  return `<div class="sect"><span class="label">${esc(sectionTitle(ctx, 'offers', 'Right now'))}</span><span class="tiny dim">${ctx.spec.offers.length} live</span></div>
     ${ctx.spec.offers
       .slice(0, limit)
       .map(
@@ -376,7 +403,7 @@ function hoursBlock(ctx: Ctx): string {
     )
 
   return `<div class="info">
-    <h3>Find us</h3>
+    <h3>${esc(sectionTitle(ctx, 'visit', 'Find us'))}</h3>
     ${spec.hours ? `<p>${esc(spec.hours)}</p>` : ''}
     ${address ? `<p>${esc(address)}</p>` : ''}
     ${phone ? `<p><a href="tel:${esc(phone.replace(/[^\d+]/g, ''))}">${esc(phone)}</a></p>` : ''}
@@ -582,12 +609,64 @@ const HOME_ORDER: Record<HomeOrder, (keyof HomeBlocks)[]> = {
 }
 
 function storyBlock(ctx: Ctx): string {
-  const story = (ctx.spec.story ?? '').trim()
+  const story = (sectionFor(ctx.doc, 'story')?.text ?? ctx.spec.story ?? '').trim()
   if (!story) return ''
   return `<p class="home-story">${esc(story)}</p>`
 }
 
+/** A section that exists only because the editor added it. */
+function addedBlock(ctx: Ctx, node: DocNode): string {
+  const title = node.title || (node.kind === 'cta' ? 'Ready when you are' : 'Kind words')
+  if (node.kind === 'testimonials') {
+    return `<div class="sect"><span class="label">${esc(title)}</span></div>
+      <div class="card" style="padding:18px">
+        <p style="font-family:var(--display);font-size:16px;line-height:1.5">“${esc(node.text || 'A line from a happy customer belongs here.')}”</p>
+        <p class="tiny dim" style="margin-top:10px">— A regular, ${esc(ctx.spec.name)}</p>
+      </div>`
+  }
+  const action = node.cta ?? ctx.actions[0]
+  return `<div class="card" style="padding:22px 18px;text-align:center">
+    <h3 style="font-family:var(--display);font-size:20px">${esc(title)}</h3>
+    <p class="tiny dim" style="margin:8px 0 14px">${esc(node.text || '')}</p>
+    ${action ? `<button class="btn accent" type="button" data-go="${esc(action.screen)}">${esc(node.cta?.label || 'Get in touch')}</button>` : ''}
+  </div>`
+}
+
+/** Wraps one section with its stable id and responsive rules. */
+function wrapDoc(node: DocNode, html: string): string {
+  if (!html) return ''
+  const hides = node.responsive.hideOn.map((point) => `hide-${point}`).join(' ')
+  const style = [
+    node.style.background ? `background:${node.style.background}` : '',
+    node.style.color ? `color:${node.style.color}` : '',
+    node.style.align ? `text-align:${node.style.align}` : '',
+    node.style.paddingY ? `padding-block:${node.style.paddingY === 2 ? 36 : 18}px` : '',
+    node.style.radius ? `border-radius:${node.style.radius === 2 ? 22 : 12}px` : '',
+  ]
+    .filter(Boolean)
+    .join(';')
+  return `<div class="doc-section${hides ? ` ${hides}` : ''}" data-sec="${node.id}"${style ? ` style="${style}"` : ''}>${html}</div>`
+}
+
+function docSection(ctx: Ctx, node: DocNode, blocks: HomeBlocks): string {
+  const html = blocks[node.kind as keyof HomeBlocks] || addedBlock(ctx, node)
+  return wrapDoc(node, html)
+}
+
+/** The hero is composed by each layout, but is still a selectable section. */
+function heroSection(ctx: Ctx, html: string): string {
+  const hero = sectionFor(ctx.doc, 'hero')
+  return hero ? wrapDoc({ ...hero, hidden: false }, html) : html
+}
+
 function orderedHome(ctx: Ctx, blocks: HomeBlocks): string {
+  // With a document, its order and visibility win over the seeded composition.
+  if (ctx.doc) {
+    return visibleSections(ctx.doc)
+      .filter((node) => node.kind !== 'hero')
+      .map((node) => docSection(ctx, node, blocks))
+      .join('')
+  }
   const sequence = HOME_ORDER[ctx.order].filter((key) => blocks[key])
   // A trade without offers (or rewards) would otherwise fall back to exactly
   // the catalog page, so two of the three designs would share a composition.
@@ -647,9 +726,9 @@ function homeBlock(ctx: Ctx): string {
   })
 
   if (theme.layout === 'editorial') {
-    const selected = `<div class="sect"><span class="label">Selected</span><span class="tiny dim">${esc(ctx.vocab.catalog)}</span></div>
+    const selected = `<div class="sect"><span class="label">${esc(sectionTitle(ctx, 'featured', 'Selected'))}</span><span class="tiny dim">${esc(ctx.vocab.catalog)}</span></div>
       <div>${featured.slice(0, 3).map((entry) => itemRowEditorial(ctx, entry.item, entry.key)).join('')}</div>`
-    return `${lHero(ctx)}
+    return `${heroSection(ctx, lHero(ctx))}
       ${secondaryActions(ctx)}
       <div class="meta-strip"><span>${esc(spec.hours.split('·')[0])}</span><span>${esc(spec.address)}</span></div>
       ${showcaseBlock(ctx)}
@@ -658,9 +737,9 @@ function homeBlock(ctx: Ctx): string {
   }
 
   if (theme.layout === 'grid') {
-    const featuredTiles = `<div class="sect"><span class="label">Featured</span><span class="count">${featured.length} items</span></div>
+    const featuredTiles = `<div class="sect"><span class="label">${esc(sectionTitle(ctx, 'featured', 'Featured'))}</span><span class="count">${featured.length} items</span></div>
       <div class="tiles">${featured.slice(0, 4).map((entry) => itemTile(ctx, entry.item, entry.key)).join('')}</div>`
-    return `${cover(ctx, [spec.hours.split('·')[0], spec.address])}
+    return `${heroSection(ctx, cover(ctx, [spec.hours.split('·')[0], spec.address]))}
       ${actions(ctx)}
       ${showcaseBlock(ctx)}
       <div class="chips" style="margin-top:14px">
@@ -676,7 +755,7 @@ function homeBlock(ctx: Ctx): string {
   }
 
   if (theme.layout === 'rows') {
-    const sections = `<div class="sect"><span class="label">${esc(ctx.vocab.catalog)}</span><span class="count">${spec.menu.length} sections</span></div>
+    const sections = `<div class="sect"><span class="label">${esc(sectionTitle(ctx, 'featured', ctx.vocab.catalog))}</span><span class="count">${spec.menu.length} sections</span></div>
       <div>
         ${spec.menu
           .map(
@@ -687,7 +766,7 @@ function homeBlock(ctx: Ctx): string {
           )
           .join('')}
       </div>`
-    return `${cover(ctx, [spec.hours.split('·')[0], spec.address])}
+    return `${heroSection(ctx, cover(ctx, [spec.hours.split('·')[0], spec.address]))}
       ${actions(ctx)}
       ${showcaseBlock(ctx)}
       <div class="status-card" style="margin-top:16px">
@@ -698,9 +777,9 @@ function homeBlock(ctx: Ctx): string {
       ${coda}`
   }
 
-  const stack = `<div class="sect"><span class="label">${esc(ctx.vocab.catalog)}</span><span class="count">${featured.length} items</span></div>
+  const stack = `<div class="sect"><span class="label">${esc(sectionTitle(ctx, 'featured', ctx.vocab.catalog))}</span><span class="count">${featured.length} items</span></div>
     ${featured.slice(0, 3).map((entry) => itemStackCard(ctx, entry.item, entry.key)).join('')}`
-  return `${cover(ctx, [spec.hours.split('·')[0], spec.address])}
+  return `${heroSection(ctx, cover(ctx, [spec.hours.split('·')[0], spec.address]))}
     ${actions(ctx)}
     ${showcaseBlock(ctx)}
     ${timetableBlock(ctx)}
@@ -859,6 +938,68 @@ function suppliedPreview(preview: PreviewOverrides | undefined): PreviewOverride
   return clean as PreviewOverrides
 }
 
+/** Rules the document layer adds without touching the trade's own CSS. */
+const DOC_CSS = `
+.doc-section { position: relative; }
+.doc-section[style*="padding-block"] { margin-inline: -2px; }
+@media (max-width: 599px) { .hide-mobile { display: none !important; } }
+@media (min-width: 600px) and (max-width: 1023px) { .hide-tablet { display: none !important; } }
+@media (min-width: 1024px) { .hide-desktop { display: none !important; } }
+body[data-editor="1"] .doc-section { outline: 1px dashed color-mix(in srgb, currentColor 22%, transparent); outline-offset: -3px; }
+body[data-editor="1"] .doc-section:hover { outline: 1px solid var(--accent); }
+body[data-editor="1"] .doc-section.doc-selected { outline: 2px solid var(--accent) !important; }
+body[data-editor="1"] .doc-section.doc-drop { box-shadow: inset 0 3px 0 var(--accent); }
+`
+
+/**
+ * The bridge the editor's canvas needs: it selects a section on click and
+ * reports drag-reorder as a message. It is only injected when the editor asks
+ * for it, so a published app carries no editor code.
+ */
+const EDITOR_BRIDGE = `
+<style>
+body[data-editor="1"] .doc-section { cursor: pointer; }
+</style>
+<script>
+(() => {
+  const send = (message) => parent.postMessage({ source: 'plattr-canvas', ...message }, '*')
+  const sections = Array.from(document.querySelectorAll('[data-sec]'))
+  for (const section of sections) {
+    section.draggable = true
+    section.addEventListener('click', (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      send({ type: 'select', id: section.dataset.sec })
+    }, true)
+    section.addEventListener('dragstart', (event) => {
+      event.dataTransfer.setData('text/plain', section.dataset.sec)
+      event.dataTransfer.effectAllowed = 'move'
+    })
+    section.addEventListener('dragover', (event) => {
+      event.preventDefault()
+      section.classList.add('doc-drop')
+    })
+    section.addEventListener('dragleave', () => section.classList.remove('doc-drop'))
+    section.addEventListener('drop', (event) => {
+      event.preventDefault()
+      section.classList.remove('doc-drop')
+      const id = event.dataTransfer.getData('text/plain')
+      if (id && id !== section.dataset.sec) send({ type: 'move', id, before: section.dataset.sec })
+    })
+  }
+  addEventListener('message', (event) => {
+    const message = event.data
+    if (!message || message.source !== 'plattr-editor') return
+    if (message.type === 'select') {
+      for (const section of sections) section.classList.toggle('doc-selected', section.dataset.sec === message.id)
+      const target = sections.find((section) => section.dataset.sec === message.id)
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  })
+  send({ type: 'ready' })
+})()
+</script>`
+
 export function renderApp(
   spec: AppSpec,
   options: {
@@ -874,12 +1015,17 @@ export function renderApp(
     photos?: { wide?: string[]; thumb?: string[] }
     /** Customer builds stay out of search; demo builds remain indexable. */
     noindex?: boolean
+    /** The editable document; absent keeps the seeded composition. */
+    doc?: Doc
+    /** Adds the editor bridge (selection and drag) to the rendered page. */
+    editor?: boolean
   },
 ): string {
   const live = options.live !== false
   const vertical = verticalFor(spec.vertical)
   const vocab: Vocab = vertical.vocab
   const theme = resolveTheme(themeFor(vertical.id), spec.design)
+  const doc = options.doc ? normalizeDoc(options.doc, spec) : null
   const shell: ShellId = theme.shell ?? 'standard'
   // A restaurant opens on its menu, a listings app on search. Home is optional.
   const initial = shell === 'menu' || shell === 'listing' ? 'catalog' : 'home'
@@ -941,7 +1087,7 @@ export function renderApp(
     value === 'square' || value === 'soft' || value === 'round' ? value : undefined
   const buttons = shape(preview.buttons)
   const cards = shape(preview.cards)
-  const accent = legibleAccent(spec.accent, theme.dark)
+  const accent = legibleAccent(doc?.accent || spec.accent, theme.dark)
   const onAccent = inkFor(accent)
   const drawer = spec.structure?.nav === 'drawer'
   const has = (feature: FeatureId) => spec.features.includes(feature)
@@ -989,6 +1135,7 @@ export function renderApp(
     timetable,
     goal,
     actions: [primary, ...(secondary ? [secondary] : [])],
+    doc,
   }
 
   const tabs = tabsFor(ctx, shell)
@@ -1040,9 +1187,9 @@ ${options.noindex ? '<meta name="robots" content="noindex, nofollow" />' : ''}
 <meta name="apple-mobile-web-app-status-bar-style" content="${theme.dark ? 'black-translucent' : 'default'}" />
 ${live ? '<link rel="manifest" href="./manifest.webmanifest" />' : ''}
 ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
-<style>${CSS(ctx)}${presetCss(preset)}</style>
+<style>${CSS(ctx)}${presetCss(preset)}${DOC_CSS}</style>
 </head>
-<body data-trade="${vertical.id}" data-layout="${theme.layout}" data-shell="${shell}" data-variant="${variant}" data-density="${density}" data-corners="${corners}" data-media="${media}" data-nav="${drawer ? 'drawer' : theme.nav}" data-hero="${hero}" data-order="${order}" data-hero-scale="${heroScale}" data-accent-style="${theme.accentStyle}" data-theme="${theme.dark ? 'dark' : 'light'}"${buttons ? ` data-buttons="${buttons}"` : ''}${cards ? ` data-cards="${cards}"` : ''}${preset ? ` data-preset="${preset}"` : ''}>
+<body data-trade="${vertical.id}" data-layout="${theme.layout}" data-shell="${shell}" data-variant="${variant}" data-density="${density}" data-corners="${corners}" data-media="${media}" data-nav="${drawer ? 'drawer' : theme.nav}" data-hero="${hero}" data-order="${order}" data-hero-scale="${heroScale}" data-accent-style="${theme.accentStyle}" data-theme="${theme.dark ? 'dark' : 'light'}"${buttons ? ` data-buttons="${buttons}"` : ''}${cards ? ` data-cards="${cards}"` : ''}${preset ? ` data-preset="${preset}"` : ''}${options.editor ? ' data-editor="1"' : ''}>
   <div class="app">
     <div class="grain" aria-hidden="true"></div>
     <div class="offline" data-offline hidden>Offline — showing what is already stored</div>
@@ -1955,7 +2102,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       navigator.serviceWorker.register('./sw.js').catch(() => {})
     }
   })()
-  </script>
+  </script>${options.editor ? EDITOR_BRIDGE : ''}
 </body>
 </html>`
 }

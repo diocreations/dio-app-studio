@@ -9,6 +9,7 @@ import {
   createProject,
   deleteProject,
   getProject,
+  saveDoc,
   listActivity,
   listNotes,
   listProjects,
@@ -25,6 +26,8 @@ import {
   throttleImports,
 } from './importer'
 import { buildSpec, quote, sanitizeMenu, type VerticalId } from './pricing'
+import { applyCommand, docFromSpec, normalizeDoc } from './doc'
+import { editorPage } from './views/editor'
 import type { VideoLink } from './types'
 import { cleanLayout, designsFor, readPrompt } from './prompt'
 import { sampleSpec } from './proof'
@@ -319,6 +322,19 @@ app.post('/studio/projects/:id/delete', async (c) => {
   return c.redirect('/studio', 303)
 })
 
+app.get('/p/:token/edit', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.html(notFoundPage(), 404)
+  c.header('Cache-Control', 'no-store')
+  return c.html(
+    editorPage({
+      project,
+      doc: project.doc ?? docFromSpec(project.spec),
+      origin: new URL(c.req.url).origin,
+    }),
+  )
+})
+
 app.get('/p/:token', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.html(notFoundPage(), 404)
@@ -350,6 +366,9 @@ app.get('/p/:token/app', async (c) => {
       slot: project.variationSlot ?? undefined,
       photos,
       noindex: true,
+      doc: project.doc ?? undefined,
+      // The editor's canvas opts in; a published app never carries the bridge.
+      editor: c.req.query('editor') === '1',
     }),
   )
 })
@@ -662,6 +681,64 @@ app.patch('/api/projects/:token', async (c) => {
   })
 
   return c.json({ version: updated.version, quote: updated.quote, status: updated.status })
+})
+
+/**
+ * The editor's document API. Possession of the private token is the credential,
+ * exactly as for the review link; a cross-site page cannot send these JSON
+ * mutations, and the server normalises every document it stores.
+ */
+app.get('/api/projects/:token/doc', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({
+    doc: project.doc ?? docFromSpec(project.spec),
+    saved: Boolean(project.doc),
+    version: project.version,
+  })
+})
+
+app.put('/api/projects/:token/doc', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Edits are saved from the editor.')
+  const type = (c.req.header('content-type') ?? '').split(';')[0].trim().toLowerCase()
+  if (type !== 'application/json')
+    return fail(c, 415, 'unsupported_media_type', 'Send a JSON body.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  const doc = normalizeDoc(body.doc, project.spec)
+  await saveDoc(c.env.DB, project, doc)
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({ ok: true, doc, savedAt: new Date().toISOString() })
+})
+
+/**
+ * Predicts a change without applying it: the editor shows the proposal and only
+ * saves it when the owner accepts, so AI edits are as reversible as manual
+ * ones.
+ */
+app.post('/api/projects/:token/doc/ai', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Ask for changes from the editor.')
+  const type = (c.req.header('content-type') ?? '').split(';')[0].trim().toLowerCase()
+  if (type !== 'application/json')
+    return fail(c, 415, 'unsupported_media_type', 'Send a JSON body.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  const command = str(body.command, 120)
+  if (command.length < 3)
+    return fail(c, 422, 'command_required', 'Say what you would like to change.')
+  const current = normalizeDoc(body.doc ?? project.doc, project.spec)
+  const result = applyCommand(current, command, project.spec)
+  c.header('Cache-Control', 'private, no-store')
+  return c.json(result)
 })
 
 app.post('/api/projects/:token/notes', async (c) => {
