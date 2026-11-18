@@ -110,6 +110,10 @@ button { cursor: pointer; }
 .right .head { padding: 14px; border-bottom: 1px solid var(--line-soft); display: flex; align-items: center; justify-content: space-between; }
 .right .head b { font-family: var(--serif); font-size: 15px; font-weight: 600; }
 .badge { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.versions { display: grid; gap: 6px; }
+.version { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line-soft); border-radius: 9px; padding: 8px 9px; background: #fff; }
+.version b { flex: 1; font-size: 11.5px; font-weight: 600; }
+.version span { color: var(--muted); font-size: 10px; }
 .toast { position: fixed; bottom: 18px; left: 50%; transform: translate(-50%, 20px); background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 9px; font-size: 12px; opacity: 0; transition: .2s; pointer-events: none; z-index: 20; }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
 @media (max-width: 1080px) {
@@ -118,6 +122,13 @@ button { cursor: pointer; }
   .panel.right.open { transform: none; }
   .ai { width: min(320px, 46%); }
   .phone.desktop { width: 100%; }
+}
+@media (max-width: 900px) {
+  .bar { gap: 6px; padding: 0 9px; }
+  .brand span { display: none; }
+  .brand b { max-width: 96px; }
+  .bar .ghost, #openApp { display: none; }
+  .seg button { padding: 5px 7px; font-size: 11px; }
 }
 @media (max-width: 760px) {
   .layout { grid-template-columns: minmax(0, 1fr); }
@@ -146,6 +157,7 @@ button { cursor: pointer; }
     <button data-device="tablet" title="Tablet check">Tablet</button>
     <button data-device="mobile" class="on" title="Phone">Phone</button>
   </div>
+  <button class="iconbtn" id="history" title="Version history" aria-label="Version history">⟲</button>
   <button class="iconbtn" id="panelRight" title="Properties" aria-label="Properties">⚙</button>
   <a class="btn ghost" href="/p/${esc(token)}" target="_blank" rel="noreferrer">Review page</a>
   <a class="btn primary" id="openApp" href="${esc(origin)}/p/${esc(token)}/app" target="_blank" rel="noreferrer">Open app ↗</a>
@@ -201,7 +213,7 @@ const SCREEN_LABELS = { home:'Home', catalog:'Catalogue', search:'Search', saved
 const COMPONENTS = ['heading','text','button','image','banner','gallery','productList','search','form','testimonials','cta','offers','loyalty','visit','story','featured'];
 const SINGLE = ['hero','featured','offers','loyalty','visit','story','testimonials','cta','search','form','productList'];
 const SCREENS = [['contact','Contact','Address, hours and a message'],['about','About','Your story and a photo'],['profile','Profile','Account and shortcuts'],['custom','Blank','A new screen']];
-const state = { doc: JSON.parse(JSON.stringify(INITIAL)), screen: INITIAL.initialScreen || INITIAL.screens[0].id, selected: null, device: 'mobile', history: [], future: [] };
+const state = { doc: JSON.parse(JSON.stringify(INITIAL)), screen: INITIAL.initialScreen || INITIAL.screens[0].id, selected: null, device: 'mobile', history: [], future: [], historyMode: false };
 const $ = (id) => document.getElementById(id);
 const frame = $('frame');
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
@@ -313,6 +325,7 @@ function moveComponent(doc, screenId, id, beforeId) {
   target.sections = rest; return doc;
 }
 function renderInspector() {
+  if (state.historyMode) { renderHistory(); return; }
   const node = component();
   $('selectionLabel').textContent = node ? SECTION_LABELS[node.kind] : 'Screen';
   if (!node) { renderScreenInspector(); return; }
@@ -322,6 +335,7 @@ function renderInspector() {
       '<div class="field"><label>Heading</label><input id="pTitle" type="text" maxlength="60" value="' + esc(node.title || '') + '" placeholder="' + SECTION_LABELS[node.kind] + '" /></div>' +
       '<div class="field"><label>Words</label><textarea id="pText" maxlength="600" placeholder="A sentence or two">' + esc(node.text || '') + '</textarea></div>' +
       (node.kind === 'button' || node.kind === 'banner' || node.kind === 'cta' ? '<div class="field"><label>Button label</label><input id="pCta" type="text" maxlength="28" value="' + esc((node.cta && node.cta.label) || '') + '" /></div><div class="field"><label>Button opens</label><select id="pTarget">' + state.doc.screens.map((s) => '<option value="' + s.id + '"' + (node.cta && node.cta.screen === s.id ? ' selected' : '') + '>' + esc(s.name) + '</option>').join('') + '</select></div>' : '') +
+    (node.kind === 'hero' ? '' : '<div class="field"><label>Move to another screen</label><select id="pMoveTo"><option value="">Choose a screen…</option>' + state.doc.screens.filter((s) => s.id !== state.screen).map((s) => '<option value="' + s.id + '">' + esc(s.name) + '</option>').join('') + '</select></div>') +
     '</div>' +
     '<div class="sec"><h3>Design</h3>' +
       '<div class="field"><label>Alignment</label><div class="seg"><button data-align="left" class="' + (style.align !== 'center' ? 'on' : '') + '">Left</button><button data-align="center" class="' + (style.align === 'center' ? 'on' : '') + '">Centred</button></div></div>' +
@@ -357,6 +371,8 @@ function renderScreenInspector() {
 function bindInspector(node) {
   $('pTitle').addEventListener('input', (event) => commit((doc) => patchNode(doc, node.id, { title: event.target.value })));
   $('pText').addEventListener('input', (event) => commit((doc) => patchNode(doc, node.id, { text: event.target.value })));
+  const moveTo = $('pMoveTo');
+  if (moveTo) moveTo.addEventListener('change', (event) => { if (event.target.value) moveComponentTo(event.target.value, node.id); });
   const cta = $('pCta'), target = $('pTarget');
   if (cta) cta.addEventListener('input', (event) => commit((doc) => patchNode(doc, node.id, { cta: { label: event.target.value, screen: target.value } })));
   if (target) target.addEventListener('change', (event) => commit((doc) => patchNode(doc, node.id, { cta: { label: cta.value || 'Continue', screen: event.target.value } }), true));
@@ -386,6 +402,41 @@ function patchNode(doc, id, patch) {
   if (patch.cta !== undefined) node.cta = { label: (patch.cta.label || 'Continue').slice(0,28), screen: patch.cta.screen };
   if (patch.style) node.style = Object.assign({}, node.style, patch.style);
   return doc;
+}
+function renderHistory() {
+  $('selectionLabel').textContent = 'Versions';
+  $('inspector').innerHTML = '<div class="sec"><p class="hint">Loading saved versions…</p></div>';
+  fetch('/api/projects/' + TOKEN + '/doc/versions').then((r) => r.json()).then((payload) => {
+    const versions = payload.versions || [];
+    $('inspector').innerHTML = '<div class="sec"><h3>Saved versions</h3>' +
+      (versions.length ? '<div class="versions">' + versions.map((v) => '<div class="version"><b>' + new Date(v.createdAt).toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) + '</b><button class="btn small" data-restore="' + v.id + '">Restore</button></div>').join('') + '</div>'
+        : '<p class="empty">No earlier versions yet. Versions are kept as you edit, at most one a minute.</p>') +
+      '<p class="hint">Up to 20 designs are kept. Restoring is itself undoable for this session.</p></div>';
+  }).catch(() => toast('Could not load versions.'));
+}
+function restoreVersion(versionId) {
+  fetch('/api/projects/' + TOKEN + '/doc/versions/' + versionId + '/restore', { method:'POST' })
+    .then((response) => response.json().then((payload) => { if (!response.ok) throw new Error('restore'); return payload; }))
+    .then((payload) => {
+      historyPush(clone(state.doc)); state.doc = payload.doc; state.historyMode = false; state.selected = null;
+      const home = state.doc.screens[0]; state.screen = home.id;
+      render(); save(); reloadFrame(); toast('Version restored');
+    })
+    .catch(() => toast('Could not restore that version.'));
+}
+function moveComponentTo(screenId, nodeId) {
+  commit((doc) => {
+    const from = doc.screens.find((s) => s.id === state.screen);
+    const to = doc.screens.find((s) => s.id === screenId);
+    if (!from || !to) return doc;
+    const node = from.sections.find((s) => s.id === nodeId);
+    if (!node || node.kind === 'hero') return doc;
+    from.sections = from.sections.filter((s) => s.id !== nodeId);
+    let id = node.id; let index = 2; while (to.sections.some((s) => s.id === id)) { id = node.id + '_' + index; index += 1; }
+    node.id = id; to.sections.push(node);
+    state.screen = screenId; state.selected = id;
+    return doc;
+  }, true);
 }
 function addComponent(kind) {
   commit((doc) => {
@@ -440,6 +491,7 @@ document.addEventListener('click', (event) => {
   const select = event.target.closest('[data-select]'); if (select) { state.selected = select.dataset.select; render(); return; }
   const hide = event.target.closest('[data-hide]'); if (hide) { commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); const node = screen && screen.sections.find((s) => s.id === hide.dataset.hide); if (node) node.hidden = !node.hidden; return doc; }, true); return; }
   const dup = event.target.closest('[data-duplicate]'); if (dup) { commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc; const index = screen.sections.findIndex((s) => s.id === dup.dataset.duplicate); if (index < 0 || screen.sections[index].kind === 'hero') return doc; const cloneNode = clone(screen.sections[index]); cloneNode.id += '_' + Date.now().toString(36); screen.sections.splice(index + 1, 0, cloneNode); return doc; }, true); return; }
+  const restore = event.target.closest('[data-restore]'); if (restore) { restoreVersion(restore.dataset.restore); return; }
   const remove = event.target.closest('[data-delete]'); if (remove) { if (!confirm('Delete this component?')) return; commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (screen) screen.sections = screen.sections.filter((s) => s.id !== remove.dataset.delete); return doc; }, true); if (state.selected === remove.dataset.delete) state.selected = null; render(); }
 });
 window.addEventListener('message', (event) => {
@@ -456,6 +508,7 @@ document.querySelectorAll('[data-device]').forEach((button) => button.addEventLi
   state.device = button.dataset.device;
   $('phone').className = 'phone ' + state.device;
 }));
+$('history').addEventListener('click', () => { state.historyMode = !state.historyMode; if (state.historyMode) state.selected = null; render(); $('right').classList.add('open'); });
 $('panelLeft').addEventListener('click', () => $('left').classList.toggle('open'));
 $('panelRight').addEventListener('click', () => $('right').classList.toggle('open'));
 let proposal = null;

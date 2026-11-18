@@ -89,3 +89,38 @@ app:
 4. Per-breakpoint style overrides beyond visibility, and named mobile design
    presets curated for all 27 categories.
 5. Hosted AI with limits behind the existing proposal API.
+
+## Workflow audit, August 2026
+
+Generated apps are functional, not mockups, in these flows:
+
+| Flow | State |
+| --- | --- |
+| Browse catalogue, sections, filters | Works (all catalogue trades) |
+| Item detail, favourite, quantity | Works |
+| Cart sheet, fulfilment choice, demo order | Works for ordering trades |
+| Booking (days, slots, party size, confirmation) | Works for booking/classes trades |
+| Enquiry form (name, contact, message) | Works for quote trades |
+| Search and saved items | Works |
+| Call, directions, social links | Work when the build has the details |
+| Profile / order history screens | Document-managed screens exist, but a real account/order backend does **not**; treat them as presentation until wired to data |
+
+Ordering and checkout deliberately remain a bottom sheet with local demo
+semantics: no payment is taken and no order leaves the app. Making them
+document-managed screens must keep that working sheet as the transactional
+surface until a real backend exists; the document can own a cart *screen*
+presentation later without pretending it charges anyone.
+
+## Media manager (not yet built)
+
+The current image component is generated artwork or a server-resolved photo.
+Uploads, cropping, WebP conversion, reuse and storage quotas need an object-store
+binding and an authenticated upload endpoint; that is the next infrastructure
+slice. Until then the editor must not present an upload control that does
+nothing.
+
+## Element editing today
+
+Components are selectable in the canvas and in the structure list, with
+properties, duplicate, delete, reorder and move-to-screen. Direct inline editing
+on the canvas, image replacement and resize handles are not implemented yet.

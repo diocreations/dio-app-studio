@@ -143,8 +143,15 @@ const SCHEMA = [
     detail TEXT NOT NULL DEFAULT '',
     created_at TEXT NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS doc_versions (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    doc TEXT NOT NULL,
+    created_at TEXT NOT NULL
+  )`,
   `CREATE INDEX IF NOT EXISTS notes_by_project ON notes (project_id, created_at)`,
   `CREATE INDEX IF NOT EXISTS activity_by_project ON activity (project_id, created_at)`,
+  `CREATE INDEX IF NOT EXISTS doc_versions_by_project ON doc_versions (project_id, created_at)`,
 ]
 
 /** Columns added after the first deployments. Duplicate-column errors are fine. */
@@ -434,11 +441,66 @@ export async function getProjectById(
  */
 export async function saveDoc(db: D1Database, project: Project, doc: Doc): Promise<void> {
   await ensureSchema(db)
+  const previous = await db
+    .prepare('SELECT doc FROM projects WHERE id = ?')
+    .bind(project.id)
+    .first<{ doc: string }>()
+  const now = new Date().toISOString()
   await db
     .prepare('UPDATE projects SET doc = ?, updated_at = ? WHERE id = ?')
-    .bind(JSON.stringify(doc), new Date().toISOString(), project.id)
+    .bind(JSON.stringify(doc), now, project.id)
     .run()
+
+  // Autosave is continuous, so snapshot at most once a minute. The document
+  // being replaced is what a restore needs, not the new one.
+  const previousDoc = (previous?.doc ?? '').trim()
+  if (previousDoc && previousDoc !== JSON.stringify(doc)) {
+    const last = await db
+      .prepare('SELECT created_at FROM doc_versions WHERE project_id = ? ORDER BY created_at DESC LIMIT 1')
+      .bind(project.id)
+      .first<{ created_at: string }>()
+    if (!last || Date.now() - Date.parse(last.created_at) > 60_000) {
+      await db
+        .prepare('INSERT INTO doc_versions (id, project_id, doc, created_at) VALUES (?, ?, ?, ?)')
+        .bind(id('dvr'), project.id, previousDoc, now)
+        .run()
+      // Keep the last twenty; older designs are not recoverable.
+      await db
+        .prepare(
+          `DELETE FROM doc_versions WHERE project_id = ? AND id NOT IN (
+             SELECT id FROM doc_versions WHERE project_id = ? ORDER BY created_at DESC LIMIT 20
+           )`,
+        )
+        .bind(project.id, project.id)
+        .run()
+    }
+  }
   await log(db, project.id, 'edit', 'Design edited', `${doc.screens.length} screens`)
+}
+
+export type DocVersion = { id: string; createdAt: string }
+
+export async function listDocVersions(db: D1Database, projectId: string): Promise<DocVersion[]> {
+  await ensureSchema(db)
+  const { results } = await db
+    .prepare('SELECT id, created_at FROM doc_versions WHERE project_id = ? ORDER BY created_at DESC LIMIT 20')
+    .bind(projectId)
+    .all<{ id: string; created_at: string }>()
+  return (results ?? []).map((row) => ({ id: row.id, createdAt: row.created_at }))
+}
+
+export async function getDocVersion(
+  db: D1Database,
+  projectId: string,
+  versionId: string,
+): Promise<Doc | null> {
+  await ensureSchema(db)
+  const row = await db
+    .prepare('SELECT doc FROM doc_versions WHERE id = ? AND project_id = ?')
+    .bind(versionId, projectId)
+    .first<{ doc: string }>()
+  if (!row) return null
+  return parseJson<Doc | null>(row.doc, null)
 }
 
 /**

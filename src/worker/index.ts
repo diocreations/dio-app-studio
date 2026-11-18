@@ -8,7 +8,9 @@ import {
   approveProject,
   createProject,
   deleteProject,
+  getDocVersion,
   getProject,
+  listDocVersions,
   saveDoc,
   listActivity,
   listNotes,
@@ -742,6 +744,28 @@ app.post('/api/projects/:token/doc/ai', async (c) => {
   const result = applyCommand(current, command, project.spec)
   c.header('Cache-Control', 'private, no-store')
   return c.json(result)
+})
+
+/** Snapshots of the design, newest first. Bodies stay server-side. */
+app.get('/api/projects/:token/doc/versions', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({ versions: await listDocVersions(c.env.DB, project.id) })
+})
+
+app.post('/api/projects/:token/doc/versions/:versionId/restore', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Edits are restored from the editor.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const version = await getDocVersion(c.env.DB, project.id, c.req.param('versionId'))
+  if (!version) return fail(c, 404, 'version_not_found', 'That saved design no longer exists.')
+  const doc = normalizeDoc(version, project.spec)
+  await saveDoc(c.env.DB, project, doc)
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({ ok: true, doc })
 })
 
 app.post('/api/projects/:token/notes', async (c) => {

@@ -652,6 +652,37 @@ export function moveSection(doc: Doc, screenId: string, id: string, beforeId: st
   }
 }
 
+/** Moves a component to another screen, keeping ids unique on the target. */
+export function moveComponentToScreen(
+  doc: Doc,
+  fromScreenId: string,
+  id: string,
+  toScreenId: string,
+): Doc {
+  if (fromScreenId === toScreenId) return doc
+  const from = screenById(doc, fromScreenId)
+  const to = screenById(doc, toScreenId)
+  if (!from || !to) return doc
+  const node = from.sections.find((entry) => entry.id === id)
+  if (!node || node.kind === 'hero') return doc
+  let nextId = node.id
+  let index = 2
+  while (to.sections.some((entry) => entry.id === nextId)) {
+    nextId = `${node.id}_${index}`
+    index += 1
+  }
+  return {
+    ...doc,
+    screens: doc.screens.map((entry) => {
+      if (entry.id === fromScreenId)
+        return { ...entry, sections: entry.sections.filter((section) => section.id !== id) }
+      if (entry.id === toScreenId)
+        return { ...entry, sections: [...entry.sections, { ...node, id: nextId }] }
+      return entry
+    }),
+  }
+}
+
 export function duplicateSection(doc: Doc, screenId: string, id: string): Doc {
   const target = screenById(doc, screenId)
   if (!target) return doc

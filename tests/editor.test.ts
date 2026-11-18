@@ -9,6 +9,7 @@ import {
   duplicateScreen,
   homeScreen,
   homeSections,
+  moveComponentToScreen,
   moveScreen,
   moveSection,
   normalizeDoc,
@@ -195,6 +196,20 @@ describe('screens and navigation', () => {
     expect(html).toContain('data-item="0-0"')
   })
 
+  test('components can move between screens without id collisions', () => {
+    let doc = docFromSpec(spec())
+    doc = addScreen(doc, 'contact', spec())
+    doc = addSection(doc, 'scr_contact', 'testimonials', spec())
+    const home = homeScreen(doc)
+    const moving = home.sections.find((node) => node.kind === 'visit')!
+    doc = moveComponentToScreen(doc, home.id, moving.id, 'scr_contact')
+    expect(homeScreen(doc).sections.some((node) => node.id === moving.id)).toBe(false)
+    const contact = doc.screens.find((entry) => entry.id === 'scr_contact')!
+    expect(contact.sections.some((node) => node.id === moving.id)).toBe(true)
+    // The hero never leaves home.
+    expect(moveComponentToScreen(doc, home.id, 'sec_hero', 'scr_contact')).toEqual(doc)
+  })
+
   test('responsive visibility is still real CSS', () => {
     const doc = updateSection(docFromSpec(spec()), 'scr_home', 'sec_story', {
       responsive: { hideOn: ['mobile'] },
@@ -280,6 +295,59 @@ describe('the editor and its API', () => {
     ).text()
     expect(html).toContain('Saved by the editor')
     expect(html).toContain('data-screen="scr_contact"')
+  })
+
+  test('saved versions list and restore the previous design', async () => {
+    const { db, project } = await projectWithDb()
+    const env = { DB: db, ASSETS: {} as Fetcher }
+    const path = `https://plattr.example/api/projects/${project.token}/doc`
+    const write = async (doc: ReturnType<typeof docFromSpec>) =>
+      app.request(
+        path,
+        { method: 'PUT', headers: { ...JSON_HEADERS, origin: 'https://plattr.example' }, body: JSON.stringify({ doc }) },
+        env,
+      )
+
+    const first = docFromSpec(project.spec)
+    first.screens[0].sections[0].title = 'Version one'
+    expect((await write(first)).status).toBe(200)
+
+    const second = docFromSpec(project.spec)
+    second.screens[0].sections[0].title = 'Version two'
+    expect((await write(second)).status).toBe(200)
+
+    const listed = (await (
+      await app.request(`https://plattr.example/api/projects/${project.token}/doc/versions`, {}, env)
+    ).json()) as { versions: { id: string; createdAt: string }[] }
+    expect(listed.versions.length).toBe(1)
+
+    const restored = await app.request(
+      `https://plattr.example/api/projects/${project.token}/doc/versions/${listed.versions[0].id}/restore`,
+      { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://plattr.example' } },
+      env,
+    )
+    expect(restored.status).toBe(200)
+    const restoredDoc = (await restored.json()) as { doc: { screens: { sections: { title?: string }[] }[] } }
+    expect(restoredDoc.doc.screens[0].sections[0].title).toBe('Version one')
+
+    const html = await (
+      await app.request(`https://plattr.example/p/${project.token}/app`, {}, env)
+    ).text()
+    expect(html).toContain('Version one')
+
+    const cross = await app.request(
+      `https://plattr.example/api/projects/${project.token}/doc/versions/${listed.versions[0].id}/restore`,
+      { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://evil.example' } },
+      env,
+    )
+    expect(cross.status).toBe(403)
+
+    const missing = await app.request(
+      `https://plattr.example/api/projects/${project.token}/doc/versions/dvr_missing/restore`,
+      { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://plattr.example' } },
+      env,
+    )
+    expect(missing.status).toBe(404)
   })
 
   test('cross-site, wrong-type and unknown-token writes are refused', async () => {
