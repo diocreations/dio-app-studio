@@ -192,4 +192,6 @@ value shared work is a free-delivery threshold stored on the spec, order status
 lookup for guests, and course access provisioning, because the new journeys make
 those gaps visible.
 
-Code commit: recorded in the repository history for this batch.
+Code commit: `e355ffb` (334 files; batch 2 and 3 implementations, imagery,
+tests and documentation). This report's hash line is recorded in the following
+documentation commit.
