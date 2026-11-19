@@ -28,6 +28,7 @@ import {
   sanitizeImported,
   throttleImports,
 } from './importer'
+import { applyApproval, diffCatalogue } from './reimport'
 import { buildSpec, initialsFor, quote, sanitizeHex, sanitizeMenu, type VerticalId } from './pricing'
 import { applyCommand, docFromSpec, flagshipDocFromSpec, normalizeDoc } from './doc'
 import { FLAGSHIP_TRADES } from './flagship'
@@ -834,6 +835,8 @@ app.post('/api/import', async (c) => {
       found: report.found,
       missing: report.missing,
       notes: report.notes,
+      images: report.images,
+      quality: report.quality,
     })
   } catch (error) {
     if (error instanceof ImportError) {
@@ -987,6 +990,67 @@ app.put('/api/projects/:token/doc', async (c) => {
  * saves it when the owner accepts, so AI edits are as reversible as manual
  * ones.
  */
+/**
+ * Re-import, step one: read the site again and describe the difference. This
+ * endpoint writes nothing, so an owner can look before anything moves.
+ */
+app.post('/api/projects/:token/import/check', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to update this build.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  try {
+    const url = checkImportUrl(str(body.url, 300))
+    throttleImports(`reimport:${await visitorBucket(c.req.header('cf-connecting-ip'))}`)
+    const report = await importOnce(url.href)
+    c.header('Cache-Control', 'no-store')
+    return c.json({
+      plan: diffCatalogue(project.spec.menu, report.site.menu, url.href),
+      quality: report.quality,
+      images: report.images,
+    })
+  } catch (error) {
+    if (error instanceof ImportError) return c.json({ error: { code: error.code, message: error.message } }, error.status)
+    return fail(c, 502, 'import_failed', 'That site could not be read. Try again later.')
+  }
+})
+
+/**
+ * Re-import, step two: apply only the categories the owner ticked. An
+ * unapproved difference is left exactly as the owner last saved it.
+ */
+app.post('/api/projects/:token/import/apply', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to update this build.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  try {
+    const url = checkImportUrl(str(body.url, 300))
+    const approval = (body.approval ?? {}) as {
+      added?: boolean
+      removed?: string[]
+      changed?: string[]
+    }
+    throttleImports(`reimport:${await visitorBucket(c.req.header('cf-connecting-ip'))}`)
+    const report = await importOnce(url.href)
+    const menu = applyApproval(project.spec.menu, report.site.menu, {
+      added: approval.added === true,
+      removed: Array.isArray(approval.removed) ? approval.removed.map(String).slice(0, 200) : [],
+      changed: Array.isArray(approval.changed) ? approval.changed.map(String).slice(0, 400) : [],
+    })
+    const updated = await saveVersion(c.env.DB, project, { spec: { menu } })
+    await log(c.env.DB, project.id, 'import', 'Catalogue updated', `Re-import applied from ${url.href}`)
+    return c.json({ version: updated.version })
+  } catch (error) {
+    if (error instanceof ImportError) return c.json({ error: { code: error.code, message: error.message } }, error.status)
+    return fail(c, 502, 'import_failed', 'That site could not be read. Try again later.')
+  }
+})
+
 app.post('/api/projects/:token/doc/ai', async (c) => {
   const origin = c.req.header('origin')
   if (origin && origin !== new URL(c.req.url).origin)

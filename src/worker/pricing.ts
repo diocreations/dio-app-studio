@@ -437,7 +437,18 @@ function sanitizeItemImage(value: unknown): MenuItem['image'] {
   const url = raw.trim()
   if (url.length > 600 || !/^https:\/\/[^\s"'<>]+$/i.test(url)) return undefined
   const alt = input && typeof input.alt === 'string' ? input.alt.trim().slice(0, 140) : ''
-  return { url, ...(alt ? { alt } : {}), source: 'website' }
+  const rawSource = input && typeof input.sourceUrl === 'string' ? input.sourceUrl.trim() : ''
+  const sourceUrl =
+    rawSource.length <= 600 && /^https:\/\/[^\s"'<>]+$/i.test(rawSource) ? rawSource : undefined
+  const methods = ['structured-data', 'embedded-json', 'og-image', 'public-data'] as const
+  const method = methods.find((entry) => entry === input?.method)
+  return {
+    url,
+    ...(sourceUrl ? { sourceUrl } : {}),
+    ...(alt ? { alt } : {}),
+    ...(method ? { method } : {}),
+    source: 'website',
+  }
 }
 
 function sanitizeItemMedia(value: unknown): MenuItem['media'] {
@@ -493,7 +504,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
                 : 0
             return {
               name: String(entry.name ?? '').trim().slice(0, 60) || 'Item',
-              desc: String(entry.desc ?? '').trim().slice(0, 90),
+              desc: String(entry.desc ?? '').trim().slice(0, 400),
               price,
               tag: String(entry.tag ?? '').trim().slice(0, 12) || undefined,
               meta: String(entry.meta ?? '').trim().slice(0, 30) || undefined,
@@ -620,6 +631,26 @@ export function buildSpec(input: {
     vertical: vertical.id,
     features: normalizeFeatures(requested),
     menu: importedMenu.length ? importedMenu : copyMenu(vertical.menu),
+    ...(site.website && importedMenu.length
+      ? {
+          importSummary: {
+            source: site.website.slice(0, 120),
+            importedAt: new Date().toISOString(),
+            products: importedMenu.reduce((total, section) => total + section.items.length, 0),
+            withImage: importedMenu.reduce(
+              (total, section) =>
+                total + section.items.filter((item) => Boolean(item.image || item.media)).length,
+              0,
+            ),
+            priced: importedMenu.reduce(
+              (total, section) => total + section.items.filter((item) => item.price > 0).length,
+              0,
+            ),
+            currency: site.currency && /^[A-Z]{3}$/.test(site.currency) ? site.currency : '',
+            categories: importedMenu.slice(0, 12).map((section) => section.name),
+          },
+        }
+      : {}),
     offers: vertical.offers.map((offer) => ({ ...offer })),
     loyalty: { ...vertical.loyalty },
     sampleContent: {

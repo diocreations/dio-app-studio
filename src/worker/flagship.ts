@@ -38,7 +38,7 @@ function esc(value: string): string {
 }
 
 function price(item: MenuItem, currency?: string): string {
-  return item.price > 0 ? moneyIn(item.price, currency) : 'On request'
+  return item.price > 0 ? moneyIn(item.price, currency) : ''
 }
 
 /** A job with no fixed price shows its own "from" line, never a blank quote. */
@@ -143,7 +143,6 @@ function restaurantHome(spec: AppSpec): string {
       ${spec.features.includes('booking') ? `<button class="fx-secondary" type="button" data-go="book">Reserve</button>` : ''}
     </div>
     ${factline(spec)}
-    <div class="fx-note"><span class="fx-rule"></span><span>Seasonal · cooked to order</span></div>
   </div>`
 }
 
@@ -1270,9 +1269,13 @@ function flagshipNode(ctx: FlagshipContext, node: DocNode, standalone = false): 
   if (node.kind !== 'flagship') return ''
   const body = flagshipBody(ctx, node)
   if (!body) return ''
+  // An editorial photo keeps the shape it was published in: the frame takes the
+  // file's own ratio, so a 4:3 photograph is not cropped to a 16:10 band.
+  const ratio =
+    node.media?.width && node.media?.height ? ` style="aspect-ratio:${node.media.width}/${node.media.height}"` : ''
   const attachment =
     node.media && node.variant && !MEDIA_BLOCKS.has(node.variant)
-      ? `<figure class="fx-attachment">${photoFor(ctx, node.media, node.title || '')}</figure>`
+      ? `<figure class="fx-attachment"${ratio}>${photoFor(ctx, node.media, node.title || '')}</figure>`
       : ''
   const wrapped = fxWrap(ctx, node, `${attachment}${body}`)
   return standalone ? `<div class="fx-home ${tradeClass(ctx.spec)} is-single">${wrapped}</div>` : wrapped
@@ -1430,7 +1433,7 @@ export function flagshipCss(): string {
   return `
 /* ---- flagship base -------------------------------------------------- */
 body[data-flagship="1"] { background: var(--bg); }
-body[data-flagship="1"] .app { max-width: 520px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 5%, transparent); }
+body[data-flagship="1"] .app { max-width: 520px; margin-inline: auto; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 5%, transparent); }
 body[data-flagship="1"] .screens { scroll-behavior: smooth; }
 body[data-flagship="1"] .screen { padding-left: 18px; padding-right: 18px; }
 body[data-flagship="1"] .appbar { min-height: 54px; padding-top: max(10px, env(safe-area-inset-top)); border-bottom: 1px solid color-mix(in srgb, var(--ink) 7%, transparent); backdrop-filter: blur(20px) saturate(1.2); background: color-mix(in srgb, var(--bg) 86%, transparent); }
@@ -1747,14 +1750,14 @@ body[data-trade="gym"][data-flagship="1"] .fx-gym-strip .fx-art:first-child { gr
 body[data-trade="gym"][data-flagship="1"] .fx-gym-stats { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 18px; border-top: 1px solid rgba(255,255,255,.16); border-bottom: 1px solid rgba(255,255,255,.16); }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-stats div { padding: 12px 8px; border-right: 1px solid rgba(255,255,255,.12); }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-stats div:last-child { border-right: 0; }
-body[data-trade="gym"][data-flagship="1"] .fx-gym-stats b { display: block; font-family: var(--display); font-size: 25px; line-height: 1; color: var(--accent); }
+body[data-trade="gym"][data-flagship="1"] .fx-gym-stats b { display: block; font-family: var(--display); font-size: 25px; line-height: 1; color: var(--paper); }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-stats span { display: block; margin-top: 4px; font-size: 7px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 28px 0 11px; }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-head > span:first-child { font-family: var(--display); font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-head button { border: 0; background: none; color: var(--accent); font: inherit; font-size: 8.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 0; }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-plans { display: flex; flex-direction: column; gap: 6px; }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-plan { display: grid; grid-template-columns: 27px 1fr auto; align-items: center; gap: 11px; min-height: 76px; padding: 14px 13px; background: var(--surface); cursor: pointer; }
-body[data-trade="gym"][data-flagship="1"] .fx-gym-plan.is-feature { background: var(--accent); color: #07130d; }
+body[data-trade="gym"][data-flagship="1"] .fx-gym-plan.is-feature { background: var(--accent); color: var(--on-accent); }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-num { font-family: var(--body); font-size: 8px; font-weight: 700; letter-spacing: .06em; opacity: .48; }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-plan > div:nth-child(2) b { display: block; font-family: var(--display); font-size: 17px; font-weight: 800; line-height: 1.05; text-transform: uppercase; letter-spacing: -.01em; }
 body[data-trade="gym"][data-flagship="1"] .fx-gym-plan > div:nth-child(2) span { display: block; margin-top: 4px; font-size: 9px; line-height: 1.35; opacity: .6; }

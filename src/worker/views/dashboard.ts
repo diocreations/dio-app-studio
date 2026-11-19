@@ -511,6 +511,18 @@ td b { font-weight: 600; }
         <div class="card"><span>Upcoming bookings</span><b>${data.summary.upcomingBookings}</b><small>${data.summary.bookings} total</small></div>
         <div class="card"><span>New enquiries</span><b>${data.summary.newEnquiries}</b><small>${data.summary.customers} customers</small></div>
       </div>
+      ${project.spec.importSummary
+        ? `<div class="panel" id="importPanel">
+            <h2>Imported from ${esc(project.spec.importSummary.source.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</h2>
+            <p class="note">${project.spec.importSummary.products} products · ${project.spec.importSummary.withImage} with a photograph the site itself published · ${project.spec.importSummary.priced} priced${project.spec.importSummary.currency ? ` in ${esc(project.spec.importSummary.currency)}` : ''}</p>
+            <p class="note">Categories: ${esc(project.spec.importSummary.categories.join(' · '))}. Check every name, price and photograph before you publish: the editor corrects anything, and a later re-import never replaces your corrections without your approval.</p>
+            <div class="links">
+              <button class="btn" type="button" id="checkImport">Check the site for updates</button>
+              <span class="muted" id="importStatus" style="font-size:12px"></span>
+            </div>
+            <div id="importDiff"></div>
+          </div>`
+        : ''}
       <div class="grid2">
         <div class="panel">
           <h2>Latest orders</h2>
@@ -599,6 +611,7 @@ td b { font-weight: 600; }
 </div>
 <script>
 const TOKEN = ${JSON.stringify(token)};
+const IMPORTED_FROM = ${JSON.stringify(project.spec.importSummary?.source ?? '')};
 const CATALOG = ${catalogJson};
 const OFFERS = ${offersJson};
 const $ = (id) => document.getElementById(id);
@@ -707,6 +720,59 @@ async function updateStatus(button) {
   }
   location.reload();
 }
+
+/* ----------------------------- re-import ----------------------------- */
+
+const checkImport = $('checkImport');
+if (checkImport) checkImport.addEventListener('click', async () => {
+  const status = $('importStatus');
+  const host = $('importDiff');
+  status.textContent = 'Reading the site…';
+  const response = await fetch('/api/projects/' + TOKEN + '/import/check', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ url: IMPORTED_FROM }),
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    status.textContent = (body.error && body.error.message) || 'The site could not be read.';
+    return;
+  }
+  const plan = body.plan || {};
+  const added = plan.added || [];
+  const removed = plan.removed || [];
+  const changed = plan.changed || [];
+  status.textContent = added.length + ' new, ' + changed.length + ' changed, ' + removed.length + ' gone, ' + (plan.unchanged || 0) + ' unchanged.';
+  if (!added.length && !removed.length && !changed.length) {
+    host.innerHTML = '<p class="note">Nothing has changed on the site.</p>';
+    return;
+  }
+  const rows = [];
+  if (added.length)
+    rows.push('<div class="record"><label><input type="checkbox" data-approve-added checked /> Add ' + added.length + ' new ' + (added.length === 1 ? 'item' : 'items') + '</label><p class="note">' + esc(added.map((item) => item.name).slice(0, 8).join(', ')) + '</p></div>');
+  for (const entry of changed)
+    rows.push('<div class="record"><b>' + esc(entry.name) + '</b><span>' + esc(entry.section) + (entry.ownerEdited ? ' · your own photo is kept' : '') + '</span>' +
+      entry.changes.map((change) => '<label style="display:block;margin-top:4px"><input type="checkbox" data-approve-change="' + esc(entry.name) + '|' + esc(change.field) + '" checked /> ' + esc(change.field) + ': ' + esc(String(change.from) || 'empty') + ' → ' + esc(String(change.to) || 'empty') + '</label>').join('') + '</div>');
+  for (const entry of removed)
+    rows.push('<div class="record"><label><input type="checkbox" data-approve-remove="' + esc(entry.name) + '" /> Remove ' + esc(entry.name) + '</label><span>It is no longer on the site. Leave this unticked to keep it.</span></div>');
+  host.innerHTML = rows.join('') + '<div class="links"><button class="btn primary" type="button" id="applyImport">Apply approved changes</button><span class="muted" id="applyStatus" style="font-size:12px"></span></div>';
+  const apply = $('applyImport');
+  apply.addEventListener('click', async () => {
+    const approved = {
+      added: Boolean(document.querySelector('[data-approve-added]')?.checked),
+      removed: Array.from(document.querySelectorAll('[data-approve-remove]')).filter((box) => box.checked).map((box) => box.dataset.approveRemove),
+      changed: Array.from(document.querySelectorAll('[data-approve-change]')).filter((box) => box.checked).map((box) => box.dataset.approveChange),
+    };
+    $('applyStatus').textContent = 'Applying…';
+    const applied = await fetch('/api/projects/' + TOKEN + '/import/apply', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ url: IMPORTED_FROM, approval: approved }),
+    });
+    const result = await applied.json().catch(() => ({}));
+    $('applyStatus').textContent = applied.ok ? 'Applied. The app now shows the approved changes.' : ((result.error && result.error.message) || 'That could not be applied.');
+  });
+});
 
 const settingsForm = $('settingsForm');
 if (settingsForm) settingsForm.addEventListener('submit', async (event) => {

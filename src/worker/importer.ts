@@ -1,3 +1,13 @@
+import {
+  attachImages,
+  checkImageCandidate,
+  embeddedJsonImages,
+  ogProductImage,
+  publicProductImages,
+  toEvidence,
+  type ImageReport,
+} from './importImages'
+
 /** Turns a customer's existing website into a draft app brief.
  *
  *  The job is breadth: one pasted link, then the shop, collection, menu and
@@ -79,9 +89,26 @@ export type ImportedSite = {
   pwa?: PwaInfo
 }
 
+export type ImportQuality = {
+  /** Items the extraction produced before cleaning. */
+  discovered: number
+  /** Items left in the catalogue after cleaning. */
+  kept: number
+  /** Items that were read but are not sellable entries, with the reason. */
+  dropped: { name: string; section: string; reason: string }[]
+  /** Prices that look like a parse accident rather than a price. */
+  suspectPrices: { name: string; section: string; value: number }[]
+  duplicates: number
+  categories: string[]
+}
+
 export type ImportReport = {
   /** The cleaned-up link that was actually read. */
   source: string
+  /** What happened to product photographs. */
+  images: ImageReport
+  /** Catalogue cleaning: what was kept, what was not, and why. */
+  quality: ImportQuality
   host: string
   /** How many pages the crawl opened, including the one that was pasted. */
   pages: number
@@ -1117,7 +1144,12 @@ function hoursOf(business: Record<string, unknown>): string {
 
 export function toCents(raw: string): number {
   if (!raw) return 0
-  const cleaned = raw.replace(/[^\d.,]/g, '')
+  // One field can quote several options for the same line (“89.00 / 237.00”
+  // for a glass and a bottle). The leading amount is the line's own price;
+  // reading the run as one number produces a fantastic, wrong price.
+  const amounts = raw.match(/\d[\d,]*(?:[.,]\d{2})?/g) ?? []
+  const quoted = amounts.length > 1 && /[^\d.,]+\s*\d/.test(raw)
+  const cleaned = (quoted ? amounts[0]! : raw).replace(/[^\d.,]/g, '')
   if (!cleaned) return 0
   const lastComma = cleaned.lastIndexOf(',')
   const lastDot = cleaned.lastIndexOf('.')
@@ -1139,6 +1171,16 @@ export function toCents(raw: string): number {
 }
 
 const PRICE_PATTERN = /(?:[$£€₹¥]\s?\d[\d.,]*|\d[\d.,]*\s?(?:€|£|\$))/g
+
+/** Markup with its code stripped: analytics blobs and framework payloads carry
+ *  numbers that look like prices and are not. Prices are read from what a
+ *  visitor can actually see. */
+function visibleMarkup(html: string): string {
+  return html
+    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<noscript\b[\s\S]*?<\/noscript>/gi, ' ')
+}
 
 const CURRENCIES: Record<string, string> = {
   $: 'USD',
@@ -1176,6 +1218,85 @@ const PRODUCT_TYPES = new Set([
   'Vehicle',
   'Course',
 ])
+
+/** No lowercase letters at all: how printed menus set a section label. */
+const SECTION_HEADING = /^[A-Z0-9][A-Z0-9 '’&/+.,-]{2,}$/
+/** Instructions to the shopper, not things to buy. */
+const OPTION_LABEL = /^(?:choose|select|customi[sz]e|pick)\b/i
+/** A four-figure minor-unit price is worth a second look before publishing. */
+const SUSPECT_PRICE = 100_000
+
+/**
+ * Turns what a crawl read into what a menu may show. A section label, an option
+ * button or a retail card with no price is not a dish: it is dropped and
+ * reported, never guessed at. A price that looks like a parse accident is
+ * cleared and reported, because a wrong price is worse than a missing one.
+ */
+export function cleanMenu(
+  sections: MenuSection[],
+  vertical: VerticalId,
+): { sections: MenuSection[]; quality: ImportQuality } {
+  const discovered = sections.reduce((total, section) => total + section.items.length, 0)
+  const dropped: ImportQuality['dropped'] = []
+  const suspectPrices: ImportQuality['suspectPrices'] = []
+  const prices = sections
+    .flatMap((section) => section.items.map((item) => item.price))
+    .filter((price) => price > 0)
+    .sort((a, b) => a - b)
+  const median = prices.length ? prices[Math.floor(prices.length / 2)]! : 0
+  // A menu that prices anything at all is a menu of things for sale, so an
+  // all-caps entry with no price and no description is a label even when its
+  // own section holds nothing else.
+  const pricedAnywhere = prices.length > 0
+
+  const cleaned = sections
+    .map((section) => {
+      const hasPriced = section.items.some((item) => item.price > 0)
+      const items = section.items.flatMap((item) => {
+        // A printed section label is not a dish. Its name is shouted, it carries
+        // no price, and the menu around it proves prices exist — the card parser
+        // can even have mistaken the next dish for its description.
+        if (
+          item.price === 0 &&
+          item.name.length <= 32 &&
+          SECTION_HEADING.test(item.name) &&
+          (hasPriced || pricedAnywhere)
+        ) {
+          dropped.push({ name: item.name, section: section.name, reason: 'section-heading' })
+          return []
+        }
+        if (!item.desc && OPTION_LABEL.test(item.name)) {
+          dropped.push({ name: item.name, section: section.name, reason: 'option-label' })
+          return []
+        }
+        if (vertical === 'restaurant' && item.price === 0 && !item.desc) {
+          dropped.push({ name: item.name, section: section.name, reason: 'no-price-or-description' })
+          return []
+        }
+        let price = item.price
+        if (price >= SUSPECT_PRICE && median > 0 && price > median * 20) {
+          suspectPrices.push({ name: item.name, section: section.name, value: price })
+          price = 0
+        }
+        return [{ ...item, price }]
+      })
+      return { ...section, items }
+    })
+    .filter((section) => section.items.length > 0)
+
+  const names = cleaned.flatMap((section) => section.items.map((item) => item.name.toLowerCase()))
+  return {
+    sections: cleaned,
+    quality: {
+      discovered,
+      kept: names.length,
+      dropped,
+      suspectPrices,
+      duplicates: names.length - new Set(names).size,
+      categories: cleaned.map((section) => section.name),
+    },
+  }
+}
 
 /** The image a page declares for one specific product, and nothing else. */
 function imageFrom(value: unknown): string {
@@ -1238,16 +1359,26 @@ function logoFrom(page: Page, business: Record<string, unknown>, name: string): 
   return undefined
 }
 
+/** A candidate photograph still has to pass the evidence gate: a stock URL, a
+ *  logo or a banner declared as a product image is not one. */
+function acceptedImage(...candidates: string[]): string {
+  for (const candidate of candidates) {
+    const checked = checkImageCandidate(candidate)
+    if (checked.ok) return checked.url
+  }
+  return ''
+}
+
 function itemFromNode(node: Record<string, unknown>): Item | null {
   if (!typeOf(node).some((type) => PRODUCT_TYPES.has(type))) return null
   const name = textOf(node, 'name', 'headline')
   if (!name) return null
-  const image = imageFrom(node.image) || imageFrom(node.thumbnailUrl)
+  const image = acceptedImage(imageFrom(node.image), imageFrom(node.thumbnailUrl))
   return {
     name: collapse(name, 60),
     desc: collapse(textOf(node, 'description'), 90),
     price: centsOf(node),
-    ...(image ? { image: { url: image, source: 'website' as const } } : {}),
+    ...(image ? { image: toEvidence(image, 'structured-data', collapse(name, 60)) } : {}),
   }
 }
 
@@ -1339,7 +1470,7 @@ export function cardProducts(html: string): Item[] {
   for (let index = 0; index < starts.length; index += 1) {
     const start = starts[index]
     const chunk = html.slice(start, Math.min(starts[index + 1] ?? html.length, start + 4200))
-    const price = chunk.match(PRICE_PATTERN)?.[0]
+    const price = visibleMarkup(chunk).match(PRICE_PATTERN)?.[0]
     if (!price) continue
     const titleAttr = /<a\b[^>]*title=["']([^"']{2,90})["']/i.exec(chunk)?.[1]
     const heading = /<h[1-4][^>]*>([\s\S]{1,220}?)<\/h[1-4]>/i.exec(chunk)?.[1]
@@ -1830,7 +1961,7 @@ function currencyOf(page: Page): string {
       textOf(node, 'priceCurrency')
     if (/^[A-Z]{3}$/.test(code)) return code
   }
-  const symbol = page.html.match(PRICE_PATTERN)?.[0]?.trim().charAt(0) ?? ''
+  const symbol = visibleMarkup(page.html).match(PRICE_PATTERN)?.[0]?.trim().charAt(0) ?? ''
   return CURRENCIES[symbol] ?? ''
 }
 
@@ -1919,14 +2050,14 @@ function productFromPage(page: Page): Item | null {
     page.meta['product:price:amount'] ||
     page.meta['og:price:amount'] ||
     /itemprop=["']price["'][^>]*content=["']([\d.,]+)/i.exec(page.html)?.[1] ||
-    page.html.match(PRICE_PATTERN)?.[0] ||
+    visibleMarkup(page.html).match(PRICE_PATTERN)?.[0] ||
     ''
-  const image = imageFrom(page.meta['og:image']) || imageFrom(page.meta['twitter:image'])
+  const image = ogProductImage(page.html, page.meta, page.url.toString())
   return {
     name: collapse(name, 60),
     desc: collapse(page.meta.description ?? page.meta['og:description'] ?? '', 90),
     price: toCents(price),
-    ...(image ? { image: { url: image, source: 'website' as const } } : {}),
+    ...(image ? { image } : {}),
   }
 }
 
@@ -1999,8 +2130,8 @@ function sectionFromProductPage(page: Page, site: ImportedSite): MenuSection | n
   // product. A listing page selling several cannot: no image is better than
   // the wrong product's photograph.
   if (items.length === 1 && !items[0]!.image) {
-    const image = imageFrom(page.meta['og:image']) || imageFrom(page.meta['twitter:image'])
-    if (image) items[0] = { ...items[0]!, image: { url: image, source: 'website' } }
+    const image = ogProductImage(page.html, page.meta, page.url.toString())
+    if (image) items[0] = { ...items[0]!, image }
   }
 
   let name = ''
@@ -2231,7 +2362,16 @@ export async function importWebsite(
   })
   site.menu = mergeSections(site.menu, crawl.sections)
   const pages = crawl.opened + 1
-  const items = site.menu.reduce((total, section) => total + section.items.length, 0)
+  // Section labels, option buttons and unpriced retail cards leave the menu
+  // before anything else looks at it.
+  const { sections: menu, quality } = cleanMenu(site.menu, site.vertical)
+  site.menu = menu
+  // Photographs last, so only surviving items are looked up, and only against
+  // evidence the site itself published for that item.
+  const embedded = embeddedJsonImages(entry.html)
+  const publicData = await publicProductImages(entry.html, fetchImpl)
+  const images = attachImages(site.menu, new Map([...publicData.images, ...embedded]), publicData.rejected)
+  const items = quality.kept
 
   // Trade detection on the entry page alone cannot see a catalogue the sitemap
   // supplied: ButterTales read as "professional services" with seven priced
@@ -2339,9 +2479,44 @@ export async function importWebsite(
   notes.push(DESIGN_NOTE)
   notes.push(PHOTO_NOTE)
 
+  if (images.products) {
+    if (images.withImage)
+      found.push(
+        `${images.withImage} of ${images.products} items with a photograph the site published for that item (${Object.entries(images.methods)
+          .map(([method, count]) => `${method}: ${count}`)
+          .join(', ')})`,
+      )
+    if (images.withoutImage)
+      missing.push(
+        `${images.withoutImage} product ${images.withoutImage === 1 ? 'photograph' : 'photographs'} — the site publishes none for ${images.withoutImage === 1 ? 'that item' : 'those items'}`,
+      )
+  }
+  if (images.rejected.length)
+    notes.push(
+      `Refused ${images.rejected.length} image${images.rejected.length === 1 ? '' : 's'} the page offered that do not belong to the item: ${images.rejected
+        .slice(0, 3)
+        .map((entry) => entry.reason)
+        .join('; ')}.`,
+    )
+  if (quality.dropped.length)
+    notes.push(
+      `Left out ${quality.dropped.length} catalogue ${quality.dropped.length === 1 ? 'entry' : 'entries'} that are not things to buy: ${quality.dropped
+        .slice(0, 4)
+        .map((entry) => `${entry.name} (${entry.reason})`)
+        .join(', ')}.`,
+    )
+  if (quality.suspectPrices.length)
+    notes.push(
+      `Cleared ${quality.suspectPrices.length} price${quality.suspectPrices.length === 1 ? '' : 's'} that looked like a reading error, so the item shows no price until you set one: ${quality.suspectPrices
+        .map((entry) => `${entry.name} at ${entry.value / 100}`)
+        .join(', ')}.`,
+    )
+
   return {
     source: entry.url.toString(),
     host: entry.url.hostname.replace(/^www\./, ''),
+    images,
+    quality,
     pages,
     site,
     found,

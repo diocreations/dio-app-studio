@@ -112,8 +112,10 @@ function legibleAccent(accent: string, dark: boolean): string {
   return accent
 }
 
+/** No price means no price line. “On request” is only used when the business
+ *  itself says so, never as a stand-in for a value the import failed to read. */
 function priceOf(item: MenuItem, currency?: string): string {
-  return item.price > 0 ? moneyIn(item.price, currency) : 'On request'
+  return item.price > 0 ? moneyIn(item.price, currency) : ''
 }
 
 /**
@@ -508,7 +510,7 @@ function itemRowEditorial(ctx: Ctx, item: MenuItem, key: string): string {
 
 function itemRowCompact(ctx: Ctx, item: MenuItem, key: string): string {
   return `<div class="r-row" data-item="${key}" role="button" tabindex="0">
-    ${artThumb(ctx, item.name.slice(0, 1).toUpperCase(), key, 'r-art', 'thumb', item.name, item.media)}
+    ${artThumb(ctx, item.name.slice(0, 1).toUpperCase(), key, 'r-art', 'thumb', item.name, item.media, item.image)}
     <div class="lead">
       <div class="name">${esc(item.name)}${item.tag ? ` <span class="tag">${esc(item.tag)}</span>` : ''}</div>
       ${item.desc ? `<div class="desc">${esc(item.desc)}</div>` : ''}
@@ -522,7 +524,16 @@ function itemRowCompact(ctx: Ctx, item: MenuItem, key: string): string {
   </div>`
 }
 
-/** The same thumb, with a photo on top when this build uses photography. */
+/** A photograph the source site published for this exact item. Served from the
+ *  source's own public URL, so nothing is copied without permission; if it
+ *  fails, the generated artwork underneath stays visible. */
+function sitePhoto(image: NonNullable<MenuItem['image']>, kind: 'wide' | 'thumb', alt = ''): string {
+  const sizes = kind === 'wide' ? '100vw' : '(max-width: 620px) 38vw, 200px'
+  return `<img class="photo" src="${esc(image.url)}" sizes="${sizes}" alt="${esc(image.alt || alt)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:cover" onerror="this.remove()" />`
+}
+
+/** The same thumb, with a photo on top when this build uses photography. An
+ *  owner's own upload wins over the source site's photograph. */
 function artThumb(
   ctx: Ctx,
   label: string,
@@ -531,18 +542,21 @@ function artThumb(
   kind: 'wide' | 'thumb' = 'thumb',
   alt = '',
   media?: MenuItem['media'],
+  image?: MenuItem['image'],
 ): string {
   const shot = media
     ? itemPhoto(ctx, media, kind, alt)
-    : showsPhoto(ctx, 'tile')
-      ? photo(ctx, seed, kind, alt)
-      : ''
+    : image
+      ? sitePhoto(image, kind, alt)
+      : showsPhoto(ctx, 'tile')
+        ? photo(ctx, seed, kind, alt)
+        : ''
   return `<span class="thumb ${extra} m-${ctx.theme.motif}">${shot}<span class="mono">${esc(label)}</span></span>`
 }
 
 function itemTile(ctx: Ctx, item: MenuItem, key: string, wide = false): string {
   return `<div class="tile${wide ? ' wide' : ''}" data-item="${key}" role="button" tabindex="0">
-    ${artThumb(ctx, item.name.slice(0, 1), key, '', 'thumb', item.name, item.media)}
+    ${artThumb(ctx, item.name.slice(0, 1), key, '', 'thumb', item.name, item.media, item.image)}
     ${saveButton(key, item.name, ' on-art')}
     <div class="body">
       <div class="name">${esc(item.name)}</div>
@@ -555,7 +569,7 @@ function itemTile(ctx: Ctx, item: MenuItem, key: string, wide = false): string {
 
 function itemStackCard(ctx: Ctx, item: MenuItem, key: string): string {
   return `<div class="stack-card" data-item="${key}" role="button" tabindex="0">
-    ${artThumb(ctx, ctx.spec.logo, key, 'band', 'wide', item.name, item.media)}
+    ${artThumb(ctx, ctx.spec.logo, key, 'band', 'wide', item.name, item.media, item.image)}
     <div class="body">
       <div class="top">
         <span class="name">${esc(item.name)}</span>
@@ -1762,6 +1776,9 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         const base = '/p/' + DATA.token + '/media/' + media.id
         return '<img class="photo" src="' + base + '/640.webp" srcset="' + base + '/320.webp 320w, ' + base + '/640.webp 640w, ' + base + '/1280.webp 1280w" sizes="' + (list === 'photoWide' ? '100vw' : '(max-width: 620px) 38vw, 200px') + '" alt="' + esc(media.alt || alt || '') + '" loading="lazy" decoding="async" style="object-fit:' + (media.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (media.focalX ?? 50) + '% ' + (media.focalY ?? 50) + '%" onerror="this.remove()" />'
       }
+      if (item && item.image && item.image.url) {
+        return '<img class="photo" src="' + esc(item.image.url) + '" sizes="' + (list === 'photoWide' ? '100vw' : '(max-width: 620px) 38vw, 200px') + '" alt="' + esc((item.image.alt || alt || '')) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:cover" onerror="this.remove()" />'
+      }
       const urls = DATA[list]
       if (DATA.media !== 'photo' || !urls || !urls.length) return ''
       let index = -1
@@ -1797,7 +1814,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         picks.map(function (pick) {
           return '<button class="rec" type="button" data-item="' + pick.key + '">' +
             '<span class="thumb m-' + DATA.motif + ' rec-art">' + pickShot(pick.key, 'photoThumb', pick.item.name, pick.item) + '<span class="mono">' + esc(pick.item.name.slice(0, 1).toUpperCase()) + '</span></span>' +
-            '<span class="rec-copy"><b>' + esc(pick.item.name) + '</b><span class="rec-price">' + (pick.item.price > 0 ? money(pick.item.price) : 'On request') + '</span></span></button>'
+            '<span class="rec-copy"><b>' + esc(pick.item.name) + '</b><span class="rec-price">' + (pick.item.price > 0 ? money(pick.item.price) : '') + '</span></span></button>'
         }).join('') + '</div></div>'
     }
 
@@ -1884,7 +1901,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       if (!item) return
       const host = document.querySelector('[data-detail-body]')
       const screen = document.querySelector('[data-screen="detail"]')
-      const price = item.price > 0 ? money(item.price) : 'On request'
+      const price = item.price > 0 ? money(item.price) : ''
       const footer = DATA.ordering && item.price > 0
         ? '<div class="detail-cta"><div class="detail-cta-line"><span class="tiny dim">' + esc(item.meta || DATA.catalogWord) + '</span>' +
           '<b class="price">' + price + '</b></div>' +
@@ -1897,6 +1914,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const shellDetail = detailHtml(item, key, price)
       host.innerHTML = shellDetail ||
         '<div class="thumb m-' + DATA.motif + ' detail-band">' +
+        pickShot(key, 'photoWide', item.name, item) +
         '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' +
         '<span class="cap"><span>' + esc(item.tag || DATA.catalogWord) + '</span><span>' + price + '</span></span>' +
         '<button class="save on-art detail-save' + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save">' + HEART + '</button></div>' +
@@ -1976,7 +1994,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     }
 
     function itemRow(item, key) {
-      const price = item.price > 0 ? money(item.price) : 'On request'
+      const price = item.price > 0 ? money(item.price) : ''
       return '<div class="r-row" data-item="' + key + '" role="button" tabindex="0">' +
         '<span class="thumb r-art m-' + DATA.motif + '">' + pickShot(key, 'photoThumb', item.name, item) +
         '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span></span>' +

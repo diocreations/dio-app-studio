@@ -38,7 +38,15 @@ export type MenuItem = {
   /** The image the source website published for this exact item. Kept as a
    *  URL with its provenance, so the app never presents another product's
    *  photograph — or a stock one — as this item's. */
-  image?: { url: string; alt?: string; source: 'website' }
+  image?: {
+    url: string
+    /** The source URL exactly as published, when `url` is a CDN rendition. */
+    sourceUrl?: string
+    alt?: string
+    source: 'website'
+    /** How the source tied this photograph to this item. */
+    method?: 'structured-data' | 'embedded-json' | 'og-image' | 'public-data'
+  }
 }
 
 /** The same reference shape as a document image, kept flat so a catalogue item
@@ -159,6 +167,17 @@ export type AppSpec = {
   staff?: string[]
   /** Sample team profiles for trades that sell expertise, not just services. */
   team?: { name: string; role: string; credential?: string }[]
+  /** What the import produced, kept so the owner can review it before
+   *  publishing without re-reading the website. */
+  importSummary?: {
+    source: string
+    importedAt: string
+    products: number
+    withImage: number
+    priced: number
+    currency: string
+    categories: string[]
+  }
   /** The design they chose on the brief, so the build matches the preview. */
   layout?: LayoutChoice
   /** The look read from their own site: palette, type, corners, light or dark. */

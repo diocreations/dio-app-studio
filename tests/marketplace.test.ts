@@ -50,7 +50,10 @@ describe('the marketplace catalogue', () => {
   })
 
   test('item prices use the catalogue formatter, not a fixed two decimals', () => {
-    expect(html).toContain("const price = item.price > 0 ? money(item.price) : 'On request'")
+    expect(html).toContain("const price = item.price > 0 ? money(item.price) : ''")
+    // A price the import could not read stays blank; it is never dressed up as
+    // “On request”, which is a claim only the business can make.
+    expect(html).not.toContain("'On request'")
     expect(html).toContain("toLocaleString('en-US')")
     expect(html).not.toContain('toFixed(2)')
   })

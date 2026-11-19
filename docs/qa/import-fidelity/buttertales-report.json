@@ -1,0 +1,160 @@
+{
+  "site": {
+    "name": "Butter Tales™",
+    "tagline": "Butter Tales creates warm, imaginative, screen-free learning products for children.",
+    "story": "Butter Tales creates warm, imaginative, screen-free learning products for children. Explore our Malayalam Alphabet Book, Brain Game, and Kids Creative Library.",
+    "vertical": "shop",
+    "verticalConfidence": "detected",
+    "category": "Children's learning",
+    "categoryBasis": "the words on the page",
+    "accent": "#5f8a6a",
+    "logo": "",
+    "logoImage": {
+      "url": "https://www.buttertales.com/apple-touch-icon.png",
+      "alt": "Butter Tales™ logo"
+    },
+    "phone": "",
+    "email": "",
+    "address": "",
+    "hours": "",
+    "website": "https://www.buttertales.com",
+    "currency": "INR",
+    "socials": [],
+    "menu": [
+      {
+        "name": "Children's learning",
+        "items": [
+          {
+            "name": "Letterloo",
+            "desc": "A playful Malayalam letter tile game with a built-in slate that builds vocabulary and…",
+            "price": 52200,
+            "image": {
+              "url": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/render/image/public/media-library/2026/1794501148560-y96kks.png?width=720&quality=78",
+              "sourceUrl": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/object/public/media-library/2026/1794501148560-y96kks.png",
+              "alt": "Letterloo",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "തറ പറ ചങ്ങാതി",
+            "desc": "A set of 10 books that makes Malayalam alphabet learning easy! Learning Malayalam letters…",
+            "price": 99900,
+            "image": {
+              "url": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/render/image/public/media-library/2026/1794196208562-i23zdg.jpg?width=720&quality=78",
+              "sourceUrl": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/object/public/media-library/2026/1794196208562-i23zdg.jpg",
+              "alt": "തറ പറ ചങ്ങാതി",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "തറ പറ ചങ്ങാതി + Letterloo + ReLeaf",
+            "desc": "തറ പറ ചങ്ങാതി + Letterloo + ReLeaf — 3 items in one curated Butter Tales combo.",
+            "price": 150000,
+            "image": {
+              "url": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/render/image/public/media-library/2026/1794727120677-jslv0h.png?width=720&quality=78",
+              "sourceUrl": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/object/public/media-library/2026/1794727120677-jslv0h.png",
+              "alt": "തറ പറ ചങ്ങാതി + Letterloo + ReLeaf",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "ReLeaf",
+            "desc": "A carefully crafted recycled-paper book with a seed pen for a greener tomorrow.",
+            "price": 17000,
+            "image": {
+              "url": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/render/image/public/media-library/2026/1794501003856-270rvw.jpg?width=720&quality=78",
+              "sourceUrl": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/object/public/media-library/2026/1794501003856-270rvw.jpg",
+              "alt": "ReLeaf",
+              "source": "website",
+              "method": "public-data"
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+      "catalog",
+      "ordering"
+    ],
+    "pwa": {
+      "manifest": "https://www.buttertales.com/manifest.webmanifest",
+      "name": "Butter Tales™ — Crafting Creative Childhood",
+      "display": "standalone",
+      "themeColor": "#5f8a6a",
+      "backgroundColor": "#f5f8f4",
+      "icon": "https://www.buttertales.com/icon-192.png",
+      "serviceWorker": false
+    },
+    "design": {
+      "bg": "#f5f8f4",
+      "surface": "#ecefeb",
+      "surface2": "#e2e4e1",
+      "ink": "#111111",
+      "muted": "#5f605e",
+      "radius": 0,
+      "display": "\"Plus Jakarta Sans\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+      "fontLabel": "Plus Jakarta Sans",
+      "dark": false,
+      "palette": true,
+      "basis": "splash colour #f5f8f4 with a neutral ink · Plus Jakarta Sans · light"
+    }
+  },
+  "source": "https://www.buttertales.com/",
+  "host": "buttertales.com",
+  "pages": 6,
+  "pagesRead": [
+    "/",
+    "/shop/malayalam-brain-game",
+    "/shop/malayalam-alphabet-book",
+    "/shop/combo-malayalam-alphabet-book-malayalam-brain-game-kids-creative-library",
+    "/shop/kids-creative-library",
+    "/shop"
+  ],
+  "pagesFailed": [],
+  "usedSitemap": true,
+  "found": [
+    "4 catalogue entries in 1 section, read from 6 pages",
+    "their sitemap listed the product pages the home page did not link to",
+    "name: Butter Tales™",
+    "their logo — taken from the image the site itself declares as its mark",
+    "category: Children's learning — from the words on the page",
+    "a one-line description",
+    "brand colour #5f8a6a",
+    "their look: splash colour #f5f8f4 with a neutral ink · Plus Jakarta Sans · light",
+    "PWA manifest — standalone display, theme #5f8a6a, splash #f5f8f4",
+    "4 of 4 items with a photograph the site published for that item (public-data: 4)"
+  ],
+  "missing": [
+    "phone number",
+    "email",
+    "address",
+    "opening hours"
+  ],
+  "notes": [
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded."
+  ],
+  "images": {
+    "products": 4,
+    "withImage": 4,
+    "withoutImage": 0,
+    "methods": {
+      "public-data": 4
+    },
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 4,
+    "kept": 4,
+    "dropped": [],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "Services"
+    ]
+  }
+}

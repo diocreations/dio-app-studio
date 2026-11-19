@@ -507,7 +507,6 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
         title: 'See the menu',
         cta: { label: 'See the menu', screen: 'scr_catalog' },
       }),
-      flagshipSection('dine-note', { text: 'Seasonal · cooked to order' }),
     ]
   } else if (spec.vertical === 'shop') {
     sections = [

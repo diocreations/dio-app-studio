@@ -1,0 +1,10 @@
+{
+  "ownerPrice": 49900,
+  "planChange": {
+    "field": "price",
+    "from": "49900",
+    "to": "52200"
+  },
+  "afterNoApproval": 49900,
+  "afterApproval": 49900
+}
