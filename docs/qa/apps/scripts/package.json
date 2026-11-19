@@ -1,0 +1,8 @@
+{
+  "name": "plattr-app-qa",
+  "private": true,
+  "description": "Reproduces the customer-app and owner-dashboard QA runs",
+  "devDependencies": {
+    "playwright": "1.64.0"
+  }
+}

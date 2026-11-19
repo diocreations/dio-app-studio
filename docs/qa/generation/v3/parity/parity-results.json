@@ -24,7 +24,7 @@
     "ok": true,
     "sections": [
       "Search the collectionSearch",
-      "Butter Tales creates warm, imaginative, screen-free learning products for children.Shop intro",
+      "Butter Tales creates warm, imaginative, screen-free learningShop intro",
       "New inProducts",
       "Browse everythingBrowse link"
     ],
@@ -251,31 +251,31 @@
         "label": "Dishoom House ChaiFeatured dish"
       },
       "reorder": {
-        "moved": "sec_fx_dine_actions",
+        "moved": "sec_fx_dine_facts",
         "direction": "down"
       },
       "hide": {
-        "id": "sec_fx_dine_note",
-        "label": "Kitchen noteKitchen note"
+        "id": "sec_fx_dine_actions",
+        "label": "See the menuActions"
       }
     },
     "ok": true,
     "sections": [
       "Dishoom Indian RestaurantsRestaurant intro",
       "Dishoom House ChaiFeatured dish",
-      "See the menuActions",
-      "Kitchen noteKitchen note"
+      "Visit detailsVisit details",
+      "See the menuActions"
     ],
     "reload": {
       "order": [
         "sec_fx_dine_title",
         "sec_fx_dine_feature",
-        "sec_fx_dine_note",
-        "sec_fx_dine_actions"
+        "sec_fx_dine_actions",
+        "sec_fx_dine_facts"
       ],
       "orderMatches": true,
       "hidden": [
-        "sec_fx_dine_note"
+        "sec_fx_dine_actions"
       ],
       "hiddenMatches": true,
       "taglineValue": "Bombay comfort food, from breakfast to dinner.",
@@ -285,7 +285,7 @@
       "order": [
         "sec_fx_dine_title",
         "sec_fx_dine_feature",
-        "sec_fx_dine_actions"
+        "sec_fx_dine_facts"
       ],
       "orderMatches": true,
       "taglineShown": true,

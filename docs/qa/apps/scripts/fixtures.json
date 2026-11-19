@@ -1,0 +1,12 @@
+{
+  "base": "http://127.0.0.1:8795",
+  "widths": [320, 360, 375, 390, 430],
+  "wide": [768, 1280],
+  "apps": [
+    { "key": "buttertales", "name": "Butter Tales", "token": "70f1955221cd57b85e71c364" },
+    { "key": "cafe", "name": "Good Day Cafe", "token": "69f0e40cb2ec05f00d1d5b66" },
+    { "key": "salon", "name": "Halo Hair Studio", "token": "d3cb7b2bedef0fd5bd2e5394" },
+    { "key": "gym", "name": "Iron Yard", "token": "a209e7ebde55c44f57444ad5" },
+    { "key": "dishoom", "name": "Dishoom", "token": "0ab0b1248e55df20f194aad0" }
+  ]
+}

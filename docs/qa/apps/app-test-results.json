@@ -1,5 +1,6 @@
 {
-  "startedAt": "2026-11-19T16:03:42.972Z",
+  "startedAt": "2026-11-19T17:32:43.287Z",
+  "base": "http://127.0.0.1:8795",
   "apps": [
     {
       "app": "buttertales",
@@ -21,22 +22,18 @@
             }
           ]
         },
-        "home-first": {
-          "pass": true,
-          "detail": "Butter Tales™"
-        },
         "tab:home": {
           "pass": true,
           "detail": {
             "shown": "home",
-            "length": 165
+            "length": 253
           }
         },
         "tab:catalog": {
           "pass": true,
           "detail": {
             "shown": "catalog",
-            "length": 664
+            "length": 579
           }
         },
         "tab:more": {
@@ -50,8 +47,8 @@
           "pass": true,
           "detail": {
             "query": "a",
-            "hits": 5,
-            "text": "RESULTS 5 Letterloo A playful Malayalam letter tile game with a built-in slate that builds vocabulary and… ₹522 തറ പറ ചങ്ങാതി A set of 10 books that makes Malayalam alphabet learning easy! Learning Ma"
+            "hits": 4,
+            "text": "RESULTS 4 Letterloo A playful Malayalam letter tile game with a built-in slate that builds vocabulary and… ₹522 തറ പറ ചങ്ങാതി A set of 10 books that makes Malayalam alphabet learning easy! Learning Ma"
           }
         },
         "search-empty-state": {
@@ -87,22 +84,20 @@
         },
         "cart-quantity": {
           "pass": true,
-          "detail": {
-            "qty": "2"
-          }
+          "detail": {}
         },
         "checkout-completes": {
           "pass": true,
           "detail": {
             "visible": true,
-            "text": "✓ Order #2286 Pickup · ₹1,044 Sent to Butter Tales™. They will confirm when it is ready. Done",
+            "text": "✓ Order #9127 Pickup · ₹1,044 Sent to Butter Tales™. They will confirm when it is ready. Done",
             "payButton": 0
           }
         },
         "order-persists-in-app": {
           "pass": true,
           "detail": {
-            "number": "2286",
+            "number": "9127",
             "head": "Butter Tales™ Butter Tales creates warm, imaginative, screen-free learning products for children. ABOUT Butter Tales creates warm, imaginative, screen-free learning products for children. Explore our "
           }
         },
@@ -111,8 +106,7 @@
           "detail": {
             "home": {
               "scrollWidth": 320,
-              "innerWidth": 320,
-              "widest": 320
+              "innerWidth": 320
             },
             "catalog": {
               "scrollWidth": 320,
@@ -125,8 +119,7 @@
           "detail": {
             "home": {
               "scrollWidth": 360,
-              "innerWidth": 360,
-              "widest": 360
+              "innerWidth": 360
             },
             "catalog": {
               "scrollWidth": 360,
@@ -139,8 +132,7 @@
           "detail": {
             "home": {
               "scrollWidth": 375,
-              "innerWidth": 375,
-              "widest": 375
+              "innerWidth": 375
             },
             "catalog": {
               "scrollWidth": 375,
@@ -153,8 +145,7 @@
           "detail": {
             "home": {
               "scrollWidth": 390,
-              "innerWidth": 390,
-              "widest": 390
+              "innerWidth": 390
             },
             "catalog": {
               "scrollWidth": 390,
@@ -167,8 +158,7 @@
           "detail": {
             "home": {
               "scrollWidth": 430,
-              "innerWidth": 430,
-              "widest": 430
+              "innerWidth": 430
             },
             "catalog": {
               "scrollWidth": 430,
@@ -194,8 +184,8 @@
         }
       },
       "screenText": {
-        "home": "Search the collection 5 CHILDREN'S LEARNING Butter Tales creates warm, imaginative, screen-free learning Screen-free stories, made to be handled. Browse everything →",
-        "catalog": "THE COLLECTION Butter Tales creates warm, imaginative, screen-free learning products for children. 5 pieces ALL CHILDREN'S LEARNING CHILDREN'S LEARNING 5 Letterloo A playful Malayalam letter tile game with a built-in slate that builds vocabulary and… ₹522 തറ പറ ചങ്ങാതി A set of 10 books that makes Malayalam alphabet learning easy! Learning Malayalam letters… ₹999 തറ പറ ചങ്ങാതി + Letterloo + ReLeaf",
+        "home": "Search the collection 4 CHILDREN'S LEARNING Butter Tales creates warm, imaginative, screen-free learning Screen-free stories, made to be handled. NEW IN All 4 pieces Letterloo ₹522 തറ പറ ചങ്ങാതി ₹999 തറ പറ ചങ്ങാതി + Letterloo + ReLeaf ₹1,500 ReLeaf ₹170",
+        "catalog": "THE COLLECTION Butter Tales creates warm, imaginative, screen-free learning products for children. 4 pieces ALL CHILDREN'S LEARNING CHILDREN'S LEARNING 4 Letterloo A playful Malayalam letter tile game with a built-in slate that builds vocabulary and… ₹522 തറ പറ ചങ്ങാതി A set of 10 books that makes Malayalam alphabet learning easy! Learning Malayalam letters… ₹999 തറ പറ ചങ്ങാതി + Letterloo + ReLeaf",
         "more": "Butter Tales™ Butter Tales creates warm, imaginative, screen-free learning products for children. ABOUT Butter Tales creates warm, imaginative, screen-free learning products for children. Explore our Malayalam Alphabet Book, Brain Game, and Kids Creative Library. Find us Website YOUR ACTIVITY Orders and bookings you make on this device will be listed here. No account is needed to browse or order. ",
         "detail": "SHOP ₹522 Letterloo A playful Malayalam letter tile game with a built-in slate that builds vocabulary and… shop ₹522 Prices include tax. Ask the team about allergies or access needs — they would rather know. shop ₹522 Add to order"
       },
@@ -216,9 +206,9 @@
       "errors": [],
       "orders": [
         {
-          "number": "2286",
+          "number": "9127",
           "payButton": 0,
-          "text": "✓ Order #2286 Pickup · ₹1,044 Sent to Butter Tales™. They will confirm when it is ready. Done"
+          "text": "✓ Order #9127 Pickup · ₹1,044 Sent to Butter Tales™. They will confirm when it is ready. Done"
         }
       ],
       "bookings": [],
@@ -266,16 +256,14 @@
             "label": "MORE"
           }
         ],
-        "items": 5,
-        "adds": 5,
-        "filters": 2
+        "items": 8,
+        "adds": 4
       },
       "responsive": {
         "320": {
           "home": {
             "scrollWidth": 320,
-            "innerWidth": 320,
-            "widest": 320
+            "innerWidth": 320
           },
           "catalog": {
             "scrollWidth": 320,
@@ -285,8 +273,7 @@
         "360": {
           "home": {
             "scrollWidth": 360,
-            "innerWidth": 360,
-            "widest": 360
+            "innerWidth": 360
           },
           "catalog": {
             "scrollWidth": 360,
@@ -296,8 +283,7 @@
         "375": {
           "home": {
             "scrollWidth": 375,
-            "innerWidth": 375,
-            "widest": 375
+            "innerWidth": 375
           },
           "catalog": {
             "scrollWidth": 375,
@@ -307,8 +293,7 @@
         "390": {
           "home": {
             "scrollWidth": 390,
-            "innerWidth": 390,
-            "widest": 390
+            "innerWidth": 390
           },
           "catalog": {
             "scrollWidth": 390,
@@ -318,8 +303,7 @@
         "430": {
           "home": {
             "scrollWidth": 430,
-            "innerWidth": 430,
-            "widest": 430
+            "innerWidth": 430
           },
           "catalog": {
             "scrollWidth": 430,
@@ -361,10 +345,6 @@
               "label": "Visit"
             }
           ]
-        },
-        "home-first": {
-          "pass": true,
-          "detail": "Good Day Cafe"
         },
         "tab:home": {
           "pass": true,
@@ -435,22 +415,20 @@
         },
         "cart-quantity": {
           "pass": true,
-          "detail": {
-            "qty": "2"
-          }
+          "detail": {}
         },
         "checkout-completes": {
           "pass": true,
           "detail": {
             "visible": true,
-            "text": "✓ Order #8224 Pickup · $8.40 Sent to Good Day Cafe. They will confirm when it is ready. Done",
+            "text": "✓ Order #8973 Pickup · $8.40 Sent to Good Day Cafe. They will confirm when it is ready. Done",
             "payButton": 0
           }
         },
         "order-persists-in-app": {
           "pass": true,
           "detail": {
-            "number": "8224",
+            "number": "8973",
             "head": "Good Day Cafe Slow coffee, warm bread, all day. ABOUT One grinder, a rotating filter list, and a bakehouse that finishes before the sun is up. Find us HOW WAS IT? Your rating goes straight to the team"
           }
         },
@@ -467,8 +445,7 @@
           "detail": {
             "home": {
               "scrollWidth": 320,
-              "innerWidth": 320,
-              "widest": 395
+              "innerWidth": 320
             },
             "catalog": {
               "scrollWidth": 320,
@@ -481,8 +458,7 @@
           "detail": {
             "home": {
               "scrollWidth": 360,
-              "innerWidth": 360,
-              "widest": 395
+              "innerWidth": 360
             },
             "catalog": {
               "scrollWidth": 360,
@@ -495,8 +471,7 @@
           "detail": {
             "home": {
               "scrollWidth": 375,
-              "innerWidth": 375,
-              "widest": 398
+              "innerWidth": 375
             },
             "catalog": {
               "scrollWidth": 375,
@@ -509,8 +484,7 @@
           "detail": {
             "home": {
               "scrollWidth": 390,
-              "innerWidth": 390,
-              "widest": 398
+              "innerWidth": 390
             },
             "catalog": {
               "scrollWidth": 390,
@@ -523,8 +497,7 @@
           "detail": {
             "home": {
               "scrollWidth": 430,
-              "innerWidth": 430,
-              "widest": 430
+              "innerWidth": 430
             },
             "catalog": {
               "scrollWidth": 430,
@@ -550,7 +523,7 @@
         }
       },
       "screenText": {
-        "home": "CAFÉ Good Day Cafe Slow coffee, warm bread, and a seat by the window. Baked here DAILY COFFEE BAKERY ALL DAY From the counter Full menu COFFEE BAKERY ALL DAY COFFEE Flat white $4.20 COFFEE Filter of the week $3.60 COFFEE Cold brew $4.80 BAKERY Croissant $3.80 TAKEAWAY Takeaway, ready when you are Order ahead and collect at the bar. 01 CHOOSE 02 PAY 03 COLLECT Start an order → TABLES A table, held ",
+        "home": "CAFÉ Good Day Cafe Slow coffee, warm bread, and a seat by the window. Baked here DAILY COFFEE BAKERY ALL DAY From the counter Full menu COFFEE BAKERY ALL DAY COFFEE Flat white $4.20 COFFEE Filter of the week $3.60 COFFEE Cold brew $4.80 BAKERY Croissant $3.80 TABLES A table, held for you Kitchen open mon–fri 7:00–16:00 TODAY 19 TOMORROW 20 SAT 21 SUN 22 Parties of 1–8 Reserve a table TAKEAWAY Take",
         "catalog": "COUNTER MENU Slow coffee, warm bread, all day. Order takeaway Reserve a table MENU 7 All Coffee Bakery All day COFFEE 3 Flat white House blend, 6oz $4.20 Filter of the week NEW Rotating single origin $3.60 Cold brew 18-hour steep, over ice $4.80 BAKERY 2 Croissant Laminated over three days $3.80 Cardamom bun Baked at 5am $4.50 ALL DAY 2 Granola bowl Yoghurt, honey, poached pear $8 Eggs on rye POPU",
         "book": "GUESTS 2 CHOOSE A DAY Today Tomorrow Sat 21 Sun 22 Mon 23 CHOOSE A TIME 08:30 09:30 10:30 12:00 13:00 14:30 16:00 YOUR NAME PHONE OR EMAIL Request booking",
         "more": "Good Day Cafe Slow coffee, warm bread, all day. ABOUT One grinder, a rotating filter list, and a bakehouse that finishes before the sun is up. Find us HOW WAS IT? Your rating goes straight to the team. ★ ★ ★ ★ ★ Send feedback YOUR ACTIVITY Orders and bookings you make on this device will be listed here. No account is needed to browse or order. YOURS Saved Items you kept for later 0 INSTALL Add to ",
@@ -575,9 +548,9 @@
       "errors": [],
       "orders": [
         {
-          "number": "8224",
+          "number": "8973",
           "payButton": 0,
-          "text": "✓ Order #8224 Pickup · $8.40 Sent to Good Day Cafe. They will confirm when it is ready. Done"
+          "text": "✓ Order #8973 Pickup · $8.40 Sent to Good Day Cafe. They will confirm when it is ready. Done"
         }
       ],
       "bookings": [
@@ -640,15 +613,13 @@
           }
         ],
         "items": 11,
-        "adds": 7,
-        "filters": 4
+        "adds": 7
       },
       "responsive": {
         "320": {
           "home": {
             "scrollWidth": 320,
-            "innerWidth": 320,
-            "widest": 395
+            "innerWidth": 320
           },
           "catalog": {
             "scrollWidth": 320,
@@ -658,8 +629,7 @@
         "360": {
           "home": {
             "scrollWidth": 360,
-            "innerWidth": 360,
-            "widest": 395
+            "innerWidth": 360
           },
           "catalog": {
             "scrollWidth": 360,
@@ -669,8 +639,7 @@
         "375": {
           "home": {
             "scrollWidth": 375,
-            "innerWidth": 375,
-            "widest": 398
+            "innerWidth": 375
           },
           "catalog": {
             "scrollWidth": 375,
@@ -680,8 +649,7 @@
         "390": {
           "home": {
             "scrollWidth": 390,
-            "innerWidth": 390,
-            "widest": 398
+            "innerWidth": 390
           },
           "catalog": {
             "scrollWidth": 390,
@@ -691,8 +659,7 @@
         "430": {
           "home": {
             "scrollWidth": 430,
-            "innerWidth": 430,
-            "widest": 430
+            "innerWidth": 430
           },
           "catalog": {
             "scrollWidth": 430,
@@ -738,10 +705,6 @@
               "label": "ENQUIRY"
             }
           ]
-        },
-        "home-first": {
-          "pass": true,
-          "detail": "Halo Hair Studio"
         },
         "tab:home": {
           "pass": true,
@@ -825,8 +788,7 @@
           "detail": {
             "home": {
               "scrollWidth": 320,
-              "innerWidth": 320,
-              "widest": 395
+              "innerWidth": 320
             },
             "catalog": {
               "scrollWidth": 320,
@@ -839,8 +801,7 @@
           "detail": {
             "home": {
               "scrollWidth": 360,
-              "innerWidth": 360,
-              "widest": 395
+              "innerWidth": 360
             },
             "catalog": {
               "scrollWidth": 360,
@@ -853,8 +814,7 @@
           "detail": {
             "home": {
               "scrollWidth": 375,
-              "innerWidth": 375,
-              "widest": 398
+              "innerWidth": 375
             },
             "catalog": {
               "scrollWidth": 375,
@@ -867,8 +827,7 @@
           "detail": {
             "home": {
               "scrollWidth": 390,
-              "innerWidth": 390,
-              "widest": 398
+              "innerWidth": 390
             },
             "catalog": {
               "scrollWidth": 390,
@@ -881,8 +840,7 @@
           "detail": {
             "home": {
               "scrollWidth": 430,
-              "innerWidth": 430,
-              "widest": 430
+              "innerWidth": 430
             },
             "catalog": {
               "scrollWidth": 430,
@@ -908,7 +866,7 @@
         }
       },
       "screenText": {
-        "home": "HAIR SALON Cuts, colour and calm. Cuts, colour, and a quieter kind of appointment. CHOOSE A DAY TODAY 19 TOMORROW 20 SAT 21 SUN 22 CHOOSE A TREATMENT All services Cut & finish 45 min $55 HAIR Colour 2 hr $120 HAIR Blow dry 30 min $38 HAIR Keratin smoothing 2 hr 30 $140 TREATMENTS With Maya Chen, Noa Williams, Elena Rossi Book an appointment →",
+        "home": "HAIR SALON Cuts, colour and calm. Cuts, colour, and a quieter kind of appointment. CHOOSE A DAY TODAY 19 TOMORROW 20 SAT 21 SUN 22 With Maya Chen, Noa Williams, Elena Rossi CHOOSE A TREATMENT All services Cut & finish 45 min $55 HAIR Colour 2 hr $120 HAIR Blow dry 30 min $38 HAIR Keratin smoothing 2 hr 30 $140 TREATMENTS Book an appointment →",
         "catalog": "SERVICES 7 All Hair Treatments Beauty HAIR 3 Cut & finish Consultation, wash, cut, style 45 MIN $55 Colour POPULAR Full head, toner included 2 HR $120 Blow dry Wash and finish 30 MIN $38 TREATMENTS 2 Keratin smoothing Lasts 12 weeks 2 HR 30 $140 Scalp ritual Massage, mask, steam 40 MIN $45 BEAUTY 2 Brow shape Wax and tint 20 MIN $25 Gel manicure Shape, buff, long-wear colour 45 MIN $42",
         "book": "PEOPLE 2 CHOOSE A DAY Today Tomorrow Sat 21 Sun 22 Mon 23 CHOOSE A TIME 09:00 10:30 12:00 13:30 15:00 16:30 18:00 SERVICE Cut & finish Colour Blow dry Keratin smoothing Scalp ritual Brow shape Gel manicure YOUR NAME PHONE OR EMAIL Request booking",
         "more": "Halo Hair Studio Cuts, colour and calm. ABOUT Four chairs, two treatment rooms and a rule that nothing runs late. Everyone here is booked by name. Find us THE WORK HOW WAS IT? Your rating goes straight to the team. ★ ★ ★ ★ ★ Send feedback ASK ABOUT A TREATMENT Open the form YOUR ACTIVITY Orders and bookings you make on this device will be listed here. No account is needed to browse or order. YOURS",
@@ -1002,15 +960,13 @@
           }
         ],
         "items": 11,
-        "adds": 0,
-        "filters": 4
+        "adds": 0
       },
       "responsive": {
         "320": {
           "home": {
             "scrollWidth": 320,
-            "innerWidth": 320,
-            "widest": 395
+            "innerWidth": 320
           },
           "catalog": {
             "scrollWidth": 320,
@@ -1020,8 +976,7 @@
         "360": {
           "home": {
             "scrollWidth": 360,
-            "innerWidth": 360,
-            "widest": 395
+            "innerWidth": 360
           },
           "catalog": {
             "scrollWidth": 360,
@@ -1031,8 +986,7 @@
         "375": {
           "home": {
             "scrollWidth": 375,
-            "innerWidth": 375,
-            "widest": 398
+            "innerWidth": 375
           },
           "catalog": {
             "scrollWidth": 375,
@@ -1042,8 +996,7 @@
         "390": {
           "home": {
             "scrollWidth": 390,
-            "innerWidth": 390,
-            "widest": 398
+            "innerWidth": 390
           },
           "catalog": {
             "scrollWidth": 390,
@@ -1053,8 +1006,7 @@
         "430": {
           "home": {
             "scrollWidth": 430,
-            "innerWidth": 430,
-            "widest": 430
+            "innerWidth": 430
           },
           "catalog": {
             "scrollWidth": 430,
@@ -1100,10 +1052,6 @@
               "label": "JOIN"
             }
           ]
-        },
-        "home-first": {
-          "pass": true,
-          "detail": "Iron Yard"
         },
         "tab:home": {
           "pass": true,
@@ -1187,8 +1135,7 @@
           "detail": {
             "home": {
               "scrollWidth": 320,
-              "innerWidth": 320,
-              "widest": 395
+              "innerWidth": 320
             },
             "catalog": {
               "scrollWidth": 320,
@@ -1201,8 +1148,7 @@
           "detail": {
             "home": {
               "scrollWidth": 360,
-              "innerWidth": 360,
-              "widest": 395
+              "innerWidth": 360
             },
             "catalog": {
               "scrollWidth": 360,
@@ -1215,8 +1161,7 @@
           "detail": {
             "home": {
               "scrollWidth": 375,
-              "innerWidth": 375,
-              "widest": 398
+              "innerWidth": 375
             },
             "catalog": {
               "scrollWidth": 375,
@@ -1229,8 +1174,7 @@
           "detail": {
             "home": {
               "scrollWidth": 390,
-              "innerWidth": 390,
-              "widest": 398
+              "innerWidth": 390
             },
             "catalog": {
               "scrollWidth": 390,
@@ -1243,8 +1187,7 @@
           "detail": {
             "home": {
               "scrollWidth": 430,
-              "innerWidth": 430,
-              "widest": 430
+              "innerWidth": 430
             },
             "catalog": {
               "scrollWidth": 430,
@@ -1364,15 +1307,13 @@
           }
         ],
         "items": 11,
-        "adds": 0,
-        "filters": 4
+        "adds": 0
       },
       "responsive": {
         "320": {
           "home": {
             "scrollWidth": 320,
-            "innerWidth": 320,
-            "widest": 395
+            "innerWidth": 320
           },
           "catalog": {
             "scrollWidth": 320,
@@ -1382,8 +1323,7 @@
         "360": {
           "home": {
             "scrollWidth": 360,
-            "innerWidth": 360,
-            "widest": 395
+            "innerWidth": 360
           },
           "catalog": {
             "scrollWidth": 360,
@@ -1393,8 +1333,7 @@
         "375": {
           "home": {
             "scrollWidth": 375,
-            "innerWidth": 375,
-            "widest": 398
+            "innerWidth": 375
           },
           "catalog": {
             "scrollWidth": 375,
@@ -1404,8 +1343,7 @@
         "390": {
           "home": {
             "scrollWidth": 390,
-            "innerWidth": 390,
-            "widest": 398
+            "innerWidth": 390
           },
           "catalog": {
             "scrollWidth": 390,
@@ -1415,8 +1353,7 @@
         "430": {
           "home": {
             "scrollWidth": 430,
-            "innerWidth": 430,
-            "widest": 430
+            "innerWidth": 430
           },
           "catalog": {
             "scrollWidth": 430,
@@ -1455,22 +1392,18 @@
             }
           ]
         },
-        "home-first": {
-          "pass": true,
-          "detail": "Dishoom Indian Restaurants"
-        },
         "tab:home": {
           "pass": true,
           "detail": {
             "shown": "home",
-            "length": 213
+            "length": 190
           }
         },
         "tab:catalog": {
           "pass": true,
           "detail": {
             "shown": "catalog",
-            "length": 5956
+            "length": 5604
           }
         },
         "tab:more": {
@@ -1484,8 +1417,8 @@
           "pass": true,
           "detail": {
             "query": "a",
-            "hits": 61,
-            "text": "RESULTS 61 Dishoom House Chai menu On request Dishoom Masala Dabba menu On request Market Bag: Lemon Cooler menu On request Bacon Naan Roll Ramsay of Carluke’s smoked streaky bacon is matured in the t"
+            "hits": 52,
+            "text": "RESULTS 52 Bacon Naan Roll Ramsay of Carluke’s smoked streaky bacon is matured in the traditional Ayrshire way and… £11.70 Sausage Naan Roll Shropshire pork sausages, warmly spiced with cracked black "
           }
         },
         "search-empty-state": {
@@ -1498,22 +1431,22 @@
         "detail-opens": {
           "pass": true,
           "detail": {
-            "card": "Dishoom House Chai On request",
+            "card": "Bacon Naan Roll Ramsay of Carluke’s smoked streaky bacon is matured in the tradi",
             "on": true,
-            "text": "MENU Dishoom House Chai HOUSE On request You might also like MENU Dishoom Masala Dabba On request Market Bag: Lemon Cooler On request Bacon Naan Roll £11.70 Sausage Naan Roll £12.50 Book a table"
+            "text": "MENU Bacon Naan Roll Ramsay of Carluke’s smoked streaky bacon is matured in the traditional Ayrshire way and… HOUSE £11.70 You might also like MENU Sausage Naan Roll £12.50 Egg Naan Roll £10.70 Bacon & Egg Naan Roll £13.50 Sausage & Egg Naan Roll £13.90 Add to order"
           }
         },
         "saved-persists": {
           "pass": true,
           "detail": {
             "count": "1",
-            "list": "Dishoom House Chai menu On request"
+            "list": "Bacon Naan Roll Ramsay of Carluke’s smoked streaky bacon is matured in the traditional Ayrshire way and… £11.70"
           }
         },
         "cart-adds-item": {
           "pass": true,
           "detail": {
-            "added": "1-0",
+            "added": "0-0",
             "lines": 1,
             "inc": 2,
             "totals": "Subtotal £11.70 Total £11.70"
@@ -1521,22 +1454,20 @@
         },
         "cart-quantity": {
           "pass": true,
-          "detail": {
-            "qty": "2"
-          }
+          "detail": {}
         },
         "checkout-completes": {
           "pass": true,
           "detail": {
             "visible": true,
-            "text": "✓ Order #6140 Pickup · £23.40 Sent to Dishoom Indian Restaurants. They will confirm when it is ready. Done",
+            "text": "✓ Order #9950 Pickup · £23.40 Sent to Dishoom Indian Restaurants. They will confirm when it is ready. Done",
             "payButton": 0
           }
         },
         "order-persists-in-app": {
           "pass": true,
           "detail": {
-            "number": "6140",
+            "number": "9950",
             "head": "Dishoom Indian Restaurants Dishoom cafés pay homage to the food of Bombay. ABOUT Dishoom cafés pay homage to the food of Bombay. Open all day, from breakfast to dinner and later. Enjoy Bombay comfort "
           }
         },
@@ -1545,8 +1476,7 @@
           "detail": {
             "home": {
               "scrollWidth": 320,
-              "innerWidth": 320,
-              "widest": 1373
+              "innerWidth": 320
             },
             "catalog": {
               "scrollWidth": 320,
@@ -1559,8 +1489,7 @@
           "detail": {
             "home": {
               "scrollWidth": 360,
-              "innerWidth": 360,
-              "widest": 1373
+              "innerWidth": 360
             },
             "catalog": {
               "scrollWidth": 360,
@@ -1573,8 +1502,7 @@
           "detail": {
             "home": {
               "scrollWidth": 375,
-              "innerWidth": 375,
-              "widest": 1376
+              "innerWidth": 375
             },
             "catalog": {
               "scrollWidth": 375,
@@ -1587,8 +1515,7 @@
           "detail": {
             "home": {
               "scrollWidth": 390,
-              "innerWidth": 390,
-              "widest": 1376
+              "innerWidth": 390
             },
             "catalog": {
               "scrollWidth": 390,
@@ -1601,8 +1528,7 @@
           "detail": {
             "home": {
               "scrollWidth": 430,
-              "innerWidth": 430,
-              "widest": 1376
+              "innerWidth": 430
             },
             "catalog": {
               "scrollWidth": 430,
@@ -1628,10 +1554,10 @@
         }
       },
       "screenText": {
-        "home": "KITCHEN MENU · RESTAURANT Dishoom Indian Restaurants. Bombay comfort food, from breakfast to dinner. FROM THE KITCHEN Dishoom House Chai The kitchen is writing its first menu. On request SEASONAL · COOKED TO ORDER",
-        "catalog": "THE MENU Dishoom cafés pay homage to the food of Bombay. MENU 61 All Restaurant Breakfast Biryani Ruby Murray and Daal Salad Rolls Small plates Side Orders Drinks Shop All Festive Tipples Tipples RESTAURANT 3 Dishoom House Chai On request Dishoom Masala Dabba On request Market Bag: Lemon Cooler On request BREAKFAST 12 Bacon Naan Roll Ramsay of Carluke’s smoked streaky bacon is matured in the tradi",
+        "home": "KITCHEN MENU · RESTAURANT Dishoom Indian Restaurants. Bombay comfort food, from breakfast to dinner. FROM THE KITCHEN Dishoom House Chai The kitchen is writing its first menu. £11.70 Kitchen",
+        "catalog": "THE MENU Dishoom cafés pay homage to the food of Bombay. MENU 52 All Breakfast Biryani Ruby Murray and Daal Salad Rolls Small plates Side Orders Drinks Tipples BREAKFAST 12 Bacon Naan Roll Ramsay of Carluke’s smoked streaky bacon is matured in the traditional Ayrshire way and… £11.70 Sausage Naan Roll Shropshire pork sausages, warmly spiced with cracked black pepper. Each sausage is… £12.50 Egg Na",
         "more": "Dishoom Indian Restaurants Dishoom cafés pay homage to the food of Bombay. ABOUT Dishoom cafés pay homage to the food of Bombay. Open all day, from breakfast to dinner and later. Enjoy Bombay comfort food and first-class drinks. All welcome. Find us Website Instagram LinkedIn TikTok YOUR ACTIVITY Orders and bookings you make on this device will be listed here. No account is needed to browse or ord",
-        "detail": "MENU Dishoom House Chai HOUSE On request You might also like MENU Dishoom Masala Dabba On request Market Bag: Lemon Cooler On request Bacon Naan Roll £11.70 Sausage Naan Roll £12.50 Book a table"
+        "detail": "MENU Bacon Naan Roll Ramsay of Carluke’s smoked streaky bacon is matured in the traditional Ayrshire way and… HOUSE £11.70 You might also like MENU Sausage Naan Roll £12.50 Egg Naan Roll £10.70 Bacon & Egg Naan Roll £13.50 Sausage & Egg Naan Roll £13.90 Add to order"
       },
       "screenshots": [
         "dishoom-home-390.png",
@@ -1650,9 +1576,9 @@
       "errors": [],
       "orders": [
         {
-          "number": "6140",
+          "number": "9950",
           "payButton": 0,
-          "text": "✓ Order #6140 Pickup · £23.40 Sent to Dishoom Indian Restaurants. They will confirm when it is ready. Done"
+          "text": "✓ Order #9950 Pickup · £23.40 Sent to Dishoom Indian Restaurants. They will confirm when it is ready. Done"
         }
       ],
       "bookings": [],
@@ -1700,16 +1626,14 @@
             "label": "Visit"
           }
         ],
-        "items": 62,
-        "adds": 55,
-        "filters": 13
+        "items": 53,
+        "adds": 52
       },
       "responsive": {
         "320": {
           "home": {
             "scrollWidth": 320,
-            "innerWidth": 320,
-            "widest": 1373
+            "innerWidth": 320
           },
           "catalog": {
             "scrollWidth": 320,
@@ -1719,8 +1643,7 @@
         "360": {
           "home": {
             "scrollWidth": 360,
-            "innerWidth": 360,
-            "widest": 1373
+            "innerWidth": 360
           },
           "catalog": {
             "scrollWidth": 360,
@@ -1730,8 +1653,7 @@
         "375": {
           "home": {
             "scrollWidth": 375,
-            "innerWidth": 375,
-            "widest": 1376
+            "innerWidth": 375
           },
           "catalog": {
             "scrollWidth": 375,
@@ -1741,8 +1663,7 @@
         "390": {
           "home": {
             "scrollWidth": 390,
-            "innerWidth": 390,
-            "widest": 1376
+            "innerWidth": 390
           },
           "catalog": {
             "scrollWidth": 390,
@@ -1752,8 +1673,7 @@
         "430": {
           "home": {
             "scrollWidth": 430,
-            "innerWidth": 430,
-            "widest": 1376
+            "innerWidth": 430
           },
           "catalog": {
             "scrollWidth": 430,
@@ -1773,5 +1693,5 @@
       }
     }
   ],
-  "finishedAt": "2026-11-19T16:05:11.407Z"
+  "finishedAt": "2026-11-19T17:34:11.712Z"
 }
