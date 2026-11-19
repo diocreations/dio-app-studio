@@ -90,6 +90,12 @@ export type ImportReport = {
   missing: string[]
   /** Caveats worth saying out loud. */
   notes: string[]
+  /** Paths the crawl actually read, so the owner can see the coverage. */
+  pagesRead: string[]
+  /** Pages that were attempted and could not be read, with the reason. */
+  pagesFailed: { url: string; reason: string }[]
+  /** Whether a sitemap supplied the pages the home page did not link to. */
+  usedSitemap: boolean
 }
 
 /* ------------------------------------------------------------------ */
@@ -98,10 +104,20 @@ export type ImportReport = {
 
 const MAX_BYTES = 900_000
 const PAGE_TIMEOUT_MS = 6500
-/** Pages opened per import, including the pasted one. */
-const MAX_PAGES = 6
+/**
+ * Pages opened per import, including the pasted one. Six was too few for a real
+ * catalogue: a shop with three aisles and four products each ran out before it
+ * reached a product. Ten keeps the brief inside its time budget while letting a
+ * sitemap-driven crawl read product pages that the home page never links to.
+ */
+export const MAX_PAGES = 10
 /** Wall clock for the whole crawl, so the brief never hangs. */
-const CRAWL_BUDGET_MS = 16_000
+const CRAWL_BUDGET_MS = 20_000
+/** Sitemaps are cheap metadata, but still bounded and same-origin. */
+const SITEMAP_TIMEOUT_MS = 4500
+const MAX_SITEMAP_BYTES = 400_000
+const MAX_SITEMAP_URLS = 300
+const MAX_SITEMAP_CHILDREN = 3
 
 /* ------------------------------------------------------------------ */
 /* URLs and the network guard                                          */
@@ -451,6 +467,132 @@ export async function fetchRobots(origin: string, fetchImpl: typeof fetch): Prom
     }
   }
   return []
+}
+
+/* ------------------------------------------------------------------ */
+/* sitemap.xml                                                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A sitemap is the one place a shop states its product URLs even when the home
+ * page draws its navigation in JavaScript. ButterTales is the case that made
+ * this necessary: a readable home page, no `<a href>` at all, and a sitemap
+ * listing `/shop/malayalam-alphabet-book` and friends.
+ *
+ * Nothing here bypasses a policy: every URL is same-origin and re-checked
+ * against robots.txt before it is opened.
+ */
+const SITEMAP_PATHS = ['/sitemap.xml', '/sitemap_index.xml', '/sitemap-index.xml']
+
+function sitemapLocations(xml: string): string[] {
+  const out: string[] = []
+  const pattern = /<loc>\s*(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?\s*<\/loc>/gi
+  let match: RegExpExecArray | null
+  while ((match = pattern.exec(xml)) && out.length < MAX_SITEMAP_URLS * 2) {
+    const value = decode(match[1] ?? '').trim()
+    if (value) out.push(value)
+  }
+  return out
+}
+
+async function loadSitemapText(
+  url: URL,
+  fetchImpl: typeof fetch,
+  robots: RobotsGroup[],
+): Promise<string | null> {
+  let current = url
+  for (let hop = 0; hop < 3; hop += 1) {
+    try {
+      assertPublicHost(current)
+      if (!robotsAllows(robots, `${current.pathname}${current.search}`)) return null
+      const response = await fetchImpl(current.toString(), {
+        redirect: 'manual',
+        cache: 'no-store',
+        signal: AbortSignal.timeout(SITEMAP_TIMEOUT_MS),
+        headers: { 'user-agent': IMPORTER_UA, accept: 'application/xml,text/xml,text/plain;q=0.8,*/*;q=0.5' },
+      })
+      if (REDIRECTS.includes(response.status)) {
+        const location = response.headers.get('location')
+        if (!location) return null
+        current = new URL(location, current)
+        continue
+      }
+      if (!response.ok) return null
+      const text = (await response.text()).slice(0, MAX_SITEMAP_BYTES)
+      return /<(?:urlset|sitemapindex)\b/i.test(text) ? text : null
+    } catch {
+      return null
+    }
+  }
+  return null
+}
+
+/** Product, service and menu pages a sitemap can point at. */
+const SITEMAP_DETAIL_PATH =
+  /(?:^|\/)(?:shop|store|products?|collections?|menu|services|treatments|packages|courses|classes|listings|books?|catalogue|catalog)\/[^/?#]{2,}\/?$/i
+
+/**
+ * Product-like URLs first, then aisles. Reading one product page is worth more
+ * than opening a collection index that the crawler has already seen.
+ */
+export function rankSitemapUrls(urls: URL[], origin: string): URL[] {
+  const seen = new Set<string>()
+  const scored: { url: URL; score: number }[] = []
+  for (const url of urls) {
+    if (url.origin !== origin) continue
+    if (OFF_LIMITS.test(url.pathname) || UNSAFE_QUERY.test(url.search)) continue
+    const key = url.pathname.replace(/\/$/, '')
+    if (!key || key === '' || seen.has(key)) continue
+    seen.add(key)
+    let score = 1
+    if (SITEMAP_DETAIL_PATH.test(url.pathname)) score += 4
+    if (PRODUCT_PATH.test(url.pathname)) score += 2
+    if (AISLE_PATH.test(url.pathname)) score += 2
+    // A dated or paginated URL is usually a blog, not a product.
+    if (/\/\d{4}\/\d{2}\//.test(url.pathname) || /\/page\/\d+/.test(url.pathname)) score -= 2
+    if (score > 0) scored.push({ url, score })
+  }
+  return scored.sort((a, b) => b.score - a.score).slice(0, MAX_SITEMAP_URLS).map((entry) => entry.url)
+}
+
+async function readSitemap(
+  origin: URL,
+  fetchImpl: typeof fetch,
+  robots: RobotsGroup[],
+): Promise<{ urls: URL[]; used: boolean }> {
+  for (const path of SITEMAP_PATHS) {
+    const xml = await loadSitemapText(new URL(path, origin), fetchImpl, robots)
+    if (!xml) continue
+    let locations = sitemapLocations(xml)
+    // A sitemap index points at other sitemaps; read a few of them, not all.
+    if (/<sitemapindex\b/i.test(xml)) {
+      const children: URL[] = []
+      for (const location of locations) {
+        try {
+          const child = new URL(location)
+          if (child.origin === origin.origin) children.push(child)
+        } catch {
+          // A malformed loc is skipped, like any other unreadable link.
+        }
+      }
+      locations = []
+      for (const child of children.slice(0, MAX_SITEMAP_CHILDREN)) {
+        const childXml = await loadSitemapText(child, fetchImpl, robots)
+        if (childXml) locations.push(...sitemapLocations(childXml))
+      }
+    }
+    const urls: URL[] = []
+    for (const location of locations) {
+      try {
+        urls.push(new URL(location, origin))
+      } catch {
+        // Ignore a loc that is not a URL.
+      }
+    }
+    const ranked = rankSitemapUrls(urls, origin.origin)
+    if (ranked.length) return { urls: ranked, used: true }
+  }
+  return { urls: [], used: false }
 }
 
 /* ------------------------------------------------------------------ */
@@ -1403,6 +1545,9 @@ const SCHEMA_CATEGORY: Record<string, string> = {
 /** Retail sub-categories the page copy usually names outright. Only consulted
  *  for shops: a restaurant that mentions coffee is still a restaurant. */
 const CATEGORY_NOUNS: [RegExp, string][] = [
+  // Before the generic book rule: a shop selling learning kits and alphabet
+  // books is not a bookshop, and "Bookshop" would misdescribe it.
+  [/\b(?:learning (?:products?|games?|kits?)|educational (?:toys?|books?|games?|kits?)|children'?s? (?:books?|learning)|alphabet book|screen-free|montessori (?:toys?|materials?))\b/i, "Children's learning"],
   [/\b(?:bookshop|bookstore|books?)\b/i, 'Bookshop'],
   [/\b(?:stationery|notebooks?|greeting cards?)\b/i, 'Stationery shop'],
   [/\b(?:florist|flowers?|bouquets?)\b/i, 'Florist'],
@@ -1439,7 +1584,7 @@ function categoryOf(
     }
 
   if (vertical === 'shop') {
-    const haystack = `${page.meta['og:title'] ?? ''} ${page.title} ${collapse(page.text, 4000)}`
+    const haystack = `${page.meta['og:title'] ?? ''} ${page.meta['og:description'] ?? ''} ${page.meta.description ?? ''} ${page.title} ${collapse(page.text, 6000)}`
     for (const [pattern, label] of CATEGORY_NOUNS)
       if (pattern.test(haystack)) return { category: label, basis: 'the words on the page' }
   }
@@ -1457,14 +1602,20 @@ function categoryOf(
 
 const CARTS_BY_TRADE = new Set<VerticalId>(['shop', 'restaurant', 'cafe'])
 
-function inferFeatures(page: Page, vertical: VerticalId, productCount: number): FeatureId[] {
+function inferFeatures(
+  page: Page,
+  vertical: VerticalId,
+  productCount: number,
+  /** A cart seen on a crawled page, not just the entry page. */
+  cartSignal = false,
+): FeatureId[] {
   const text = page.text.toLowerCase()
   const has = (pattern: RegExp) => pattern.test(text)
   const features = new Set<FeatureId>(['catalog'])
 
   // A cart is only assumed where the trade sells things by the item, or where
   // the site shows one. Everything else is booked, quoted or called.
-  if (productCount > 0 && (CART_SIGNAL.test(page.html) || CARTS_BY_TRADE.has(vertical)))
+  if (productCount > 0 && (cartSignal || CART_SIGNAL.test(page.html) || CARTS_BY_TRADE.has(vertical)))
     features.add('ordering')
   if (has(/\bdelivery\b|\bshipping\b|same[- ]day/)) features.add('delivery')
   if (has(/\bbook(?:ing)?\b|\bappointment|\breserve\b|\bschedule\b|\bavailability\b/))
@@ -1613,7 +1764,7 @@ function currencyOf(page: Page): string {
 /* ------------------------------------------------------------------ */
 
 const OFF_LIMITS =
-  /(?:\/cart|\/basket|\/checkout|\/account|\/login|\/signin|\/signup|\/register|\/search|\/blog|\/news|\/journal|\/privacy|\/terms|\/legal|\/cookies?|\/contact|\/about|\/faq|\/shipping|\/returns|\/careers|\/wp-admin|\/feed)(?:[/?#]|$)/i
+  /(?:\/cart|\/basket|\/checkout|\/account|\/login|\/signin|\/signup|\/register|\/search|\/blog|\/news|\/journal|\/privacy|\/terms|\/policies|\/policy|\/legal|\/cookies?|\/contact|\/about|\/faq|\/shipping|\/returns|\/careers|\/wp-admin|\/feed)(?:[/?#]|$)/i
 
 const UNSAFE_QUERY = /[?&](?:sort|filter|q|search|add|variant|color|colour|size|page=0|utm_|currency=)/i
 
@@ -1737,9 +1888,49 @@ export function looksClientRendered(html: string, text = visible(html)): boolean
 type Crawl = {
   sections: MenuSection[]
   pages: number
+  /** Every page that was actually opened, including ones with no catalogue. */
+  opened: number
   skipped: boolean
   blocked: number
   clientRendered: boolean
+  read: string[]
+  failed: { url: string; reason: string }[]
+  usedSitemap: boolean
+  /** A currency declared by any page that was read. */
+  currency: string
+  /** Whether any page showed a cart or checkout control. */
+  cartSignal: boolean
+}
+
+/** A product page turned into a catalogue section, named the way the shop
+ *  names that aisle (breadcrumb), else as the business's own category. */
+function sectionFromProductPage(page: Page, site: ImportedSite): MenuSection | null {
+  const read = catalogueOf(page)
+  const items = read.sections.flatMap((section) => section.items)
+  if (!items.length) {
+    const single = productFromPage(page)
+    if (!single) return null
+    items.push(single)
+  }
+
+  let name = ''
+  const crumbs = page.nodes.find((node) => typeOf(node).includes('BreadcrumbList'))
+  if (crumbs) {
+    const list = Array.isArray(crumbs.itemListElement) ? crumbs.itemListElement : []
+    const names = list
+      .map((entry) => {
+        const node = (entry ?? {}) as Record<string, unknown>
+        const item = (node.item ?? node) as Record<string, unknown>
+        return collapse(textOf(node, 'name') || textOf(item, 'name'), 40)
+      })
+      .filter(Boolean)
+    // Second to last is the aisle; the last is this product's own name.
+    name = names.length > 1 ? names[names.length - 2]! : ''
+  }
+  if (!name || /^(?:home|shop|store|products?)$/i.test(name))
+    name = site.category || VERTICALS[site.vertical].vocab.catalog
+
+  return { name: collapse(name, 40) || 'Catalogue', items: items.slice(0, 30) }
 }
 
 async function expandCatalogue(options: {
@@ -1748,14 +1939,23 @@ async function expandCatalogue(options: {
   fetchImpl: typeof fetch
   deadline: number
   robots: RobotsGroup[]
+  /** Same-origin pages a sitemap declared, ranked product-first. */
+  sitemap?: URL[]
 }): Promise<Crawl> {
   const { entry, site, fetchImpl, deadline, robots } = options
+  const sitemap = options.sitemap ?? []
   const visited = new Set([`${entry.url.origin}${entry.url.pathname}`])
   let sections: MenuSection[] = []
   let pages = 0
+  let opened = 0
   let skipped = false
   let blocked = 0
+  let usedSitemap = false
+  let currency = ''
+  let cartSignal = false
   let clientRendered = looksClientRendered(entry.html, entry.text)
+  const read: string[] = [entry.url.pathname]
+  const failed: { url: string; reason: string }[] = []
 
   const remainingPages = () => MAX_PAGES - 1 - pages
   const budgetLeft = () => deadline - Date.now() - 900
@@ -1770,12 +1970,24 @@ async function expandCatalogue(options: {
         robots,
       })
       const page = readPage(loaded.html, loaded.url)
+      opened += 1
       if (looksClientRendered(page.html, page.text)) clientRendered = true
+      if (!currency) currency = currencyOf(page)
+      if (CART_SIGNAL.test(page.html)) cartSignal = true
+      read.push(url.pathname)
       return page
     } catch (error) {
       // loadSite is the single gate; a refusal here is the site's policy, not a
       // dead link, so it is counted rather than swallowed.
-      if (error instanceof ImportError && error.code === 'robots_disallowed') blocked += 1
+      if (error instanceof ImportError && error.code === 'robots_disallowed') {
+        blocked += 1
+        failed.push({ url: url.pathname, reason: 'robots.txt excludes this page' })
+      } else {
+        failed.push({
+          url: url.pathname,
+          reason: error instanceof Error ? error.message.slice(0, 120) : 'could not be read',
+        })
+      }
       // One dead aisle shouldn't cost the rest of the shop.
       return null
     }
@@ -1828,8 +2040,43 @@ async function expandCatalogue(options: {
     }
   }
 
+  // The home page drew no links, or too thin a catalogue: use the pages the
+  // sitemap declared. Product pages carry their own structured data, so each
+  // one read is a real item with a real price.
+  const stillThin =
+    site.menu.length === 0 &&
+    sections.reduce((total, section) => total + section.items.length, 0) < 3
+  if (stillThin && sitemap.length) {
+    for (const url of sitemap) {
+      if (remainingPages() <= 0 || budgetLeft() < 1200) {
+        skipped = true
+        break
+      }
+      if (visited.has(`${url.origin}${url.pathname}`)) continue
+      const page = await open(url)
+      if (!page) continue
+      const section = sectionFromProductPage(page, site)
+      if (!section) continue
+      sections = mergeSections(sections, [section])
+      pages += 1
+      usedSitemap = true
+    }
+  }
+
   if (queue.length) skipped = true
-  return { sections, pages, skipped, blocked, clientRendered }
+  return {
+    sections,
+    pages,
+    opened,
+    skipped,
+    blocked,
+    clientRendered,
+    read,
+    failed,
+    usedSitemap,
+    currency,
+    cartSignal,
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -1875,10 +2122,56 @@ export async function importWebsite(
   const structure = readStructure(page.html, css, site.name)
   if (structure) site.structure = structure
 
-  const crawl = await expandCatalogue({ entry: page, site, fetchImpl, deadline, robots })
+  // A readable home page with no product markup and no usable links is the
+  // case a sitemap exists for. Reading it costs one request and is only done
+  // when the entry page was thin.
+  const entryItems = site.menu.reduce((total, section) => total + section.items.length, 0)
+  const sitemap = entryItems < 3 ? await readSitemap(entry.url, fetchImpl, robots) : { urls: [], used: false }
+
+  const crawl = await expandCatalogue({
+    entry: page,
+    site,
+    fetchImpl,
+    deadline,
+    robots,
+    sitemap: sitemap.urls,
+  })
   site.menu = mergeSections(site.menu, crawl.sections)
-  const pages = crawl.pages + 1
+  const pages = crawl.opened + 1
   const items = site.menu.reduce((total, section) => total + section.items.length, 0)
+
+  // Trade detection on the entry page alone cannot see a catalogue the sitemap
+  // supplied: ButterTales read as "professional services" with seven priced
+  // products in hand. A guessed trade plus a priced catalogue is retail.
+  const entryVertical = site.vertical
+  // Two priced products plus a cart is already a shop; three products is a
+  // catalogue on its own.
+  const looksRetail = items >= 3 || (items >= 2 && crawl.cartSignal)
+  if (looksRetail && site.verticalConfidence === 'guessed' && site.vertical !== 'shop') {
+    site.vertical = 'shop'
+    site.verticalConfidence = 'detected'
+    const guessed = categoryOf(page, 'shop', ['priced catalogue'], 'detected')
+    if (guessed.category) {
+      site.category = guessed.category
+      site.categoryBasis = guessed.category.startsWith('Shop')
+        ? 'a priced catalogue of products on the site'
+        : guessed.basis
+    }
+    site.features = inferFeatures(page, 'shop', items, crawl.cartSignal)
+  } else if (items > 0) {
+    site.features = inferFeatures(page, site.vertical, items, crawl.cartSignal)
+  }
+
+  if (!site.currency && crawl.currency) site.currency = crawl.currency
+
+  // A section named after the old trade ("Services") is renamed to the
+  // business's own category once it is known.
+  const oldVocab = VERTICALS[entryVertical].vocab.catalog
+  const sectionName = site.category || VERTICALS[site.vertical].vocab.catalog
+  if (sectionName !== oldVocab)
+    site.menu = site.menu.map((section) =>
+      section.name === oldVocab ? { ...section, name: sectionName } : section,
+    )
   // Only a thin read needs explaining; a full catalogue speaks for itself.
   const clientRendered = items < 3 && crawl.clientRendered
 
@@ -1890,6 +2183,8 @@ export async function importWebsite(
     found.push(
       `${items} catalogue ${items === 1 ? 'entry' : 'entries'} in ${site.menu.length} ${site.menu.length === 1 ? 'section' : 'sections'}${pages > 1 ? `, read from ${pages} pages` : ''}`,
     )
+    if (crawl.usedSitemap)
+      found.push('their sitemap listed the product pages the home page did not link to')
   } else {
     missing.push(
       clientRendered
@@ -1930,7 +2225,7 @@ export async function importWebsite(
 
   if (site.verticalConfidence === 'guessed')
     notes.push(
-      'No trade was obvious from the copy, so this started as professional services. Change the business type and every word in the app follows.',
+      `No trade was obvious from the copy, so this started as ${VERTICALS[site.vertical].label.toLowerCase()} services. Change the business type and every word in the app follows.`,
     )
   if (crawl.skipped)
     notes.push(
@@ -1957,6 +2252,9 @@ export async function importWebsite(
     found,
     missing,
     notes,
+    pagesRead: [...new Set(crawl.read)].slice(0, 20),
+    pagesFailed: crawl.failed.slice(0, 10),
+    usedSitemap: crawl.usedSitemap,
   }
 }
 

@@ -45,7 +45,7 @@ export function marketingPage(): string {
         <h1 class="display" style="margin-top:16px">A customer says they need an app.<br />It&rsquo;s on their phone before the call ends.</h1>
         <p class="lede" style="margin-top:18px">Plattr takes a four-minute brief — restaurant, salon, gym, garage, clinic, shop, agency — and builds a working app with the right catalogue, bookings or quote form. The owner edits it live, approves it, and you package it for web, Android and iOS.</p>
         <form action="/brief" method="get" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:24px;max-width:560px">
-          <input name="prompt" type="text" maxlength="240" placeholder="I need an app for my salon" aria-label="What does the business need?" style="flex:1;min-width:220px" />
+          <input name="prompt" type="text" maxlength="240" placeholder="I need an app for my coffee shop" aria-label="What does the business need?" style="flex:1;min-width:220px" />
           <button class="btn accent" type="submit">Show me three designs</button>
         </form>
         <p class="tiny" style="margin-top:8px">One sentence in plain words. We read the trade, tick the features that fit, and show three different designs to choose from.</p>
@@ -62,10 +62,11 @@ export function marketingPage(): string {
       </div>
       <div>
         <div class="phone tall">
-          <iframe id="demo-frame" title="A live Plattr build" src="/demo/app" loading="lazy"></iframe>
+          <iframe id="demo-frame" title="A live Plattr build" src="/demo/app?biz=cafe" loading="lazy"></iframe>
         </div>
         <div class="seg" data-demos style="margin:12px auto 0;justify-content:center;display:flex;flex-wrap:wrap;gap:4px">
-          <button type="button" data-demo="restaurant" aria-pressed="true">Restaurant</button>
+          <button type="button" data-demo="cafe" aria-pressed="true">Café</button>
+          <button type="button" data-demo="restaurant" aria-pressed="false">Restaurant</button>
           <button type="button" data-demo="salon" aria-pressed="false">Salon</button>
           <button type="button" data-demo="gym" aria-pressed="false">Gym</button>
           <button type="button" data-demo="shop" aria-pressed="false">Shop</button>

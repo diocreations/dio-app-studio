@@ -33,6 +33,7 @@ import { applyCommand, docFromSpec, flagshipDocFromSpec, normalizeDoc } from './
 import { FLAGSHIP_TRADES } from './flagship'
 import { editorPage } from './views/editor'
 import { dashboardPage, ownerLoginPage } from './views/dashboard'
+import { paymentMissingPage, paymentPage } from './views/payments'
 import {
   OWNER_SESSION_DAYS,
   createOwnerSession,
@@ -66,7 +67,7 @@ import {
   uploadMedia,
   type MediaBucket,
 } from './media'
-import type { VideoLink } from './types'
+import type { MenuSection, VideoLink } from './types'
 import { cleanLayout, designsFor, readPrompt } from './prompt'
 import { sampleSpec } from './proof'
 import { briefPage } from './views/brief'
@@ -82,6 +83,21 @@ import {
 } from './studioAuth'
 import { workspacePage } from './views/workspace'
 import { esc, page } from './views/shell'
+import {
+  checkoutPresentation,
+  disconnectConnection,
+  handleWebhook,
+  paymentCapability,
+  paymentDashboard,
+  refundTransaction,
+  refreshTransaction,
+  saveConnection,
+  savePaymentSettings,
+  startCheckout,
+  testConnection,
+  verifyRazorpayCheckout,
+} from './payments/service'
+import { isProvider, PaymentError, type ProviderId } from './payments/types'
 
 type Bindings = {
   DB: D1Database
@@ -97,6 +113,10 @@ type Bindings = {
   IMPORT_DAILY_CAP?: string
   /** Published on the privacy page for deletion and data requests. */
   CONTACT_EMAIL?: string
+  /** Base64 32-byte key for AES-GCM encryption of payment credentials. */
+  PAYMENT_ENCRYPTION_KEY?: string
+  /** M0 dark-launch switches, e.g. `accounts.enabled=1`. Unset means all off. */
+  PLATFORM_FLAGS?: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -471,6 +491,7 @@ app.get('/p/:token/app', async (c) => {
   c.header('Cache-Control', 'no-store')
   c.header('X-Robots-Tag', project.spec.indexable ? 'index, follow' : 'noindex, nofollow')
   const photos = await photosFor(project.spec.vertical, c.env)
+  const capability = await paymentCapability(c.env.DB, project)
   return c.html(
     renderApp(project.spec, {
       token: project.token,
@@ -482,6 +503,9 @@ app.get('/p/:token/app', async (c) => {
       // editor bridge is the only difference.
       doc: starterDoc(project),
       flagship: FLAGSHIP_TRADES.has(project.spec.vertical),
+      payments: capability.enabled
+        ? { payOrders: capability.payOrders, payBookings: capability.payBookings, provider: capability.provider ?? '' }
+        : undefined,
       editor: c.req.query('editor') === '1',
       screen: c.req.query('editor') === '1' ? c.req.query('screen')?.slice(0, 40) : undefined,
     }),
@@ -587,10 +611,55 @@ app.get('/proof/app', async (c) => {
   return c.html(renderApp(spec, { token: 'proof-books', live: false, photos: await photosFor(spec.vertical, c.env) }))
 })
 
+/**
+ * Brief parameters a design preview may carry. A preview is only useful if it
+ * is *their* app: the same three concepts must be judged with the owner's name,
+ * colour, category and first catalogue rows, not a demo shop's.
+ */
+function previewMenu(raw: string | undefined): MenuSection[] {
+  if (!raw) return []
+  const items = raw
+    .split(';')
+    .slice(0, 12)
+    .map((entry) => {
+      const [name, price] = entry.split('~')
+      const clean = (name ?? '').trim().slice(0, 60)
+      if (!clean) return null
+      const value = Number(price)
+      return {
+        name: clean,
+        desc: '',
+        price: Number.isFinite(value) && value > 0 ? Math.round(value * 100) : 0,
+      }
+    })
+    .filter((item): item is MenuSection['items'][number] => item !== null)
+  return items.length ? [{ name: 'Popular', items }] : []
+}
+
 app.get('/demo/app', async (c) => {
   const key = c.req.query('biz') ?? 'restaurant'
   const demo = DEMOS[key] ?? DEMOS.restaurant
-  const spec = buildSpec({ ...demo, features: [] })
+  const name = (c.req.query('name') ?? '').trim().slice(0, 60)
+  const tagline = (c.req.query('tag') ?? '').trim().slice(0, 90)
+  const category = (c.req.query('cat') ?? '').trim().slice(0, 40)
+  const logo = (c.req.query('logo') ?? '').trim().slice(0, 4)
+  const accent = /^#[0-9a-f]{6}$/i.test(c.req.query('accent') ?? '') ? c.req.query('accent')! : ''
+  const features = (c.req.query('feat') ?? '')
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .slice(0, 20)
+  const menu = previewMenu(c.req.query('items'))
+  const spec = buildSpec({
+    name: name || demo.name,
+    vertical: demo.vertical,
+    accent: accent || demo.accent,
+    logo: logo || demo.logo,
+    features,
+    ...(tagline ? { tagline } : {}),
+    ...(category ? { category } : {}),
+    ...(menu.length ? { site: { menu } } : {}),
+  })
   const photos = await photosFor(demo.vertical, c.env)
   c.header('Cache-Control', 'public, max-age=60')
   // Demo-only overrides, so one variation axis can be looked at on its own.
@@ -721,6 +790,9 @@ app.post('/api/import', async (c) => {
       source: report.source,
       host: report.host,
       pages: report.pages,
+      pagesRead: report.pagesRead,
+      pagesFailed: report.pagesFailed,
+      usedSitemap: report.usedSitemap,
       found: report.found,
       missing: report.missing,
       notes: report.notes,
@@ -1045,6 +1117,18 @@ function businessFailure(c: Context, error: unknown): Response {
   return c.json({ error: { code: 'internal_error', message: 'That could not be saved. Try again.' } }, 500)
 }
 
+function paymentFailure(c: Context, error: unknown): Response {
+  if (error instanceof PaymentError)
+    return c.json({ error: { code: error.code, message: error.message } }, error.status)
+  console.error('plattr_payment_error', error instanceof Error ? error.message : 'unknown')
+  return c.json({ error: { code: 'payment_error', message: 'The payment request could not be completed.' } }, 500)
+}
+
+function providerParam(c: Context): ProviderId | null {
+  const value = c.req.param('provider')
+  return isProvider(value) ? value : null
+}
+
 /** Customer app writes. Branded JSON only, no payment details, no client prices. */
 app.post(
   '/p/:token/orders',
@@ -1141,14 +1225,127 @@ app.post(
   },
 )
 
+/* ------------------------------ payments ------------------------------ */
+
+// Creates a gateway order/session for an existing order or booking. The body
+// names the record; the amount is always read from D1 or the owner catalogue.
+app.post(
+  '/p/:token/payments/start',
+  bodyLimit({ maxSize: 8 * 1024, onError: (c) => fail(c, 413, 'body_too_large', 'That payment request is too large.') }),
+  async (c) => {
+    const origin = c.req.header('origin')
+    if (origin && origin !== new URL(c.req.url).origin)
+      return fail(c, 403, 'cross_origin', 'Start payments from the customer app.')
+    const project = await loadProject(c)
+    if (!project) return fail(c, 404, 'not_found', 'No app with that link.')
+    if (!(await publicWriteBudget(c, project.id, 'payment', 20))) return rateLimited(c)
+    const body = await readJson(c)
+    if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+    try {
+      const payment = await startCheckout(c.env.DB, project, c.env, new URL(c.req.url).origin, body)
+      c.header('Cache-Control', 'private, no-store')
+      return c.json({ payment })
+    } catch (error) {
+      return paymentFailure(c, error)
+    }
+  },
+)
+
+// Razorpay's checkout returns a signed payment response. The signature proves
+// the response came from the checkout for this order; the service then checks
+// the captured status and amount with the Razorpay API before marking it paid.
+app.post(
+  '/p/:token/payments/razorpay/verify',
+  bodyLimit({ maxSize: 16 * 1024, onError: (c) => fail(c, 413, 'body_too_large', 'That verification is too large.') }),
+  async (c) => {
+    const origin = c.req.header('origin')
+    if (origin && origin !== new URL(c.req.url).origin)
+      return fail(c, 403, 'cross_origin', 'Verify payments from the payment page.')
+    const project = await loadProject(c)
+    if (!project) return fail(c, 404, 'not_found', 'No app with that link.')
+    const body = await readJson(c)
+    if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+    try {
+      const payment = await verifyRazorpayCheckout(c.env.DB, project, c.env, body)
+      c.header('Cache-Control', 'private, no-store')
+      return c.json({
+        payment: {
+          id: payment.id,
+          status: payment.status,
+          amount: payment.amount,
+          currency: payment.currency,
+          provider: payment.provider,
+        },
+      })
+    } catch (error) {
+      return paymentFailure(c, error)
+    }
+  },
+)
+
+app.get('/p/:token/pay/:transactionId', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.text('Not found', 404)
+  const presentation = await checkoutPresentation(c.env.DB, project, c.req.param('transactionId'))
+  if (!presentation) return c.html(paymentMissingPage(project), 404)
+  c.header('Cache-Control', 'private, no-store')
+  c.header('X-Robots-Tag', 'noindex, nofollow')
+  if (presentation.transaction.provider === 'stripe' && presentation.transaction.status === 'pending') {
+    const row = await c.env.DB.prepare(
+      'SELECT checkout_url FROM payment_transactions WHERE id = ? AND project_id = ?',
+    )
+      .bind(presentation.transaction.id, project.id)
+      .first<{ checkout_url: string }>()
+    if (row?.checkout_url) return c.redirect(row.checkout_url, 303)
+  }
+  return c.html(
+    paymentPage({ project, transaction: presentation.transaction, razorpay: presentation.razorpay }),
+  )
+})
+
+app.get('/p/:token/payment/:transactionId', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.text('Not found', 404)
+  const id = c.req.param('transactionId')
+  await refreshTransaction(c.env.DB, project, c.env, id).catch(() => null)
+  const presentation = await checkoutPresentation(c.env.DB, project, id)
+  if (!presentation) return c.html(paymentMissingPage(project), 404)
+  c.header('Cache-Control', 'private, no-store')
+  c.header('X-Robots-Tag', 'noindex, nofollow')
+  return c.html(paymentPage({ project, transaction: presentation.transaction }))
+})
+
+// Provider-to-provider webhook. The signature is verified before the payload
+// is trusted; event ids make duplicate delivery harmless.
+app.post(
+  '/p/:token/payments/webhook/:provider',
+  bodyLimit({ maxSize: 128 * 1024, onError: (c) => fail(c, 413, 'body_too_large', 'That webhook is too large.') }),
+  async (c) => {
+    const project = await loadProject(c)
+    if (!project) return fail(c, 404, 'not_found', 'No app with that link.')
+    const provider = providerParam(c)
+    if (!provider) return fail(c, 404, 'provider_unknown', 'Unknown payment provider.')
+    const rawBody = await c.req.text()
+    try {
+      const result = await handleWebhook(c.env.DB, project, c.env, provider, rawBody, c.req.raw.headers)
+      c.header('Cache-Control', 'no-store')
+      return c.json({ ok: true, ...result })
+    } catch (error) {
+      return paymentFailure(c, error)
+    }
+  },
+)
+
 app.get('/p/:token/dashboard', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.html(notFoundPage(), 404)
   if (!(await ownerSession(c, project)))
     return c.redirect(`/p/${project.token}/dashboard/login`, 303)
   const data = await dashboardData(c.env.DB, project)
+  const origin = new URL(c.req.url).origin
+  const payments = await paymentDashboard(c.env.DB, project, origin)
   c.header('Cache-Control', 'private, no-store')
-  return c.html(dashboardPage({ project, data, origin: new URL(c.req.url).origin }))
+  return c.html(dashboardPage({ project, data, origin, payments }))
 })
 
 app.get('/p/:token/dashboard/login', async (c) => {
@@ -1214,7 +1411,10 @@ app.get('/api/projects/:token/dashboard', async (c) => {
   if (!(await ownerSession(c, project)))
     return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to open this dashboard.')
   c.header('Cache-Control', 'private, no-store')
-  return c.json(await dashboardData(c.env.DB, project))
+  return c.json({
+    ...(await dashboardData(c.env.DB, project)),
+    payments: await paymentDashboard(c.env.DB, project, new URL(c.req.url).origin),
+  })
 })
 
 app.patch('/api/projects/:token/orders/:orderId', async (c) => {
@@ -1354,6 +1554,125 @@ app.put('/api/projects/:token/app-settings', async (c) => {
   await log(c.env.DB, project.id, 'settings', 'Business details updated', name)
   c.header('Cache-Control', 'private, no-store')
   return c.json({ ok: true, spec })
+})
+
+/* --------------------------- owner payments --------------------------- */
+
+app.get('/api/projects/:token/payments', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to see payments.')
+  c.header('Cache-Control', 'private, no-store')
+  return c.json(await paymentDashboard(c.env.DB, project, new URL(c.req.url).origin))
+})
+
+app.put('/api/projects/:token/payments/settings', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Save payment settings from the dashboard.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to change payment settings.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  try {
+    const settings = await savePaymentSettings(c.env.DB, project, body)
+    c.header('Cache-Control', 'private, no-store')
+    return c.json({ settings })
+  } catch (error) {
+    return paymentFailure(c, error)
+  }
+})
+
+app.put(
+  '/api/projects/:token/payments/connections/:provider',
+  bodyLimit({ maxSize: 16 * 1024, onError: (c) => fail(c, 413, 'body_too_large', 'That configuration is too large.') }),
+  async (c) => {
+    const origin = c.req.header('origin')
+    if (origin && origin !== new URL(c.req.url).origin)
+      return fail(c, 403, 'cross_origin', 'Save gateway settings from the dashboard.')
+    const project = await loadProject(c)
+    if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+    if (!(await ownerSession(c, project)))
+      return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to connect a gateway.')
+    const provider = providerParam(c)
+    if (!provider) return fail(c, 404, 'provider_unknown', 'Unknown payment provider.')
+    const body = await readJson(c)
+    if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+    try {
+      const connection = await saveConnection(c.env.DB, project, c.env, provider, body, new URL(c.req.url).origin)
+      c.header('Cache-Control', 'private, no-store')
+      return c.json({ connection })
+    } catch (error) {
+      return paymentFailure(c, error)
+    }
+  },
+)
+
+app.post('/api/projects/:token/payments/connections/:provider/test', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Test gateways from the dashboard.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to test a gateway.')
+  const provider = providerParam(c)
+  if (!provider) return fail(c, 404, 'provider_unknown', 'Unknown payment provider.')
+  if (!(await spendDailyBudget(c.env.DB, `payment-test:${project.id}`, 30)))
+    return fail(c, 429, 'rate_limited', 'Too many gateway tests today. Try again tomorrow.')
+  try {
+    const result = await testConnection(
+      c.env.DB,
+      project,
+      c.env,
+      provider,
+      fetch,
+      new URL(c.req.url).origin,
+    )
+    c.header('Cache-Control', 'private, no-store')
+    return c.json(result)
+  } catch (error) {
+    return paymentFailure(c, error)
+  }
+})
+
+app.delete('/api/projects/:token/payments/connections/:provider', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Disconnect gateways from the dashboard.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to disconnect a gateway.')
+  const provider = providerParam(c)
+  if (!provider) return fail(c, 404, 'provider_unknown', 'Unknown payment provider.')
+  try {
+    await disconnectConnection(c.env.DB, project, provider)
+    c.header('Cache-Control', 'private, no-store')
+    return c.json({ ok: true })
+  } catch (error) {
+    return paymentFailure(c, error)
+  }
+})
+
+app.post('/api/projects/:token/payments/transactions/:transactionId/refund', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Refund from the dashboard.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to refund a payment.')
+  try {
+    const payment = await refundTransaction(c.env.DB, project, c.env, c.req.param('transactionId'))
+    c.header('Cache-Control', 'private, no-store')
+    return c.json({ payment })
+  } catch (error) {
+    return paymentFailure(c, error)
+  }
 })
 
 /**

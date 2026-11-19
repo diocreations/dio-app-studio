@@ -357,18 +357,54 @@ function briefScript(verticals: string): string {
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
   }
 
+  // A structured receipt, not a log line: the owner has to be able to check
+  // what was read, what was not, and what still needs their confirmation before
+  // any of it becomes their app.
   function report(data) {
     const site = data.site || {}
-    const found = (data.found || []).map((line) => '<li>' + esc(line) + '</li>').join('')
-    const notes = (data.notes || []).map((line) => '<p class="tiny" style="margin-top:6px">' + esc(line) + '</p>').join('')
-    const missing = (data.missing || []).join(', ')
+    const menu = Array.isArray(site.menu) ? site.menu : []
+    const items = menu.reduce((total, section) => total + (section.items || []).length, 0)
+    const pricey = menu.flatMap((section) => section.items || []).filter((item) => item.price > 0)
+    const sample = menu
+      .flatMap((section) => (section.items || []).slice(0, 3).map((item) => ({ section: section.name, item })))
+      .slice(0, 6)
+    const money = (cents) => (cents > 0 ? esc(site.currency || '') + ' ' + (cents / 100).toFixed(2) : 'price not listed')
+    const rows = (label, value) =>
+      value ? '<div class="row"><span>' + label + '</span><strong style="text-align:right">' + value + '</strong></div>' : ''
+
+    const catalogue = menu.length
+      ? '<div style="margin-top:10px">' +
+          '<div class="label">Catalogue read</div>' +
+          '<p class="small" style="margin-top:4px"><b>' + items + '</b> ' + (items === 1 ? 'item' : 'items') + ' across <b>' + menu.length + '</b> ' + (menu.length === 1 ? 'section' : 'sections') +
+          (pricey.length ? ' · ' + pricey.length + ' with a listed price' : ' · no prices listed') + '</p>' +
+          '<ul class="ticks" style="margin-top:6px">' +
+            sample.map((entry) => '<li>' + esc(entry.item.name) + ' <span class="tiny">' + esc(entry.section) + ' · ' + money(entry.item.price) + '</span></li>').join('') +
+          '</ul>' +
+          (items > sample.length ? '<p class="tiny" style="margin-top:4px">…and ' + (items - sample.length) + ' more. All of them go into the app and stay editable.</p>' : '') +
+        '</div>'
+      : '<p class="tiny" style="margin-top:10px"><strong>No catalogue found.</strong> Nothing was invented — the app starts from the trade\'s sample menu, clearly marked as sample, until you add their items.</p>'
+
+    const contact = [site.phone, site.email, site.address, site.hours].filter(Boolean).map(esc).join(' · ')
+    const pagesRead = (data.pagesRead || []).map(function (path) { return '<li><span class="mono">' + esc(path) + '</span></li>' }).join('')
+    const pagesFailed = (data.pagesFailed || []).map(function (entry) { return '<li><span class="mono">' + esc(entry.url) + '</span> — ' + esc(entry.reason) + '</li>' }).join('')
+    const notes = (data.notes || []).map(function (line) { return '<p class="tiny" style="margin-top:6px">' + esc(line) + '</p>' }).join('')
+    const missing = (data.missing || [])
+
     return '<div class="notice accent">' +
-      '<strong>Read ' + esc(data.host) + '</strong>' +
-      '<p class="small" style="margin-top:6px">' + esc(site.name) + (site.tagline ? ' — ' + esc(site.tagline) : '') + '</p>' +
-      (found ? '<ul class="ticks" style="margin-top:8px">' + found + '</ul>' : '') +
-      (missing ? '<p class="tiny" style="margin-top:8px"><strong>Still needed:</strong> ' + esc(missing) + '</p>' : '') +
+      '<strong>Read ' + esc(data.host) + '</strong> <span class="tiny">— ' + (data.pages || 1) + ' ' + (data.pages === 1 ? 'page' : 'pages') + (data.usedSitemap ? ', via their sitemap' : '') + '</span>' +
+      '<p class="small" style="margin-top:6px">' + esc(site.name || '') + (site.tagline ? ' — ' + esc(site.tagline) : '') + '</p>' +
+      '<div class="rows" style="margin-top:8px">' +
+        rows('Category', site.category ? esc(site.category) : '') +
+        rows('Brand colour', site.accent ? '<span style="display:inline-block;width:11px;height:11px;border-radius:3px;border:1px solid #0002;vertical-align:-1px;background:' + esc(site.accent) + '"></span> ' + esc(site.accent) : '') +
+        rows('Contact', contact) +
+        rows('Currency', site.currency ? esc(site.currency) : '') +
+      '</div>' +
+      catalogue +
+      (pagesRead ? '<details style="margin-top:10px"><summary class="tiny" style="cursor:pointer">Pages inspected (' + (data.pagesRead || []).length + ')</summary><ul class="ticks" style="margin-top:6px">' + pagesRead + '</ul></details>' : '') +
+      (pagesFailed ? '<details style="margin-top:6px"><summary class="tiny" style="cursor:pointer">Could not be read (' + (data.pagesFailed || []).length + ')</summary><ul class="ticks" style="margin-top:6px">' + pagesFailed + '</ul></details>' : '') +
+      (missing.length ? '<p class="tiny" style="margin-top:8px"><strong>Not found — please confirm:</strong> ' + esc(missing.join(', ')) + '</p>' : '') +
       notes +
-      '<p class="tiny" style="margin-top:8px"><a href="' + esc(data.source) + '" target="_blank" rel="noopener">Open the source site</a> · every field below is editable</p>' +
+      '<p class="tiny" style="margin-top:8px"><a href="' + esc(data.source) + '" target="_blank" rel="noopener">Open the source site</a> · check the name, catalogue and contact details below before building</p>' +
       '</div>'
   }
 
@@ -402,10 +438,15 @@ function briefScript(verticals: string): string {
     document.querySelectorAll('[data-feature]').forEach((input) => {
       input.checked = input.disabled || chosen.indexOf(input.dataset.feature) >= 0
     })
-    importStatus.textContent = 'Filled from ' + data.host + ' — check the details, then carry on.'
+    const readItems = (site.menu || []).reduce(function (total, section) { return total + (section.items || []).length }, 0)
+    importStatus.textContent = readItems
+      ? 'Filled from ' + data.host + ' — ' + readItems + ' ' + (readItems === 1 ? 'item' : 'items') + ' read. Check them below.'
+      : 'Read ' + data.host + ' — no catalogue was found. Nothing was invented; check what is missing below.'
     importReport.hidden = false
     importReport.innerHTML = report(data)
     refresh()
+    // The three concepts must show *their* business, not the demo shop.
+    syncElementPreviews()
   }
 
   async function runImport(rawUrl) {
@@ -479,11 +520,46 @@ function briefScript(verticals: string): string {
     })
   }
 
-  // The three previews are the same demo with the axes in the query, so the
+  /** The first few real catalogue rows, in the preview's compact name~price
+   *  form. A preview is capped so the URL stays short; the built app has all. */
+  function previewItems() {
+    const menu = (imported && imported.menu) || []
+    const out = []
+    for (const section of menu) {
+      for (const item of section.items || []) {
+        if (out.length >= 8) return out.join(';')
+        if (!item || !item.name) continue
+        out.push(item.name + '~' + (item.price > 0 ? item.price / 100 : ''))
+      }
+    }
+    return out.join(';')
+  }
+
+  /** The owner's own identity, appended to a design preview URL. */
+  function identityPreview(base) {
+    const url = new URL(base, window.location.origin)
+    const set = (key, value) => {
+      if (value) url.searchParams.set(key, value)
+      else url.searchParams.delete(key)
+    }
+    set('name', document.getElementById('name').value.trim())
+    set('tag', tagline.value.trim())
+    set('cat', document.getElementById('category').value.trim())
+    set('accent', accent.value)
+    set('logo', document.getElementById('logo').value.trim())
+    set('items', previewItems())
+    set('feat', Array.from(document.querySelectorAll('[data-feature]:checked')).map((input) => input.dataset.feature).join(','))
+    return url.pathname + url.search
+  }
+
+  // The three previews are the same app with their own axes in the query, plus
+  // this owner's name, colour, category and first catalogue rows, so the
   // element rows can re-point them and the choice is visible before the build.
   function syncElementPreviews() {
     document.querySelectorAll('[data-design-grid] iframe').forEach((frame) => {
-      const url = new URL(frame.getAttribute('src'), window.location.origin)
+      const base = frame.dataset.base || frame.getAttribute('src')
+      if (!base) return
+      const url = new URL(identityPreview(base), window.location.origin)
       // Only what was actually chosen travels; the rest stays as each design
       // asked for it, so the three previews keep their own rhythm.
       elementTouched.forEach((key) => {
@@ -492,6 +568,11 @@ function briefScript(verticals: string): string {
       frame.setAttribute('src', url.pathname + url.search)
     })
   }
+
+  ;['name', 'tagline', 'category', 'accent', 'logo'].forEach((id) => {
+    const field = document.getElementById(id)
+    if (field) field.addEventListener('input', syncElementPreviews)
+  })
 
   elementRows.forEach((row) =>
     row.addEventListener('click', (event) => {
@@ -541,7 +622,7 @@ function briefScript(verticals: string): string {
         '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px">' +
           '<b>' + esc(design.name) + '</b><span class="tiny">' + esc(design.axes.buttons) + ' buttons</span>' +
         '</div>' +
-        '<iframe src="' + esc(design.preview) + '" title="' + esc(design.name) + ' design" loading="lazy" style="width:100%;height:430px;border:1px solid var(--line);border-radius:12px;background:#fff"></iframe>' +
+        '<iframe data-base="' + esc(design.preview) + '" src="' + esc(identityPreview(design.preview)) + '" title="' + esc(design.name) + ' design" loading="lazy" style="width:100%;height:430px;border:1px solid var(--line);border-radius:12px;background:#fff"></iframe>' +
         '<p class="tiny" style="flex:1">' + esc(design.note) + '</p>' +
         '<button class="btn primary small" type="button" data-pick="' + esc(design.id) + '">Use this design</button>' +
       '</article>'

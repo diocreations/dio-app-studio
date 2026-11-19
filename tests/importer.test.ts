@@ -15,6 +15,7 @@ import {
   robotsAllows,
   sanitizeImported,
   toCents,
+  MAX_PAGES,
 } from '../src/worker/importer'
 import { renderApp } from '../src/worker/app'
 import { buildSpec } from '../src/worker/pricing'
@@ -427,11 +428,13 @@ describe('the crawl goes past the page that was pasted', () => {
     }) as unknown as typeof fetch
 
     const report = await importWebsite('https://bigshop.example.com/', fetchImpl)
-    // robots.txt is a policy check, not one of the pages in the budget.
-    const pageViews = seen.filter((path) => path !== '/robots.txt')
-    expect(report.pages).toBeLessThanOrEqual(6)
-    expect(pageViews.length).toBeLessThanOrEqual(6)
-    expect(report.notes.join(' ')).toContain('capped at 6 pages')
+    // robots.txt is a policy check and sitemap.xml is metadata, not pages.
+    const pageViews = seen.filter(
+      (path) => path !== '/robots.txt' && !path.startsWith('/sitemap'),
+    )
+    expect(report.pages).toBeLessThanOrEqual(MAX_PAGES)
+    expect(pageViews.length).toBeLessThanOrEqual(MAX_PAGES)
+    expect(report.notes.join(' ')).toContain(`capped at ${MAX_PAGES} pages`)
   })
 })
 
