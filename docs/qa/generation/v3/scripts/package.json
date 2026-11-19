@@ -1,0 +1,8 @@
+{
+  "name": "plattr-generation-qa",
+  "private": true,
+  "description": "Reproduces the v3 concept captures and editor/published parity checks",
+  "devDependencies": {
+    "playwright": "1.64.0"
+  }
+}
