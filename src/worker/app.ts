@@ -13,6 +13,7 @@ import {
   type SectionKind,
 } from './doc'
 import { directionFor, themeForDirection, typographyTheme } from './directions'
+import { FLAGSHIP_TRADES, flagshipCatalogLead, flagshipCss, flagshipHome, flagshipSection } from './flagship'
 import { presetCss, presetFor } from './presets'
 import { CURRENCY_SYMBOLS, inkFor, moneyIn } from './pricing'
 import type { AppSpec, FeatureId, MenuItem, Vocab } from './types'
@@ -137,16 +138,45 @@ function motif(theme: Theme, label: string, extra = '', inner = ''): string {
   return `<span class="thumb ${extra} m-${theme.motif}">${inner}<span class="mono">${esc(label)}</span></span>`
 }
 
+/** Item keys are `section-item`; walking them in order keeps every product or
+ *  dish on a different photograph instead of letting a hash collide. */
+function photoIndex(ctx: Ctx, seed: string): number {
+  const key = /^(\d+)-(\d+)$/.exec(seed)
+  if (!key) return hashSeed(`${ctx.spec.name}|${seed}`, 7)
+  const sectionIndex = Number(key[1])
+  const itemIndex = Number(key[2])
+  let index = 0
+  for (let i = 0; i < sectionIndex && i < ctx.spec.menu.length; i += 1) index += ctx.spec.menu[i].items.length
+  return index + itemIndex
+}
+
 /**
- * A topic-matched photo, seeded so a build always gets the same shot. The
- * images arrive already resolved for this trade's subject (a homeware shop gets
- * ceramics, not a forest); without any, the artwork carries the page.
+ * A topic-matched photo. Flagship trades use their local, responsive library;
+ * other trades use a Pexels pool when a key is configured. Without a usable
+ * image the artwork still carries the page.
  */
-function photo(ctx: Ctx, seed: string, kind: 'wide' | 'thumb'): string {
+function photo(ctx: Ctx, seed: string, kind: 'wide' | 'thumb', alt = ''): string {
   const urls = ctx.photos[kind]
   if (!urls.length) return ''
-  const url = urls[hashSeed(`${ctx.spec.name}|${seed}`, 7) % urls.length]
-  return `<img class="photo" src="${esc(url)}" alt="" loading="lazy" decoding="async" onerror="this.remove()" />`
+  const url = urls[photoIndex(ctx, seed) % urls.length]
+  const local = /^(.*)-\d+\.webp$/.exec(url)
+  const srcset = local
+    ? ` srcset="${esc(local[1])}-320.webp 320w, ${esc(local[1])}-640.webp 640w, ${esc(local[1])}-1280.webp 1280w" sizes="${kind === 'wide' ? '100vw' : '(max-width: 620px) 38vw, 200px'}"`
+    : ''
+  return `<img class="photo" src="${esc(url)}"${srcset} alt="${esc(alt)}" loading="lazy" decoding="async" onerror="this.remove()" />`
+}
+
+/** An owner-assigned catalogue photograph. The media id, not a URL, is stored
+ *  on the item; the token only lives in this rendered page. */
+function itemPhoto(
+  ctx: Ctx,
+  media: MenuItem['media'],
+  kind: 'wide' | 'thumb',
+  alt = '',
+): string {
+  if (!media) return ''
+  const base = `/p/${ctx.token}/media/${media.id}`
+  return `<img class="photo" src="${esc(base)}/640.webp" srcset="${esc(base)}/320.webp 320w, ${esc(base)}/640.webp 640w, ${esc(base)}/1280.webp 1280w" sizes="${kind === 'wide' ? '100vw' : '(max-width: 620px) 38vw, 200px'}" alt="${esc(media.alt || alt || '')}" loading="lazy" decoding="async" style="object-fit:${media.fit === 'contain' ? 'contain' : 'cover'};object-position:${media.focalX ?? 50}% ${media.focalY ?? 50}%" onerror="this.remove()" />`
 }
 
 /** Photography replaces the artwork where it does the most for the page. */
@@ -473,7 +503,7 @@ function itemRowEditorial(ctx: Ctx, item: MenuItem, key: string): string {
 
 function itemRowCompact(ctx: Ctx, item: MenuItem, key: string): string {
   return `<div class="r-row" data-item="${key}" role="button" tabindex="0">
-    ${artThumb(ctx, item.name.slice(0, 1).toUpperCase(), item.name, 'r-art')}
+    ${artThumb(ctx, item.name.slice(0, 1).toUpperCase(), key, 'r-art', 'thumb', item.name, item.media)}
     <div class="lead">
       <div class="name">${esc(item.name)}${item.tag ? ` <span class="tag">${esc(item.tag)}</span>` : ''}</div>
       ${item.desc ? `<div class="desc">${esc(item.desc)}</div>` : ''}
@@ -488,14 +518,26 @@ function itemRowCompact(ctx: Ctx, item: MenuItem, key: string): string {
 }
 
 /** The same thumb, with a photo on top when this build uses photography. */
-function artThumb(ctx: Ctx, label: string, seed: string, extra = '', kind: 'wide' | 'thumb' = 'thumb'): string {
-  const shot = showsPhoto(ctx, 'tile') ? photo(ctx, seed, kind) : ''
+function artThumb(
+  ctx: Ctx,
+  label: string,
+  seed: string,
+  extra = '',
+  kind: 'wide' | 'thumb' = 'thumb',
+  alt = '',
+  media?: MenuItem['media'],
+): string {
+  const shot = media
+    ? itemPhoto(ctx, media, kind, alt)
+    : showsPhoto(ctx, 'tile')
+      ? photo(ctx, seed, kind, alt)
+      : ''
   return `<span class="thumb ${extra} m-${ctx.theme.motif}">${shot}<span class="mono">${esc(label)}</span></span>`
 }
 
 function itemTile(ctx: Ctx, item: MenuItem, key: string, wide = false): string {
   return `<div class="tile${wide ? ' wide' : ''}" data-item="${key}" role="button" tabindex="0">
-    ${artThumb(ctx, item.name.slice(0, 1), item.name)}
+    ${artThumb(ctx, item.name.slice(0, 1), key, '', 'thumb', item.name, item.media)}
     ${saveButton(key, item.name, ' on-art')}
     <div class="body">
       <div class="name">${esc(item.name)}</div>
@@ -508,7 +550,7 @@ function itemTile(ctx: Ctx, item: MenuItem, key: string, wide = false): string {
 
 function itemStackCard(ctx: Ctx, item: MenuItem, key: string): string {
   return `<div class="stack-card" data-item="${key}" role="button" tabindex="0">
-    ${artThumb(ctx, ctx.spec.logo, item.name, 'band', 'wide')}
+    ${artThumb(ctx, ctx.spec.logo, key, 'band', 'wide', item.name, item.media)}
     <div class="body">
       <div class="top">
         <span class="name">${esc(item.name)}</span>
@@ -735,7 +777,9 @@ function addedBlock(ctx: Ctx, node: DocNode): string {
 function customScreen(ctx: Ctx, screen: ScreenNode, active = false): string {
   const sections = screen.sections
     .filter((node) => !node.hidden)
-    .map((node) => docSection(ctx, node, {} as HomeBlocks))
+    .map((node) =>
+      node.kind === 'flagship' ? flagshipSection(ctx, node) : docSection(ctx, node, {} as HomeBlocks),
+    )
     .join('')
   return `<section class="screen${active ? ' on' : ''}" data-screen="${esc(screen.id)}" data-title="${esc(screen.name)}">
     <div class="detail-body" style="padding:16px 16px 110px">
@@ -920,7 +964,7 @@ function bookingBlock(ctx: Ctx): string {
         : ''
     }
     ${
-      ctx.spec.vertical !== 'restaurant' && services.length
+      ctx.spec.vertical !== 'restaurant' && ctx.spec.vertical !== 'cafe' && services.length
         ? `<div class="field"><label for="book-service">Service</label><select id="book-service" data-book-service>${services
             .map((item) => `<option value="${esc(item.name)}">${esc(item.name)}</option>`)
             .join('')}</select></div>`
@@ -940,11 +984,12 @@ function bookingBlock(ctx: Ctx): string {
 }
 
 function quoteBlock(ctx: Ctx): string {
+  const clinic = ctx.spec.vertical === 'clinic'
   return `<div class="sect" style="margin-top:4px"><span class="label">${esc(ctx.vocab.quoteTitle)}</span></div>
-    <p class="tiny dim" style="margin-bottom:14px">A short description is enough. We reply within one working day.</p>
+    <p class="tiny dim" style="margin-bottom:14px">${esc(ctx.vocab.quoteNote || 'A short description is enough. We reply within one working day.')}</p>
     <div class="field"><label for="q-name">Your name</label><input id="q-name" type="text" data-quote-name placeholder="Name" /></div>
     <div class="field"><label for="q-contact">Phone or email</label><input id="q-contact" type="text" data-quote-contact placeholder="How to reach you" /></div>
-    <div class="field"><label for="q-msg">What do you need?</label><textarea id="q-msg" rows="4" data-quote-message placeholder="A sentence is fine"></textarea></div>
+    <div class="field"><label for="q-msg">${clinic ? 'What would you like to arrange?' : 'What do you need?'}</label><textarea id="q-msg" rows="4" data-quote-message placeholder="${clinic ? 'Appointment, treatment or a general question' : 'A sentence is fine'}"></textarea></div>
     <button class="btn accent block" type="button" data-quote-send>Send request</button>
     <p class="tiny dim" style="text-align:center;margin-top:10px">Goes straight to the business dashboard. No account needed.</p>`
 }
@@ -1166,6 +1211,8 @@ export function renderApp(
     editor?: boolean
     /** Editor-only: open on this screen instead of the document's initial one. */
     screen?: string
+    /** The five flagship trades opt into the mobile-first composition layer. */
+    flagship?: boolean
   },
 ): string {
   const live = options.live !== false
@@ -1188,6 +1235,12 @@ export function renderApp(
     spec.design,
   )
   const shell: ShellId = theme.shell ?? 'standard'
+  // A saved document that predates the flagship composition stays on the
+  // generic document renderer: never show static markup that ignores its edits.
+  const flagship =
+    options.flagship === true &&
+    FLAGSHIP_TRADES.has(vertical.id) &&
+    (!doc || homeSections(doc).some((node) => node.kind === 'flagship'))
   // A restaurant opens on its menu, a listings app on search. Home is optional.
   // With an application document, the owner chooses the initial screen.
   const initial = options.screen
@@ -1203,8 +1256,8 @@ export function renderApp(
   // review link, the downloads, a preview iframe — lands on the same structure.
   // Explicit preview axes (the demo route) still win.
   const preset = presetFor(preview.preset)
-  // Artwork is the default: photography only enters a build once a stock key
-  // has actually produced images for it.
+  // Photography enters a build when the server resolves images for it. The
+  // five flagship trades always bring their local library.
   const hasPhotos = (options.photos?.wide?.length ?? 0) > 0 && (options.photos?.thumb?.length ?? 0) > 0
   // Layouts are dealt from a deck keyed on the build's allocated slot (or its
   // token and version for unallocated builds). One pass holds 2,304 layouts:
@@ -1230,7 +1283,8 @@ export function renderApp(
   // projects also differ in radius. The combined cycle is 6,912 with photos.
   const corners =
     preview.corners ?? ['sharp', 'soft', 'round'][(cursor + Math.floor(cursor / layoutCount)) % 3]
-  const media = (preview.media ?? (hasPhotos ? ['photo', 'mixed', 'art'][Math.floor(layoutIndex / 12) % 3] : 'art')) as
+  const media = (preview.media ??
+    (flagship && hasPhotos ? 'photo' : hasPhotos ? ['photo', 'mixed', 'art'][Math.floor(layoutIndex / 12) % 3] : 'art')) as
     | 'photo'
     | 'mixed'
     | 'art'
@@ -1330,6 +1384,10 @@ export function renderApp(
     reward: spec.loyalty.reward,
     fulfilment: vocab.fulfilment,
     deliveryFee: ordering && vocab.fulfilment.includes('Delivery') ? 299 : 0,
+    // Course checkouts still create orders; the wording follows the trade.
+    isCourse: spec.vertical === 'courses',
+    addLabel: spec.vertical === 'courses' ? 'Enrol on this course' : 'Add to order',
+    placeLabel: spec.vertical === 'courses' ? 'Confirm enrolment' : 'Place order',
     partyLabel: vocab.partyLabel,
     slots: vocab.slots,
     catalogWord: vocab.catalog.toLowerCase(),
@@ -1349,7 +1407,7 @@ export function renderApp(
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>${esc(`${spec.name} · ${spec.kind}`)}</title>
 <meta name="description" content="${esc(spec.tagline)}" />
 <meta name="theme-color" content="${theme.bg}" />
@@ -1359,9 +1417,9 @@ ${options.noindex ? '<meta name="robots" content="noindex, nofollow" />' : ''}
 <meta name="apple-mobile-web-app-status-bar-style" content="${theme.dark ? 'black-translucent' : 'default'}" />
 ${live ? '<link rel="manifest" href="./manifest.webmanifest" />' : ''}
 ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
-<style>${CSS(ctx)}${presetCss(preset)}${DOC_CSS}</style>
+<style>${CSS(ctx)}${presetCss(preset)}${DOC_CSS}${flagship ? flagshipCss() : ''}</style>
 </head>
-<body data-trade="${vertical.id}" data-layout="${theme.layout}" data-shell="${shell}" data-variant="${variant}" data-density="${density}" data-corners="${corners}" data-media="${media}" data-nav="${drawer ? 'drawer' : theme.nav}" data-hero="${hero}" data-order="${order}" data-hero-scale="${heroScale}" data-accent-style="${theme.accentStyle}" data-theme="${theme.dark ? 'dark' : 'light'}"${look ? ` data-direction="${look.id}"` : ''}${doc?.design?.typography ? ` data-type="${doc.design.typography}"` : ''}${buttons ? ` data-buttons="${buttons}"` : ''}${cards ? ` data-cards="${cards}"` : ''}${preset ? ` data-preset="${preset}"` : ''}${options.editor ? ' data-editor="1"' : ''}>
+<body data-trade="${vertical.id}" data-layout="${theme.layout}" data-shell="${shell}" data-variant="${variant}" data-density="${density}" data-corners="${corners}" data-media="${media}" data-nav="${drawer ? 'drawer' : theme.nav}" data-hero="${hero}" data-order="${order}" data-hero-scale="${heroScale}" data-accent-style="${theme.accentStyle}" data-theme="${theme.dark ? 'dark' : 'light'}"${look ? ` data-direction="${look.id}"` : ''}${doc?.design?.typography ? ` data-type="${doc.design.typography}"` : ''}${buttons ? ` data-buttons="${buttons}"` : ''}${cards ? ` data-cards="${cards}"` : ''}${preset ? ` data-preset="${preset}"` : ''}${flagship ? ' data-flagship="1"' : ''}${options.editor ? ' data-editor="1"' : ''}>
   <div class="app">
     <div class="grain" aria-hidden="true"></div>
     <div class="offline" data-offline hidden>Offline — showing what is already stored</div>
@@ -1397,11 +1455,16 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
     <main class="screens">
       <section class="screen${initial === 'home' ? ' on' : ''}" data-screen="home" data-title="${esc(spec.name)}">
-        ${shellOpener(ctx, shell)}
-        ${homeBlock(ctx)}
+        ${flagship
+          ? flagshipHome(ctx)
+          : `<div>
+               ${shellOpener(ctx, shell)}
+               ${homeBlock(ctx)}
+             </div>`}
       </section>
 
       <section class="screen${initial === 'catalog' ? ' on' : ''}" data-screen="catalog" data-title="${esc(vocab.catalog)}">
+        ${flagship ? flagshipCatalogLead(spec) : ''}
         ${shell === 'menu' ? menuMasthead(ctx) : ''}
         <div class="sect" style="margin-top:4px"><span class="label">${esc(vocab.catalog)}</span><span class="count">${spec.menu.reduce((total, section) => total + section.items.length, 0)}</span></div>
         ${storesBlock(ctx)}
@@ -1505,7 +1568,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           <div class="totals" data-totals></div>
           <div class="field" style="margin-top:12px"><label for="checkout-name">Your name</label><input id="checkout-name" type="text" maxlength="60" data-checkout-name placeholder="Name" autocomplete="name" /></div>
           <div class="field"><label for="checkout-contact">Phone or email</label><input id="checkout-contact" type="text" maxlength="120" data-checkout-contact placeholder="How the business reaches you" autocomplete="tel" /></div>
-          <button class="btn accent block" type="button" data-place style="margin-top:12px">Place order</button>
+          <button class="btn accent block" type="button" data-place style="margin-top:12px">${data.placeLabel || 'Place order'}</button>
           <p class="tiny dim" style="text-align:center;margin-top:9px">No payment is taken in the app. Pay the business on collection or delivery.</p>
         </div>
         <div data-cart-done hidden></div>
@@ -1627,12 +1690,29 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
     // One seeded pick out of the trade's photo set, or nothing when the server
     // could not match any: the artwork then stands in without a broken tile.
-    function pickShot(seed, list) {
+    function pickShot(seed, list, alt, item) {
+      if (item && item.media && item.media.id) {
+        const media = item.media
+        const base = '/p/' + DATA.token + '/media/' + media.id
+        return '<img class="photo" src="' + base + '/640.webp" srcset="' + base + '/320.webp 320w, ' + base + '/640.webp 640w, ' + base + '/1280.webp 1280w" sizes="' + (list === 'photoWide' ? '100vw' : '(max-width: 620px) 38vw, 200px') + '" alt="' + esc(media.alt || alt || '') + '" loading="lazy" decoding="async" style="object-fit:' + (media.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (media.focalX ?? 50) + '% ' + (media.focalY ?? 50) + '%" onerror="this.remove()" />'
+      }
       const urls = DATA[list]
       if (DATA.media !== 'photo' || !urls || !urls.length) return ''
-      let hash = 7
-      for (let index = 0; index < seed.length; index++) hash = (hash * 31 + seed.charCodeAt(index)) % 99991
-      return '<img class="photo" src="' + urls[hash % urls.length] + '" alt="" loading="lazy" decoding="async" onerror="this.remove()" />'
+      let index = -1
+      const key = /^(\d+)-(\d+)$/.exec(seed)
+      if (key) {
+        index = Number(key[2])
+        for (let section = 0; section < Number(key[1]); section += 1) index += DATA.menu[section] ? DATA.menu[section].items.length : 0
+      } else {
+        index = 7
+        for (let cursor = 0; cursor < seed.length; cursor += 1) index = (index * 31 + seed.charCodeAt(cursor)) % 99991
+      }
+      const url = urls[Math.max(0, index) % urls.length]
+      const local = /^(.*)-\d+\.webp$/.exec(url)
+      const srcset = local
+        ? ' srcset="' + local[1] + '-320.webp 320w, ' + local[1] + '-640.webp 640w, ' + local[1] + '-1280.webp 1280w" sizes="100vw"'
+        : ''
+      return '<img class="photo" src="' + url + '"' + srcset + ' alt="' + esc(alt || '') + '" loading="lazy" decoding="async" onerror="this.remove()" />'
     }
 
     // A short, real recommendation rail: other items from the same catalogue,
@@ -1650,7 +1730,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       return '<div class="recs"><div class="recs-head"><b>You might also like</b><span>' + esc(DATA.catalogWord) + '</span></div><div class="rec-row">' +
         picks.map(function (pick) {
           return '<button class="rec" type="button" data-item="' + pick.key + '">' +
-            '<span class="thumb m-' + DATA.motif + ' rec-art">' + pickShot(pick.item.name, 'photoThumb') + '<span class="mono">' + esc(pick.item.name.slice(0, 1).toUpperCase()) + '</span></span>' +
+            '<span class="thumb m-' + DATA.motif + ' rec-art">' + pickShot(pick.key, 'photoThumb', pick.item.name, pick.item) + '<span class="mono">' + esc(pick.item.name.slice(0, 1).toUpperCase()) + '</span></span>' +
             '<span class="rec-copy"><b>' + esc(pick.item.name) + '</b><span class="rec-price">' + (pick.item.price > 0 ? money(pick.item.price) : 'On request') + '</span></span></button>'
         }).join('') + '</div></div>'
     }
@@ -1662,12 +1742,12 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       // Photography only where the build asked for it; removing the node on
       // failure reveals the generated artwork underneath, which is why the
       // app still looks complete offline.
-      const shot = function (seed, list) {
-        return pickShot(seed, list)
+      const shot = function (seed, list, alt, useItem) {
+        return pickShot(seed, list, alt, useItem ? item : null)
       }
-      const band = '<div class="thumb m-' + DATA.motif + ' detail-band">' + shot(item.name, 'photoWide') + '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' + save + '</div>'
+      const band = '<div class="thumb m-' + DATA.motif + ' detail-band">' + shot(key, 'photoWide', item.name, true) + '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' + save + '</div>'
       if (DATA.shell === 'menu')
-        return '<div class="thumb m-' + DATA.motif + ' menu-band">' + shot(item.name, 'photoWide') + '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' + save + '</div>' +
+        return '<div class="thumb m-' + DATA.motif + ' menu-band">' + shot(key, 'photoWide', item.name, true) + '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' + save + '</div>' +
           '<div class="detail-body menu-body">' +
           '<span class="eyebrow">' + esc(item.tag || DATA.catalogWord) + '</span>' +
           '<h1 class="menu-title">' + esc(item.name) + '</h1>' +
@@ -1676,7 +1756,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           recsHtml(key) +
           '<div class="detail-gap" aria-hidden="true"></div>' +
           '<div class="detail-cta">' + (DATA.ordering && item.price > 0
-            ? '<button class="btn accent block" type="button" data-add="' + key + '">Add to order</button>'
+            ? '<button class="btn accent block" type="button" data-add="' + key + '">' + DATA.addLabel + '</button>'
             : '<button class="btn accent block" type="button" data-go="book">' + DATA.bookTitle + '</button>') + '</div>' +
           '</div>'
       if (DATA.shell === 'session') {
@@ -1709,7 +1789,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         const section = DATA.menu[Number(key.split('-')[0])]
         const category = section ? section.name : ''
         return '<div class="listing-gallery">' +
-          '<div class="thumb m-' + DATA.motif + ' listing-shot wide">' + shot(item.name + '-wide', 'photoWide') + '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span></div>' +
+          '<div class="thumb m-' + DATA.motif + ' listing-shot wide">' + shot(item.name + '-wide', 'photoWide', item.name, true) + '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span></div>' +
           '<div class="thumb m-' + DATA.motif + ' listing-shot">' + shot(item.name + '-b', 'photoThumb') + '</div>' +
           '<div class="thumb m-' + DATA.motif + ' listing-shot">' + shot(item.name + '-c', 'photoThumb') + '</div>' + save + '</div>' +
           '<div class="detail-body listing-body">' +
@@ -1726,7 +1806,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           recsHtml(key) +
           '<div class="detail-gap" aria-hidden="true"></div>' +
           '<div class="detail-cta">' + (DATA.ordering && item.price > 0
-            ? '<button class="btn accent block" type="button" data-add="' + key + '">Add to order</button>'
+            ? '<button class="btn accent block" type="button" data-add="' + key + '">' + DATA.addLabel + '</button>'
             : '<button class="btn accent block" type="button" data-go="book">Arrange viewing</button>') + '</div>' +
           '</div>'
       }
@@ -1742,7 +1822,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const footer = DATA.ordering && item.price > 0
         ? '<div class="detail-cta"><div class="detail-cta-line"><span class="tiny dim">' + esc(item.meta || DATA.catalogWord) + '</span>' +
           '<b class="price">' + price + '</b></div>' +
-          '<button class="btn accent" type="button" data-add="' + key + '">Add to order</button></div>'
+          '<button class="btn accent" type="button" data-add="' + key + '">' + DATA.addLabel + '</button></div>'
         : DATA.booking
           ? '<div class="detail-cta"><button class="btn accent block" type="button" data-go="book">' + DATA.bookTitle + '</button></div>'
           : DATA.quoting
@@ -1832,7 +1912,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     function itemRow(item, key) {
       const price = item.price > 0 ? money(item.price) : 'On request'
       return '<div class="r-row" data-item="' + key + '" role="button" tabindex="0">' +
-        '<span class="thumb r-art m-' + DATA.motif + '">' + pickShot(item.name, 'photoThumb') +
+        '<span class="thumb r-art m-' + DATA.motif + '">' + pickShot(key, 'photoThumb', item.name, item) +
         '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span></span>' +
         '<div class="lead"><div class="name">' + esc(item.name) + '</div>' +
         '<div class="desc">' + esc(item.meta || item.desc || DATA.catalogWord) + '</div></div>' +
@@ -2182,9 +2262,19 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       }
     }
 
+    // Cards are divs with role=button so the art layouts stay intact. Give
+    // them the keyboard behaviour a native button would have.
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return
+      const target = event.target.closest('[role="button"][tabindex]')
+      if (!target || target.matches('button, a, input, select, textarea')) return
+      event.preventDefault()
+      target.click()
+    })
+
     document.addEventListener('click', (event) => {
       const target = event.target.closest(
-        '[data-add],[data-inc],[data-go],[data-jump],[data-place],[data-type],[data-party],[data-book],[data-reserve],[data-quote-send],[data-send-review],[data-cart-open],[data-nav-open],[data-save],[data-search-open],[data-saved-open],[data-search-clear],[data-filter],[data-recent],[data-install],[data-close-sheet],[data-back],[data-store],.stars span,[data-item]',
+        '[data-add],[data-inc],[data-go],[data-jump],[data-place],[data-type],[data-party],[data-book],[data-reserve],[data-quote-send],[data-send-review],[data-cart-open],[data-nav-open],[data-save],[data-search-open],[data-saved-open],[data-search-clear],[data-filter],[data-property-filter],[data-recent],[data-install],[data-close-sheet],[data-back],[data-store],.stars span,[data-item]',
       )
       if (!target) return
 
@@ -2205,6 +2295,10 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           field.focus()
         }
         return
+      }
+      if (target.dataset.propertyFilter !== undefined) {
+        setFilter(target.dataset.propertyFilter, true)
+        return go('catalog')
       }
       if (target.dataset.filter !== undefined) return setFilter(target.dataset.filter)
       if (target.dataset.recent !== undefined) {

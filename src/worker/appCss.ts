@@ -785,7 +785,7 @@ body[data-nav="floating"] .tab.on { background: var(--accent-soft); color: var(-
   outline: none; min-width: 0;
 }
 .search-field .search-ico svg { width: 17px; height: 17px; color: var(--muted); display: block; }
-.search-clear { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 999px; color: var(--muted); }
+.search-clear { display: grid; place-items: center; width: 40px; height: 40px; margin-right: -8px; border-radius: 999px; color: var(--muted); }
 .search-clear svg { width: 13px; height: 13px; }
 
 /* saved */
@@ -2349,5 +2349,10 @@ body[data-direction="cinema"] .tile .thumb { aspect-ratio: 16 / 10; }
 body[data-direction="classic"] .app::before { opacity: 0.2; }
 body[data-direction="classic"] .tile { border: 0; border-bottom: 1px solid var(--hair); border-radius: 0; background: transparent; }
 body[data-direction="classic"] .sect .label { font-family: var(--display-serif); font-weight: 500; }
+
+/* A visible keyboard focus ring, independent of each composition's button skin. */
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [tabindex]:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
 `
 }

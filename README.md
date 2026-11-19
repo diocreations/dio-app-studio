@@ -12,10 +12,22 @@ detail screens, bottom sheets, haptics, safe-area insets, and a design system
 that changes with the trade (four layout archetypes, three navigation styles,
 twelve palettes and type pairings). Out of the box it also takes real guest
 orders, booking requests and enquiries into D1, and the owner gets a separate
-business dashboard at `/p/:token/dashboard` for the day-to-day work. Payments
-and external notifications stay off until the business's own merchant and
-provider accounts are configured; see `docs/PAYMENTS.md` and
+business dashboard at `/p/:token/dashboard` for the day-to-day work, behind a
+separate owner key rather than the customer app link. Five flagship trades —
+restaurant, retail, salon, hotel and professional services — now use distinct
+mobile compositions rather than one shared page grammar. Those compositions are
+document-backed: every flagship block has a stable node id and is selectable,
+editable, photographable, draggable, hideable and restorable from the phone
+preview. Payments and external notifications stay off until the business's own
+merchant and provider accounts are configured; see `docs/PAYMENTS.md` and
 `docs/NOTIFICATIONS.md`.
+
+Every restaurant dish, retail product, salon treatment, hotel room and
+professional service can carry its own uploaded photo, alt text, crop and fit.
+The central media library supports search, reuse, replacement without breaking
+references, and safe deletion. The dashboard can replace the business name,
+brand colour and contact details, then remove the sample groups that are still
+marked as examples without touching an owner-edited catalogue.
 
 ## Run and check
 
@@ -48,12 +60,17 @@ prose. `/brief` links to it from the website panel.
 | `GET /`                            | Studio marketing page, switchable live demo builds    |
 | `GET /brief`                       | Business type, features, free-text ask, live quote    |
 | `GET /privacy`                     | Privacy and terms, with the deletion contact          |
-| `GET /robots.txt`                  | Crawl rules; keeps `/studio`, `/p/`, `/api/`, `/demo/` out |
+| `GET /robots.txt`                  | Crawl rules; keeps `/studio`, `/p/`, `/api/`, `/demo/`, `/health` out |
 | `GET /sitemap.xml`                 | The three public pages, absolute to the asking origin |
+| `GET /health`                      | Liveness plus a real D1 query for deployment checks   |
 | `POST /api/import`                 | Read a customer's website into a draft brief          |
-| `POST /api/projects`               | Create a build, returns a private token               |
+| `POST /api/projects`               | Create a build and its first owner session            |
 | `POST /api/quote`                  | Price a feature/platform/plan combination             |
-| `GET /p/:token`                    | The customer's build page: preview, edit, notes       |
+| `GET /p/:token`                    | Owner build page: preview, edit, notes (login required) |
+| `GET /p/:token/dashboard/login`    | Owner sign-in for the business dashboard              |
+| `POST /p/:token/dashboard/login`   | Exchange the owner key for a project-scoped session   |
+| `POST /p/:token/dashboard/logout`  | Revoke the owner session                              |
+| `POST /p/:token/dashboard/logout-all` | Revoke every owner session for the business        |
 | `PATCH /api/projects/:token`       | Save brand/feature/catalogue/custom edits, bumps v    |
 | `POST /api/projects/:token/notes`  | Free-text change request                              |
 | `POST /api/projects/:token/approve`| Sign off, marks open requests handled                 |
@@ -75,6 +92,8 @@ prose. `/brief` links to it from the website panel.
 - `src/worker/importer.ts` — reads an existing website: JSON-LD, product markup, brand colour, trade detection, contact details.
 - `src/worker/pricing.ts` — capability catalogue, prices, quote engine, spec builder.
 - `src/worker/app.ts` — the generated app (one self-contained document that adapts to the spec), manifest, icon, service worker.
+- `src/worker/flagshipImages.ts` — the five flagship photo sets, alt text and responsive `srcset` markup; files live in `public/images/flagship/`.
+- `src/worker/photos.ts` — photo resolution: the local flagship library by default, Pexels when a key is configured.
 - `src/worker/export.ts` — store-only ZIP writer and the three package builders.
 - `src/worker/db.ts` — D1 schema/migrations, versioning, notes and activity.
 - `src/worker/doc.ts` — the shared section document: model, normalisation, operations, local design commands.
@@ -83,9 +102,12 @@ prose. `/brief` links to it from the website panel.
 - `src/worker/views/dashboard.ts` — the separate business dashboard for orders, bookings, catalogue, customers, enquiries, offers, analytics and settings.
 - `src/worker/views/editor.ts` — the three-pane visual editor and its canvas bridge.
 - `src/worker/views/*` — marketing, brief, customer build page, operator board.
-- `docs/EDITOR.md` — editor architecture, what is shared with the app, and what is next.
+- `docs/EDITOR.md` — unified editor and flagship document architecture, what is shared with the app, and what is next.
 - `docs/MOBILE.md` — the screen application model, PWA vs native distribution, and remaining work.
-- `docs/DESIGN.md` — the generated-app design audit, direction system, tokens and media pipeline.
+- `docs/DESIGN.md` — the generated-app design audit, direction system, flagship compositions, tokens and media pipeline.
+- `docs/DESIGN_QA.md` — the five flagship browser captures, viewport checks and visual QA notes.
+- `docs/PRODUCT_READINESS.md` — per-item photography, personalisation, booking QA, Lighthouse, accessibility and security results.
+- `docs/PHOTOGRAPHY.md` — flagship photo delivery, Unsplash source IDs, licence and replacement policy.
 - `docs/FUNCTIONAL_AUDIT.md` — honest feature status across all 27 trades.
 - `docs/OPERATIONS.md` — Studio/dashboard/customer-app boundaries, permissions and customer-account assessment.
 - `docs/PAYMENTS.md` — business-owned Razorpay/Stripe ownership, settlement and refund architecture (not yet implemented).
@@ -180,8 +202,11 @@ Limits, stated plainly:
 - Sites that render their catalogue in JavaScript (most Next.js shops) return
   the shell only. The importer says the catalogue was missing instead of
   inventing products; the build then uses trade-seeded items.
-- Photos are not copied — they belong to the owner or their supplier, and
-  hotlinking breaks the offline app. The app uses its own generated artwork.
+- Photos are not copied from their site — they belong to the owner or their
+  supplier, and hotlinking breaks the offline app. The five flagship trades use
+  a local, licensed sample-photo library (`docs/PHOTOGRAPHY.md`) with owner
+  uploads overriding it; other trades keep generated artwork until they get the
+  same treatment.
 - Their **markup, CSS and JavaScript are not copied either**. A byte-for-byte
   clone would be their copyright, would ship without their consent, and would
   break the first time it went offline or they redeployed; a React or Next.js
@@ -236,5 +261,8 @@ Limits, stated plainly:
 - `/studio` is gated by a single operator key: the `STUDIO_KEY` Worker secret,
 exchanged for an HMAC session cookie by `/studio/unlock`. With no key set the
 board returns a locked page instead of the customer list. Customer build links
-stay private through their 24-character tokens.
+stay private through their 24-character tokens. Owner operations are separate:
+the dashboard and its APIs require the owner key exchanged at
+`/p/:token/dashboard/login`, never the customer app token. Public order, booking
+and enquiry writes are rate-limited per project and connection.
 - Payment collection is not implemented: plans and prices are, invoices are not.

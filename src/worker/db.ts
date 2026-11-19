@@ -1,4 +1,5 @@
 import {
+  backfillSampleContent,
   buildSpec,
   cleanCategory,
   initialsFor,
@@ -223,6 +224,14 @@ const SCHEMA = [
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS owner_sessions (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    last_seen_at TEXT NOT NULL DEFAULT ''
+  )`,
+  `CREATE INDEX IF NOT EXISTS owner_sessions_by_project ON owner_sessions (project_id, expires_at)`,
   `CREATE TABLE IF NOT EXISTS notifications (
     id TEXT PRIMARY KEY,
     project_id TEXT NOT NULL,
@@ -251,6 +260,7 @@ const MIGRATIONS = [
   `ALTER TABLE projects ADD COLUMN custom TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE projects ADD COLUMN variation_slot INTEGER`,
   `ALTER TABLE projects ADD COLUMN doc TEXT NOT NULL DEFAULT ''`,
+  `ALTER TABLE owner_sessions ADD COLUMN last_seen_at TEXT NOT NULL DEFAULT ''`,
   `CREATE UNIQUE INDEX IF NOT EXISTS projects_variation_slot ON projects (variation_slot)`,
   // Legacy rows get a stable slot before the counter is seeded past them.
   `UPDATE projects SET variation_slot = rowid - 1 WHERE variation_slot IS NULL`,
@@ -514,7 +524,8 @@ export async function getProject(
     .prepare('SELECT * FROM projects WHERE token = ?')
     .bind(token)
     .first<ProjectRow>()
-  return row ? toProject(row) : null
+  if (!row) return null
+  return backfillProjectSampleContent(db, toProject(row))
 }
 
 export async function getProjectById(
@@ -523,7 +534,18 @@ export async function getProjectById(
 ): Promise<Project | null> {
   await ensureSchema(db)
   const row = await db.prepare('SELECT * FROM projects WHERE id = ?').bind(id).first<ProjectRow>()
-  return row ? toProject(row) : null
+  if (!row) return null
+  return backfillProjectSampleContent(db, toProject(row))
+}
+
+async function backfillProjectSampleContent(db: D1Database, project: Project): Promise<Project> {
+  const filled = backfillSampleContent(project.spec)
+  if (JSON.stringify(filled) === JSON.stringify(project.spec.sampleContent)) return project
+  await db
+    .prepare('UPDATE projects SET spec = ? WHERE id = ?')
+    .bind(JSON.stringify({ ...project.spec, sampleContent: filled }), project.id)
+    .run()
+  return { ...project, spec: { ...project.spec, sampleContent: filled } }
 }
 
 /**
@@ -542,10 +564,16 @@ export async function saveDoc(db: D1Database, project: Project, doc: Doc): Promi
     .bind(JSON.stringify(doc), now, project.id)
     .run()
 
-  // Autosave is continuous, so snapshot at most once a minute. The document
-  // being replaced is what a restore needs, not the new one.
+  // The first save keeps a baseline version. Without it a new build has no
+  // earlier design to return to until a minute of editing has passed. After
+  // that, autosave snapshots the replaced document at most once a minute.
   const previousDoc = (previous?.doc ?? '').trim()
-  if (previousDoc && previousDoc !== JSON.stringify(doc)) {
+  if (!previousDoc) {
+    await db
+      .prepare('INSERT INTO doc_versions (id, project_id, doc, created_at) VALUES (?, ?, ?, ?)')
+      .bind(id('dvr'), project.id, JSON.stringify(doc), now)
+      .run()
+  } else if (previousDoc !== JSON.stringify(doc)) {
     const last = await db
       .prepare('SELECT created_at FROM doc_versions WHERE project_id = ? ORDER BY created_at DESC LIMIT 1')
       .bind(project.id)

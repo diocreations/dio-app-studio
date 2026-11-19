@@ -33,6 +33,20 @@ export type MenuItem = {
   meta?: string
   /** The seller on a marketplace: the store an item is bought from. */
   vendor?: string
+  /** A photograph owned by this product, service or room. */
+  media?: ItemMedia
+}
+
+/** The same reference shape as a document image, kept flat so a catalogue item
+ *  can be stored and rendered without a document. */
+export type ItemMedia = {
+  id: string
+  alt?: string
+  width?: number
+  height?: number
+  focalX?: number
+  focalY?: number
+  fit?: 'cover' | 'contain'
 }
 
 export type MenuSection = { name: string; items: MenuItem[] }
@@ -59,6 +73,8 @@ export type Vocab = {
   homeCta: string
   /** Heading over the gallery; "The work" when the trade has no better word. */
   galleryTitle?: string
+  /** Reassurance shown above the enquiry form; clinic copy avoids medical details. */
+  quoteNote?: string
   /** Empty means the booking screen is date-only (hotels, viewings). */
   slots: string[]
   /** What the listing's meta line means; property says "Included". */
@@ -135,6 +151,8 @@ export type AppSpec = {
   custom: string
   /** Named team members a customer may request for an appointment. */
   staff?: string[]
+  /** Sample team profiles for trades that sell expertise, not just services. */
+  team?: { name: string; role: string; credential?: string }[]
   /** The design they chose on the brief, so the build matches the preview. */
   layout?: LayoutChoice
   /** The look read from their own site: palette, type, corners, light or dark. */
@@ -146,8 +164,22 @@ export type AppSpec = {
   email?: string
   currency?: string
   socials?: SocialLink[]
+  /** Off by default; an owner must deliberately allow search indexing. */
+  indexable?: boolean
   /** Trailers and clips, shown on the about screen when the trade has them. */
   videos?: VideoLink[]
   /** The platform bundle bought with this build, if any. */
   bundle?: BundleId
+  /** Which parts still came from Plattr's trade defaults rather than the
+   *  owner's own menu, story or contact details. The editor uses this to say
+   *  plainly what is sample content; it never makes the business's own copy
+   *  look generated. */
+  sampleContent?: {
+    menu: boolean
+    contact: boolean
+    story: boolean
+    offers: boolean
+    team?: boolean
+    tagline?: boolean
+  }
 }

@@ -24,6 +24,10 @@ export type Vertical = {
   menu: MenuSection[]
   offers: { title: string; body: string }[]
   loyalty: { goal: number; reward: string }
+  /** Named people a booking can be made with; sample names, not a claim. */
+  staff?: string[]
+  /** Team profiles for expertise-led trades; always sample copy. */
+  team?: { name: string; role: string; credential?: string }[]
   timetable?: { name: string; when: string; coach: string }[]
   /** What the trade has on, shown when the events feature is picked. */
   events?: { title: string; when: string }[]
@@ -62,8 +66,8 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       {
         name: 'Starters',
         items: [
-          { name: 'Burrata, blood orange', desc: 'Chilli oil, grilled bread', price: 1200 },
-          { name: 'Arancini', desc: 'Three, saffron risotto', price: 800 },
+          { name: 'Burrata, heirloom tomatoes', desc: 'Basil, olive oil', price: 1200 },
+          { name: 'Warm sourdough', desc: 'Cultured butter, sea salt', price: 600 },
         ],
       },
       {
@@ -75,10 +79,10 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
         ],
       },
       {
-        name: 'Puddings',
+        name: 'Puddings & drinks',
         items: [
           { name: 'Tiramisu', desc: 'Made each morning', price: 800 },
-          { name: 'Sorbet', desc: 'Whatever is ripe', price: 600 },
+          { name: 'House spritz', desc: 'Aperitivo, olive', price: 900 },
         ],
       },
     ],
@@ -102,18 +106,18 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
     phone: `${BASE_PHONE}98`,
     address: '14 Mill Lane, Riverside',
     accent: '#8a5a2b',
-    features: ['catalog', 'ordering', 'loyalty', 'offers', 'reviews'],
+    features: ['catalog', 'ordering', 'booking', 'loyalty', 'offers', 'reviews'],
     vocab: {
       catalog: 'Menu',
       item: 'item',
       order: 'Order',
-      book: 'Book',
-      bookTitle: 'Book a table',
+      book: 'Reserve',
+      bookTitle: 'Reserve a table',
       quoteTitle: 'Ask us anything',
-      partyLabel: 'People',
+      partyLabel: 'Guests',
       fulfilment: ['Pickup', 'Delivery'],
       homeCta: 'Order for pickup',
-      slots: [],
+      slots: ['08:30', '09:30', '10:30', '12:00', '13:00', '14:30', '16:00'],
     },
     menu: [
       {
@@ -189,15 +193,15 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
         ],
       },
       {
-        name: 'Kitchen',
+        name: 'Furniture',
         items: [
-          { name: 'Olive board', desc: 'One piece, oiled', price: 3800 },
-          { name: 'Copper pan', desc: '20cm, tin lined', price: 9500, tag: 'Limited' },
+          { name: 'Sculptural chair', desc: 'Solid ash, pale finish', price: 24000 },
+          { name: 'Oak stool', desc: 'Hand-turned, 45cm', price: 9500, tag: 'Limited' },
         ],
       },
     ],
     offers: [
-      { title: 'Free local delivery over $75', body: 'Within five miles, next day.' },
+      { title: 'Local delivery, $2.99', body: 'Within five miles, next day.' },
       { title: 'First look: new ceramics', body: 'Friday evening, in the shop.' },
     ],
     loyalty: { goal: 5, reward: '10% off your next order' },
@@ -216,7 +220,7 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
     phone: `${BASE_PHONE}77`,
     address: '22 Orchard Row, High Street',
     accent: '#7a4b8f',
-    features: ['catalog', 'booking', 'loyalty', 'offers', 'gallery', 'reviews'],
+    features: ['catalog', 'booking', 'quote', 'loyalty', 'offers', 'gallery', 'reviews'],
     vocab: {
       catalog: 'Services',
       item: 'treatment',
@@ -249,7 +253,7 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
         name: 'Beauty',
         items: [
           { name: 'Brow shape', desc: 'Wax and tint', price: 2500, meta: '20 min' },
-          { name: 'Lash tint', desc: 'Patch test first', price: 3000, meta: '30 min' },
+          { name: 'Gel manicure', desc: 'Shape, buff, long-wear colour', price: 4200, meta: '45 min' },
         ],
       },
     ],
@@ -257,6 +261,7 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       { title: 'Tuesday colour, 15% off', body: 'Any full-head colour, all day Tuesday.' },
       { title: 'Refer a friend', body: 'You both get $20 off the next visit.' },
     ],
+    staff: ['Maya Chen', 'Noa Williams', 'Elena Rossi'],
     loyalty: { goal: 6, reward: 'A free blow dry' },
   },
 
@@ -273,14 +278,15 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
     phone: `${BASE_PHONE}21`,
     address: 'Unit 4, Gasworks Lane',
     accent: '#1f6b52',
-    features: ['catalog', 'classes', 'booking', 'loyalty', 'offers', 'reviews'],
+    features: ['catalog', 'classes', 'booking', 'quote', 'loyalty', 'offers', 'reviews'],
     vocab: {
       catalog: 'Memberships',
       item: 'plan',
       order: 'Order',
       book: 'Classes',
       bookTitle: 'Join a class',
-      quoteTitle: 'Ask about coaching',
+      quoteTitle: 'Membership enquiry',
+      quoteNote: 'Tell us your goal and any experience you have. No medical history needed.',
       partyLabel: 'Spots',
       fulfilment: ['In studio'],
       homeCta: 'See the timetable',
@@ -302,12 +308,26 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
           { name: 'Movement screen', desc: 'Assessment and plan', price: 4500, meta: '45 min' },
         ],
       },
+      {
+        name: 'Classes',
+        items: [
+          { name: 'Strength 101', desc: 'Barbell basics in a small group', price: 1500, meta: 'Mon · Wed · Fri 06:30' },
+          { name: 'Barbell club', desc: 'Coached lifting, all levels', price: 1500, meta: 'Tue · Thu 18:30' },
+          { name: 'Conditioning', desc: 'Engine work, no burpees', price: 1500, meta: 'Sat 09:00' },
+        ],
+      },
     ],
     offers: [
       { title: 'First class free', body: 'Any class, any level. Just book a spot.' },
       { title: 'Bring a friend Fridays', body: 'Second person trains free.' },
     ],
     loyalty: { goal: 10, reward: 'A guest pass for a friend' },
+    staff: ['Ada Okafor', 'Marcus Bell', 'Priya Shah'],
+    team: [
+      { name: 'Ada Okafor', role: 'Head coach', credential: 'Strength & conditioning' },
+      { name: 'Marcus Bell', role: 'Barbell coach', credential: 'Level 3' },
+      { name: 'Priya Shah', role: 'Conditioning coach', credential: 'Endurance' },
+    ],
     timetable: [
       { name: 'Strength 101', when: 'Mon · Wed · Fri 06:30', coach: 'with Ada' },
       { name: 'Barbell club', when: 'Tue · Thu 18:30', coach: 'with Marcus' },
@@ -335,11 +355,13 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       order: 'Order',
       book: 'Book',
       bookTitle: 'Book an appointment',
-      quoteTitle: 'Ask a clinical question',
+      quoteTitle: 'Patient enquiry',
+      quoteNote: 'Please do not include medical details. We only need your contact details to arrange an appointment; a clinician will discuss your health privately.',
       partyLabel: 'Patients',
       fulfilment: ['At the clinic'],
       homeCta: 'Book an appointment',
       slots: ['08:30', '10:00', '11:30', '14:00', '15:30', '17:00'],
+      galleryTitle: 'The practice',
     },
     menu: [
       {
@@ -369,6 +391,12 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       { title: 'Evening slots', body: 'Until 8pm on Wednesdays.' },
     ],
     loyalty: { goal: 2, reward: 'A free hygiene visit after two check-ups' },
+    staff: ['Dr Amara Osei', 'Dr Theo Marsh', 'Lena Park'],
+    team: [
+      { name: 'Dr Amara Osei', role: 'Principal dentist', credential: 'GDC 84210' },
+      { name: 'Dr Theo Marsh', role: 'Dentist', credential: 'GDC 90117' },
+      { name: 'Lena Park', role: 'Hygienist', credential: 'GDC 76542' },
+    ],
   },
 
   trades: {
@@ -392,6 +420,7 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       book: 'Book',
       bookTitle: 'Book a call-out',
       quoteTitle: 'Request a quote',
+      quoteNote: 'A photo and a sentence about what has gone wrong is enough. We reply with a fixed price, usually within one working day.',
       partyLabel: 'People',
       fulfilment: ['At your place'],
       homeCta: 'Get a quote',
@@ -424,6 +453,11 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       { title: 'Landlord certificates', body: 'Booked this week, certificate by email.' },
     ],
     loyalty: { goal: 3, reward: 'A free annual boiler check' },
+    staff: ['Dan Mercer', 'Ruth Okafor'],
+    team: [
+      { name: 'Dan Mercer', role: 'Heating engineer', credential: 'Gas Safe 552103' },
+      { name: 'Ruth Okafor', role: 'Plumbing lead', credential: 'City & Guilds' },
+    ],
   },
 
   professional: {
@@ -473,6 +507,11 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       { title: 'Free 20-minute intro call', body: 'No pitch, just questions answered.' },
       { title: 'Fixed-fee self assessment', body: 'Quoted before we start.' },
     ],
+    staff: ['Maya Chen', 'Alex Reed', 'Priya Shah'],
+    team: [
+      { name: 'Maya Chen', role: 'Managing partner', credential: 'FCA' },
+      { name: 'Alex Reed', role: 'Tax adviser', credential: 'ATT' },
+    ],
     loyalty: { goal: 2, reward: 'A free quarterly review' },
   },
 
@@ -497,24 +536,26 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       book: 'Viewing',
       bookTitle: 'Book a viewing',
       quoteTitle: 'Request a valuation',
+      quoteNote: 'Tell us the address and what you are thinking of doing. We will arrange a measured valuation.',
       partyLabel: 'Viewers',
       fulfilment: ['At the property'],
       homeCta: 'Request a valuation',
       slots: ['10:00', '11:30', '13:00', '15:00', '17:00'],
+      galleryTitle: 'Inside the homes',
     },
     menu: [
       {
         name: 'For sale',
         items: [
-          { name: 'Kestrel Square', desc: 'South-facing garden, original floors', price: 0, meta: '3 bed · 2 bath', tag: 'New' },
-          { name: 'Mill Lane', desc: 'Top floor, river view', price: 0, meta: '2 bed · 1 bath' },
+          { name: 'Kestrel Square', desc: 'South-facing garden, original floors', price: 68500000, meta: '3 bed · 2 bath · Gardens', tag: 'New' },
+          { name: 'Mill Lane', desc: 'Top floor, river view', price: 42500000, meta: '2 bed · 1 bath · Riverside' },
         ],
       },
       {
         name: 'To rent',
         items: [
-          { name: 'Lantern Court', desc: 'Furnished, bills included', price: 0, meta: '2 bed · furnished' },
-          { name: 'Gasworks Loft', desc: 'Studio, exposed steel', price: 0, meta: 'Studio · 1 bath' },
+          { name: 'Lantern Court', desc: 'Furnished, bills included', price: 240000, meta: '2 bed · furnished · per month' },
+          { name: 'Gasworks Loft', desc: 'Studio, exposed steel', price: 185000, meta: 'Studio · 1 bath · per month' },
         ],
       },
     ],
@@ -538,7 +579,7 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
     phone: `${BASE_PHONE}31`,
     address: 'Harbour Head, North Cliff',
     accent: '#1f6b52',
-    features: ['catalog', 'booking', 'offers', 'gallery', 'reviews', 'quote'],
+    features: ['catalog', 'booking', 'quote', 'offers', 'gallery', 'reviews'],
     vocab: {
       catalog: 'Rooms',
       item: 'room',
@@ -596,10 +637,12 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       book: 'Call',
       bookTitle: 'Book a call',
       quoteTitle: 'Request a shoot brief',
+      quoteNote: 'A few lines about the project, the dates and where it will happen is plenty.',
       partyLabel: 'People',
       fulfilment: ['On location'],
       homeCta: 'Request a shoot brief',
       slots: ['10:00', '11:30', '14:00', '15:30', '17:00'],
+      galleryTitle: 'Selected work',
     },
     menu: [
       {
@@ -628,6 +671,10 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       { title: 'Half-day studio hire', body: 'Weekday rate for members.' },
     ],
     loyalty: { goal: 2, reward: 'A free print from your next shoot' },
+    team: [
+      { name: 'Nell Fraser', role: 'Photographer', credential: 'Editorial & weddings' },
+      { name: 'Ivo Mercer', role: 'Photographer', credential: 'Studio & product' },
+    ],
   },
 
   auto: {
@@ -679,6 +726,11 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       { title: 'MOT + service, $310', body: 'Book both together.' },
     ],
     loyalty: { goal: 4, reward: 'A free MOT next year' },
+    staff: ['Sam Iles', 'Priya Nair'],
+    team: [
+      { name: 'Sam Iles', role: 'Master technician', credential: 'IMI 44102' },
+      { name: 'Priya Nair', role: 'Service adviser', credential: 'Customer care' },
+    ],
   },
 
   hospital: {
@@ -782,7 +834,7 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       },
     ],
     offers: [
-      { title: 'Free delivery over $60', body: 'Tracked, two to three days.' },
+      { title: 'Delivery $2.99, tracked', body: 'Two to three working days.' },
       { title: 'Seconds sale', body: 'Slight marks, half price, this week.' },
     ],
     loyalty: { goal: 5, reward: '$15 off your next order' },
@@ -956,6 +1008,10 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       { title: 'Free first lesson', body: 'Every course, no card needed.' },
     ],
     loyalty: { goal: 2, reward: 'A free short course' },
+    team: [
+      { name: 'Rosa Bell', role: 'Course lead', credential: 'Finance & operations' },
+      { name: 'Tomas Reed', role: 'Writing tutor', credential: 'Editorial' },
+    ],
   },
 
   tuition: {
@@ -1144,6 +1200,7 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       book: 'Book',
       bookTitle: 'Book a call',
       quoteTitle: 'Request a review',
+      quoteNote: 'Tell us what you would like to review and roughly when. Please do not include account numbers or balances in this form.',
       partyLabel: 'Attendees',
       fulfilment: ['Online', 'In person'],
       homeCta: 'Request a review',
@@ -1177,6 +1234,11 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       { title: 'Annual check-in', body: 'Included for review clients.' },
     ],
     loyalty: { goal: 2, reward: 'A free annual check-in' },
+    staff: ['Helen Marsh', 'Owen Shah'],
+    team: [
+      { name: 'Helen Marsh', role: 'Independent adviser', credential: 'FPFS' },
+      { name: 'Owen Shah', role: 'Mortgage adviser', credential: 'CeMAP' },
+    ],
   },
 
   agency: {

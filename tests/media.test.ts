@@ -4,6 +4,22 @@ import { createProject, saveDoc } from '../src/worker/db'
 import { addSection, docFromSpec, homeScreen, updateSection } from '../src/worker/doc'
 import type { MediaBucket } from '../src/worker/media'
 import { MemoryD1 } from './memoryD1'
+import { ownerCookieFor } from './ownerCookie'
+
+const ownerCookies = new Map<string, string>()
+
+/** Adds the real dashboard session for the project named in the URL. */
+async function authedRequest(
+  input: string,
+  init: RequestInit = {},
+  env: unknown,
+): Promise<Response> {
+  const token = input.match(/(?:projects|p)\/([0-9a-f]{24})/)?.[1]
+  const cookie = token ? ownerCookies.get(token) : undefined
+  const headers = new Headers(init.headers as HeadersInit)
+  if (cookie) headers.set('cookie', cookie)
+  return app.request(input, { ...init, headers }, env as never)
+}
 
 /**
  * The media route is exercised end to end: a real multipart upload, magic-byte
@@ -75,7 +91,9 @@ async function projectWithDb() {
     platforms: ['pwa'],
     plan: 'onetime',
   })
-  return { db, project }
+  const cookie = await ownerCookieFor(db, project)
+  ownerCookies.set(project.token, cookie)
+  return { db, project, cookie }
 }
 
 function uploadForm(bytes = png(640, 480), variants = [webp(320, 240), webp(640, 480)]) {
@@ -90,10 +108,10 @@ async function upload(
   env: { DB: D1Database; ASSETS: Fetcher; MEDIA?: R2Bucket },
   form = uploadForm(),
 ) {
-  return app.request(
+  return authedRequest(
     `https://plattr.example/api/projects/${token}/media`,
     { method: 'POST', headers: { origin: 'https://plattr.example' }, body: form },
-    env as never,
+    env,
   )
 }
 
@@ -125,13 +143,13 @@ describe('media library', () => {
     expect(againBody.media.id).toBe(body.media.id)
 
     const listed = (await (
-      await app.request(`https://plattr.example/api/projects/${project.token}/media`, {}, env as never)
+      await authedRequest(`https://plattr.example/api/projects/${project.token}/media`, {}, env as never)
     ).json()) as { media: unknown[]; suggestions: unknown[]; limits: { files: number } }
     expect(listed.media.length).toBe(1)
     expect(listed.suggestions.length).toBeGreaterThan(0)
     expect(listed.limits.files).toBe(24)
 
-    const served = await app.request(
+    const served = await authedRequest(
       `https://plattr.example/p/${project.token}/media/${body.media.id}/640.webp`,
       {},
       env as never,
@@ -177,7 +195,7 @@ describe('media library', () => {
     nonWebp.append('variant', new File([png(320, 240)], '320.png', { type: 'image/png' }))
     expect((await upload(project.token, env, nonWebp)).status).toBe(400)
 
-    const cross = await app.request(
+    const cross = await authedRequest(
       `https://plattr.example/api/projects/${project.token}/media`,
       { method: 'POST', headers: { origin: 'https://evil.example' }, body: uploadForm() },
       env as never,
@@ -193,7 +211,7 @@ describe('media library', () => {
     const response = await upload(project.token, env)
     expect(response.status).toBe(502)
     const listed = (await (
-      await app.request(`https://plattr.example/api/projects/${project.token}/media`, {}, env as never)
+      await authedRequest(`https://plattr.example/api/projects/${project.token}/media`, {}, env as never)
     ).json()) as { media: unknown[] }
     expect(listed.media.length).toBe(0)
   })
@@ -222,13 +240,13 @@ describe('media library', () => {
     await saveDoc(db, project, doc)
 
     const read = (await (
-      await app.request(`https://plattr.example/api/projects/${project.token}/doc`, {}, env as never)
+      await authedRequest(`https://plattr.example/api/projects/${project.token}/doc`, {}, env as never)
     ).json()) as { doc: { screens: { sections: { media?: Record<string, unknown> }[] }[] } }
     const media = read.doc.screens.flatMap((screen) => screen.sections).find((section) => section.media)?.media
     expect(media).toMatchObject({ focalX: 24, focalY: 68, fit: 'contain', aspect: 'portrait', alt: 'Coffee on the counter' })
 
     const html = await (
-      await app.request(`https://plattr.example/p/${project.token}/app`, {}, env as never)
+      await authedRequest(`https://plattr.example/p/${project.token}/app`, {}, env as never)
     ).text()
     expect(html).toContain(`/p/${project.token}/media/${uploaded.media.id}/640.webp`)
     expect(html).toContain('srcset=')
@@ -249,7 +267,7 @@ describe('media library', () => {
     doc = updateSection(doc, homeScreen(doc).id, 'sec_image', { media: { id: uploaded.media.id } })
     await saveDoc(db, project, doc)
 
-    const used = await app.request(
+    const used = await authedRequest(
       `https://plattr.example/api/projects/${project.token}/media/${uploaded.media.id}`,
       { method: 'DELETE', headers: { origin: 'https://plattr.example' } },
       env as never,
@@ -260,7 +278,7 @@ describe('media library', () => {
     // it, so deletion scrubs that version instead of leaving a broken image.
     const without = docFromSpec(project.spec)
     await saveDoc(db, project, without)
-    const freed = await app.request(
+    const freed = await authedRequest(
       `https://plattr.example/api/projects/${project.token}/media/${uploaded.media.id}`,
       { method: 'DELETE', headers: { origin: 'https://plattr.example' } },
       env as never,
@@ -316,14 +334,14 @@ describe('media library', () => {
     const env = ENV(r2 as unknown as R2Bucket, db)
     const uploaded = (await (await upload(project.token, env)).json()) as { media: { id: string } }
 
-    const wrongWidth = await app.request(
+    const wrongWidth = await authedRequest(
       `https://plattr.example/p/${project.token}/media/${uploaded.media.id}/9999.webp`,
       {},
       env as never,
     )
     // 9999 is syntactically a width but picks the largest stored variant.
     expect(wrongWidth.status).toBe(200)
-    const badName = await app.request(
+    const badName = await authedRequest(
       `https://plattr.example/p/${project.token}/media/${uploaded.media.id}/photo.webp`,
       {},
       env as never,
@@ -331,11 +349,181 @@ describe('media library', () => {
     expect(badName.status).toBe(404)
 
     const otherEnv = ENV(r2 as unknown as R2Bucket, other.db)
-    const crossProject = await app.request(
+    const crossProject = await authedRequest(
       `https://plattr.example/p/${other.project.token}/media/${uploaded.media.id}/320.webp`,
       {},
       otherEnv as never,
     )
     expect(crossProject.status).toBe(404)
+  })
+
+  test('a catalogue item owns its photo, alt text, crop and responsive markup', async () => {
+    const { db, project } = await projectWithDb()
+    const r2 = new MemoryR2()
+    const env = ENV(r2 as unknown as R2Bucket, db)
+    const uploaded = (await (await upload(project.token, env)).json()) as { media: { id: string; width: number; height: number } }
+
+    const saved = await authedRequest(
+      `https://plattr.example/api/projects/${project.token}/catalog`,
+      {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json', origin: 'https://plattr.example' },
+        body: JSON.stringify({
+          menu: [
+            {
+              name: 'Objects',
+              items: [
+                {
+                  name: 'Stoneware mug',
+                  desc: 'Hand-thrown',
+                  price: 2800,
+                  media: {
+                    id: uploaded.media.id,
+                    alt: 'A cream stoneware mug',
+                    width: uploaded.media.width,
+                    height: uploaded.media.height,
+                    focalX: 32,
+                    focalY: 71,
+                    fit: 'contain',
+                  },
+                },
+              ],
+            },
+          ],
+        }),
+      },
+      env as never,
+    )
+    expect(saved.status).toBe(200)
+    const savedBody = (await saved.json()) as { menu: { items: { media?: Record<string, unknown> }[] }[] }
+    expect(savedBody.menu[0].items[0].media).toMatchObject({ id: uploaded.media.id, focalX: 32, focalY: 71, fit: 'contain' })
+
+    const html = await (await authedRequest(`https://plattr.example/p/${project.token}/app`, {}, env as never)).text()
+    expect(html).toContain(`/p/${project.token}/media/${uploaded.media.id}/640.webp`)
+    expect(html).toContain('A cream stoneware mug')
+    expect(html).toContain('object-position:32% 71%')
+    expect(html).toContain('object-fit:contain')
+    expect(html).toContain('loading="lazy"')
+
+    const blocked = await authedRequest(
+      `https://plattr.example/api/projects/${project.token}/media/${uploaded.media.id}`,
+      { method: 'DELETE', headers: { origin: 'https://plattr.example' } },
+      env as never,
+    )
+    expect(blocked.status).toBe(409)
+  })
+
+  test('replacing a photo keeps its id so every item reference survives', async () => {
+    const { db, project } = await projectWithDb()
+    const r2 = new MemoryR2()
+    const env = ENV(r2 as unknown as R2Bucket, db)
+    const uploaded = (await (await upload(project.token, env)).json()) as { media: { id: string } }
+    await authedRequest(
+      `https://plattr.example/api/projects/${project.token}/catalog`,
+      {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json', origin: 'https://plattr.example' },
+        body: JSON.stringify({
+          menu: [{ name: 'Objects', items: [{ name: 'Vase', desc: '', price: 100, media: { id: uploaded.media.id, alt: 'Old caption' } }] }],
+        }),
+      },
+      env as never,
+    )
+
+    const form = new FormData()
+    form.append('file', new File([png(800, 600)], 'new.png', { type: 'image/png' }))
+    form.append('variant', new File([webp(320, 240)], '320.webp', { type: 'image/webp' }))
+    form.append('variant', new File([webp(640, 480)], '640.webp', { type: 'image/webp' }))
+    form.append('replace', uploaded.media.id)
+    form.append('alt', 'The replacement vase')
+    const replaced = await authedRequest(
+      `https://plattr.example/api/projects/${project.token}/media`,
+      { method: 'POST', headers: { origin: 'https://plattr.example' }, body: form },
+      env as never,
+    )
+    expect(replaced.status).toBe(200)
+    const body = (await replaced.json()) as { media: { id: string; width: number; alt: string; variants: { width: number }[] }; replaced: boolean }
+    expect(body.replaced).toBe(true)
+    expect(body.media.id).toBe(uploaded.media.id)
+    expect(body.media.width).toBe(800)
+    expect(body.media.alt).toBe('The replacement vase')
+    expect(body.media.variants.map((entry) => entry.width)).toEqual([320, 640])
+
+    const html = await (await authedRequest(`https://plattr.example/p/${project.token}/app`, {}, env as never)).text()
+    expect(html).toContain(`/p/${project.token}/media/${uploaded.media.id}/640.webp`)
+    // The item keeps its own alt text; replacing the library file must not
+    // silently rewrite the catalogue copy that references it.
+    expect(html).toContain('Old caption')
+  })
+
+  test('each flagship trade renders its own item photo and alt text', async () => {
+    for (const vertical of [
+      'restaurant',
+      'salon',
+      'hotel',
+      'professional',
+      'cafe',
+      'gym',
+      'clinic',
+      'property',
+      'studio',
+      'trades',
+      'auto',
+      'ecommerce',
+      'courses',
+      'finance',
+    ] as const) {
+      const db = new MemoryD1() as unknown as D1Database
+      const project = await createProject(db, {
+        name: 'Fern & Flint',
+        contact: '',
+        email: '',
+        vertical,
+        accent: '#2a5a8f',
+        logo: 'FF',
+        features: ['catalog', 'booking'],
+        platforms: ['pwa'],
+        plan: 'onetime',
+      })
+      ownerCookies.set(project.token, await ownerCookieFor(db, project))
+      const r2 = new MemoryR2()
+      const env = ENV(r2 as unknown as R2Bucket, db)
+      const uploaded = (await (await upload(project.token, env)).json()) as { media: { id: string; width: number; height: number } }
+      const first = project.spec.menu[0].items[0]
+      const saved = await authedRequest(
+        `https://plattr.example/api/projects/${project.token}/catalog`,
+        {
+          method: 'PUT',
+          headers: { 'content-type': 'application/json', origin: 'https://plattr.example' },
+          body: JSON.stringify({
+            menu: [
+              {
+                name: project.spec.menu[0].name,
+                items: [
+                  {
+                    ...first,
+                    media: {
+                      id: uploaded.media.id,
+                      alt: `Own photo for ${first.name}`,
+                      width: uploaded.media.width,
+                      height: uploaded.media.height,
+                      focalX: 41,
+                      focalY: 58,
+                      fit: 'cover',
+                    },
+                  },
+                ],
+              },
+            ],
+          }),
+        },
+        env as never,
+      )
+      expect(saved.status).toBe(200)
+      const html = await (await authedRequest(`https://plattr.example/p/${project.token}/app`, {}, env as never)).text()
+      expect(html).toContain(`/p/${project.token}/media/${uploaded.media.id}/640.webp`)
+      expect(html).toContain(`Own photo for ${first.name}`)
+      expect(html).toContain('object-position:41% 58%')
+    }
   })
 })

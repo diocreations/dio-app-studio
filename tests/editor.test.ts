@@ -23,6 +23,7 @@ import {
 import app from '../src/worker/index'
 import { buildSpec } from '../src/worker/pricing'
 import { MemoryD1 } from './memoryD1'
+import { ownerCookieFor } from './ownerCookie'
 
 function spec() {
   return buildSpec({
@@ -47,7 +48,7 @@ async function projectWithDb() {
     platforms: ['pwa'],
     plan: 'onetime',
   })
-  return { db, project }
+  return { db, project, cookie: await ownerCookieFor(db, project) }
 }
 
 const JSON_HEADERS = { 'content-type': 'application/json' }
@@ -250,9 +251,9 @@ describe('the local design assistant', () => {
 
 describe('the editor and its API', () => {
   test('the editor page is private and built around the phone canvas', async () => {
-    const { db, project } = await projectWithDb()
+    const { db, project, cookie } = await projectWithDb()
     const env = { DB: db, ASSETS: {} as Fetcher }
-    const response = await app.request(`https://plattr.example/p/${project.token}/edit`, {}, env)
+    const response = await app.request(`https://plattr.example/p/${project.token}/edit`, { headers: { cookie } }, env)
     expect(response.status).toBe(200)
     expect(response.headers.get('x-robots-tag')).toBe('noindex, nofollow')
     const html = await response.text()
@@ -264,9 +265,9 @@ describe('the editor and its API', () => {
   })
 
   test('screens and components persist and are read back by the app', async () => {
-    const { db, project } = await projectWithDb()
+    const { db, project, cookie } = await projectWithDb()
     const env = { DB: db, ASSETS: {} as Fetcher }
-    const start = await app.request(`https://plattr.example/api/projects/${project.token}/doc`, {}, env)
+    const start = await app.request(`https://plattr.example/api/projects/${project.token}/doc`, { headers: { cookie } }, env)
     const startBody = (await start.json()) as { doc: { screens: unknown[] }; saved: boolean }
     expect(startBody.saved).toBe(false)
 
@@ -278,14 +279,14 @@ describe('the editor and its API', () => {
       `https://plattr.example/api/projects/${project.token}/doc`,
       {
         method: 'PUT',
-        headers: { ...JSON_HEADERS, origin: 'https://plattr.example' },
+        headers: { ...JSON_HEADERS, origin: 'https://plattr.example', cookie },
         body: JSON.stringify({ doc }),
       },
       env,
     )
     expect(put.status).toBe(200)
     const saved = (await (
-      await app.request(`https://plattr.example/api/projects/${project.token}/doc`, {}, env)
+      await app.request(`https://plattr.example/api/projects/${project.token}/doc`, { headers: { cookie } }, env)
     ).json()) as { saved: boolean; doc: { screens: { kind: string }[] } }
     expect(saved.saved).toBe(true)
     expect(saved.doc.screens.some((entry) => entry.kind === 'contact')).toBe(true)
@@ -298,13 +299,13 @@ describe('the editor and its API', () => {
   })
 
   test('saved versions list and restore the previous design', async () => {
-    const { db, project } = await projectWithDb()
+    const { db, project, cookie } = await projectWithDb()
     const env = { DB: db, ASSETS: {} as Fetcher }
     const path = `https://plattr.example/api/projects/${project.token}/doc`
     const write = async (doc: ReturnType<typeof docFromSpec>) =>
       app.request(
         path,
-        { method: 'PUT', headers: { ...JSON_HEADERS, origin: 'https://plattr.example' }, body: JSON.stringify({ doc }) },
+        { method: 'PUT', headers: { ...JSON_HEADERS, origin: 'https://plattr.example', cookie }, body: JSON.stringify({ doc }) },
         env,
       )
 
@@ -317,13 +318,13 @@ describe('the editor and its API', () => {
     expect((await write(second)).status).toBe(200)
 
     const listed = (await (
-      await app.request(`https://plattr.example/api/projects/${project.token}/doc/versions`, {}, env)
+      await app.request(`https://plattr.example/api/projects/${project.token}/doc/versions`, { headers: { cookie } }, env)
     ).json()) as { versions: { id: string; createdAt: string }[] }
     expect(listed.versions.length).toBe(1)
 
     const restored = await app.request(
       `https://plattr.example/api/projects/${project.token}/doc/versions/${listed.versions[0].id}/restore`,
-      { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://plattr.example' } },
+      { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://plattr.example', cookie } },
       env,
     )
     expect(restored.status).toBe(200)
@@ -337,35 +338,35 @@ describe('the editor and its API', () => {
 
     const cross = await app.request(
       `https://plattr.example/api/projects/${project.token}/doc/versions/${listed.versions[0].id}/restore`,
-      { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://evil.example' } },
+      { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://evil.example', cookie } },
       env,
     )
     expect(cross.status).toBe(403)
 
     const missing = await app.request(
       `https://plattr.example/api/projects/${project.token}/doc/versions/dvr_missing/restore`,
-      { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://plattr.example' } },
+      { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://plattr.example', cookie } },
       env,
     )
     expect(missing.status).toBe(404)
   })
 
   test('cross-site, wrong-type and unknown-token writes are refused', async () => {
-    const { db, project } = await projectWithDb()
+    const { db, project, cookie } = await projectWithDb()
     const env = { DB: db, ASSETS: {} as Fetcher }
     const path = `https://plattr.example/api/projects/${project.token}/doc`
     const body = JSON.stringify({ doc: docFromSpec(project.spec) })
 
     const cross = await app.request(
       path,
-      { method: 'PUT', headers: { ...JSON_HEADERS, origin: 'https://evil.example' }, body },
+      { method: 'PUT', headers: { ...JSON_HEADERS, origin: 'https://evil.example', cookie }, body },
       env,
     )
     expect(cross.status).toBe(403)
 
     const wrongType = await app.request(
       path,
-      { method: 'PUT', headers: { 'content-type': 'text/plain' }, body },
+      { method: 'PUT', headers: { 'content-type': 'text/plain', cookie }, body },
       env,
     )
     expect(wrongType.status).toBe(415)
@@ -379,13 +380,13 @@ describe('the editor and its API', () => {
   })
 
   test('AI previews are returned, not saved', async () => {
-    const { db, project } = await projectWithDb()
+    const { db, project, cookie } = await projectWithDb()
     const env = { DB: db, ASSETS: {} as Fetcher }
     const response = await app.request(
       `https://plattr.example/api/projects/${project.token}/doc/ai`,
       {
         method: 'POST',
-        headers: { ...JSON_HEADERS, origin: 'https://plattr.example' },
+        headers: { ...JSON_HEADERS, origin: 'https://plattr.example', cookie },
         body: JSON.stringify({
           command: 'add a contact screen',
           doc: docFromSpec(project.spec),
@@ -401,7 +402,7 @@ describe('the editor and its API', () => {
     expect(body.doc.screens.some((entry) => entry.kind === 'contact')).toBe(true)
     expect(body.summary).toContain('Contact')
 
-    const stored = await app.request(`https://plattr.example/api/projects/${project.token}/doc`, {}, env)
+    const stored = await app.request(`https://plattr.example/api/projects/${project.token}/doc`, { headers: { cookie } }, env)
     expect(((await stored.json()) as { saved: boolean }).saved).toBe(false)
   })
 })

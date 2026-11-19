@@ -43,7 +43,7 @@ export function studioKeyPage(options: { configured: boolean; wrong?: boolean })
   })
 }
 
-export function studioPage(projects: Project[]): string {
+export function studioPage(projects: Project[], ownerKeys: Record<string, string> = {}): string {
   const monthly = projects
     .filter((project) => project.quote.plan === 'monthly')
     .reduce((sum, project) => sum + project.quote.monthly, 0)
@@ -115,6 +115,7 @@ export function studioPage(projects: Project[]): string {
                           <span>
                             <b style="display:block">${esc(project.name)}</b>
                             <span class="tiny">${esc(verticalFor(project.vertical).label)} · ${esc(project.contact || 'no contact')}${project.email ? ` · ${esc(project.email)}` : ''}</span>
+                            ${ownerKeys[project.id] ? `<details style="margin-top:4px"><summary class="tiny" style="cursor:pointer">Owner access</summary><span class="tiny">Dashboard key: <code>${esc(ownerKeys[project.id])}</code> · <a href="/p/${project.token}/dashboard/login">owner login</a></span></details>` : ''}
                           </span>
                         </div>
                       </td>

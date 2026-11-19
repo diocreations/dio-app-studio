@@ -98,26 +98,26 @@ Generated apps are functional, not mockups, in these flows:
 | --- | --- |
 | Browse catalogue, sections, filters | Works (all catalogue trades) |
 | Item detail, favourite, quantity | Works |
-| Cart sheet, fulfilment choice, demo order | Works for ordering trades |
+| Cart sheet, fulfilment choice, guest order | Works for ordering trades; creates a real D1 order with server-priced lines |
 | Booking (days, slots, party size, confirmation) | Works for booking/classes trades |
 | Enquiry form (name, contact, message) | Works for quote trades |
 | Search and saved items | Works |
 | Call, directions, social links | Work when the build has the details |
-| Profile / order history screens | Document-managed screens exist, but a real account/order backend does **not**; treat them as presentation until wired to data |
+| Order/booking confirmation and status | Works through the returned random capability id stored on the device |
+| Profile / saved items | Saved items work locally; customer accounts remain future work |
 
-Ordering and checkout deliberately remain a bottom sheet with local demo
-semantics: no payment is taken and no order leaves the app. Making them
-document-managed screens must keep that working sheet as the transactional
-surface until a real backend exists; the document can own a cart *screen*
-presentation later without pretending it charges anyone.
+Ordering and checkout deliberately remain a bottom sheet. They now create a real
+guest order in D1 and the customer can read its status with the returned id, but
+no payment is taken in the app. Making them document-managed screens must keep
+that working sheet as the transactional surface; payment remains blocked on each
+business's own merchant credentials.
 
-## Media manager (not yet built)
+## Media manager
 
-The current image component is generated artwork or a server-resolved photo.
-Uploads, cropping, WebP conversion, reuse and storage quotas need an object-store
-binding and an authenticated upload endpoint; that is the next infrastructure
-slice. Until then the editor must not present an upload control that does
-nothing.
+The editor now has a real R2-backed media library: browser-side WebP conversion,
+server validation, focal-point crops, replace/reuse/delete, reference-safe
+deletion and quotas. The published app falls back to deliberate abstract artwork
+when the owner has not supplied a photograph or a stock key is unavailable.
 
 ## Element editing today
 

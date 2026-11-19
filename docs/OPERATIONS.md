@@ -31,24 +31,70 @@ id.
 The app never receives merchant credentials, other customers' data, owner notes
 or the full dashboard payload. The dashboard never writes the design document.
 
+## Personalisation and sample content
+
+`spec.sampleContent` records which groups still came from Plattr's trade seed.
+Saving changed business details clears the matching flags; saving a changed
+catalogue clears the menu/offers flags. `POST
+/api/projects/:token/personalise/clear-samples` requires the owner session, a
+same-origin JSON request and the explicit confirmation phrase
+`remove-sample-content`. It clears only groups still flagged, so an owner-edited
+catalogue or details survive. Photos and the document layout are never deleted
+by this action.
+
+## Backup and rollback
+
+- Content rollback: the last 20 design versions are listed and restorable from
+  the editor (`/api/projects/:token/doc/versions`). Restoring is a normal save
+  and can itself be undone in the session.
+- Data recovery: D1 point-in-time recovery is a Cloudflare provider operation,
+  not an automated application job. Media lives in R2 and must be included in
+  the provider backup policy.
+- Deployment rollback: versions and statuses are recorded on the build page, but
+  rolling a Worker deployment back is a provider/dashboard operation.
+- There is no scheduled offsite backup job in this repository; that is a
+  production gap, not a claim.
+
 ## Owner access
 
-The current model is a **private capability URL**: possession of the project's
-random edit token grants owner access. It is the same model already used by the
-studio review and editor links. It is adequate for this local milestone but it
-is not an account system.
+The customer app token and the owner credential are deliberately separate. A
+public app link opens the customer experience but **cannot** read the dashboard,
+change order status, edit app settings or use the dashboard catalogue endpoint.
 
-Production needs:
+- The owner key is derived from a server secret (`OWNER_SECRET`, falling back to
+  `STUDIO_KEY` locally) and the project token, so every build has a distinct
+  credential without storing a plaintext key.
+- It is shown only on the operator-authenticated `/studio` board, under **Owner
+  access**, to be sent to the business owner out of band.
+- Exchanging it at `/p/:token/dashboard/login` creates a random session in D1 and
+  an HttpOnly, SameSite=Lax cookie. The cookie has a project-specific name and is
+  scoped to the origin root, so both dashboard pages and `/api/projects/...`
+  calls can use it without two owners in one browser overwriting each other.
+  Sessions last 30 days absolute and expire after 7 idle days. **Sign out**
+  revokes one browser; **Sign out everywhere** revokes every session.
+- Dashboard pages redirect to the owner login. Dashboard data, status changes,
+  catalogue writes and app settings return `401 owner_auth_required` without a
+  session. The editor and review page redirect to login, and every
+  `/api/projects/:token/*` route is behind the same check.
+- Login is capped at 10 attempts per project and connection per day. Public
+  order, booking and enquiry writes are capped at 30, 15 and 10 per project and
+  connection per day, with `429` and `Retry-After` when exhausted. Media uploads
+  are capped at 40 per project and connection per day.
 
-- Owner accounts with a session cookie, passwordless email or SSO.
-- Team roles (`owner`, `manager`, `staff`) and permission checks on every
-  dashboard mutation.
-- Audit log entries for refunds, cancellations and data exports.
-- Token rotation and revocation; a leaked dashboard URL currently exposes
-  customer contact details and operations.
+`OWNER_SECRET` (or the local `STUDIO_KEY` fallback) must be supplied as a real
+secret in production. Local QA uses a gitignored `.dev.vars`; without either
+binding the dashboard says owner access is not configured and returns 503.
 
-Until then the dashboard must be treated as a private link and not shared with
-customers. The footer says so.
+This closes the reported token-authorization weakness for owner operations. It
+is still not a full account system: there is one owner credential per build, no
+named team roles, no password reset and no per-user audit trail. Production
+still needs owner accounts, team roles, audit entries for cancellations/refunds,
+and key rotation. The visual editor remains a private build capability for the
+studio and owner-designer workflow, separate from the customer link.
+
+Live verification: unauthenticated dashboard API `401`, owner login reaches the
+dashboard, and the same session reads `/api/projects/:token/dashboard` with
+`200`. The regression suite covers the same split.
 
 ## Customer authentication assessment
 
@@ -111,5 +157,7 @@ before completion. Enquiries: `new → replied → closed`. Invalid jumps return
 `tests/business.test.ts` exercises real HTTP requests against a memory D1:
 order creation with server-side pricing, guest validation, disabled trades,
 cross-origin rejection, status transitions, bookings with staff/service,
-enquiries, dashboard module gating and application settings. It does not mock
-success responses; assertions read the stored rows and the dashboard payload.
+enquiries, dashboard module gating and application settings. It also proves that
+the customer token cannot open the dashboard or mutate an order, and that a valid
+owner login is required. It does not mock success responses; assertions read the
+stored rows and the dashboard payload.

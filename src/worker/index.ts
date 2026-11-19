@@ -11,6 +11,7 @@ import {
   getDocVersion,
   getProject,
   listDocVersions,
+  log,
   saveDoc,
   listActivity,
   listNotes,
@@ -27,10 +28,21 @@ import {
   sanitizeImported,
   throttleImports,
 } from './importer'
-import { buildSpec, quote, sanitizeMenu, type VerticalId } from './pricing'
-import { applyCommand, docFromSpec, normalizeDoc } from './doc'
+import { buildSpec, initialsFor, quote, sanitizeHex, sanitizeMenu, type VerticalId } from './pricing'
+import { applyCommand, docFromSpec, flagshipDocFromSpec, normalizeDoc } from './doc'
+import { FLAGSHIP_TRADES } from './flagship'
 import { editorPage } from './views/editor'
-import { dashboardPage } from './views/dashboard'
+import { dashboardPage, ownerLoginPage } from './views/dashboard'
+import {
+  OWNER_SESSION_DAYS,
+  createOwnerSession,
+  deleteOwnerSession,
+  deleteOwnerSessions,
+  hasOwnerSession,
+  matchesOwnerKey,
+  ownerAccessKey,
+  ownerCookieName,
+} from './ownerAuth'
 import {
   BusinessError,
   createBooking,
@@ -49,6 +61,7 @@ import {
   listMedia,
   mediaSuggestions,
   mediaView,
+  replaceMedia,
   serveMedia,
   uploadMedia,
   type MediaBucket,
@@ -78,6 +91,8 @@ type Bindings = {
   PEXELS_API_KEY?: string
   /** Operator key for /studio. Unset means the board stays closed. */
   STUDIO_KEY?: string
+  /** Separate secret for owner dashboard credentials and sessions. */
+  OWNER_SECRET?: string
   /** Imports allowed per day across everyone. Unset uses the default; 0 closes the importer. */
   IMPORT_DAILY_CAP?: string
   /** Published on the privacy page for deletion and data requests. */
@@ -141,7 +156,16 @@ app.use('*', async (c, next) => {
  */
 app.use('*', async (c, next) => {
   await next()
-  if (PRIVATE_PATHS.test(c.req.path)) c.res.headers.set('X-Robots-Tag', 'noindex, nofollow')
+  // Asset responses from the host are immutable; clone the headers before
+  // adding the security policy instead of mutating them in place.
+  const headers = new Headers(c.res.headers)
+  headers.set('X-Content-Type-Options', 'nosniff')
+  headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+  // The customer app sets its own policy from the owner's indexing choice.
+  if (PRIVATE_PATHS.test(c.req.path) && !/^\/p\/[0-9a-f]{24}\/app$/.test(c.req.path))
+    headers.set('X-Robots-Tag', 'noindex, nofollow')
+  c.res = new Response(c.res.body, { status: c.res.status, statusText: c.res.statusText, headers })
 })
 
 /** Builds one visitor may create per day, and the whole studio may create. */
@@ -199,6 +223,17 @@ function importCap(env: Bindings): number {
 
 /** Imports one visitor may spend in a day, so one browser cannot drain the studio's. */
 const IMPORTS_PER_VISITOR = 3
+
+function ownerSecret(env: Bindings): string {
+  return (env.OWNER_SECRET ?? env.STUDIO_KEY ?? '').trim()
+}
+
+async function ownerSession(
+  c: Context<{ Bindings: Bindings }>,
+  project: { id: string; token: string },
+): Promise<boolean> {
+  return hasOwnerSession(c.env.DB, project.id, getCookie(c, ownerCookieName(project.token)))
+}
 
 function isHttps(url: string): boolean {
   return url.startsWith('https://')
@@ -266,7 +301,31 @@ function notFoundPage(): string {
 
 /* -------------------------------- pages -------------------------------- */
 
+// Every project-scoped API capability is owner-only. The customer app talks to
+// its public `/p/:token/orders`, `/bookings` and `/enquiries` routes instead; it
+// never receives an owner session. Keeping this in one middleware means a new
+// editor route cannot accidentally ship without authorization.
+app.use('/api/projects/:token/*', async (c, next) => {
+  const project = await loadProject(c)
+  if (!project) return next()
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to edit this build.')
+  await next()
+})
+
 app.get('/', (c) => c.html(marketingPage()))
+
+/** Liveness plus a real D1 round-trip for deployment checks. */
+app.get('/health', async (c) => {
+  try {
+    await c.env.DB.prepare('SELECT 1 AS ok').first()
+    c.header('Cache-Control', 'no-store')
+    return c.json({ ok: true, db: 'up', at: new Date().toISOString() })
+  } catch {
+    c.header('Cache-Control', 'no-store')
+    return c.json({ ok: false, db: 'down' }, 503)
+  }
+})
 
 app.get('/robots.txt', (c) => {
   const url = new URL(c.req.url)
@@ -278,7 +337,7 @@ app.get('/robots.txt', (c) => {
     })
   const origin = url.origin
   return c.body(
-    `User-agent: *\nAllow: /\nDisallow: /studio\nDisallow: /p/\nDisallow: /api/\nDisallow: /demo/\n\nSitemap: ${origin}/sitemap.xml\n`,
+    `User-agent: *\nAllow: /\nDisallow: /studio\nDisallow: /p/\nDisallow: /api/\nDisallow: /demo/\nDisallow: /health\n\nSitemap: ${origin}/sitemap.xml\n`,
     200,
     { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' },
   )
@@ -312,8 +371,10 @@ app.get('/studio', async (c) => {
   if (!(await isOperator(getCookie(c, STUDIO_COOKIE), key)))
     return c.html(studioKeyPage({ configured: true }), 401)
   const projects = await listProjects(c.env.DB)
+  const ownerKeys: Record<string, string> = {}
+  for (const project of projects) ownerKeys[project.id] = await ownerAccessKey(project.token, ownerSecret(c.env))
   c.header('Cache-Control', 'private, no-store')
-  return c.html(studioPage(projects))
+  return c.html(studioPage(projects, ownerKeys))
 })
 
 /**
@@ -356,16 +417,29 @@ app.post('/studio/projects/:id/delete', async (c) => {
   return c.redirect('/studio', 303)
 })
 
+/**
+ * One starting document for every surface. A saved document always wins. A new
+ * flagship build is born with its own composition, not a generic section stack;
+ * every other trade keeps the existing seeded document.
+ */
+function starterDoc(project: { doc: unknown; spec: Parameters<typeof normalizeDoc>[1] }) {
+  if (project.doc) return normalizeDoc(project.doc, project.spec)
+  return FLAGSHIP_TRADES.has(project.spec.vertical)
+    ? flagshipDocFromSpec(project.spec)
+    : docFromSpec(project.spec)
+}
+
 app.get('/p/:token/edit', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.html(notFoundPage(), 404)
+  if (!(await ownerSession(c, project))) return c.redirect(`/p/${project.token}/dashboard/login`, 303)
   c.header('Cache-Control', 'no-store')
   return c.html(
     editorPage({
       project,
       // An editor session always opens the v2 screen model, even for a build
       // whose saved document predates screens.
-      doc: normalizeDoc(project.doc ?? docFromSpec(project.spec), project.spec),
+      doc: starterDoc(project),
       origin: new URL(c.req.url).origin,
     }),
   )
@@ -374,6 +448,7 @@ app.get('/p/:token/edit', async (c) => {
 app.get('/p/:token', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.html(notFoundPage(), 404)
+  if (!(await ownerSession(c, project))) return c.redirect(`/p/${project.token}/dashboard/login`, 303)
   const [notes, activity] = await Promise.all([
     listNotes(c.env.DB, project.id),
     listActivity(c.env.DB, project.id),
@@ -394,6 +469,7 @@ app.get('/p/:token/app', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.text('Not found', 404)
   c.header('Cache-Control', 'no-store')
+  c.header('X-Robots-Tag', project.spec.indexable ? 'index, follow' : 'noindex, nofollow')
   const photos = await photosFor(project.spec.vertical, c.env)
   return c.html(
     renderApp(project.spec, {
@@ -401,9 +477,11 @@ app.get('/p/:token/app', async (c) => {
       version: project.version,
       slot: project.variationSlot ?? undefined,
       photos,
-      noindex: true,
-      doc: project.doc ?? undefined,
-      // The editor's canvas opts in; a published app never carries the bridge.
+      noindex: !project.spec.indexable,
+      // Published and preview surfaces render the same saved document. The
+      // editor bridge is the only difference.
+      doc: starterDoc(project),
+      flagship: FLAGSHIP_TRADES.has(project.spec.vertical),
       editor: c.req.query('editor') === '1',
       screen: c.req.query('editor') === '1' ? c.req.query('screen')?.slice(0, 40) : undefined,
     }),
@@ -696,6 +774,17 @@ app.post('/api/projects', async (c) => {
     bundle: str(body.bundle, 20),
     site: sanitizeImported(body.site),
   })
+  // The person who just created the build holds its first owner session; the
+  // customer app link alone can never edit it.
+  const session = await createOwnerSession(c.env.DB, project.id)
+  setCookie(c, ownerCookieName(project.token), session.id, {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'Lax',
+    secure: isHttps(c.req.url),
+    maxAge: OWNER_SESSION_DAYS * 24 * 60 * 60,
+  })
+  await log(c.env.DB, project.id, 'session', 'Build created', 'First owner session created.')
 
   return c.json(
     {
@@ -712,6 +801,8 @@ app.post('/api/projects', async (c) => {
 app.patch('/api/projects/:token', async (c) => {
   const project = await loadProject(c)
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to edit this build.')
   const body = await readJson(c)
   if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
 
@@ -758,7 +849,7 @@ app.get('/api/projects/:token/doc', async (c) => {
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
   c.header('Cache-Control', 'private, no-store')
   return c.json({
-    doc: normalizeDoc(project.doc ?? docFromSpec(project.spec), project.spec),
+    doc: starterDoc(project),
     saved: Boolean(project.doc),
     version: project.version,
   })
@@ -863,6 +954,7 @@ app.post(
     if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
     if (!c.env.MEDIA)
       return fail(c, 503, 'media_unavailable', 'Image storage is not configured for this environment.')
+    if (!(await publicWriteBudget(c, project.id, 'media', 40))) return rateLimited(c)
 
     let form: FormData
     try {
@@ -882,17 +974,30 @@ app.post(
       const variantInputs = await Promise.all(
         variants.map(async (entry) => ({ bytes: new Uint8Array(await entry.arrayBuffer()) })),
       )
+      const input = {
+        original: { bytes: originalBytes, type: original.type, name: original.name },
+        variants: variantInputs,
+        alt: typeof form.get('alt') === 'string' ? String(form.get('alt')) : '',
+        focalX: Number(form.get('focalX') ?? 50),
+        focalY: Number(form.get('focalY') ?? 50),
+      }
+      const replaceId = typeof form.get('replace') === 'string' ? String(form.get('replace')) : ''
+      if (replaceId && /^med_[a-f0-9]{16,40}$/.test(replaceId)) {
+        const media = await replaceMedia(
+          c.env.DB,
+          c.env.MEDIA as unknown as MediaBucket,
+          project,
+          replaceId,
+          input,
+        )
+        c.header('Cache-Control', 'private, no-store')
+        return c.json({ media: mediaView(media), existing: false, replaced: true }, 200)
+      }
       const result = await uploadMedia(
         c.env.DB,
         c.env.MEDIA as unknown as MediaBucket,
         project,
-        {
-          original: { bytes: originalBytes, type: original.type, name: original.name },
-          variants: variantInputs,
-          alt: typeof form.get('alt') === 'string' ? String(form.get('alt')) : '',
-          focalX: Number(form.get('focalX') ?? 50),
-          focalY: Number(form.get('focalY') ?? 50),
-        },
+        input,
       )
       c.header('Cache-Control', 'private, no-store')
       return c.json({ media: mediaView(result.media), existing: result.existing }, result.existing ? 200 : 201)
@@ -923,6 +1028,16 @@ app.delete('/api/projects/:token/media/:mediaId', async (c) => {
   }
 })
 
+async function publicWriteBudget(c: Context<{ Bindings: Bindings }>, projectId: string, kind: string, limit: number): Promise<boolean> {
+  const visitor = await visitorBucket(c.req.header('cf-connecting-ip'))
+  return spendDailyBudget(c.env.DB, `${kind}:${projectId}:${visitor}`, limit)
+}
+
+function rateLimited(c: Context): Response {
+  c.header('Retry-After', '3600')
+  return fail(c, 429, 'rate_limited', 'Too many requests from this device. Please try again later.')
+}
+
 function businessFailure(c: Context, error: unknown): Response {
   if (error instanceof BusinessError)
     return c.json({ error: { code: error.code, message: error.message } }, error.status)
@@ -940,6 +1055,7 @@ app.post(
       return fail(c, 403, 'cross_origin', 'Orders are placed from the customer app.')
     const project = await loadProject(c)
     if (!project) return fail(c, 404, 'not_found', 'No app with that link.')
+    if (!(await publicWriteBudget(c, project.id, 'order', 30))) return rateLimited(c)
     const body = await readJson(c)
     if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
     try {
@@ -981,6 +1097,7 @@ app.post(
       return fail(c, 403, 'cross_origin', 'Bookings are requested from the customer app.')
     const project = await loadProject(c)
     if (!project) return fail(c, 404, 'not_found', 'No app with that link.')
+    if (!(await publicWriteBudget(c, project.id, 'booking', 15))) return rateLimited(c)
     const body = await readJson(c)
     if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
     try {
@@ -1011,6 +1128,7 @@ app.post(
       return fail(c, 403, 'cross_origin', 'Enquiries are sent from the customer app.')
     const project = await loadProject(c)
     if (!project) return fail(c, 404, 'not_found', 'No app with that link.')
+    if (!(await publicWriteBudget(c, project.id, 'enquiry', 10))) return rateLimited(c)
     const body = await readJson(c)
     if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
     try {
@@ -1026,14 +1144,75 @@ app.post(
 app.get('/p/:token/dashboard', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.html(notFoundPage(), 404)
+  if (!(await ownerSession(c, project)))
+    return c.redirect(`/p/${project.token}/dashboard/login`, 303)
   const data = await dashboardData(c.env.DB, project)
   c.header('Cache-Control', 'private, no-store')
   return c.html(dashboardPage({ project, data, origin: new URL(c.req.url).origin }))
 })
 
+app.get('/p/:token/dashboard/login', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.html(notFoundPage(), 404)
+  if (await ownerSession(c, project)) return c.redirect(`/p/${project.token}/dashboard`, 303)
+  c.header('Cache-Control', 'private, no-store')
+  return c.html(ownerLoginPage({ project, configured: Boolean(ownerSecret(c.env)) }))
+})
+
+app.post('/p/:token/dashboard/login', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.html(notFoundPage(), 404)
+  c.header('Cache-Control', 'no-store')
+  const secret = ownerSecret(c.env)
+  if (!secret) return c.html(ownerLoginPage({ project, configured: false }), 503)
+  const visitor = await visitorBucket(c.req.header('cf-connecting-ip'))
+  if (!(await spendDailyBudget(c.env.DB, `owner-login:${project.id}:${visitor}`, 10)))
+    return c.html(ownerLoginPage({ project, configured: true, blocked: true }), 429)
+  const body = await c.req.parseBody()
+  const given = typeof body.key === 'string' ? body.key.trim() : ''
+  if (!(await matchesOwnerKey(given, project.token, secret)))
+    return c.html(ownerLoginPage({ project, configured: true, wrong: true }), 401)
+  const session = await createOwnerSession(c.env.DB, project.id)
+  await log(c.env.DB, project.id, 'session', 'Owner signed in', 'Dashboard session created.')
+  setCookie(c, ownerCookieName(project.token), session.id, {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'Lax',
+    secure: isHttps(c.req.url),
+    maxAge: OWNER_SESSION_DAYS * 24 * 60 * 60,
+  })
+  return c.redirect(`/p/${project.token}/dashboard`, 303)
+})
+
+app.post('/p/:token/dashboard/logout', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.redirect('/', 303)
+  const name = ownerCookieName(project.token)
+  if (await ownerSession(c, project)) await log(c.env.DB, project.id, 'session', 'Owner signed out', 'This browser session ended.')
+  await deleteOwnerSession(c.env.DB, getCookie(c, name))
+  deleteCookie(c, name, { path: '/', secure: isHttps(c.req.url) })
+  return c.redirect(`/p/${project.token}/dashboard/login`, 303)
+})
+
+app.post('/p/:token/dashboard/logout-all', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin) return fail(c, 403, 'cross_origin', 'Sign out from the dashboard.')
+  const project = await loadProject(c)
+  if (!project) return c.redirect('/', 303)
+  const name = ownerCookieName(project.token)
+  if (await ownerSession(c, project)) {
+    await deleteOwnerSessions(c.env.DB, project.id)
+    await log(c.env.DB, project.id, 'session', 'Signed out everywhere', 'Every owner session was revoked.')
+  }
+  deleteCookie(c, name, { path: '/', secure: isHttps(c.req.url) })
+  return c.redirect(`/p/${project.token}/dashboard/login`, 303)
+})
+
 app.get('/api/projects/:token/dashboard', async (c) => {
   const project = await loadProject(c)
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to open this dashboard.')
   c.header('Cache-Control', 'private, no-store')
   return c.json(await dashboardData(c.env.DB, project))
 })
@@ -1043,10 +1222,13 @@ app.patch('/api/projects/:token/orders/:orderId', async (c) => {
   if (origin && origin !== new URL(c.req.url).origin) return fail(c, 403, 'cross_origin', 'Update orders from the dashboard.')
   const project = await loadProject(c)
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to update orders.')
   const body = await readJson(c)
   if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
   try {
     const order = await updateOrderStatus(c.env.DB, project.id, c.req.param('orderId'), str(body.status, 20))
+    await log(c.env.DB, project.id, 'order', `Order ${order.status}`, order.id)
     c.header('Cache-Control', 'private, no-store')
     return c.json({ order: { id: order.id, status: order.status, updatedAt: order.updatedAt } })
   } catch (error) {
@@ -1059,10 +1241,13 @@ app.patch('/api/projects/:token/bookings/:bookingId', async (c) => {
   if (origin && origin !== new URL(c.req.url).origin) return fail(c, 403, 'cross_origin', 'Update bookings from the dashboard.')
   const project = await loadProject(c)
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to update bookings.')
   const body = await readJson(c)
   if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
   try {
     const booking = await updateBookingStatus(c.env.DB, project.id, c.req.param('bookingId'), str(body.status, 20))
+    await log(c.env.DB, project.id, 'booking', `Booking ${booking.status}`, booking.id)
     c.header('Cache-Control', 'private, no-store')
     return c.json({ booking: { id: booking.id, status: booking.status, updatedAt: booking.updatedAt } })
   } catch (error) {
@@ -1075,10 +1260,13 @@ app.patch('/api/projects/:token/enquiries/:enquiryId', async (c) => {
   if (origin && origin !== new URL(c.req.url).origin) return fail(c, 403, 'cross_origin', 'Update enquiries from the dashboard.')
   const project = await loadProject(c)
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to update enquiries.')
   const body = await readJson(c)
   if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
   try {
     const enquiry = await updateEnquiryStatus(c.env.DB, project.id, c.req.param('enquiryId'), str(body.status, 20))
+    await log(c.env.DB, project.id, 'enquiry', `Enquiry ${enquiry.status}`, enquiry.id)
     c.header('Cache-Control', 'private, no-store')
     return c.json({ enquiry: { id: enquiry.id, status: enquiry.status } })
   } catch (error) {
@@ -1094,38 +1282,128 @@ app.put('/api/projects/:token/app-settings', async (c) => {
   if (type !== 'application/json') return fail(c, 415, 'unsupported_media_type', 'Send a JSON body.')
   const project = await loadProject(c)
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to change app settings.')
   const body = await readJson(c)
   if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
   const name = str(body.name, 60) || project.name
   if (name.length < 2) return fail(c, 422, 'name_required', 'Add the business name.')
+  const accent = sanitizeHex(body.accent, project.accent)
+  const logo = name === project.name ? project.logo : initialsFor(name)
+  const phone = str(body.phone, 24) || project.spec.phone
+  const email = str(body.email, 80) || project.spec.email
+  const address = str(body.address, 60) || project.spec.address
+  const hours = str(body.hours, 90) || project.spec.hours
+  const tagline = str(body.tagline, 90) || project.spec.tagline
+  const story = str(body.story, 600) || project.spec.story
+  const team =
+    body.team === undefined
+      ? project.spec.team ?? []
+      : str(body.team, 2400)
+          .split('\n')
+          .map((line) => line.split('|').map((part) => part.trim().slice(0, 60)))
+          .filter((parts) => parts[0])
+          .slice(0, 8)
+          .map((parts) => ({ name: parts[0], role: parts[1] || '', ...(parts[2] ? { credential: parts[2] } : {}) }))
+  const staff =
+    body.staff === undefined
+      ? team.length
+        ? team.map((person) => person.name)
+        : project.spec.staff ?? []
+      : str(body.staff, 500)
+          .split(',')
+          .map((person) => person.trim().slice(0, 40))
+          .filter(Boolean)
+          .slice(0, 12)
   const spec = {
     ...project.spec,
     name,
-    tagline: str(body.tagline, 90) || project.spec.tagline,
-    story: str(body.story, 600) || project.spec.story,
-    hours: str(body.hours, 90) || project.spec.hours,
-    address: str(body.address, 60) || project.spec.address,
-    phone: str(body.phone, 24) || project.spec.phone,
-    email: str(body.email, 80) || project.spec.email,
+    tagline,
+    story,
+    hours,
+    address,
+    phone,
+    email,
+    accent,
+    logo,
     category: str(body.category, 40) || project.spec.category,
-    staff: str(body.staff, 500)
-      .split(',')
-      .map((person) => person.trim().slice(0, 40))
-      .filter(Boolean)
-      .slice(0, 12),
+    staff,
+    team,
+    indexable:
+      body.indexable === undefined
+        ? project.spec.indexable === true
+        : body.indexable === true || body.indexable === 'on',
   }
+  const sample = {
+    menu: false,
+    contact: false,
+    story: false,
+    offers: false,
+    ...(project.spec.sampleContent ?? {}),
+  }
+  if (phone !== project.spec.phone || email !== project.spec.email || address !== project.spec.address || hours !== project.spec.hours) sample.contact = false
+  if (tagline !== project.spec.tagline) sample.tagline = false
+  if (story !== project.spec.story) sample.story = false
+  if (JSON.stringify(staff) !== JSON.stringify(project.spec.staff ?? [])) sample.team = false
+  if (JSON.stringify(team) !== JSON.stringify(project.spec.team ?? [])) sample.team = false
+  spec.sampleContent = sample
   await c.env.DB
-    .prepare('UPDATE projects SET name = ?, spec = ?, updated_at = ? WHERE id = ?')
-    .bind(name, JSON.stringify(spec), new Date().toISOString(), project.id)
+    .prepare('UPDATE projects SET name = ?, spec = ?, accent = ?, logo = ?, updated_at = ? WHERE id = ?')
+    .bind(name, JSON.stringify(spec), accent, logo, new Date().toISOString(), project.id)
     .run()
+  await log(c.env.DB, project.id, 'settings', 'Business details updated', name)
   c.header('Cache-Control', 'private, no-store')
   return c.json({ ok: true, spec })
 })
 
-app.put('/api/projects/:token/catalog', async (c) => {
+/**
+ * Removes only the groups still flagged as Plattr's sample content. Anything
+ * the owner has saved as their own (a catalogue save clears its flag, edited
+ * settings clear theirs) is left untouched, so this cannot silently replace
+ * work the owner has done. The explicit confirmation is checked server-side as
+ * well as in the dashboard.
+ */
+app.post('/api/projects/:token/personalise/clear-samples', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin) return fail(c, 403, 'cross_origin', 'Remove sample content from the dashboard.')
+  const type = (c.req.header('content-type') ?? '').split(';')[0].trim().toLowerCase()
+  if (type !== 'application/json') return fail(c, 415, 'unsupported_media_type', 'Send a JSON body.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to change the business details.')
+  const body = await readJson(c)
+  if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
+  if (body.confirm !== 'remove-sample-content')
+    return fail(c, 422, 'confirmation_required', 'Confirm that you want to remove the remaining sample content.')
+  const before = project.spec.sampleContent ?? { menu: false, contact: false, story: false, offers: false }
+  const spec = { ...project.spec }
+  if (before.menu) spec.menu = []
+  if (before.offers) spec.offers = []
+  if (before.story) spec.story = ''
+  if (before.tagline) spec.tagline = ''
+  if (before.team) spec.staff = []
+  if (Array.isArray(spec.team)) spec.team = []
+  if (before.contact) {
+    spec.phone = ''
+    spec.email = ''
+    spec.address = ''
+    spec.hours = ''
+  }
+  spec.sampleContent = { menu: false, contact: false, story: false, offers: false, team: false, tagline: false }
+  await c.env.DB
+    .prepare('UPDATE projects SET spec = ?, updated_at = ? WHERE id = ?')
+    .bind(JSON.stringify(spec), new Date().toISOString(), project.id)
+    .run()
+  await log(c.env.DB, project.id, 'content', 'Sample content removed', 'Only groups still marked as examples were cleared.')
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({ ok: true, spec })
+})
+
+async function saveCatalogHandler(c: Context<{ Bindings: Bindings }, '/api/projects/:token/catalog'>) {
   const origin = c.req.header('origin')
   if (origin && origin !== new URL(c.req.url).origin)
-    return fail(c, 403, 'cross_origin', 'Catalogue edits are saved from the editor.')
+    return fail(c, 403, 'cross_origin', 'Catalogue edits are saved from an owner surface.')
   const type = (c.req.header('content-type') ?? '').split(';')[0].trim().toLowerCase()
   if (type !== 'application/json') return fail(c, 415, 'unsupported_media_type', 'Send a JSON body.')
   const project = await loadProject(c)
@@ -1142,13 +1420,46 @@ app.put('/api/projects/:token/catalog', async (c) => {
         }))
         .filter((entry) => entry.title)
     : project.spec.offers
-  const spec = { ...project.spec, menu, offers }
+  const sample = {
+    menu: false,
+    contact: false,
+    story: false,
+    offers: false,
+    ...(project.spec.sampleContent ?? {}),
+  }
+  const menuChanged = JSON.stringify(menu) !== JSON.stringify(project.spec.menu)
+  const offersChanged = JSON.stringify(offers) !== JSON.stringify(project.spec.offers)
+  // Saving the catalogue is the owner taking ownership of it. The remaining
+  // sample groups stay flagged so the dashboard can still offer to clear them.
+  const spec = {
+    ...project.spec,
+    menu,
+    offers,
+    sampleContent: {
+      ...sample,
+      menu: menuChanged ? false : sample.menu,
+      offers: offersChanged ? false : sample.offers,
+    },
+  }
   await c.env.DB
     .prepare('UPDATE projects SET spec = ?, updated_at = ? WHERE id = ?')
     .bind(JSON.stringify(spec), new Date().toISOString(), project.id)
     .run()
+  if (menuChanged || offersChanged)
+    await log(c.env.DB, project.id, 'catalogue', 'Catalogue updated', 'Saved from an owner surface.')
   c.header('Cache-Control', 'private, no-store')
   return c.json({ ok: true, menu, offers })
+}
+
+// The visual editor addresses the catalogue through the project's private
+// edit token; the dashboard uses the separate owner session.
+app.put('/api/projects/:token/catalog', saveCatalogHandler)
+app.put('/api/projects/:token/dashboard/catalog', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (!(await ownerSession(c, project)))
+    return fail(c, 401, 'owner_auth_required', 'Sign in with the owner key to change the catalogue.')
+  return saveCatalogHandler(c)
 })
 
 app.post('/api/projects/:token/notes', async (c) => {

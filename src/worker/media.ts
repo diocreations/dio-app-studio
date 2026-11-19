@@ -416,10 +416,132 @@ export async function uploadMedia(
   }
 }
 
+/** Replace the bytes behind an existing media id. References keep pointing at
+ *  the same id while every rendered image picks up the new variants. */
+export async function replaceMedia(
+  db: D1Database,
+  bucket: MediaBucket,
+  project: Project,
+  id: string,
+  input: {
+    original: { bytes: Uint8Array; type: string; name: string }
+    variants: { bytes: Uint8Array }[]
+    alt?: string
+    focalX?: number
+    focalY?: number
+  },
+): Promise<MediaRecord> {
+  const existing = await getMedia(db, project.id, id)
+  if (!existing) throw new MediaError('not_found', 'That image no longer exists.', 404)
+  const original = validInfo(imageInfo(input.original.bytes))
+  const type = input.original.type.toLowerCase()
+  const expectedType = { jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' }[original.format]
+  if (!expectedType || type !== expectedType)
+    throw new MediaError('unsupported_type', 'Upload a JPEG, PNG or WebP image whose contents match its type.')
+  if (input.original.bytes.byteLength > MEDIA_LIMITS.maxBytes)
+    throw new MediaError('too_large', 'That image is larger than 8 MB.')
+  if (!input.variants.length)
+    throw new MediaError('bad_variants', 'No usable image sizes were produced.')
+  if (input.variants.length > 4)
+    throw new MediaError('bad_variants', 'Too many image sizes were uploaded.')
+
+  const variants: MediaVariant[] = []
+  const contents = new Map<number, Uint8Array>()
+  for (const entry of input.variants) {
+    const info = validInfo(imageInfo(entry.bytes))
+    if (info.format !== 'webp')
+      throw new MediaError('bad_variants', 'Every stored image size must be WebP.')
+    if (info.width > original.width * 1.02 || info.height > original.height * 1.02)
+      throw new MediaError('bad_variants', 'An image size is larger than the original.')
+    if (entry.bytes.byteLength > 2 * 1024 * 1024)
+      throw new MediaError('too_large', 'One image size is larger than 2 MB.')
+    if (variants.some((variant) => variant.width === info.width))
+      throw new MediaError('bad_variants', 'Two image sizes have the same width.')
+    variants.push({ width: info.width, height: info.height, bytes: entry.bytes.byteLength, key: '' })
+    contents.set(info.width, entry.bytes)
+  }
+  variants.sort((a, b) => a.width - b.width)
+  const total = variants.reduce((sum, entry) => sum + entry.bytes, 0)
+  const usage = await quota(db, project.id)
+  if (usage.bytes - existing.bytes + total > MEDIA_LIMITS.maxTotalBytes)
+    throw new MediaError('quota_bytes', 'This app has reached its image storage limit.', 409)
+
+  const hash = await sha256(input.original.bytes)
+  const stored: string[] = []
+  try {
+    for (const variant of variants) {
+      variant.key = variantKey(project.id, hash, variant.width)
+      const content = contents.get(variant.width)
+      if (!content) throw new MediaError('bad_variants', 'An image size was missing.')
+      await bucket.put(
+        variant.key,
+        content.buffer.slice(content.byteOffset, content.byteOffset + content.byteLength) as ArrayBuffer,
+        {
+          httpMetadata: { contentType: 'image/webp', cacheControl: 'private, max-age=31536000, immutable' },
+          customMetadata: { project: project.id, hash },
+        },
+      )
+      stored.push(variant.key)
+    }
+    const alt = input.alt === undefined ? existing.alt : input.alt.trim().slice(0, 120)
+    const focalX = Math.max(0, Math.min(100, Math.round(input.focalX ?? existing.focalX)))
+    const focalY = Math.max(0, Math.min(100, Math.round(input.focalY ?? existing.focalY)))
+    await db
+      .prepare(
+        `UPDATE media SET hash = ?, width = ?, height = ?, bytes = ?, alt = ?, focal_x = ?, focal_y = ?, variants = ?
+         WHERE id = ? AND project_id = ?`,
+      )
+      .bind(
+        hash,
+        original.width,
+        original.height,
+        total,
+        alt,
+        focalX,
+        focalY,
+        JSON.stringify(variants.map(({ width, height, bytes }) => ({ width, height, bytes }))),
+        id,
+        project.id,
+      )
+      .run()
+    const oldKeys = existing.variants.map((variant) => variant.key)
+    const newKeys = variants.map((variant) => variant.key)
+    const oldHash = existing.hash
+    const shared = await db
+      .prepare('SELECT COUNT(*) AS count FROM media WHERE project_id = ? AND hash = ? AND id != ?')
+      .bind(project.id, oldHash, id)
+      .first<{ count: number }>()
+    if (!Number(shared?.count ?? 0)) {
+      const stale = oldKeys.filter((key) => !newKeys.includes(key))
+      if (stale.length) await bucket.delete(stale).catch(() => undefined)
+    }
+    return {
+      ...existing,
+      hash,
+      width: original.width,
+      height: original.height,
+      bytes: total,
+      alt,
+      focalX,
+      focalY,
+      variants: variants.map((entry) => ({ ...entry, key: variantKey(project.id, hash, entry.width) })),
+    }
+  } catch (error) {
+    await Promise.all(stored.map((key) => bucket.delete(key).catch(() => undefined))).catch(() => undefined)
+    if (error instanceof MediaError) throw error
+    throw new MediaError('storage_failed', 'Image storage is unavailable. Try again in a moment.', 502)
+  }
+}
+
 /** The current document is the reference that protects an image from deletion. */
 export function mediaInDoc(doc: Doc | null, id: string): boolean {
   if (!doc) return false
   return doc.screens.some((screen) => screen.sections.some((node) => node.media?.id === id))
+}
+
+/** A catalogue item's photograph is a first-class reference too. */
+export function mediaInCatalog(project: Project, id: string): boolean {
+  return project.spec.menu.some((section) => section.items.some((item) => item.media?.id === id))
 }
 
 /** Remove references to a deleted image from retained versions, so restoring one
@@ -460,7 +582,7 @@ export async function deleteMedia(
 ): Promise<void> {
   const record = await getMedia(db, project.id, id)
   if (!record) throw new MediaError('not_found', 'That image no longer exists.', 404)
-  if (mediaInDoc(project.doc, id))
+  if (mediaInDoc(project.doc, id) || mediaInCatalog(project, id))
     throw new MediaError('in_use', 'This image is used in the app. Replace or remove it there first.', 409)
   await scrubVersions(db, project.id, id)
   try {

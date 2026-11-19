@@ -24,27 +24,33 @@ not counted as functional.
 | Salon & spa | — | **Partial** — service, date/time, optional staff, owner confirmation | **Functional** — contact form | Staff calendars and double-booking prevention |
 | Gym & studio | — | **Partial** — session/appointment request | **Functional** — contact form | Class timetable is display-only; class capacity not implemented |
 | Clinic & health | — | **Partial** — appointment request | **Functional** — quote/contact | Clinical intake and triage not implemented |
-| Trades & home services | — | **Partial** — visit request | **Functional** — quote/contact | Job scheduling and route planning |
+| Trades & home services | — | **Partial** — visit request, flagship call-out booking | **Functional** — quote/contact | Job scheduling, route planning and engineer assignment |
 | Professional services | — | **Partial** — appointment request | **Functional** — quote/contact | Document upload and engagement letters |
 | Property & estate agency | — | **Partial** — viewing request | **Functional** — quote/contact | Listing availability and offer workflow |
 | Hotel & guesthouse | — | **Partial** — stay request, no room inventory | **Functional** — quote/contact | Room types, availability calendar, deposits |
 | Creative studio | — | **Partial** — shoot/consultation request | **Functional** — quote/contact | Contracts and deliverables |
-| Garage & auto | — | **Partial** — service request | **Functional** — quote/contact | Vehicle records and workshop scheduling |
+| Garage & auto | — | **Partial** — service request, flagship slot picker | **Functional** — quote/contact | Vehicle records, registration lookup and workshop scheduling |
 | Hospital & health | — | **Partial** — appointment request | **Functional** — quote/contact | Departments, bed/clinical systems, insurance |
-| Online store | **Functional** — catalogue, cart, guest checkout | — | **Functional** — contact form | Delivery tracking; tax calculation |
+| Online store | **Functional** — catalogue, cart, guest checkout, flat $2.99 delivery | — | **Functional** — contact form | Delivery tracking and free-delivery thresholds; tax calculation |
 | Indoor plant shop | **Functional** — catalogue, cart | — | **Functional** — contact form | Delivery tracking |
 | Garden centre | **Functional** — catalogue, cart | **Partial** — visit/appointment request | **Functional** — contact form | Delivery tracking |
-| Online courses | **Partial** — course checkout creates an order | — | **Functional** — contact form | Course access, lesson delivery, certificates |
+| Online courses | **Partial** — course detail, enrolment checkout creates an order | — | **Functional** — contact form | Course access, lesson delivery, progress and certificates |
 | Tuition centre | — | **Partial** — assessment/visit request | **Functional** — contact form | Tutor allocation and progress records |
 | School | — | **Partial** — visit request | **Functional** — contact form | Admissions workflow; classes/events are display-only |
 | Kindergarten | — | **Partial** — visit request | **Functional** — contact form | Places, ratios and fee collection |
-| Financial services | — | **Partial** — appointment request | **Functional** — quote/contact | Regulated onboarding and advice records |
+| Financial services | — | **Partial** — appointment request, flagship disclosure panel | **Functional** — quote/contact | Regulated onboarding, suitability checks and advice records |
 | Business agency | — | — | **Functional** — quote/contact | Project delivery and retainers |
 | Influencer & creator | — | — | **Functional** — quote/contact | Media kit analytics and campaign tracking |
 | Personal portfolio | — | — | **Functional** — quote/contact | Commission workflow and rights management |
 | Film & production | — | **Partial** — screening/booking request | **Functional** — contact form | Rights, screening inventory and ticketing |
 | Art gallery | — | **Partial** — visit request | **Functional** — contact form | Artwork inventory and consignment |
 | Marketplace | **Partial** — cart and checkout across vendors | — | **Functional** — contact form | Vendor onboarding, split settlement, per-vendor payouts |
+
+Batch 3 (trades, auto, ecommerce, courses, finance) added flagship
+compositions but did not change any status: the customer actions are the same
+real D1 records, now reached through a trade-specific journey. The finance
+disclosure panel is template copy, not regulated advice or a suitability check.
+Course enrolment creates an order; it does not yet provision lesson access.
 
 ## What is genuinely shared
 

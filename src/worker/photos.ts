@@ -1,5 +1,6 @@
 import { PHOTO_KEYWORDS } from './themes'
 import type { VerticalId } from './types'
+import { stockPhotos } from './flagshipImages'
 
 export type PhotoSet = { wide: string[]; thumb: string[] }
 
@@ -8,11 +9,21 @@ const TTL = 6 * 60 * 60 * 1000
 const EMPTY: PhotoSet = { wide: [], thumb: [] }
 
 /**
- * Photography needs a stock key. Without one `photosFor` returns nothing and
- * the app's generated artwork carries every image slot — deliberately: the
- * keyless pools are archival, and a homeware shop showing museum pottery reads
- * worse than the artwork did.
+ * The five flagship trades ship a curated local library. It is the default so
+ * an app always has real photography, even with no stock API key configured;
+ * Pexels remains the wider pool when the owner supplies a key.
  */
+function localPhotos(vertical: VerticalId): PhotoSet {
+  const photos = stockPhotos(vertical)
+  if (!photos.length) return EMPTY
+  return {
+    wide: photos.map((photo) => `/images/flagship/${photo.name}-1280.webp`),
+    thumb: photos.map((photo) => `/images/flagship/${photo.name}-640.webp`),
+  }
+}
+
+/** A Pexels key widens the pool; it is optional because flagship trades have
+ *  their own local library. */
 function stockKey(env?: { PEXELS_API_KEY?: string }): string {
   // A Worker binding wins; the local dev server only has process.env.
   if (env?.PEXELS_API_KEY) return env.PEXELS_API_KEY
@@ -30,7 +41,8 @@ export async function photosFor(
 ): Promise<PhotoSet> {
   const key = stockKey(env)
   const keyword = PHOTO_KEYWORDS[vertical]
-  if (!key || !keyword) return EMPTY
+  const local = localPhotos(vertical)
+  if (!key || !keyword) return local
 
   const hit = cache.get(keyword)
   if (hit && Date.now() - hit.at < TTL) return hit.set
@@ -54,6 +66,6 @@ export async function photosFor(
     cache.set(keyword, { at: Date.now(), set })
     return set
   } catch {
-    return hit?.set ?? EMPTY
+    return hit?.set ?? local
   }
 }

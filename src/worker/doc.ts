@@ -30,6 +30,7 @@ export type SectionKind =
   | 'search'
   | 'form'
   | 'gallery'
+  | 'flagship'
 
 export const SECTION_KINDS: readonly SectionKind[] = [
   'hero',
@@ -49,7 +50,97 @@ export const SECTION_KINDS: readonly SectionKind[] = [
   'search',
   'form',
   'gallery',
+  'flagship',
 ]
+
+/**
+ * The five flagship trades keep their own composition, but each visible block
+ * is an ordinary document node. The variant chooses the trade-specific
+ * presentation; the node itself supplies the stable id, words, image and
+ * visibility that every editor surface already understands.
+ */
+export const FLAGSHIP_VARIANTS = [
+  'dine-title',
+  'dine-feature',
+  'dine-actions',
+  'dine-facts',
+  'dine-note',
+  'shop-search',
+  'shop-title',
+  'shop-products',
+  'shop-all',
+  'salon-title',
+  'salon-dates',
+  'salon-services',
+  'salon-staff',
+  'salon-action',
+  'hotel-cover',
+  'hotel-stay',
+  'hotel-rooms',
+  'hotel-facts',
+  'pro-title',
+  'pro-intro',
+  'pro-team',
+  'pro-index',
+  'pro-actions',
+  'pro-facts',
+  'cafe-hero',
+  'cafe-menu',
+  'cafe-order',
+  'cafe-reserve',
+  'gym-hero',
+  'gym-plans',
+  'gym-timetable',
+  'gym-trainers',
+  'gym-join',
+  'clinic-hero',
+  'clinic-specialities',
+  'clinic-doctors',
+  'clinic-care',
+  'clinic-privacy',
+  'clinic-appointments',
+  'property-hero',
+  'property-search',
+  'property-listings',
+  'property-viewing',
+  'property-enquire',
+  'studio-hero',
+  'studio-work',
+  'studio-services',
+  'studio-team',
+  'studio-book',
+  'trades-hero',
+  'trades-jobs',
+  'trades-proof',
+  'trades-quote',
+  'trades-area',
+  'trades-book',
+  'auto-hero',
+  'auto-vehicle',
+  'auto-jobs',
+  'auto-slots',
+  'auto-promise',
+  'auto-quote',
+  'ecom-hero',
+  'ecom-drop',
+  'ecom-products',
+  'ecom-delivery',
+  'ecom-rewards',
+  'courses-hero',
+  'courses-path',
+  'courses-list',
+  'courses-included',
+  'courses-enrol',
+  'finance-hero',
+  'finance-disclosure',
+  'finance-services',
+  'finance-process',
+  'finance-advisers',
+  'finance-review',
+  'offers',
+] as const
+
+export type FlagshipVariant = (typeof FLAGSHIP_VARIANTS)[number]
 
 /** Screens the app shell knows how to render. */
 export type ScreenKind =
@@ -127,6 +218,8 @@ export type DocNode = {
   title?: string
   text?: string
   cta?: { label: string; screen: string }
+  /** Presentation inside a flagship composition. Never used by generic kinds. */
+  variant?: FlagshipVariant
   media?: MediaRef
   style: SectionStyle
   responsive: Responsive
@@ -215,6 +308,7 @@ const KIND_LABEL: Record<SectionKind, string> = {
   search: 'Search',
   form: 'Contact form',
   gallery: 'Gallery',
+  flagship: 'Featured block',
 }
 
 const SCREEN_LABEL: Record<ScreenKind, string> = {
@@ -375,6 +469,318 @@ export function docFromSpec(spec: AppSpec): Doc {
 }
 
 /** The home screen, which always exists. */
+function flagshipSection(variant: FlagshipVariant, extra: Partial<DocNode> = {}): DocNode {
+  return section('flagship', {
+    id: `sec_fx_${variant.replace(/-/g, '_')}`,
+    variant,
+    ...extra,
+  })
+}
+
+/**
+ * The starting document for a flagship build. The order is the trade's own
+ * composition, not a generic stack: a restaurant opens on its identity and one
+ * dish, a shop on search and products, a salon on dates and treatments, a hotel
+ * on its cover and stay card, a professional on its practice statement. Every
+ * block is a normal document node from birth, so from the first editor session
+ * it can be selected, rewritten, photographed, reordered and hidden.
+ */
+export function flagshipDocFromSpec(spec: AppSpec): Doc {
+  const doc = docFromSpec(spec)
+  const first = spec.menu.flatMap((entry) => entry.items)[0]
+  const hours = (spec.hours || '').split('·')[0].trim()
+  const address = spec.address || ''
+  const canBook = spec.features.includes('booking') || spec.features.includes('classes')
+  const canQuote = spec.features.includes('quote')
+  const bookingScreen = canBook ? 'scr_book' : 'scr_catalog'
+  const quoteScreen = canQuote ? 'scr_quote' : 'scr_catalog'
+  let sections: DocNode[] = []
+
+  if (spec.vertical === 'restaurant') {
+    sections = [
+      flagshipSection('dine-title', { title: spec.name, text: spec.tagline }),
+      flagshipSection('dine-feature', {
+        title: first?.name || 'The menu',
+        text: first?.desc || 'The kitchen is writing its first menu.',
+      }),
+      flagshipSection('dine-actions', {
+        title: 'See the menu',
+        cta: { label: 'See the menu', screen: 'scr_catalog' },
+      }),
+      flagshipSection('dine-note', { text: 'Seasonal · cooked to order' }),
+    ]
+  } else if (spec.vertical === 'shop') {
+    sections = [
+      flagshipSection('shop-search', { title: 'Search the collection' }),
+      flagshipSection('shop-title', { title: spec.tagline }),
+      flagshipSection('shop-products', { title: 'New in' }),
+      flagshipSection('shop-all', {
+        title: 'Browse everything',
+        cta: { label: 'Browse everything', screen: 'scr_catalog' },
+      }),
+    ]
+  } else if (spec.vertical === 'salon') {
+    sections = [
+      flagshipSection('salon-title', {
+        title: spec.tagline,
+        text: [spec.name, address].filter(Boolean).join(' · '),
+      }),
+      flagshipSection('salon-dates', { title: 'Choose a day' }),
+      flagshipSection('salon-services', { title: 'Choose a treatment' }),
+      flagshipSection('salon-staff', {
+        text: spec.staff?.length ? `With ${spec.staff.slice(0, 4).join(', ')}` : 'With the team',
+      }),
+      flagshipSection('salon-action', {
+        title: 'Book an appointment',
+        cta: { label: 'Book an appointment', screen: 'scr_book' },
+      }),
+    ]
+  } else if (spec.vertical === 'hotel') {
+    sections = [
+      flagshipSection('hotel-cover', { title: spec.name, text: spec.tagline }),
+      flagshipSection('hotel-stay', { title: 'View rooms' }),
+      flagshipSection('hotel-rooms', { title: 'Rooms' }),
+      flagshipSection('hotel-facts', {
+        title: hours || 'Reception',
+        text: [address, 'Check-in 15:00 · Check-out 11:00'].filter(Boolean).join(' · '),
+      }),
+    ]
+  } else if (spec.vertical === 'cafe') {
+    sections = [
+      flagshipSection('cafe-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('cafe-menu', { title: 'From the counter' }),
+      flagshipSection('cafe-order', {
+        title: 'Takeaway, ready when you are',
+        text: 'Order ahead and collect at the bar.',
+        cta: { label: 'Start an order', screen: 'scr_catalog' },
+      }),
+      flagshipSection('cafe-reserve', {
+        title: 'A table, held for you',
+        text: hours ? `Kitchen open ${hours.toLowerCase()}` : 'Walk-ins always welcome.',
+        cta: { label: 'Reserve a table', screen: bookingScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'gym') {
+    sections = [
+      flagshipSection('gym-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('gym-plans', { title: 'Memberships' }),
+      flagshipSection('gym-timetable', { title: 'This week' }),
+      flagshipSection('gym-trainers', { title: 'Your coaches' }),
+      flagshipSection('gym-join', {
+        title: 'Not sure where to start?',
+        text: 'Tell us your goal and we will suggest the right plan.',
+        cta: { label: 'Ask about membership', screen: quoteScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'clinic') {
+    sections = [
+      flagshipSection('clinic-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('clinic-specialities', { title: 'Specialities' }),
+      flagshipSection('clinic-doctors', { title: 'The clinical team' }),
+      flagshipSection('clinic-care', { title: 'How a visit works' }),
+      flagshipSection('clinic-privacy', {
+        title: 'Your information stays yours',
+        text: 'We only ask for what we need to arrange your appointment. Please leave medical details out of this form; we will discuss them privately at the clinic.',
+      }),
+      flagshipSection('clinic-appointments', {
+        title: 'Book an appointment',
+        text: 'Choose a treatment and a time that suits you.',
+        cta: { label: 'Book an appointment', screen: bookingScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'property') {
+    sections = [
+      flagshipSection('property-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('property-search', { title: 'Search homes' }),
+      flagshipSection('property-listings', { title: 'On the market' }),
+      flagshipSection('property-viewing', {
+        title: 'See it for yourself',
+        text: 'Viewings run Monday to Saturday, at the property.',
+        cta: { label: 'Book a viewing', screen: bookingScreen },
+      }),
+      flagshipSection('property-enquire', {
+        title: 'Thinking of selling?',
+        text: 'A measured valuation, with the numbers explained in person.',
+        cta: { label: 'Request a valuation', screen: quoteScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'studio') {
+    sections = [
+      flagshipSection('studio-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('studio-work', { title: 'Selected work' }),
+      flagshipSection('studio-services', { title: 'Ways to work together' }),
+      flagshipSection('studio-team', { title: 'The studio' }),
+      flagshipSection('studio-book', {
+        title: 'Start a project',
+        text: 'Tell us what you are making. We will reply with availability and a clear quote.',
+        cta: { label: 'Request a shoot brief', screen: quoteScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'trades') {
+    sections = [
+      flagshipSection('trades-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('trades-jobs', { title: 'What we fix' }),
+      flagshipSection('trades-proof', {
+        title: 'The promise',
+        text: 'Fixed price agreed before work starts, twelve-month workmanship guarantee, and a clean floor when we leave.',
+      }),
+      flagshipSection('trades-quote', {
+        title: 'Send a photo, get a price',
+        text: 'Tell us what has gone wrong. We reply with a fixed price, usually within one working day.',
+        cta: { label: 'Request a quote', screen: quoteScreen },
+      }),
+      flagshipSection('trades-area', {
+        title: 'Where we work',
+        text: address || 'Covering the whole city',
+      }),
+      flagshipSection('trades-book', {
+        title: 'Book a call-out',
+        text: 'Morning and afternoon visits, Monday to Saturday.',
+        cta: { label: 'Book a call-out', screen: bookingScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'auto') {
+    sections = [
+      flagshipSection('auto-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('auto-vehicle', {
+        title: 'What we look after',
+        text: 'Petrol, diesel, hybrid and electric. Cars and light vans.',
+      }),
+      flagshipSection('auto-jobs', { title: 'Work & prices' }),
+      flagshipSection('auto-slots', {
+        title: 'Next available',
+        text: 'Choose a slot and we confirm by phone the same day.',
+        cta: { label: 'Book a slot', screen: bookingScreen },
+      }),
+      flagshipSection('auto-promise', { title: 'What a service includes' }),
+      flagshipSection('auto-quote', {
+        title: 'Not sure what it needs?',
+        text: 'Describe the noise, the light or the warning. We will price the diagnosis before you book it in.',
+        cta: { label: 'Get a quote', screen: quoteScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'ecommerce') {
+    sections = [
+      flagshipSection('ecom-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('ecom-drop', { title: 'New this week' }),
+      flagshipSection('ecom-products', { title: 'The shelf' }),
+      flagshipSection('ecom-delivery', {
+        title: 'Packed and posted',
+        text: 'Orders placed before 2pm leave the same working day. Collection is from the workshop, usually next day.',
+      }),
+      ...(spec.features.includes('loyalty')
+        ? [flagshipSection('ecom-rewards', { title: 'Keep coming back' })]
+        : []),
+    ]
+  } else if (spec.vertical === 'courses') {
+    sections = [
+      flagshipSection('courses-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('courses-path', { title: 'How a course runs' }),
+      flagshipSection('courses-list', { title: 'Courses open now' }),
+      flagshipSection('courses-included', { title: "What's included" }),
+      flagshipSection('courses-enrol', {
+        title: 'Start with the free lesson',
+        text: 'Every course opens with a full lesson you can watch before you pay. No card, no sign-up.',
+        cta: { label: 'Choose a course', screen: 'scr_catalog' },
+      }),
+    ]
+  } else if (spec.vertical === 'finance') {
+    sections = [
+      flagshipSection('finance-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('finance-disclosure', {
+        title: 'How we are paid',
+        text: 'Fee-only advice. We do not earn commission from providers, so the recommendation is the only thing being sold.',
+      }),
+      flagshipSection('finance-services', { title: 'Services & fees' }),
+      flagshipSection('finance-process', { title: 'What a review looks like' }),
+      flagshipSection('finance-advisers', { title: 'Your advisers' }),
+      flagshipSection('finance-review', {
+        title: 'Book a first meeting',
+        text: 'Thirty minutes, no paperwork, no obligation. We will tell you if advice is not the right answer.',
+        cta: { label: 'Book a meeting', screen: bookingScreen },
+      }),
+    ]
+  } else {
+    sections = [
+      flagshipSection('pro-title', { title: spec.name, text: spec.tagline }),
+      flagshipSection('pro-intro', { title: 'How we can help', text: spec.story }),
+      flagshipSection('pro-team', { title: "The people you'll work with" }),
+      flagshipSection('pro-index', { title: 'Services' }),
+      flagshipSection('pro-actions', {
+        title: spec.features.includes('booking') ? 'Book a consultation' : 'Send an enquiry',
+        cta: {
+          label: spec.features.includes('booking') ? 'Book a consultation' : 'Send an enquiry',
+          screen: spec.features.includes('booking') ? 'scr_book' : 'scr_quote',
+        },
+      }),
+      flagshipSection('pro-facts', {
+        title: hours || 'Hours',
+        text: address,
+      }),
+    ]
+  }
+
+  if (spec.features.includes('offers') && spec.offers.length)
+    sections.push(flagshipSection('offers', { title: 'Right now' }))
+
+  const home = homeScreen(doc)
+  home.sections = sections
+  home.hidden = false
+  home.nav = true
+  const names: Partial<Record<ScreenKind, string>> =
+    spec.vertical === 'restaurant'
+      ? { home: 'Dine', catalog: 'Menu', book: 'Reserve', more: 'Visit' }
+      : spec.vertical === 'shop'
+        ? { home: 'Home', catalog: 'Shop', more: 'More' }
+        : spec.vertical === 'salon'
+          ? { home: 'Home', catalog: 'Services', book: 'Book', more: 'Visit' }
+          : spec.vertical === 'hotel'
+            ? { home: 'Stay', catalog: 'Rooms', book: 'Dates', more: 'More' }
+            : spec.vertical === 'cafe'
+              ? { home: 'Café', catalog: 'Menu', book: 'Reserve', more: 'Visit' }
+              : spec.vertical === 'gym'
+                ? { home: 'Train', catalog: 'Plans', book: 'Classes', quote: 'Join', more: 'Visit' }
+                : spec.vertical === 'clinic'
+                  ? { home: 'Care', catalog: 'Services', book: 'Book', quote: 'Enquire', more: 'Visit' }
+                  : spec.vertical === 'property'
+                    ? { home: 'Homes', catalog: 'Listings', book: 'Viewings', quote: 'Enquire', more: 'Visit' }
+                    : spec.vertical === 'studio'
+                      ? { home: 'Work', catalog: 'Services', book: 'Book', quote: 'Enquire', more: 'Visit' }
+                      : spec.vertical === 'trades'
+                        ? { home: 'Home', catalog: 'Services', book: 'Call-out', quote: 'Quote', more: 'Contact' }
+                        : spec.vertical === 'auto'
+                          ? { home: 'Garage', catalog: 'Work', book: 'Book', quote: 'Quote', more: 'Visit' }
+                          : spec.vertical === 'ecommerce'
+                            ? { home: 'Shop', catalog: 'Browse', more: 'Visit' }
+                            : spec.vertical === 'courses'
+                              ? { home: 'Learn', catalog: 'Courses', more: 'More' }
+                              : spec.vertical === 'finance'
+                                ? { home: 'Advice', catalog: 'Services', book: 'Meeting', quote: 'Enquiry', more: 'Contact' }
+                                : { home: 'Home', catalog: 'Services', book: 'Consult', quote: 'Enquire', more: 'Contact' }
+  for (const screen of doc.screens) {
+    const name = names[screen.kind]
+    if (name) screen.name = name
+  }
+  // Booking belongs beside the catalogue, before the More screen, so the tab
+  // order follows the customer journey rather than insertion order.
+  const book = doc.screens.findIndex((screen) => screen.kind === 'book')
+  const more = doc.screens.findIndex((screen) => screen.kind === 'more')
+  if (book > -1 && more > -1 && book > more) {
+    const [entry] = doc.screens.splice(book, 1)
+    doc.screens.splice(more, 0, entry)
+  }
+  // Quote-led trades put the enquiry tab before Visit, so the five visible
+  // tabs follow the customer journey rather than document insertion order.
+  const quote = doc.screens.findIndex((screen) => screen.kind === 'quote')
+  const visit = doc.screens.findIndex((screen) => screen.kind === 'more')
+  if (quote > -1 && visit > -1 && quote > visit && ['trades', 'auto', 'finance'].includes(spec.vertical)) {
+    const [entry] = doc.screens.splice(quote, 1)
+    doc.screens.splice(visit, 0, entry)
+  }
+  doc.initialScreen = home.id
+  return doc
+}
+
 export function homeScreen(doc: Doc): ScreenNode {
   return doc.screens.find((entry) => entry.kind === 'home') ?? doc.screens[0]
 }
@@ -414,6 +820,11 @@ function sanitizeSection(value: unknown, fallbackId: string): DocNode | null {
   const raw = value as Record<string, unknown>
   const kind = SECTION_KINDS.includes(raw.kind as SectionKind) ? (raw.kind as SectionKind) : null
   if (!kind) return null
+  const variant =
+    kind === 'flagship' && FLAGSHIP_VARIANTS.includes(raw.variant as FlagshipVariant)
+      ? (raw.variant as FlagshipVariant)
+      : undefined
+  if (kind === 'flagship' && !variant) return null
   const styleInput =
     raw.style && typeof raw.style === 'object' ? (raw.style as Record<string, unknown>) : {}
   const responsiveInput =
@@ -463,6 +874,7 @@ function sanitizeSection(value: unknown, fallbackId: string): DocNode | null {
   return {
     id,
     kind,
+    ...(variant ? { variant } : {}),
     ...(media ? { media } : {}),
     title: CLAMP(raw.title, 60) || undefined,
     text: CLAMP(raw.text, 600) || undefined,

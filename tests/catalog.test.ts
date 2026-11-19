@@ -6,6 +6,7 @@ import { renderApp } from '../src/worker/app'
 import { VERTICAL_IDS } from '../src/worker/verticals'
 import { buildSpec } from '../src/worker/pricing'
 import { MemoryD1 } from './memoryD1'
+import { ownerCookieFor } from './ownerCookie'
 
 async function projectWithDb() {
   const db = new MemoryD1() as unknown as D1Database
@@ -20,20 +21,21 @@ async function projectWithDb() {
     platforms: ['pwa'],
     plan: 'onetime',
   })
-  return { db, project }
+  return { db, project, cookie: await ownerCookieFor(db, project) }
 }
 
 const JSON_HEADERS = { 'content-type': 'application/json', origin: 'https://plattr.example' }
 
 describe('catalogue editing', () => {
   test('saves real names, descriptions and prices used by the app', async () => {
-    const { db, project } = await projectWithDb()
+    const { db, project, cookie } = await projectWithDb()
     const env = { DB: db, ASSETS: {} as Fetcher }
+    const headers = { ...JSON_HEADERS, cookie }
     const response = await app.request(
       `https://plattr.example/api/projects/${project.token}/catalog`,
       {
         method: 'PUT',
-        headers: JSON_HEADERS,
+        headers,
         body: JSON.stringify({
           menu: [
             {
@@ -61,13 +63,14 @@ describe('catalogue editing', () => {
   })
 
   test('rejects cross-site catalogue writes and empty offer titles', async () => {
-    const { db, project } = await projectWithDb()
+    const { db, project, cookie } = await projectWithDb()
     const env = { DB: db, ASSETS: {} as Fetcher }
+    const headers = { ...JSON_HEADERS, cookie }
     const cross = await app.request(
       `https://plattr.example/api/projects/${project.token}/catalog`,
       {
         method: 'PUT',
-        headers: { ...JSON_HEADERS, origin: 'https://evil.example' },
+        headers: { ...headers, origin: 'https://evil.example' },
         body: JSON.stringify({ menu: [] }),
       },
       env as never,
@@ -78,7 +81,7 @@ describe('catalogue editing', () => {
       `https://plattr.example/api/projects/${project.token}/catalog`,
       {
         method: 'PUT',
-        headers: JSON_HEADERS,
+        headers,
         body: JSON.stringify({
           menu: [{ name: 'Drinks', items: [{ name: 'Coffee', desc: '', price: 350 }] }],
           offers: [{ title: '', body: 'Nothing to see' }],

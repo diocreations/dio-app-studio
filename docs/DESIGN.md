@@ -135,7 +135,7 @@ Rendered at **390 × 844** in the local Chromium preview:
 - Professional services — classic counsel: home.
 - Hotel — coastal luxury: home.
 
-Screenshots are in `screens/design-*.png`. Cart and booking behaviour were
+Screenshots are in `docs/qa/*-final-390.png`. Cart and booking behaviour were
 checked in the browser: add-to-cart opens the sheet with a real line item and
 totals; booking shows party stepper, days and seven selectable slots, and
 confirm produces the confirmation sheet.
@@ -161,7 +161,7 @@ resizing happen in the owner's browser and the server verifies every byte it
 stores.
 
 1. **Authenticated upload** — `POST /api/projects/:token/media` under the
-   project's private edit token, same-origin checked, 18 MB request ceiling.
+   project's owner session, same-origin checked, 18 MB request ceiling.
    The browser never receives R2 credentials. The `MEDIA` binding is server-only.
 2. **Validation** — the original is sniffed by magic bytes (PNG/JPEG/WebP only;
    SVG and forged extensions are rejected), limited to 8 MB and 24 MP. Every
@@ -198,3 +198,176 @@ owner's own photography, never generated photographs or claims about the
 premises. The image inspector exposes replace, upload, library, focal point,
 fit and aspect controls; the catalogue editor covers product names,
 descriptions, prices and offers.
+
+## 8. Flagship composition layer (November 2026)
+
+### Audit method
+
+The five reference trades were rendered in the local Chromium at **390 × 844**
+and inspected as screens, not just as CSS. The restaurant was also captured
+before the change (`docs/qa/before-restaurant-390.png`). The remaining 22 trades
+were checked in the server-rendered DOM and their family/direction CSS; they
+retain the existing shells until each gets its own flagship pass.
+
+### What the rendered audit found
+
+| Problem | Where it showed up | Response |
+| --- | --- | --- |
+| A website-style hero dominated the first screen | Restaurant opened with a 3-line display name, tagline, hours and address before the first dish. | Replaced with a compact menu lead: one line of promise, hours/location, then the menu immediately. |
+| Repeated card grammar | Shop and restaurant both read as the same bordered rectangles with a small arrow. | Retail uses an edge-to-edge two-column product feed; restaurant uses a photographic menu index; salon uses a date rail and service rows; hotel uses a cinematic stay stack; professional uses an index of numbered services. |
+| Weak product imagery | With no stock key, every image slot was a monogram on a flat tint. | Deliberate abstract artwork (gradient, grain, geometric marks) is now used, never an initial pretending to be a product. Retail varies the composition per card. |
+| Oversized empty first screen | Hotel's fallback image consumed most of the viewport without information. | Reduced, given a room preview tag with real name and price, and followed immediately by the availability control. |
+| Sticky actions covered content | Salon's booking action sat across the service list. | It is now a viewport-anchored action above the tab bar with reserved scroll padding, or a normal inline action on wide screens. |
+| Navigation did not express the journey | Restaurant showed Menu/Book/Order/Visit but no discoverable path to the food's story; retail used Home/Shop/Bag/More with no filters in the header. | Each flagship keeps its trade's actual journey: restaurant menu-first, retail search/filter-first, salon appointment-first, hotel availability-first, professional service-index-first. |
+| Touch targets and labels were inconsistent | Several icon actions and small labels were below 44px or 10px. | Flagship icon controls are 40px with 48px nav items; labels are at least 9.5px, buttons at least 46–50px. |
+
+### The five experiences
+
+1. **Restaurant — editorial menu book.** Compact menu lead, category chips,
+   dish index with abstract plate marks, inline add controls, tab bar
+   Menu / Book / Order / Visit. The menu is the product; no decorative hero.
+2. **Retail — modern commerce feed.** Search is the first control, followed by
+   a concise collection statement, category rail, and a two-column product feed.
+   Prices and names sit below the image; the bag is always one tap away.
+3. **Salon — appointment-first calm.** A date rail, service list with duration
+   and price, staff names when the owner supplied them, and a persistent booking
+   action. No cart and no irrelevant catalogue chrome.
+4. **Hotel — immersive stay.** A restrained full-bleed stay image, room preview
+   card, arrival/departure fields, then room stack. Dark surface, quiet type,
+   availability before inventory.
+5. **Professional — professional precision.** Typographic practice statement,
+   numbered service index, fixed fees, and a booking or enquiry CTA depending
+   on the trade's enabled features. No stock-photo hero and no invented proof.
+
+### Design archetypes
+
+The existing curated directions remain the source of truth. The flagship layer
+selects among them by trade and keeps the owner able to switch alternatives in
+the editor:
+
+| Archetype | Flagship use | Direction |
+| --- | --- | --- |
+| Editorial Luxury | Restaurant, hotel | `editorial`, `luxe` |
+| Contemporary Minimal | Retail, salon | `minimal` |
+| Immersive Visual | Hotel | `luxe`, `editorial` |
+| Modern Commerce | Retail | `lifestyle` |
+| Professional Precision | Professional services | `classic`, `minimal` |
+| Playful Contemporary | Available to the remaining trades | trade-specific directions |
+
+### Editing and preservation
+
+Each flagship home is generated as a document (`flagshipDocFromSpec()`), and the
+published customer app and editor canvas render that exact document. Every
+visible flagship block has a stable `sec_fx_*` id, can be selected directly in
+the phone preview, edited, photographed, reordered, duplicated, hidden or
+deleted, and is covered by autosave, undo/redo and version restore. The
+compositions stay trade-specific: the document supplies order, copy, media and
+visibility, while the flagship variants keep their own markup and CSS.
+
+The final quality pass removed duplicated restaurant hours, made the salon and
+professional actions inline instead of fixed over the service list, and kept the
+bottom navigation as the persistent route to booking/enquiry. The shared
+catalogue, cart, booking, enquiry, media, dashboard, version history and PWA
+paths are unchanged.
+
+Flagship captures after this pass: `docs/qa/unified-restaurant-390-final.png`,
+`docs/qa/unified-shop-390-final.png`, `docs/qa/unified-salon-390-final.png`,
+`docs/qa/unified-hotel-390-final.png`,
+`docs/qa/unified-professional-390-final.png`; the direct editor is
+`docs/qa/unified-editor-selection-390-final.png`.
+
+### Files
+
+- `src/worker/doc.ts` — `flagship` document kind, validated variants,
+  `flagshipDocFromSpec()` and stable `sec_fx_*` ids.
+- `src/worker/flagship.ts` — five flagship block renderers, catalogue leads,
+  deliberate fallback artwork and the scoped mobile CSS.
+- `src/worker/app.ts` — renders flagship document blocks through their variants
+  and keeps the generic document path for older builds.
+- `src/worker/index.ts` — supplies the same saved document to the editor and the
+  customer app, so the published app is exactly what the editor saved.
+- `docs/qa/` — browser captures used for the before/after review.
+
+### Imagery and content intelligence
+
+The geometric artwork remains the fallback for trades without a photo library,
+but the five flagship trades now open with licensed, local photography:
+
+- 37 distinct scenes across restaurant, retail, salon, hotel and professional,
+  each stored as 320/640/1280 WebP (111 files, 4.8 MB total).
+- A local library is the keyless default; Pexels is still used when a key is
+  configured. Owner uploads stored in R2 override stock imagery per document
+  block.
+- Menu, product, service, room and professional imagery is assigned by stable
+  item order rather than one repeated hero image. The catalogue and same item’s
+  home card intentionally share that item’s scene.
+- Seeded content is labelled sample in the editor, with shortcuts to items,
+  prices and details. Professional builds gain two sample team profiles with
+  portraits, names, roles and credentials; salon and professional bookings carry
+  named sample staff.
+- Restaurant, retail and salon default catalogues were aligned with their new
+  photography so a furniture item is not shown under a kitchen shot.
+
+After captures: `docs/qa/imagery-restaurant-390.png`,
+`docs/qa/imagery-shop-390.png`, `docs/qa/imagery-salon-390.png`,
+`docs/qa/imagery-hotel-390.png`, `docs/qa/imagery-professional-390.png` and
+`docs/qa/imagery-editor-selection-390.png`. The before set remains the
+`unified-*-390-final.png` captures. Photo sources and licence are in
+`docs/PHOTOGRAPHY.md`; loading, width and flow evidence is in
+`docs/DESIGN_QA.md`.
+
+Additional files: `src/worker/flagshipImages.ts` (scene sets, alt text and
+responsive markup), `src/worker/photos.ts` (local fallback), and
+`public/images/flagship/` (delivered WebP variants).
+
+## 9. Batch 3 — five more journeys (November 2026)
+
+Five trades were added after the batch-2 acceptance: `trades`, `auto`,
+`ecommerce`, `courses` and `finance`. Each has its own composition, type
+system, surface treatment and navigation order; all reuse the shared document,
+cart, booking, enquiry, media and dashboard paths. The implementation table and
+acceptance evidence are in `docs/BATCH3_REPORT.md`.
+
+### Identity per trade
+
+| Trade | First screen reads as | Type / surface | Navigation |
+| --- | --- | --- | --- |
+| Trades & home services | a printed work-order ticket: job numbers, dashed rules, urgency stamp | condensed display, amber accent, square corners, hairline rules | Home · Services · Call-out · Quote · Contact |
+| Garage & auto | a workshop job card: number plate, bay photo, torque-spec labels | heavy grotesk, steel blue, plate yellow, hazard stripe | Garage · Work · Book · Quote · Visit |
+| Online store | a small-batch drop feed: rounded product cards, quick-add, delivery panel | warm rust, soft radii, serif display | Shop · Browse · Visit (cart in the app bar) |
+| Online courses | a learning path: connected numbered nodes, course modules | navy/indigo, geometric display, rounded panels | Learn · Courses · More (cart in the app bar) |
+| Financial advice | an advisory note: serif masthead, fee disclosure panel, adviser rows | cream paper, deep green, editorial serif | Advice · Services · Meeting · Enquiry · Contact |
+
+### What the browser review changed
+
+- Service and job rows no longer carry a thumbnail chosen by list index. The
+  first three trades had photographs that did not match the job name; the rows
+  are now work-order numbers with the photograph moved to a deliberate
+  three-frame “recent work” strip. This also keeps the owner's item photo in the
+  home composition.
+- The ecommerce delivery panel had lost its copy padding when the photo was
+  added; its heading overlapped the eyebrow. The panel now has an explicit copy
+  wrapper, and the fulfilment rows are inset with it.
+- The demo offer “Free delivery over $60” did not match the flat $2.99 delivery
+  fee in checkout. The copy now says “Delivery $2.99, tracked”, and the shop
+  vertical's equivalent offer was corrected the same way. A threshold-based free
+  delivery rule is still not implemented.
+- Short header actions (“All 7”, “All services”) were under 30px wide. They now
+  have a 44px minimum target, as do the other trade header actions. The search
+  clear button grew from 24px to 40px across every app.
+- Course cards now use a 38px “View course” target, and the course detail CTA
+  reads “Enrol on this course” with “Confirm enrolment” at checkout.
+
+### Width matrix
+
+All five apps were rendered through Chromium device metrics at 320, 375, 390 and
+430px. Every cell had `scrollWidth === innerWidth`, no image that had loaded with
+zero intrinsic width, no image without alt text, no unlabelled control, and no
+navigation label clipped. Images per home screen: trades 13, auto 10, ecommerce
+19, courses 10, finance 8. Captures are `screenshots/batch3/<trade>-<width>.png`.
+
+Editor verification in this batch covered preview tap-selection, autosaved text,
+undo/redo, library add, drag reorder, hide (including the published app),
+duplicate, delete and version restore — see `docs/EDITOR.md`. What remains
+unverified is physical-device rendering and touch behaviour; all checks used
+browser emulation.

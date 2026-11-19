@@ -3,6 +3,7 @@ import type {
   BundleId,
   FeatureId,
   LayoutChoice,
+  MenuItem,
   MenuSection,
   Platform,
   Plan,
@@ -391,13 +392,65 @@ export function initialsFor(name: string): string {
   return (words[0][0] + words[1][0]).toUpperCase()
 }
 
+/**
+ * Reconstruct the sample-content flags for projects created before the flags
+ * existed. A group is sample only while it is still byte-for-byte the trade
+ * seed; any edited value is treated as the owner's and is never cleared by the
+ * bulk action. Explicit flags on an existing spec win over the inference, so
+ * partially migrated rows converge without rewriting an owner's decision.
+ */
+export function backfillSampleContent(spec: AppSpec): NonNullable<AppSpec['sampleContent']> {
+  const vertical = verticalFor(spec.vertical)
+  const equal = (a: unknown, b: unknown) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null)
+  const inferred = {
+    menu: equal(spec.menu, vertical.menu),
+    contact:
+      spec.phone === vertical.phone &&
+      spec.address === vertical.address &&
+      spec.hours === vertical.hours &&
+      !spec.email,
+    story: spec.story === vertical.story,
+    offers: equal(spec.offers, vertical.offers),
+    team: equal(spec.team ?? [], vertical.team ?? []),
+    tagline: spec.tagline === vertical.tagline,
+  }
+  return { ...inferred, ...(spec.sampleContent ?? {}) }
+}
+
 /* --------------------------- spec builder -------------------------- */
 
 function copyMenu(menu: MenuSection[]): MenuSection[] {
   return menu.map((section) => ({
     name: section.name,
-    items: section.items.map((item) => ({ ...item })),
+    items: section.items.map((item) => ({
+      ...item,
+      ...(item.media ? { media: { ...item.media } } : {}),
+    })),
   }))
+}
+
+/** An item image is a stored media id plus presentation, never a remote URL. */
+function sanitizeItemMedia(value: unknown): MenuItem['media'] {
+  if (!value || typeof value !== 'object') return undefined
+  const input = value as Record<string, unknown>
+  if (typeof input.id !== 'string' || !/^med_[a-f0-9]{16,40}$/.test(input.id)) return undefined
+  const number = (entry: unknown, max: number, fallback: number) =>
+    typeof entry === 'number' && Number.isFinite(entry)
+      ? Math.max(0, Math.min(max, Math.round(entry)))
+      : fallback
+  const dimension = (entry: unknown) =>
+    typeof entry === 'number' && Number.isFinite(entry) && entry > 0 && entry <= 12_000
+      ? Math.round(entry)
+      : undefined
+  return {
+    id: input.id,
+    ...(typeof input.alt === 'string' && input.alt.trim() ? { alt: input.alt.trim().slice(0, 120) } : {}),
+    ...(dimension(input.width) ? { width: dimension(input.width) } : {}),
+    ...(dimension(input.height) ? { height: dimension(input.height) } : {}),
+    focalX: number(input.focalX, 100, 50),
+    focalY: number(input.focalY, 100, 50),
+    fit: input.fit === 'contain' ? 'contain' : 'cover',
+  }
 }
 
 /** Catalogue edits arrive untyped from the browser or a scraped site and are
@@ -421,6 +474,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               tag?: unknown
               meta?: unknown
               vendor?: unknown
+              media?: unknown
             }
             const price =
               typeof entry.price === 'number' && Number.isFinite(entry.price)
@@ -433,6 +487,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               tag: String(entry.tag ?? '').trim().slice(0, 12) || undefined,
               meta: String(entry.meta ?? '').trim().slice(0, 30) || undefined,
               vendor: String(entry.vendor ?? '').trim().slice(0, 40) || undefined,
+              ...(sanitizeItemMedia(entry.media) ? { media: sanitizeItemMedia(entry.media) } : {}),
             }
           })
           .filter((item) => item.name !== 'Item' || item.price > 0),
@@ -534,6 +589,16 @@ export function buildSpec(input: {
     menu: importedMenu.length ? importedMenu : copyMenu(vertical.menu),
     offers: vertical.offers.map((offer) => ({ ...offer })),
     loyalty: { ...vertical.loyalty },
+    sampleContent: {
+      menu: importedMenu.length === 0,
+      contact: !site.hours?.trim() || !site.phone?.trim() || !site.address?.trim(),
+      story: !site.story?.trim(),
+      offers: true,
+      team: Boolean(vertical.team?.length),
+      tagline: !input.tagline,
+    },
+    ...(vertical.staff?.length ? { staff: [...vertical.staff] } : {}),
+    ...(vertical.team?.length ? { team: vertical.team.map((person) => ({ ...person })) } : {}),
     custom: (input.custom ?? '').trim().slice(0, 600),
     ...(input.layout ? { layout: input.layout } : {}),
     ...(category ? { category } : {}),
