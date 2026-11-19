@@ -156,6 +156,9 @@ function photoIndex(ctx: Ctx, seed: string): number {
  * image the artwork still carries the page.
  */
 function photo(ctx: Ctx, seed: string, kind: 'wide' | 'thumb', alt = ''): string {
+  // An imported business is never dressed in this trade's stock photography.
+  // Its own image, when it has one, travels on the item or the hero.
+  if (ctx.spec.website) return ''
   const urls = ctx.photos[kind]
   if (!urls.length) return ''
   const url = urls[photoIndex(ctx, seed) % urls.length]
@@ -1191,7 +1194,7 @@ body[data-editor="1"] .doc-section { cursor: pointer; }
 </script>`
 
 export function renderApp(
-  spec: AppSpec,
+  inputSpec: AppSpec,
   options: {
     token: string
     live?: boolean
@@ -1213,8 +1216,29 @@ export function renderApp(
     screen?: string
     /** The five flagship trades opt into the mobile-first composition layer. */
     flagship?: boolean
+    /** Online payment is optional; absent keeps every existing workflow. */
+    payments?: { payOrders: boolean; payBookings: boolean; provider?: string }
   },
 ): string {
+  // A description-built app carries the trade's sample phone, address and hours.
+  // They stay editable in the studio, but the customer never sees them as if the
+  // owner had confirmed them: a value equal to the trade's seed is sample, while
+  // anything the owner or their site supplied is kept.
+  const seed = verticalFor(inputSpec.vertical)
+  const contact = (value: string | undefined, sample: string | undefined): string => {
+    const text = (value ?? '').trim()
+    if (!text) return ''
+    return sample && text === sample.trim() ? '' : text
+  }
+  const spec: AppSpec =
+    options.editor || !inputSpec.sampleContent?.contact
+      ? inputSpec
+      : {
+          ...inputSpec,
+          phone: contact(inputSpec.phone, seed.phone),
+          address: contact(inputSpec.address, seed.address),
+          hours: contact(inputSpec.hours, seed.hours),
+        }
   const live = options.live !== false
   const vertical = verticalFor(spec.vertical)
   const vocab: Vocab = vertical.vocab
@@ -1388,6 +1412,14 @@ export function renderApp(
     isCourse: spec.vertical === 'courses',
     addLabel: spec.vertical === 'courses' ? 'Enrol on this course' : 'Add to order',
     placeLabel: spec.vertical === 'courses' ? 'Confirm enrolment' : 'Place order',
+    payments: options.payments
+      ? {
+          enabled: true,
+          orders: options.payments.payOrders,
+          bookings: options.payments.payBookings,
+          provider: options.payments.provider ?? '',
+        }
+      : { enabled: false, orders: false, bookings: false, provider: '' },
     partyLabel: vocab.partyLabel,
     slots: vocab.slots,
     catalogWord: vocab.catalog.toLowerCase(),
@@ -1569,7 +1601,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           <div class="field" style="margin-top:12px"><label for="checkout-name">Your name</label><input id="checkout-name" type="text" maxlength="60" data-checkout-name placeholder="Name" autocomplete="name" /></div>
           <div class="field"><label for="checkout-contact">Phone or email</label><input id="checkout-contact" type="text" maxlength="120" data-checkout-contact placeholder="How the business reaches you" autocomplete="tel" /></div>
           <button class="btn accent block" type="button" data-place style="margin-top:12px">${data.placeLabel || 'Place order'}</button>
-          <p class="tiny dim" style="text-align:center;margin-top:9px">No payment is taken in the app. Pay the business on collection or delivery.</p>
+          <p class="tiny dim" style="text-align:center;margin-top:9px">${data.payments.enabled ? 'You can pay online after ordering. Card details are entered on the business\'s connected gateway, never in this app.' : 'No payment is taken in the app. Pay the business on collection or delivery.'}</p>
         </div>
         <div data-cart-done hidden></div>
       </div>
@@ -2151,10 +2183,26 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         done.innerHTML =
           '<div class="done"><div class="tick">✓</div><h2>Order #' + esc(order.number) + '</h2>' +
           '<p>' + esc(state.orderType) + ' · ' + money(order.total) + '<br />Sent to ' + esc(DATA.brand) + '. They will confirm when it is ready.</p>' +
+          (DATA.payments && DATA.payments.orders
+            ? '<button class="btn accent block" type="button" data-pay="order" data-ref="' + esc(order.id) + '" style="margin-top:14px">Pay ' + money(order.total) + ' online</button>'
+            : '') +
           '<button class="btn block" type="button" data-close-sheet style="margin-top:16px">Done</button></div>'
         buzz([10, 40, 16])
       } catch (error) {
         toast(error && error.message ? error.message : 'The order could not be sent.')
+        if (button) button.disabled = false
+      }
+    }
+
+    async function startPayment(kind, refId, button) {
+      if (!refId) return
+      if (button) button.disabled = true
+      try {
+        const payload = await postJson('/p/' + DATA.token + '/payments/start', { kind, refId })
+        if (!payload.payment || !payload.payment.payUrl) throw new Error('The gateway did not return a checkout link.')
+        location.href = payload.payment.payUrl
+      } catch (error) {
+        toast(error && error.message ? error.message : 'Online payment is not available right now.')
         if (button) button.disabled = false
       }
     }
@@ -2252,8 +2300,12 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         state.customerContact = contact
         save()
         renderHistory()
+        const service = ($('[data-book-service]')?.value || '')
         note('<div class="done"><div class="tick">✓</div><h2>Request sent</h2>' +
           '<p>' + esc(dayLabel) + (state.slot ? ' at ' + esc(state.slot) : '') + ' · ' + state.party + ' ' + DATA.partyLabel.toLowerCase() + '<br />The business will confirm this request. You can check its status in More.</p>' +
+          (DATA.payments && DATA.payments.bookings && service
+            ? '<button class="btn accent block" type="button" data-pay="booking" data-ref="' + esc(booking.id) + '" style="margin-top:14px">Pay a deposit online</button>'
+            : '') +
           '<button class="btn block" type="button" data-close-sheet style="margin-top:16px">Done</button></div>')
         buzz([10, 40, 16])
       } catch (error) {
@@ -2274,7 +2326,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
     document.addEventListener('click', (event) => {
       const target = event.target.closest(
-        '[data-add],[data-inc],[data-go],[data-jump],[data-place],[data-type],[data-party],[data-book],[data-reserve],[data-quote-send],[data-send-review],[data-cart-open],[data-nav-open],[data-save],[data-search-open],[data-saved-open],[data-search-clear],[data-filter],[data-property-filter],[data-recent],[data-install],[data-close-sheet],[data-back],[data-store],.stars span,[data-item]',
+        '[data-add],[data-inc],[data-pay],[data-go],[data-jump],[data-place],[data-type],[data-party],[data-book],[data-reserve],[data-quote-send],[data-send-review],[data-cart-open],[data-nav-open],[data-save],[data-search-open],[data-saved-open],[data-search-clear],[data-filter],[data-property-filter],[data-recent],[data-install],[data-close-sheet],[data-back],[data-store],.stars span,[data-item]',
       )
       if (!target) return
 
@@ -2344,6 +2396,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         return
       }
       if (target.dataset.place !== undefined) return placeOrder()
+      if (target.dataset.pay) return startPayment(target.dataset.pay, target.dataset.ref, target)
       if (target.dataset.type) {
         state.orderType = target.dataset.type
         save()

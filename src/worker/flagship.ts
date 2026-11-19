@@ -68,6 +68,8 @@ function art(index: number, shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' 
 
 /** Real photography where the trade has a local set, artwork otherwise. */
 function still(spec: AppSpec, index: number, shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' = 'card'): string {
+  // Imported businesses get artwork, not this trade's stock photography.
+  if (spec.website) return art(index, shape)
   const sizes =
     shape === 'room' ? '100vw' : shape === 'plate' ? '(max-width: 620px) 30vw, 140px' : shape === 'quiet' ? '54px' : '(max-width: 620px) 45vw, 220px'
   const photo = stockImageTag(spec.vertical, index, { sizes })
