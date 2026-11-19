@@ -90,7 +90,7 @@ export type Notification = {
 }
 export type DashboardData = {
   modules: Record<
-    'overview' | 'orders' | 'bookings' | 'products' | 'categories' | 'customers' | 'enquiries' | 'offers' | 'analytics' | 'settings',
+    'overview' | 'orders' | 'bookings' | 'products' | 'categories' | 'customers' | 'enquiries' | 'offers' | 'analytics' | 'payments' | 'settings',
     boolean
   >
   summary: {
@@ -637,6 +637,9 @@ export function modulesFor(project: Project) {
     enquiries: true,
     offers: isEnabled(project, 'offers'),
     analytics: ordering || booking,
+    // Gateway settings are optional for every trade; the tab is always present
+    // so an owner can connect or disconnect without changing the build.
+    payments: true,
     settings: true,
   }
 }

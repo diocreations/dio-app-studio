@@ -27,7 +27,7 @@ import {
   type PwaInfo,
   type SiteStructure,
 } from './design'
-import { sanitizeMenu } from './pricing'
+import { cleanLogoImage, sanitizeMenu } from './pricing'
 import { themeFor } from './themes'
 import type { FeatureId, MenuSection, SocialLink, VerticalId } from './types'
 import { VERTICALS } from './verticals'
@@ -60,6 +60,8 @@ export type ImportedSite = {
   categoryBasis: string
   accent: string
   logo: string
+  /** The business's own logo, when the site declared one. Never a hero image. */
+  logoImage?: { url: string; alt?: string }
   phone: string
   email: string
   address: string
@@ -846,8 +848,14 @@ function brandColour(raw: string): string {
   return saturation >= 0.14 && lightness >= 0.08 && lightness <= 0.9 ? hex : ''
 }
 
-/** The most-used colour in a stylesheet that still looks like a brand colour. */
+/**
+ * The most-used colour in a stylesheet that still looks like a brand colour.
+ * A utility stylesheet is not evidence: Tailwind and Chakra ship a whole palette
+ * of accent colours, so the most frequent one there is a framework default (a
+ * link blue), not the business's brand. Those sites fall back to their own ink.
+ */
 function dominantBrandHex(css: string): string {
+  if (/--tw-|--chakra-/.test(css)) return ''
   const counts = new Map<string, number>()
   const pattern = /#([0-9a-fA-F]{6})\b/g
   let match: RegExpExecArray | null
@@ -1176,6 +1184,58 @@ function imageFrom(value: unknown): string {
   const raw = typeof entry === 'string' ? entry : record ? record.url ?? record.contentUrl : ''
   const url = typeof raw === 'string' ? raw.trim() : ''
   return /^https:\/\/[^\s"'<>]{8,600}$/i.test(url) ? url : ''
+}
+
+function attribute(tag: string, name: string): string {
+  return new RegExp(`\\b${name}\\s*=\\s*["']([^"']*)["']`, 'i').exec(tag)?.[1]?.trim() ?? ''
+}
+
+/** An absolute https image URL, or nothing: a page cannot make us load http. */
+function absoluteImage(raw: string, base: URL): string {
+  if (!raw) return ''
+  try {
+    const url = new URL(raw, base)
+    if (url.protocol !== 'https:') return ''
+    if (!/\.(?:png|jpe?g|webp|avif|svg)$/i.test(url.pathname)) return ''
+    return /^https:\/\/[^\s"'<>]{4,600}$/i.test(url.href) ? url.href : ''
+  } catch {
+    return ''
+  }
+}
+
+const GENERIC_FAVICON = /\/favicon(?:\.ico|[-_][\w-]*\.(?:png|svg))$/i
+const NOT_A_LOGO = /hero|banner|cover|slider|carousel|lifestyle|gallery|product|collection|artwork/i
+const IS_A_LOGO = /logo|wordmark|brand-?mark/i
+
+/**
+ * The business's logo, in the order the site itself ranks it: structured data
+ * first, then the install icon, then a header image that calls itself a logo.
+ * A hero photograph is never accepted, and a monogram remains the fallback when
+ * the site declares nothing we can trust.
+ */
+function logoFrom(page: Page, business: Record<string, unknown>, name: string): { url: string; alt?: string } | undefined {
+  const brand = collapse(textOf(business, 'name') || name, 60)
+  const alt = brand ? `${brand} logo` : 'Business logo'
+  const structured = absoluteImage(imageFrom(business.logo), page.url)
+  if (structured) return { url: structured, alt }
+
+  // The touch icon is the site's production mark at a usable size, unlike a
+  // 16px favicon.
+  const links = page.html.match(/<link\b[^>]*>/gi) ?? []
+  const touch = links.find((tag) => /rel\s*=\s*["'][^"']*apple-touch-icon/i.test(tag))
+  const touchUrl = touch ? absoluteImage(attribute(touch, 'href'), page.url) : ''
+  if (touchUrl) return { url: touchUrl, alt }
+
+  const header = /<header\b[^>]*>([\s\S]{0,8000}?)<\/header>/i.exec(page.html)?.[1] ?? ''
+  for (const tag of (header || page.html.slice(0, 30_000)).match(/<img\b[^>]*>/gi) ?? []) {
+    const src = attribute(tag, 'src') || attribute(tag, 'data-src')
+    const signature = `${attribute(tag, 'alt')} ${attribute(tag, 'class')} ${attribute(tag, 'id')} ${src}`
+    if (NOT_A_LOGO.test(signature) || !IS_A_LOGO.test(signature)) continue
+    const url = absoluteImage(src, page.url)
+    if (!url || GENERIC_FAVICON.test(url)) continue
+    return { url, alt: collapse(attribute(tag, 'alt'), 80) || alt }
+  }
+  return undefined
 }
 
 function itemFromNode(node: Record<string, unknown>): Item | null {
@@ -1746,6 +1806,10 @@ function extractFromPage(page: Page): ImportedSite {
     categoryBasis,
     accent: declaredAccent,
     logo: '',
+    ...(() => {
+      const logoImage = logoFrom(page, business, name)
+      return logoImage ? { logoImage } : {}
+    })(),
     // Whatever the source, a placeholder is not a contact detail.
     phone: PLACEHOLDER_CONTACT.test(phone) ? '' : phone,
     email: PLACEHOLDER_CONTACT.test(email) ? '' : email,
@@ -2138,6 +2202,9 @@ export async function importWebsite(
       pwa?.backgroundColor ?? '',
     )
     if (design) site.design = design
+    // With no trustworthy brand colour, their own ink is truer than a framework
+    // palette: a site set in black stays black rather than turning cobalt.
+    if (!site.accent && design?.palette) site.accent = design.ink
   }
   const structure = readStructure(page.html, css, site.name)
   if (structure) site.structure = structure
@@ -2216,6 +2283,8 @@ export async function importWebsite(
     missing.push('a category — the page never named their trade, so add it in the brief')
 
   if (site.name) found.push(`name: ${site.name}`)
+  if (site.logoImage) found.push('their logo — taken from the image the site itself declares as its mark')
+  else missing.push('logo — using initials until you upload one')
   if (site.category) found.push(`category: ${site.category} — from ${site.categoryBasis}`)
   if (site.tagline) found.push('a one-line description')
   if (site.accent) found.push(`brand colour ${site.accent}`)
@@ -2312,6 +2381,7 @@ export function sanitizeImported(input: unknown): Partial<ImportedSite> | undefi
         ? source.website.slice(0, 120)
         : '',
     currency: /^[A-Z]{3}$/.test(String(source.currency ?? '')) ? String(source.currency) : '',
+    ...(cleanLogoImage(source.logoImage) ? { logoImage: cleanLogoImage(source.logoImage) } : {}),
     socials: Array.isArray(source.socials)
       ? source.socials
           .slice(0, 5)

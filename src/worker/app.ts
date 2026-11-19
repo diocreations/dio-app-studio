@@ -216,6 +216,8 @@ type Ctx = {
   actions: { label: string; screen: string }[]
   /** The editable document, or null for a build that predates the editor. */
   doc: Doc | null
+  /** Editor mode: sample content stays visible and labelled, never hidden. */
+  editor: boolean
 }
 
 /** A section heading the customer renamed in the editor, else the design's. */
@@ -375,11 +377,11 @@ function shellOpener(ctx: Ctx, shell: ShellId): string {
     const rows = ctx.timetable.slice(0, 3)
     return `<div class="sess-today">
       <span class="eyebrow">Today</span>
-      <h2>${esc((ctx.spec.hours || '').split('·')[0].trim() || 'Open today')}</h2>
+      ${(ctx.spec.hours || '').split('·')[0].trim() ? `<h2>${esc((ctx.spec.hours || '').split('·')[0].trim())}</h2>` : ''}
       ${rows
         .map(
           (row) =>
-            `<div class="sess-row"><b>${esc(row.name)}</b><span>${esc(row.when)}</span><em>${esc(row.coach)}</em></div>`,
+            `<div class="sess-row"><b>${esc(row.name)}</b><span>${esc(row.when)}</span>${ctx.spec.sampleContent?.team ? '' : `<em>${esc(row.coach)}</em>`}</div>`,
         )
         .join('')}
       ${rows.length ? '' : `<p class="tiny dim">The timetable is being written for this week.</p>`}
@@ -476,7 +478,7 @@ function timetableBlock(ctx: Ctx): string {
       ${ctx.timetable
         .map(
           (session, index) =>
-            `<div class="session"><div><b>${esc(session.name)}</b><span>${esc(session.when)} · ${esc(session.coach)}</span></div>
+            `<div class="session"><div><b>${esc(session.name)}</b><span>${esc(session.when)}${ctx.spec.sampleContent?.team ? '' : ` · ${esc(session.coach)}`}</span></div>
              <button type="button" data-reserve="${index}">Reserve</button></div>`,
         )
         .join('')}
@@ -678,7 +680,11 @@ const HOME_ORDER: Record<HomeOrder, (keyof HomeBlocks)[]> = {
 }
 
 function storyBlock(ctx: Ctx): string {
-  const story = (homeSections(ctx.doc).find((node) => node.kind === 'story')?.text ?? ctx.spec.story ?? '').trim()
+  let story = (homeSections(ctx.doc).find((node) => node.kind === 'story')?.text ?? ctx.spec.story ?? '').trim()
+  // An imported description becomes the tagline too; repeating it verbatim
+  // right under the hero reads as a bug, not as an introduction.
+  const tagline = ctx.spec.tagline.trim()
+  if (tagline && story.startsWith(tagline)) story = story.slice(tagline.length).trim()
   if (!story) return ''
   return `<p class="home-story">${esc(story)}</p>`
 }
@@ -687,12 +693,19 @@ function storyBlock(ctx: Ctx): string {
 function addedBlock(ctx: Ctx, node: DocNode): string {
   const title = node.title || ''
   switch (node.kind) {
-    case 'testimonials':
+    case 'testimonials': {
+      // The seeded line is an instruction to the owner, not a review. A customer
+      // sees a quote only once the owner has written one; the editor shows the
+      // placeholder so it stays obvious that nothing has been claimed yet.
+      const quote = (node.text || '').trim()
+      const placeholder = !quote || quote === 'Loved by regulars. Add a review to show it here.'
+      if (placeholder && !ctx.editor) return ''
       return `<div class="sect"><span class="label">${esc(title || 'Kind words')}</span></div>
         <div class="card" style="padding:18px">
-          <p style="font-family:var(--display);font-size:16px;line-height:1.5">“${esc(node.text || 'A line from a happy customer belongs here.')}”</p>
+          <p style="font-family:var(--display);font-size:16px;line-height:1.5">“${esc(quote || 'A line from a happy customer belongs here.')}”</p>
           <p class="tiny dim" style="margin-top:10px">— A regular, ${esc(ctx.spec.name)}</p>
         </div>`
+    }
     case 'heading':
       return `<h2 class="display" style="font-size:24px;line-height:1.15;margin:10px 0 4px;${node.style.align === 'center' ? 'text-align:center' : ''}">${esc(title || 'Heading')}</h2>`
     case 'text':
@@ -915,7 +928,7 @@ function homeBlock(ctx: Ctx): string {
   }
 
   if (theme.layout === 'rows') {
-    const sections = `<div class="sect"><span class="label">${esc(sectionTitle(ctx, 'featured', ctx.vocab.catalog))}</span><span class="count">${spec.menu.length} sections</span></div>
+    const sections = `<div class="sect"><span class="label">${esc(sectionTitle(ctx, 'featured', ctx.vocab.catalog))}</span><span class="count">${spec.menu.length} ${spec.menu.length === 1 ? 'section' : 'sections'}</span></div>
       <div>
         ${spec.menu
           .map(
@@ -929,10 +942,12 @@ function homeBlock(ctx: Ctx): string {
     return `${heroSection(ctx, cover(ctx, [spec.hours.split('·')[0], spec.address]))}
       ${actions(ctx)}
       ${showcaseBlock(ctx)}
-      <div class="status-card" style="margin-top:16px">
+      ${spec.hours.trim()
+        ? `<div class="status-card" style="margin-top:16px">
         <span class="dot"></span>
         <div><b>Open now</b><span>${esc(spec.hours)}</span></div>
-      </div>
+      </div>`
+        : ''}
       ${orderedHome(ctx, blocks(sections, 1))}
       ${coda}`
   }
@@ -1230,15 +1245,27 @@ export function renderApp(
     if (!text) return ''
     return sample && text === sample.trim() ? '' : text
   }
-  const spec: AppSpec =
-    options.editor || !inputSpec.sampleContent?.contact
-      ? inputSpec
+  // The trade's sample team is a demonstration, not this business's people: a
+  // named coach, clinician or registration number must never reach a customer
+  // as if the owner had confirmed it. The editor keeps it, so it stays editable.
+  const sampleTeam =
+    !options.editor && (inputSpec.sampleContent?.team === true || inputSpec.sampleContent?.staff === true)
+  const spec: AppSpec = {
+    ...inputSpec,
+    ...(options.editor || !inputSpec.sampleContent?.contact
+      ? {}
       : {
-          ...inputSpec,
           phone: contact(inputSpec.phone, seed.phone),
           address: contact(inputSpec.address, seed.address),
           hours: contact(inputSpec.hours, seed.hours),
-        }
+        }),
+    ...(sampleTeam ? { team: [], staff: [] } : {}),
+    // The customer never sees a "sample" ribbon on hidden details; the editor
+    // keeps the flag so the owner still knows what is theirs to replace.
+    ...(!options.editor && inputSpec.sampleContent
+      ? { sampleContent: { ...inputSpec.sampleContent, contact: false } }
+      : {}),
+  }
   const live = options.live !== false
   const vertical = verticalFor(spec.vertical)
   const vocab: Vocab = vertical.vocab
@@ -1248,7 +1275,7 @@ export function renderApp(
   // their seeded rendering. New documents carry one from birth; the demo route
   // may request one explicitly for quality review.
   const requestedDirection =
-    doc?.design?.direction ?? (typeof preview.direction === 'string' ? preview.direction : undefined)
+    (typeof preview.direction === 'string' ? preview.direction : undefined) ?? doc?.design?.direction
   const look = requestedDirection ? directionFor(vertical.id, requestedDirection) : null
   const themed = look ? themeForDirection(vertical.id, look.id) : themeFor(vertical.id)
   const withType = doc?.design?.typography
@@ -1386,6 +1413,7 @@ export function renderApp(
     goal,
     actions: [primary, ...(secondary ? [secondary] : [])],
     doc,
+    editor: options.editor === true,
   }
 
   const tabs = doc ? tabsFromDoc(doc) : tabsFor(ctx, shell)
@@ -1435,6 +1463,12 @@ export function renderApp(
     currencySymbol: CURRENCY_SYMBOLS[(spec.currency ?? '').toUpperCase()] ?? '$',
   }
 
+  // A real logo replaces the initials wherever the brand mark appears; the
+  // monogram remains the fallback when no trustworthy image was found.
+  const markHtml = spec.logoImage
+    ? `<img src="${esc(spec.logoImage.url)}" alt="${esc(spec.logoImage.alt || `${spec.name} logo`)}" width="32" height="32" decoding="async" />`
+    : esc(spec.logo)
+
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -1457,14 +1491,14 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     <div class="offline" data-offline hidden>Offline — showing what is already stored</div>
 
     <div class="splash" data-splash>
-      <div class="s-mark">${esc(spec.logo)}</div>
+      <div class="s-mark${spec.logoImage ? ' is-logo' : ''}">${markHtml}</div>
       <b>${esc(spec.name)}</b>
       <span>${esc(ctx.label)}</span>
     </div>
 
     <header class="appbar${shell === 'menu' ? ' is-brand' : ''}${shell === 'session' ? ' is-session' : ''}${shell === 'care' ? ' is-care' : ''}${shell === 'listing' ? ' is-listing' : ''}">
       <button class="iconbtn" type="button" data-back hidden aria-label="Back">${icon('chevron')}</button>
-      ${shell === 'menu' ? '' : `<span class="mark">${esc(spec.logo)}</span>`}
+      ${shell === 'menu' ? '' : `<span class="mark${spec.logoImage ? ' is-logo' : ''}">${markHtml}</span>`}
       ${
         shell === 'listing'
           ? `<button class="search-pill bar-pill" type="button" data-search-open>${icon('search')}<span>Search</span></button>

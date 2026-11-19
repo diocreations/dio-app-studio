@@ -1,0 +1,296 @@
+[
+  {
+    "app": "buttertales",
+    "name": "Butter Tales",
+    "token": "70f1955221cd57b85e71c364",
+    "steps": {
+      "tagline": {
+        "id": "sec_fx_shop_title",
+        "text": "Screen-free stories, made to be handled."
+      },
+      "image": {
+        "id": "sec_fx_shop_search",
+        "label": "Search the collectionSearch"
+      },
+      "reorder": {
+        "moved": "sec_fx_shop_products",
+        "direction": "down"
+      },
+      "hide": {
+        "id": "sec_fx_shop_all",
+        "label": "Browse everythingBrowse link"
+      }
+    },
+    "ok": true,
+    "sections": [
+      "Search the collectionSearch",
+      "Butter Tales creates warm, imaginative, screen-free learning products for children.Shop intro",
+      "New inProducts",
+      "Browse everythingBrowse link"
+    ],
+    "reload": {
+      "order": [
+        "sec_fx_shop_search",
+        "sec_fx_shop_title",
+        "sec_fx_shop_all",
+        "sec_fx_shop_products"
+      ],
+      "orderMatches": true,
+      "hidden": [
+        "sec_fx_shop_all"
+      ],
+      "hiddenMatches": true,
+      "taglineValue": "Screen-free stories, made to be handled.",
+      "photoControl": true
+    },
+    "published": {
+      "order": [
+        "sec_fx_shop_search",
+        "sec_fx_shop_title",
+        "sec_fx_shop_products"
+      ],
+      "orderMatches": true,
+      "taglineShown": true,
+      "hiddenAbsent": true,
+      "photoShown": true
+    }
+  },
+  {
+    "app": "cafe",
+    "name": "Good Day Cafe",
+    "token": "69f0e40cb2ec05f00d1d5b66",
+    "steps": {
+      "tagline": {
+        "id": "sec_fx_cafe_hero",
+        "text": "Slow coffee, warm bread, and a seat by the window."
+      },
+      "image": {
+        "id": "sec_fx_cafe_menu",
+        "label": "From the counterCounter menu"
+      },
+      "reorder": {
+        "moved": "sec_fx_cafe_order",
+        "direction": "down"
+      },
+      "hide": {
+        "id": "sec_fx_offers",
+        "label": "Right nowOffers"
+      }
+    },
+    "ok": true,
+    "sections": [
+      "Good Day CafeCafé intro",
+      "From the counterCounter menu",
+      "Takeaway, ready when you areTakeaway band",
+      "A table, held for youTable reservation",
+      "Right nowOffers"
+    ],
+    "reload": {
+      "order": [
+        "sec_fx_cafe_hero",
+        "sec_fx_cafe_menu",
+        "sec_fx_cafe_reserve",
+        "sec_fx_cafe_order",
+        "sec_fx_offers"
+      ],
+      "orderMatches": true,
+      "hidden": [
+        "sec_fx_offers"
+      ],
+      "hiddenMatches": true,
+      "taglineValue": "Slow coffee, warm bread, and a seat by the window.",
+      "photoControl": true
+    },
+    "published": {
+      "order": [
+        "sec_fx_cafe_hero",
+        "sec_fx_cafe_menu",
+        "sec_fx_cafe_reserve",
+        "sec_fx_cafe_order"
+      ],
+      "orderMatches": true,
+      "taglineShown": true,
+      "hiddenAbsent": true,
+      "photoShown": true
+    }
+  },
+  {
+    "app": "salon",
+    "name": "Halo Hair Studio",
+    "token": "d3cb7b2bedef0fd5bd2e5394",
+    "steps": {
+      "tagline": {
+        "id": "sec_fx_salon_title",
+        "text": "Cuts, colour, and a quieter kind of appointment."
+      },
+      "image": {
+        "id": "sec_fx_salon_dates",
+        "label": "Choose a dayDate picker"
+      },
+      "reorder": {
+        "moved": "sec_fx_salon_services",
+        "direction": "down"
+      },
+      "hide": {
+        "id": "sec_fx_offers",
+        "label": "Right nowOffers"
+      }
+    },
+    "ok": true,
+    "sections": [
+      "Cuts, colour and calm.Salon intro",
+      "Choose a dayDate picker",
+      "Choose a treatmentTreatments",
+      "TeamTeam",
+      "Book an appointmentBook action",
+      "Right nowOffers"
+    ],
+    "reload": {
+      "order": [
+        "sec_fx_salon_title",
+        "sec_fx_salon_dates",
+        "sec_fx_salon_staff",
+        "sec_fx_salon_services",
+        "sec_fx_salon_action",
+        "sec_fx_offers"
+      ],
+      "orderMatches": true,
+      "hidden": [
+        "sec_fx_offers"
+      ],
+      "hiddenMatches": true,
+      "taglineValue": "Cuts, colour, and a quieter kind of appointment.",
+      "photoControl": true
+    },
+    "published": {
+      "order": [
+        "sec_fx_salon_title",
+        "sec_fx_salon_dates",
+        "sec_fx_salon_staff",
+        "sec_fx_salon_services",
+        "sec_fx_salon_action"
+      ],
+      "orderMatches": true,
+      "taglineShown": true,
+      "hiddenAbsent": true,
+      "photoShown": true
+    }
+  },
+  {
+    "app": "gym",
+    "name": "Iron Yard",
+    "token": "a209e7ebde55c44f57444ad5",
+    "steps": {
+      "tagline": {
+        "id": "sec_fx_gym_hero",
+        "text": "Small classes, heavy progress, honest coaching."
+      },
+      "image": {
+        "id": "sec_fx_gym_plans",
+        "label": "MembershipsMembership plans"
+      },
+      "reorder": {
+        "moved": "sec_fx_gym_timetable",
+        "direction": "down"
+      },
+      "hide": {
+        "id": "sec_fx_offers",
+        "label": "Right nowOffers"
+      }
+    },
+    "ok": true,
+    "sections": [
+      "Iron YardGym intro",
+      "MembershipsMembership plans",
+      "This weekClass timetable",
+      "Your coachesCoach profiles",
+      "Not sure where to start?Membership enquiry",
+      "Right nowOffers"
+    ],
+    "reload": {
+      "order": [
+        "sec_fx_gym_hero",
+        "sec_fx_gym_plans",
+        "sec_fx_gym_trainers",
+        "sec_fx_gym_timetable",
+        "sec_fx_gym_join",
+        "sec_fx_offers"
+      ],
+      "orderMatches": true,
+      "hidden": [
+        "sec_fx_offers"
+      ],
+      "hiddenMatches": true,
+      "taglineValue": "Small classes, heavy progress, honest coaching.",
+      "photoControl": true
+    },
+    "published": {
+      "order": [
+        "sec_fx_gym_hero",
+        "sec_fx_gym_plans",
+        "sec_fx_gym_timetable",
+        "sec_fx_gym_join"
+      ],
+      "orderMatches": true,
+      "taglineShown": true,
+      "hiddenAbsent": true,
+      "photoShown": true
+    }
+  },
+  {
+    "app": "dishoom",
+    "name": "Dishoom",
+    "token": "0ab0b1248e55df20f194aad0",
+    "steps": {
+      "tagline": {
+        "id": "sec_fx_dine_title",
+        "text": "Bombay comfort food, from breakfast to dinner."
+      },
+      "image": {
+        "id": "sec_fx_dine_feature",
+        "label": "Dishoom House ChaiFeatured dish"
+      },
+      "reorder": {
+        "moved": "sec_fx_dine_actions",
+        "direction": "down"
+      },
+      "hide": {
+        "id": "sec_fx_dine_note",
+        "label": "Kitchen noteKitchen note"
+      }
+    },
+    "ok": true,
+    "sections": [
+      "Dishoom Indian RestaurantsRestaurant intro",
+      "Dishoom House ChaiFeatured dish",
+      "See the menuActions",
+      "Kitchen noteKitchen note"
+    ],
+    "reload": {
+      "order": [
+        "sec_fx_dine_title",
+        "sec_fx_dine_feature",
+        "sec_fx_dine_note",
+        "sec_fx_dine_actions"
+      ],
+      "orderMatches": true,
+      "hidden": [
+        "sec_fx_dine_note"
+      ],
+      "hiddenMatches": true,
+      "taglineValue": "Bombay comfort food, from breakfast to dinner.",
+      "photoControl": true
+    },
+    "published": {
+      "order": [
+        "sec_fx_dine_title",
+        "sec_fx_dine_feature",
+        "sec_fx_dine_actions"
+      ],
+      "orderMatches": true,
+      "taglineShown": true,
+      "hiddenAbsent": true,
+      "photoShown": true
+    }
+  }
+]

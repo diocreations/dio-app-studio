@@ -412,6 +412,7 @@ export function backfillSampleContent(spec: AppSpec): NonNullable<AppSpec['sampl
     story: spec.story === vertical.story,
     offers: equal(spec.offers, vertical.offers),
     team: equal(spec.team ?? [], vertical.team ?? []),
+    staff: equal(spec.staff ?? [], vertical.staff ?? []),
     tagline: spec.tagline === vertical.tagline,
   }
   return { ...inferred, ...(spec.sampleContent ?? {}) }
@@ -507,10 +508,29 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
     .filter((section) => section.items.length > 0)
 }
 
+/**
+ * A logo image survives only as an absolute https image and a short, plain alt.
+ * A relative path, a data URI or anything scriptable is dropped so the monogram
+ * stays the fallback rather than a broken frame appearing in the header.
+ */
+export function cleanLogoImage(value: unknown): { url: string; alt?: string } | undefined {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined
+  const record = value as Record<string, unknown>
+  const url = typeof record.url === 'string' ? record.url.trim() : ''
+  if (!/^https:\/\/[^\s"'<>]{4,600}$/i.test(url)) return undefined
+  const alt =
+    typeof record.alt === 'string'
+      ? record.alt.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80)
+      : ''
+  return { url, ...(alt ? { alt } : {}) }
+}
+
 /** What a website contributed to a build. Every field is optional: whatever the
  *  site did not state falls back to the trade's seeded copy. */
 export type SiteInfo = {
   menu?: MenuSection[]
+  /** The business's own logo; initials remain the fallback. */
+  logoImage?: { url: string; alt?: string }
   category?: string
   /** Anything the site told us; `cleanDesign` fills in the rest. */
   design?: Partial<DesignKit>
@@ -579,6 +599,7 @@ export function buildSpec(input: {
   const name = input.name.trim().slice(0, 60) || 'Your business'
   const requested = input.features.length ? input.features : vertical.features
   const site = input.site ?? {}
+  const logoImage = cleanLogoImage(site.logoImage)
   const importedMenu = sanitizeMenu(site.menu)
   const category = cleanCategory(input.category ?? site.category)
   const design = cleanDesign(site.design)
@@ -592,6 +613,7 @@ export function buildSpec(input: {
     story: (site.story?.trim() || vertical.story).slice(0, 240),
     accent: sanitizeHex(input.accent, vertical.accent),
     logo: sanitizeLogo(input.logo, initialsFor(name)),
+    ...(logoImage ? { logoImage } : {}),
     hours: (site.hours?.trim() || vertical.hours).slice(0, 90),
     phone: (site.phone?.trim() || vertical.phone).slice(0, 24),
     address: (site.address?.trim() || vertical.address).slice(0, 60),
@@ -606,6 +628,7 @@ export function buildSpec(input: {
       story: !site.story?.trim(),
       offers: true,
       team: Boolean(vertical.team?.length),
+      staff: Boolean(vertical.staff?.length),
       tagline: !input.tagline,
     },
     ...(vertical.staff?.length ? { staff: [...vertical.staff] } : {}),

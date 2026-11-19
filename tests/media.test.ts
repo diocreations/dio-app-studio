@@ -161,6 +161,22 @@ describe('media library', () => {
     expect(new Uint8Array(await served.arrayBuffer()).byteLength).toBe(webp(640, 480).byteLength)
   })
 
+  test('the same photograph in two apps gets its own media id', async () => {
+    const first = await projectWithDb()
+    const second = await projectWithDb()
+    const r2 = new MemoryR2()
+    const one = await upload(first.project.token, ENV(r2 as unknown as R2Bucket, first.db))
+    const two = await upload(second.project.token, ENV(r2 as unknown as R2Bucket, second.db))
+    expect(one.status).toBe(201)
+    expect(second.project.token).not.toBe(first.project.token)
+    // Both apps keep their own row and their own bytes: an id derived from the
+    // content alone would collide with the first app's primary key.
+    expect(two.status).toBe(201)
+    const oneBody = (await one.json()) as { media: { id: string } }
+    const twoBody = (await two.json()) as { media: { id: string } }
+    expect(twoBody.media.id).not.toBe(oneBody.media.id)
+  })
+
   test('rejects forged types, oversized dimensions and cross-origin uploads', async () => {
     const { db, project } = await projectWithDb()
     const r2 = new MemoryR2()

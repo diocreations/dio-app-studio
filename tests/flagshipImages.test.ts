@@ -74,6 +74,7 @@ describe('generated sample content', () => {
       story: true,
       offers: true,
       team: true,
+      staff: true,
       tagline: true,
     })
   })
@@ -99,6 +100,7 @@ describe('generated sample content', () => {
       story: false,
       offers: true,
       team: false,
+      staff: false,
       tagline: true,
     })
   })

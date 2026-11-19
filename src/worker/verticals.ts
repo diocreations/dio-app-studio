@@ -1187,7 +1187,7 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
     kind: 'Independent financial adviser',
     tagline: 'Plain numbers, no surprises.',
     story:
-      'Fee-only advice from three advisers who will tell you when the answer is to do nothing.',
+      'Unhurried financial advice for people who would rather understand the plan than be sold one.',
     hours: 'Mon–Fri 9:00–17:30',
     phone: `${BASE_PHONE}77`,
     address: 'Suite 2, Corn Exchange',

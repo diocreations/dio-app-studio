@@ -33,15 +33,28 @@ const MARKERS: Partial<Record<VerticalId, string>> = {
   finance: 'fx-finance',
 }
 
-function renderFlagship(vertical: VerticalId, flagship = true): string {
-  const spec = buildSpec({
+function probeSpec(vertical: VerticalId) {
+  return buildSpec({
     name: 'Flagship Probe',
     vertical,
     accent: '#2f4a3f',
     logo: 'FP',
     features: [],
   })
-  return renderApp(spec, { token: `flagship-${vertical}`, live: false, flagship })
+}
+
+function renderFlagship(vertical: VerticalId, flagship = true): string {
+  return renderApp(probeSpec(vertical), { token: `flagship-${vertical}`, live: false, flagship })
+}
+
+/** The owner's own view: sample names stay editable there, never public. */
+function renderFlagshipEditor(vertical: VerticalId): string {
+  return renderApp(probeSpec(vertical), {
+    token: `flagship-${vertical}-editor`,
+    live: false,
+    flagship: true,
+    editor: true,
+  })
 }
 
 describe('flagship compositions', () => {
@@ -94,15 +107,19 @@ describe('flagship compositions', () => {
     const gym = renderFlagship('gym')
     expect(gym).toContain('data-sec="sec_fx_gym_timetable"')
     expect(gym).toContain('Strength 101')
-    expect(gym).toContain('with Ada')
+    // Ada is the trade's sample coach: public renders never name her as staff,
+    // while the owner's editor keeps the sample so it stays replaceable.
+    expect(gym).not.toContain('with Ada')
+    expect(renderFlagshipEditor('gym')).toContain('with Ada')
     expect(gym).toContain('Membership enquiry')
     expect(gym).toContain('data-book-name')
     expect(gym).toContain('data-quote-message')
 
     const clinic = renderFlagship('clinic')
-    expect(clinic).toContain('data-sec="sec_fx_clinic_doctors"')
-    expect(clinic).toContain('Dr Amara Osei')
-    expect(clinic).toContain('New patients welcome')
+    expect(renderFlagshipEditor('clinic')).toContain('data-sec="sec_fx_clinic_doctors"')
+    expect(clinic).not.toContain('Dr Amara Osei')
+    expect(renderFlagshipEditor('clinic')).toContain('Dr Amara Osei')
+    expect(clinic).not.toContain('New patients welcome')
     expect(clinic).toContain('Please do not include medical details')
     expect(clinic).toContain('Appointment, treatment or a general question')
     expect(clinic).toContain('data-book-name')
@@ -117,7 +134,8 @@ describe('flagship compositions', () => {
 
     const studio = renderFlagship('studio')
     expect(studio).toContain('data-sec="sec_fx_studio_work"')
-    expect(studio).toContain('Nell Fraser')
+    expect(renderFlagshipEditor('studio')).toContain('Nell Fraser')
+    expect(studio).not.toContain('Nell Fraser')
     expect(studio).toContain('Request a shoot brief')
     expect(studio).toContain('Book a call')
     expect(studio).toContain('data-quote-message')
@@ -155,9 +173,10 @@ describe('flagship compositions', () => {
 
     const finance = renderFlagship('finance')
     expect(finance).toContain('data-sec="sec_fx_finance_disclosure"')
-    expect(finance).toContain('Fee-only')
+    expect(finance).not.toContain('Fee-only')
     expect(finance).toContain('Capital at risk')
-    expect(finance).toContain('Helen Marsh')
+    expect(renderFlagshipEditor('finance')).toContain('Helen Marsh')
+    expect(finance).not.toContain('Helen Marsh')
     expect(finance).toContain('data-book-name')
     expect(finance).toContain('data-quote-message')
   })
@@ -181,7 +200,7 @@ describe('flagship compositions', () => {
         expect(node.variant).toBeTruthy()
         expect(node.id).toMatch(/^sec_[a-z0-9_-]+$/)
       }
-      const html = renderApp(spec, { token: `doc-${vertical}`, live: false, flagship: true, doc })
+      const html = renderApp(spec, { token: `doc-${vertical}`, live: false, flagship: true, doc, editor: true })
       for (const node of sections) expect(html).toContain(`data-sec="${node.id}"`)
     }
   })

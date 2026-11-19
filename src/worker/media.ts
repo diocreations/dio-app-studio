@@ -194,8 +194,20 @@ export function variantKey(projectId: string, hash: string, width: number): stri
   return `projects/${projectId}/media/${hash}/${width}.webp`
 }
 
-export function mediaIdFor(hash: string): string {
-  return `med_${hash.slice(0, 24)}`
+/**
+ * A media id is content-addressed but never global: two projects may hold the
+ * same photograph, and `media.id` is the primary key, so the id carries a short
+ * hash of the project too. Re-uploading the same file to one project still
+ * finds its existing row by content.
+ */
+export function mediaIdFor(hash: string, projectId = ''): string {
+  if (!projectId) return `med_${hash.slice(0, 24)}`
+  let fnv = 2166136261
+  for (const character of projectId) {
+    fnv ^= character.charCodeAt(0)
+    fnv = Math.imul(fnv, 16777619)
+  }
+  return `med_${hash.slice(0, 16)}${(fnv >>> 0).toString(16).padStart(8, '0')}`
 }
 
 type MediaRow = {
@@ -341,7 +353,7 @@ export async function uploadMedia(
   const largest = variants[variants.length - 1]
 
   const hash = await sha256(input.original.bytes)
-  const id = mediaIdFor(hash)
+  const id = mediaIdFor(hash, project.id)
   const existing = await db
     .prepare('SELECT * FROM media WHERE project_id = ? AND hash = ?')
     .bind(project.id, hash)

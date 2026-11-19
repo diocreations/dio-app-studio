@@ -528,7 +528,10 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
       flagshipSection('salon-dates', { title: 'Choose a day' }),
       flagshipSection('salon-services', { title: 'Choose a treatment' }),
       flagshipSection('salon-staff', {
-        text: spec.staff?.length ? `With ${spec.staff.slice(0, 4).join(', ')}` : 'With the team',
+        text:
+          spec.staff?.length && !spec.sampleContent?.team
+            ? `With ${spec.staff.slice(0, 4).join(', ')}`
+            : 'With the team',
       }),
       flagshipSection('salon-action', {
         title: 'Book an appointment',
@@ -689,7 +692,7 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
       flagshipSection('finance-hero', { title: spec.name, text: spec.tagline }),
       flagshipSection('finance-disclosure', {
         title: 'How we are paid',
-        text: 'Fee-only advice. We do not earn commission from providers, so the recommendation is the only thing being sold.',
+        text: 'Ask how the adviser is paid and what the fee covers before you commit.',
       }),
       flagshipSection('finance-services', { title: 'Services & fees' }),
       flagshipSection('finance-process', { title: 'What a review looks like' }),

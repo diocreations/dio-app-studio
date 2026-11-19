@@ -175,6 +175,10 @@ body[data-layout="rows"] .appbar, body[data-layout="grid"] .appbar { border-bott
   font-family: var(--display); font-weight: 800; font-size: 12.5px; letter-spacing: 0.04em;
   box-shadow: 0 8px 18px -12px var(--accent), var(--edge);
 }
+.appbar .mark.is-logo { background: transparent; box-shadow: none; padding: 0; width: auto; min-width: 26px; max-width: 104px; }
+.appbar .mark.is-logo img { height: 26px; width: auto; max-width: 104px; object-fit: contain; display: block; }
+.splash .s-mark.is-logo { background: color-mix(in srgb, #fff 94%, transparent); padding: 14px; }
+.splash .s-mark.is-logo img { height: 60px; width: auto; max-width: 120px; object-fit: contain; display: block; }
 .appbar .titles { flex: 1; min-width: 0; display: grid; gap: 2px; }
 .appbar .kicker {
   display: block; font-size: 8.5px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
@@ -306,30 +310,30 @@ body[data-accent-style="underline"] .sect { border-bottom: 1px solid var(--hair)
 .hero-art { position: absolute; inset: 0; z-index: 0; }
 .hero-art::before { content: ""; position: absolute; z-index: 1; }
 .m-circle::before {
-  width: 120%; aspect-ratio: 1; border-radius: 50%; border: 1px solid color-mix(in srgb, #fff 42%, transparent);
+  width: 120%; aspect-ratio: 1; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--on-accent) 42%, transparent);
   left: -18%; top: 26%;
 }
 .m-arches::before {
   width: 78%; aspect-ratio: 1 / 1.1; left: 11%; top: 22%;
-  border: 1px solid color-mix(in srgb, #fff 44%, transparent);
-  border-radius: 50% 50% 0 0; box-shadow: 0 0 0 1px color-mix(in srgb, #fff 16%, transparent) inset;
+  border: 1px solid color-mix(in srgb, var(--on-accent) 44%, transparent);
+  border-radius: 50% 50% 0 0; box-shadow: 0 0 0 1px color-mix(in srgb, var(--on-accent) 16%, transparent) inset;
 }
 .m-stripes::before {
-  inset: 0; background: repeating-linear-gradient(112deg, color-mix(in srgb, #fff 26%, transparent) 0 1px, transparent 1px 14px);
+  inset: 0; background: repeating-linear-gradient(112deg, color-mix(in srgb, var(--on-accent) 26%, transparent) 0 1px, transparent 1px 14px);
 }
 .m-grid::before {
   inset: 0; opacity: 0.7;
   background:
-    linear-gradient(color-mix(in srgb, #fff 28%, transparent) 1px, transparent 1px) 0 0 / 100% 22px,
-    linear-gradient(90deg, color-mix(in srgb, #fff 28%, transparent) 1px, transparent 1px) 0 0 / 22px 100%;
+    linear-gradient(color-mix(in srgb, var(--on-accent) 28%, transparent) 1px, transparent 1px) 0 0 / 100% 22px,
+    linear-gradient(90deg, color-mix(in srgb, var(--on-accent) 28%, transparent) 1px, transparent 1px) 0 0 / 22px 100%;
 }
 .m-rings::before {
   width: 150%; aspect-ratio: 1; left: -25%; top: -20%; border-radius: 50%;
-  background: repeating-radial-gradient(circle at 50% 50%, color-mix(in srgb, #fff 28%, transparent) 0 1px, transparent 1px 18px);
+  background: repeating-radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--on-accent) 28%, transparent) 0 1px, transparent 1px 18px);
 }
 .m-letter::before {
   content: "Aa"; font-family: var(--display-serif); font-size: 96px;
-  color: color-mix(in srgb, #fff 22%, transparent); left: 8%; bottom: -22px; line-height: 1;
+  color: color-mix(in srgb, var(--on-accent) 22%, transparent); left: 8%; bottom: -22px; line-height: 1;
 }
 
 /* ------------------------------------------------------------------ hero */
@@ -878,7 +882,7 @@ body[data-hero-scale="immersive"] .l-hero h1, body[data-hero-scale="immersive"] 
 }
 .search-pill svg { width: 15px; height: 15px; }
 .appbar .search-pill { flex: 1; min-width: 0; }
-body[data-shell="menu"] .appbar .titles { text-align: center; justify-items: center; }
+body[data-shell="menu"] .appbar .titles { text-align: center; justify-items: stretch; }
 body[data-shell="menu"] .tabbar { border-top-color: var(--ink); }
 body[data-shell="menu"] .tab { text-transform: none; letter-spacing: 0.02em; font-family: var(--display); font-size: 10.5px; }
 body[data-shell="session"] .appbar { border-bottom-color: var(--hair); }
@@ -1518,7 +1522,7 @@ body[data-trade="gym"] .appbar {
   background: color-mix(in srgb, var(--bg) 94%, transparent);
 }
 body[data-trade="gym"] .appbar .mark {
-  border-radius: 2px; background: var(--accent); color: #0a0c0b; box-shadow: none;
+  border-radius: 2px; background: var(--accent); color: var(--on-accent); box-shadow: none;
   font-family: var(--display); font-weight: 800;
 }
 body[data-trade="gym"] .appbar .title {
@@ -1547,7 +1551,7 @@ body[data-trade="gym"] .sess-row em {
   font-family: var(--display); text-transform: uppercase; font-size: 10px; letter-spacing: 0.08em; color: var(--muted);
 }
 body[data-trade="gym"] .cover {
-  min-height: 300px; border-radius: 0; box-shadow: none; color: #0a0c0b;
+  min-height: 300px; border-radius: 0; box-shadow: none; color: var(--on-accent);
   background: linear-gradient(118deg, var(--accent) 0 40%, var(--accent-deep) 40% 100%);
 }
 body[data-trade="gym"] .cover .cover-art { opacity: 0.28; }
@@ -1555,12 +1559,12 @@ body[data-trade="gym"] .cover h1 {
   font-family: var(--display); text-transform: uppercase; font-size: clamp(40px, 14vw, 64px);
   line-height: 0.84; letter-spacing: -0.01em;
 }
-body[data-trade="gym"] .cover p { color: color-mix(in srgb, #0a0c0b 76%, transparent); }
-body[data-trade="gym"] .cover .eyebrow { color: #0a0c0b; }
-body[data-trade="gym"] .cover .eyebrow::before { background: #0a0c0b; }
-body[data-trade="gym"] .cover .cover-rule { background: color-mix(in srgb, #0a0c0b 36%, transparent); }
+body[data-trade="gym"] .cover p { color: color-mix(in srgb, var(--on-accent) 76%, transparent); }
+body[data-trade="gym"] .cover .eyebrow { color: var(--on-accent); }
+body[data-trade="gym"] .cover .eyebrow::before { background: var(--on-accent); }
+body[data-trade="gym"] .cover .cover-rule { background: color-mix(in srgb, var(--on-accent) 36%, transparent); }
 body[data-trade="gym"] .cover .cover-meta {
-  color: color-mix(in srgb, #0a0c0b 78%, transparent); font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: color-mix(in srgb, var(--on-accent) 78%, transparent); font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em;
 }
 body[data-trade="gym"] .stack-card { border-radius: 4px; border-left: 4px solid var(--accent); box-shadow: none; }
@@ -1573,7 +1577,7 @@ body[data-trade="gym"] .sect .label {
   color: var(--accent);
 }
 body[data-trade="gym"] .btn { border-radius: 4px; font-family: var(--display); text-transform: uppercase; letter-spacing: 0.03em; }
-body[data-trade="gym"] .tab.on { background: var(--accent); color: #0a0c0b; border-radius: 4px; }
+body[data-trade="gym"] .tab.on { background: var(--accent); color: var(--on-accent); border-radius: 4px; }
 
 /* Processed signage, not UI: every shared part drops to the scoreboard's 4px
    cut. */

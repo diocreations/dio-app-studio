@@ -140,6 +140,8 @@ export type AppSpec = {
   story: string
   accent: string
   logo: string
+  /** Their own logo image, when a site declared one; initials are the fallback. */
+  logoImage?: { url: string; alt?: string }
   hours: string
   phone: string
   address: string
@@ -184,6 +186,7 @@ export type AppSpec = {
     story: boolean
     offers: boolean
     team?: boolean
+    staff?: boolean
     tagline?: boolean
   }
 }

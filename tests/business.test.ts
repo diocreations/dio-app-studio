@@ -440,6 +440,7 @@ describe('enquiries and dashboard', () => {
       story: true,
       offers: true,
       team: true,
+      staff: true,
       tagline: true,
     })
 

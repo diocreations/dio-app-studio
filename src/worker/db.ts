@@ -21,6 +21,7 @@ import {
 import type { Doc } from './doc'
 import type { VideoLink } from './types'
 import { verticalFor } from './verticals'
+import { ensurePlatformSchema } from './platform/schema'
 
 export type ProjectStatus = 'in_review' | 'changes_requested' | 'approved'
 export type NoteStatus = 'open' | 'done'
@@ -252,6 +253,73 @@ const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS notifications_by_project ON notifications (project_id, created_at)`,
   `CREATE INDEX IF NOT EXISTS activity_by_project ON activity (project_id, created_at)`,
   `CREATE INDEX IF NOT EXISTS doc_versions_by_project ON doc_versions (project_id, created_at)`,
+  `CREATE TABLE IF NOT EXISTS payment_connections (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    mode TEXT NOT NULL DEFAULT 'test',
+    key_id TEXT NOT NULL DEFAULT '',
+    secrets TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'connected',
+    last_verification TEXT NOT NULL DEFAULT 'untested',
+    last_verified_at TEXT NOT NULL DEFAULT '',
+    last_error TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(project_id, provider)
+  )`,
+  `CREATE TABLE IF NOT EXISTS payment_settings (
+    project_id TEXT PRIMARY KEY,
+    active_provider TEXT NOT NULL DEFAULT '',
+    pay_orders INTEGER NOT NULL DEFAULT 1,
+    pay_bookings INTEGER NOT NULL DEFAULT 1,
+    booking_deposit_percent INTEGER NOT NULL DEFAULT 20,
+    updated_at TEXT NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS payment_transactions (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    connection_id TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    mode TEXT NOT NULL DEFAULT 'test',
+    kind TEXT NOT NULL,
+    ref_id TEXT NOT NULL,
+    ref_number TEXT NOT NULL DEFAULT '',
+    customer_id TEXT NOT NULL DEFAULT '',
+    customer_name TEXT NOT NULL DEFAULT '',
+    customer_email TEXT NOT NULL DEFAULT '',
+    customer_phone TEXT NOT NULL DEFAULT '',
+    provider_order_id TEXT NOT NULL DEFAULT '',
+    provider_payment_id TEXT NOT NULL DEFAULT '',
+    provider_refund_id TEXT NOT NULL DEFAULT '',
+    amount INTEGER NOT NULL DEFAULT 0,
+    currency TEXT NOT NULL DEFAULT 'USD',
+    status TEXT NOT NULL DEFAULT 'created',
+    refund_status TEXT NOT NULL DEFAULT 'none',
+    amount_refunded INTEGER NOT NULL DEFAULT 0,
+    checkout_url TEXT NOT NULL DEFAULT '',
+    failure_reason TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    paid_at TEXT NOT NULL DEFAULT ''
+  )`,
+  `CREATE TABLE IF NOT EXISTS payment_events (
+    id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    event_id TEXT NOT NULL,
+    event_type TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'received',
+    detail TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    UNIQUE(project_id, provider, event_id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS payment_connections_by_project ON payment_connections (project_id)`,
+  `CREATE INDEX IF NOT EXISTS payment_tx_by_project ON payment_transactions (project_id, created_at)`,
+  `CREATE INDEX IF NOT EXISTS payment_tx_by_ref ON payment_transactions (project_id, kind, ref_id)`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS payment_tx_provider_order ON payment_transactions (provider, mode, provider_order_id) WHERE provider_order_id <> ''`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS payment_tx_provider_payment ON payment_transactions (provider, mode, provider_payment_id) WHERE provider_payment_id <> ''`,
+  `CREATE INDEX IF NOT EXISTS payment_events_by_project ON payment_events (project_id, created_at)`,
 ]
 
 /** Columns added after the first deployments. Duplicate-column errors are fine. */
@@ -261,6 +329,8 @@ const MIGRATIONS = [
   `ALTER TABLE projects ADD COLUMN variation_slot INTEGER`,
   `ALTER TABLE projects ADD COLUMN doc TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE owner_sessions ADD COLUMN last_seen_at TEXT NOT NULL DEFAULT ''`,
+  `ALTER TABLE bookings ADD COLUMN payment_status TEXT NOT NULL DEFAULT 'unpaid'`,
+  `ALTER TABLE bookings ADD COLUMN paid_amount INTEGER NOT NULL DEFAULT 0`,
   `CREATE UNIQUE INDEX IF NOT EXISTS projects_variation_slot ON projects (variation_slot)`,
   // Legacy rows get a stable slot before the counter is seeded past them.
   `UPDATE projects SET variation_slot = rowid - 1 WHERE variation_slot IS NULL`,
@@ -287,6 +357,9 @@ export function ensureSchema(db: D1Database): Promise<void> {
         // Column already exists.
       }
     }
+    // M1: additive and idempotent. Existing statements above are unchanged and
+    // nothing here is read by the current application paths.
+    await ensurePlatformSchema(db)
   })()
   ready.set(db, setup)
   return setup
@@ -708,11 +781,36 @@ export async function listProjects(db: D1Database): Promise<Project[]> {
 /** Removes a build with its notes and activity. Used by the operator board. */
 export async function deleteProject(db: D1Database, id: string): Promise<void> {
   await ensureSchema(db)
+  const project = await db
+    .prepare('SELECT token FROM projects WHERE id = ?')
+    .bind(id)
+    .first<{ token: string }>()
   await db.batch([
     db.prepare('DELETE FROM notes WHERE project_id = ?').bind(id),
     db.prepare('DELETE FROM activity WHERE project_id = ?').bind(id),
     db.prepare('DELETE FROM projects WHERE id = ?').bind(id),
   ])
+  if (!project?.token) return
+  // M2 gives each app its own synthetic organisation. Removing the app must not
+  // leave that organisation behind as a new orphan, so drop it only while it is
+  // still unclaimed and holds nothing (no members, billing or transfers).
+  try {
+    await db
+      .prepare(
+        `DELETE FROM organizations
+          WHERE slug = ? AND claim_status = 'unclaimed'
+            AND NOT EXISTS (SELECT 1 FROM projects p WHERE p.org_id = organizations.id)
+            AND NOT EXISTS (SELECT 1 FROM memberships m WHERE m.org_id = organizations.id)
+            AND NOT EXISTS (SELECT 1 FROM invitations i WHERE i.org_id = organizations.id)
+            AND NOT EXISTS (SELECT 1 FROM subscriptions s WHERE s.org_id = organizations.id)
+            AND NOT EXISTS (SELECT 1 FROM ownership_transfers t WHERE t.to_org_id = organizations.id)`,
+      )
+      .bind(`app-${project.token}`)
+      .run()
+  } catch (error) {
+    // Best effort: a failed cleanup must never fail the delete itself.
+    console.error('plattr_org_cleanup_error', error)
+  }
 }
 
 export type ProjectPatch = {

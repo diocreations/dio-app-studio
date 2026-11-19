@@ -31,6 +31,7 @@ import {
 import { buildSpec, initialsFor, quote, sanitizeHex, sanitizeMenu, type VerticalId } from './pricing'
 import { applyCommand, docFromSpec, flagshipDocFromSpec, normalizeDoc } from './doc'
 import { FLAGSHIP_TRADES } from './flagship'
+import { directionsFor } from './directions'
 import { editorPage } from './views/editor'
 import { dashboardPage, ownerLoginPage } from './views/dashboard'
 import { paymentMissingPage, paymentPage } from './views/payments'
@@ -485,9 +486,37 @@ app.get('/p/:token', async (c) => {
 
 /* ---------------------------- the built app ---------------------------- */
 
+/**
+ * A design concept can be reviewed on the real build without saving it: a
+ * `concept` query names one of the trade's directions and the optional axes
+ * only count alongside it. Nothing persists, a published link without the
+ * parameter is untouched, and an unknown direction is ignored rather than
+ * guessed.
+ */
+function conceptPreview(url: URL, vertical: VerticalId) {
+  const concept = url.searchParams.get('concept')?.trim() ?? ''
+  if (!concept || !directionsFor(vertical).some((entry) => entry.id === concept)) return undefined
+  const axis = (name: string) => url.searchParams.get(name)?.trim() || undefined
+  const variant = axis('variant')
+  const pick = (name: string, allowed: readonly string[]) => {
+    const value = axis(name)
+    return value && allowed.includes(value) ? { [name]: value } : {}
+  }
+  return {
+    direction: concept,
+    ...(variant && /^[0-3]$/.test(variant) ? { variant: Number(variant) } : {}),
+    ...pick('density', ['cozy', 'standard', 'roomy']),
+    ...pick('corners', ['sharp', 'soft', 'round']),
+    ...pick('hero', ['image', 'split', 'centered', 'none']),
+    ...pick('order', ['catalog', 'offers', 'visit', 'rewards']),
+    ...pick('heroScale', ['compact', 'regular', 'tall', 'immersive']),
+  }
+}
+
 app.get('/p/:token/app', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.text('Not found', 404)
+  const concept = conceptPreview(new URL(c.req.url), project.spec.vertical)
   c.header('Cache-Control', 'no-store')
   c.header('X-Robots-Tag', project.spec.indexable ? 'index, follow' : 'noindex, nofollow')
   const photos = await photosFor(project.spec.vertical, c.env)
@@ -500,14 +529,23 @@ app.get('/p/:token/app', async (c) => {
       photos,
       noindex: !project.spec.indexable,
       // Published and preview surfaces render the same saved document. The
-      // editor bridge is the only difference.
-      doc: starterDoc(project),
-      flagship: FLAGSHIP_TRADES.has(project.spec.vertical),
+      // editor bridge is the only difference. A concept review is the one
+      // exception: it shows the seeded composition the three designs come from,
+      // with the owner's own catalogue, and saves nothing.
+      doc: concept ? undefined : starterDoc(project),
+      flagship: concept ? false : FLAGSHIP_TRADES.has(project.spec.vertical),
       payments: capability.enabled
         ? { payOrders: capability.payOrders, payBookings: capability.payBookings, provider: capability.provider ?? '' }
         : undefined,
       editor: c.req.query('editor') === '1',
-      screen: c.req.query('editor') === '1' ? c.req.query('screen')?.slice(0, 40) : undefined,
+      // A concept is judged on its home screen; the app itself may open on the
+      // catalogue, so the review names the screen explicitly.
+      screen: concept
+        ? 'home'
+        : c.req.query('editor') === '1'
+          ? c.req.query('screen')?.slice(0, 40)
+          : undefined,
+      preview: concept,
     }),
   )
 })
@@ -1544,7 +1582,7 @@ app.put('/api/projects/:token/app-settings', async (c) => {
   if (phone !== project.spec.phone || email !== project.spec.email || address !== project.spec.address || hours !== project.spec.hours) sample.contact = false
   if (tagline !== project.spec.tagline) sample.tagline = false
   if (story !== project.spec.story) sample.story = false
-  if (JSON.stringify(staff) !== JSON.stringify(project.spec.staff ?? [])) sample.team = false
+  if (JSON.stringify(staff) !== JSON.stringify(project.spec.staff ?? [])) sample.team = sample.staff = false
   if (JSON.stringify(team) !== JSON.stringify(project.spec.team ?? [])) sample.team = false
   spec.sampleContent = sample
   await c.env.DB

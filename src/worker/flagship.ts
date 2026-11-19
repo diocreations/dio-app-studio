@@ -88,6 +88,12 @@ function businessLabel(spec: AppSpec): string {
   return (spec.category || '').trim() || verticalFor(spec.vertical).label
 }
 
+/** The trade's sample people: named coaches, clinicians or a staff line must
+ *  not reach a customer as if the owner had confirmed them. */
+function samplePeople(ctx: FlagshipContext): boolean {
+  return Boolean(!ctx.editor && (ctx.spec.sampleContent?.team || ctx.spec.sampleContent?.staff))
+}
+
 function hoursLine(spec: AppSpec): string {
   return (spec.hours || '').split('·')[0].trim()
 }
@@ -280,6 +286,9 @@ export type FlagshipContext = {
   token: string
   booking: boolean
   doc: Doc | null
+  /** The owner's own view keeps the trade's sample people visible so they
+   *  stay replaceable; a customer render never names them. */
+  editor?: boolean
 }
 
 function targetFor(ctx: FlagshipContext, target: string): string {
@@ -585,7 +594,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'cafe-hero':
       return `<div class="fx-cafe-head">
-        <div class="fx-cafe-meta"><span>${esc(spec.address || businessLabel(spec))}</span>${spec.sampleContent?.contact ? '<span class="fx-sample">Sample details</span>' : ''}<span>${esc(hoursLine(spec) || 'Open daily')}</span></div>
+        <div class="fx-cafe-meta"><span>${esc(spec.address || businessLabel(spec))}</span>${spec.sampleContent?.contact ? '<span class="fx-sample">Sample details</span>' : ''}${hoursLine(spec) ? `<span>${esc(hoursLine(spec))}</span>` : ''}</div>
         <h1>${esc(heading || spec.name)}</h1>
         <p>${esc(words || spec.tagline)}</p>
         <div class="fx-cafe-window">
@@ -629,7 +638,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'gym-hero':
       return `<div class="fx-gym-hero">
-        <div class="fx-gym-meta"><span>01 / Strength &amp; conditioning</span><span>${esc(hoursLine(spec) || 'Open today')}</span></div>
+        <div class="fx-gym-meta"><span>${esc(businessLabel(spec))}</span>${hoursLine(spec) ? `<span>${esc(hoursLine(spec))}</span>` : ''}</div>
         <h1>${esc(heading || spec.name)}<span>${esc(words || spec.tagline)}</span></h1>
         <div class="fx-gym-strip">
           ${[0, 1, 3].map((index, position) => visual(ctx, node, index, 'card', position === 0, index, all[position]?.item.media, position === 0)).join('')}
@@ -637,7 +646,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
         <div class="fx-gym-stats">
           <div><b>${spec.menu[0]?.items.length ?? all.length}</b><span>Memberships</span></div>
           <div><b>${verticalFor(spec.vertical).timetable?.length ?? 0}</b><span>Weekly classes</span></div>
-          <div><b>${spec.team?.length ?? 0}</b><span>Coaches</span></div>
+          ${spec.team?.length ? `<div><b>${spec.team.length}</b><span>Coaches</span></div>` : ''}
         </div>
       </div>`
     case 'gym-plans': {
@@ -654,7 +663,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               )
               .join('')}</div>`
           : `<div class="fx-empty"><b>Plans are being finalised.</b><p>The owner can publish memberships from the dashboard.</p></div>`}
-        <p class="fx-gym-smallprint">No joining fee · Cancel with 30 days' notice</p>`
+        ${spec.hours ? `<p class="fx-gym-smallprint">${esc(spec.hours)}</p>` : ''}`
     }
     case 'gym-timetable': {
       const classes = verticalFor(spec.vertical).timetable ?? []
@@ -665,7 +674,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
                 (session, index) => `<div class="fx-gym-session">
                   <span class="fx-gym-num">0${index + 1}</span>
                   <div><b>${esc(session.name)}</b><span>${esc(session.when)}</span></div>
-                  <em>${esc(session.coach)}</em>
+                  ${samplePeople(ctx) ? '' : `<em>${esc(session.coach)}</em>`}
                   <button type="button" data-go="book" aria-label="Book ${esc(session.name)}">+</button>
                 </div>`,
               )
@@ -698,11 +707,11 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'clinic-hero':
       return `<div class="fx-clinic-hero">
-        <div class="fx-clinic-top"><span class="fx-clinic-badge">New patients welcome</span><span>${esc(hoursLine(spec) || 'Open weekdays')}</span></div>
+        <div class="fx-clinic-top"><span class="fx-clinic-badge">${esc(businessLabel(spec))}</span>${hoursLine(spec) ? `<span>${esc(hoursLine(spec))}</span>` : ''}</div>
         <h1>${esc(heading || spec.name)}</h1>
         <p>${esc(words || spec.tagline)}</p>
         <div class="fx-clinic-photo">${visual(ctx, node, 4, 'room', true, 4, first?.item.media, true)}<span class="fx-clinic-addr">${esc(spec.address || '')}</span></div>
-        <div class="fx-clinic-trust"><span>Clear pricing</span><span>GDC registered</span><span>No referral needed</span></div>
+        <div class="fx-clinic-trust"><span>Clear pricing</span><span>Appointments online</span></div>
       </div>`
     case 'clinic-specialities':
       return `<div class="fx-clinic-head"><span>${esc(heading || 'Specialities')}</span><button type="button" data-go="catalog">All treatments</button></div>
@@ -720,7 +729,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           : `<div class="fx-empty"><b>Treatments are being added.</b><p>The owner can publish services from the dashboard.</p></div>`}`
     case 'clinic-doctors': {
       const doctors = spec.team?.slice(0, 3) ?? []
-      if (!doctors.length) return ''
+      if (!doctors.length || samplePeople(ctx)) return ''
       const portraits = [2, 5, 6]
       return `<div class="fx-clinic-head"><span>${esc(heading || 'The clinical team')}</span><span class="fx-clinic-count">${doctors.length}</span></div>
         <div class="fx-clinic-doctors">${doctors
@@ -816,7 +825,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
         <h1>${esc(heading || spec.name)}<span>${esc(words || spec.tagline)}</span></h1>
         <div class="fx-studio-grid">
           ${[0, 1, 2].map((index, position) => visual(ctx, node, index, 'card', position === 0, index, all[position]?.item.media, position === 0)).join('')}
-          <div class="fx-studio-grid-copy"><span>Selected commissions</span><b>${all.length} packages</b><em>Est. ${new Date().getFullYear() - 8}</em></div>
+          <div class="fx-studio-grid-copy"><span>Selected commissions</span><b>${all.length} packages</b></div>
         </div>
       </div>`
     case 'studio-work': {
@@ -882,7 +891,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           <h1>${esc(heading || spec.name)}</h1>
           <p>${esc(words || spec.tagline)}</p>
         </div>
-        <div class="fx-trade-strip"><span>${esc(hoursLine(spec) || 'Mon–Sat')}</span><span>${esc(spec.address || '')}</span></div>
+        <div class="fx-trade-strip">${hoursLine(spec) ? `<span>${esc(hoursLine(spec))}</span>` : ''}<span>${esc(spec.address || '')}</span></div>
       </div>`
     }
     case 'trades-jobs': {
@@ -954,7 +963,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'auto-hero':
       return `<div class="fx-auto-hero">
-        <div class="fx-auto-top"><span>${esc(businessLabel(spec))}</span><span>${esc(hoursLine(spec) || 'Open today')}</span></div>
+        <div class="fx-auto-top"><span>${esc(businessLabel(spec))}</span>${hoursLine(spec) ? `<span>${esc(hoursLine(spec))}</span>` : ''}</div>
         <h1>${esc(heading || spec.name)}</h1>
         <p>${esc(words || spec.tagline)}</p>
         <div class="fx-auto-plate" aria-hidden="true"><i>GB</i><b>${esc((spec.logo || 'PL').slice(0, 4).toUpperCase())}</b></div>
@@ -1035,10 +1044,10 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'ecom-hero':
       return `<div class="fx-ecom-hero">
-        <div class="fx-ecom-top"><span>Made in small runs</span><span>${esc(hoursLine(spec) || 'Packed daily')}</span></div>
+        <div class="fx-ecom-top"><span>${esc(businessLabel(spec))}</span>${hoursLine(spec) ? `<span>${esc(hoursLine(spec))}</span>` : ''}</div>
         <h1>${esc(heading || spec.name)}<span>${esc(words || spec.tagline)}</span></h1>
         <div class="fx-ecom-collage">${[0, 1, 2, 3].map((index) => `<figure>${visual(ctx, node, index, 'card', index === 0, index)}</figure>`).join('')}</div>
-        <div class="fx-ecom-strip"><span>${all.length} pieces</span><span>Packed daily</span><span>${esc(spec.offers[0]?.title || 'Small batches')}</span></div>
+        <div class="fx-ecom-strip"><span>${all.length} pieces</span><span>${esc(spec.offers[0]?.title || '')}</span></div>
       </div>`
     case 'ecom-drop': {
       const picks = all.slice(0, 3)
@@ -1093,7 +1102,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'courses-hero':
       return `<div class="fx-course-hero">
-        <div class="fx-course-top"><span>${esc(businessLabel(spec))}</span><span>${esc(hoursLine(spec) || 'Self-paced')}</span></div>
+        <div class="fx-course-top"><span>${esc(businessLabel(spec))}</span>${hoursLine(spec) ? `<span>${esc(hoursLine(spec))}</span>` : ''}</div>
         <h1>${esc(heading || spec.name)}<span>${esc(words || spec.tagline)}</span></h1>
         <figure class="fx-course-cover">${visual(ctx, node, 0, 'room', true, 0)}<figcaption>${all.length} courses · lessons on demand</figcaption></figure>
         <div class="fx-course-strip"><span>${all.length} courses</span><span>Project feedback</span><span>Lifetime access</span></div>
@@ -1146,7 +1155,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'finance-hero':
       return `<div class="fx-fin-hero">
-        <div class="fx-fin-top"><span>Fee-only advice</span><span>${esc(hoursLine(spec) || 'By appointment')}</span></div>
+        <div class="fx-fin-top"><span>${esc(businessLabel(spec))}</span>${hoursLine(spec) ? `<span>${esc(hoursLine(spec))}</span>` : ''}</div>
         <h1>${esc(heading || spec.name)}</h1>
         <p>${esc(words || spec.tagline)}</p>
         <figure class="fx-fin-cover">${visual(ctx, node, 0, 'room', true, 0)}</figure>
@@ -1158,10 +1167,10 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     case 'finance-disclosure':
       return `<div class="fx-fin-disclosure">
         <span class="fx-fin-label">Important</span>
-        <b>${esc(heading || 'How we are paid')}</b>
+        <b>${esc(heading || 'Before you commit')}</b>
         <p>${esc(words || '')}</p>
         <ul>
-          <li>Fee-only: we take no commission from providers</li>
+          <li>Ask for the fees in writing before you commit</li>
           <li>A written recommendation before you commit</li>
           <li>Capital at risk. Investments can fall as well as rise.</li>
         </ul>
