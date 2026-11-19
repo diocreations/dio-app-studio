@@ -301,8 +301,13 @@ describe('the app shell behaves like an app', () => {
   })
 
   test('a build with no phone number does not offer a dead call button', () => {
+    // A phone the owner actually supplied renders a call button; the trade's
+    // sample number is hidden from customers until they confirm it.
+    const withPhone = buildSpec({ name: 'Voice', vertical: 'salon', accent: '#8a5a2b', logo: 'V', features: [] })
+    withPhone.phone = '020 7946 0018'
+    expect(renderApp(withPhone, { token: 't', live: false })).toContain('aria-label="Call"')
     const noPhone = buildSpec({ name: 'Voice', vertical: 'salon', accent: '#8a5a2b', logo: 'V', features: [] })
-    expect(renderApp(noPhone, { token: 't', live: false })).toContain('aria-label="Call"')
+    expect(renderApp(noPhone, { token: 't', live: false })).not.toContain('aria-label="Call"')
     noPhone.phone = ''
     expect(renderApp(noPhone, { token: 't', live: false })).not.toContain('aria-label="Call"')
   })
