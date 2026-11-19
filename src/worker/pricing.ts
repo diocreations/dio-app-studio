@@ -430,6 +430,15 @@ function copyMenu(menu: MenuSection[]): MenuSection[] {
 }
 
 /** An item image is a stored media id plus presentation, never a remote URL. */
+function sanitizeItemImage(value: unknown): MenuItem['image'] {
+  const input = value && typeof value === 'object' ? (value as Record<string, unknown>) : null
+  const raw = typeof value === 'string' ? value : input && typeof input.url === 'string' ? input.url : ''
+  const url = raw.trim()
+  if (url.length > 600 || !/^https:\/\/[^\s"'<>]+$/i.test(url)) return undefined
+  const alt = input && typeof input.alt === 'string' ? input.alt.trim().slice(0, 140) : ''
+  return { url, ...(alt ? { alt } : {}), source: 'website' }
+}
+
 function sanitizeItemMedia(value: unknown): MenuItem['media'] {
   if (!value || typeof value !== 'object') return undefined
   const input = value as Record<string, unknown>
@@ -475,6 +484,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               meta?: unknown
               vendor?: unknown
               media?: unknown
+              image?: unknown
             }
             const price =
               typeof entry.price === 'number' && Number.isFinite(entry.price)
@@ -488,6 +498,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               meta: String(entry.meta ?? '').trim().slice(0, 30) || undefined,
               vendor: String(entry.vendor ?? '').trim().slice(0, 40) || undefined,
               ...(sanitizeItemMedia(entry.media) ? { media: sanitizeItemMedia(entry.media) } : {}),
+              ...(sanitizeItemImage(entry.image) ? { image: sanitizeItemImage(entry.image) } : {}),
             }
           })
           .filter((item) => item.name !== 'Item' || item.price > 0),

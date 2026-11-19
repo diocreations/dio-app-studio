@@ -80,13 +80,20 @@ function entryPhotoIndex(spec: AppSpec, key: string): number {
   return entries(spec).findIndex((entry) => entry.key === key)
 }
 
+/** One resolved identity: the owner's category when they have one, else the
+ *  trade's name for itself. Headers, eyebrows and metadata all read this. */
+function businessLabel(spec: AppSpec): string {
+  return (spec.category || '').trim() || verticalFor(spec.vertical).label
+}
+
 function hoursLine(spec: AppSpec): string {
   return (spec.hours || '').split('·')[0].trim()
 }
 
 function factline(spec: AppSpec): string {
   const parts = [hoursLine(spec), spec.address].filter(Boolean)
-  return parts.length ? `<div class="fx-facts">${parts.map((part) => `<span>${esc(part)}</span>`).join('')}</div>` : ''
+  const sample = spec.sampleContent?.contact ? '<span class="fx-sample">Sample details</span>' : ''
+  return parts.length ? `<div class="fx-facts">${parts.map((part) => `<span>${esc(part)}</span>`).join('')}${sample}</div>` : ''
 }
 
 function restaurantHome(spec: AppSpec): string {
@@ -96,7 +103,7 @@ function restaurantHome(spec: AppSpec): string {
   return `<div class="fx-home fx-dine">
     <div class="fx-kicker"><span>${esc(spec.hours ? hoursLine(spec) : 'Kitchen')}</span><span>${esc(spec.address || '')}</span></div>
     <div class="fx-title">
-      <span class="fx-eyebrow">${esc(verticalFor(spec.vertical).vocab.catalog)} · ${esc(spec.category || verticalFor(spec.vertical).label)}</span>
+      <span class="fx-eyebrow">${esc(verticalFor(spec.vertical).vocab.catalog)} · ${esc(businessLabel(spec))}</span>
       <h1>${esc(spec.name)}<i>.</i></h1>
       <p>${esc(spec.tagline)}</p>
     </div>
@@ -141,7 +148,7 @@ function shopHome(spec: AppSpec): string {
       <span>Search the collection</span><kbd>${all.length}</kbd>
     </button>
     <div class="fx-shop-title">
-      <span class="fx-eyebrow">${esc(verticalFor(spec.vertical).label)}</span>
+      <span class="fx-eyebrow">${esc(businessLabel(spec))}</span>
       <h1>${esc(spec.tagline)}</h1>
     </div>
     ${
@@ -181,7 +188,7 @@ function salonHome(spec: AppSpec): string {
   })
   return `<div class="fx-home fx-salon">
     <div class="fx-salon-head">
-      <span class="fx-eyebrow">${esc(verticalFor(spec.vertical).label)}</span>
+      <span class="fx-eyebrow">${esc(businessLabel(spec))}</span>
       <h1>${esc(spec.tagline)}</h1>
       <p>${esc(spec.name)}${spec.address ? ` · ${esc(spec.address)}` : ''}</p>
     </div>
@@ -237,7 +244,7 @@ function professionalHome(spec: AppSpec): string {
   const all = entries(spec)
   return `<div class="fx-home fx-pro">
     <div class="fx-pro-head">
-      <span class="fx-eyebrow">${esc(spec.category || verticalFor(spec.vertical).label)}</span>
+      <span class="fx-eyebrow">${esc(businessLabel(spec))}</span>
       <h1>${esc(spec.name)}</h1>
       <p>${esc(spec.tagline)}</p>
     </div>
@@ -300,11 +307,19 @@ function visual(
   photoIndex: number = index,
   itemMedia?: MenuItem['media'],
   priority = false,
+  /** The exact image the source site published for this item. */
+  itemImage?: string,
 ): string {
   if (itemMedia)
     return `<span class="fx-art is-${shape} has-photo">${photoFor(ctx, itemMedia, node.title || '', undefined, priority)}</span>`
+  if (itemImage)
+    return `<span class="fx-art is-${shape} has-photo"><img src="${esc(itemImage)}" alt="" loading="${priority ? 'eager' : 'lazy'}" decoding="async" referrerpolicy="no-referrer" onerror="this.style.display='none'" /></span>`
   if (useMedia && node.media)
     return `<span class="fx-art is-${shape} has-photo">${photoFor(ctx, node.media, node.title || '', undefined, priority)}</span>`
+  // An imported business never gets this trade's stock photography as if it
+  // were its own. Only artwork, unless the owner uploads or the site supplies
+  // the exact image above.
+  if (ctx.spec.website) return art(index, shape)
   const sizes =
     shape === 'room' ? '100vw' : shape === 'plate' ? '(max-width: 620px) 30vw, 140px' : shape === 'quiet' ? '54px' : '(max-width: 620px) 45vw, 220px'
   const shot = stockImageTag(ctx.spec.vertical, photoIndex, { sizes, priority })
@@ -389,7 +404,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     case 'dine-title':
       return `<div class="fx-kicker"><span>${esc(spec.hours ? hoursLine(spec) : 'Kitchen')}</span><span>${esc(spec.address || '')}</span></div>
         <div class="fx-title">
-          <span class="fx-eyebrow">${esc(verticalFor(spec.vertical).vocab.catalog)} · ${esc(spec.category || verticalFor(spec.vertical).label)}</span>
+          <span class="fx-eyebrow">${esc(verticalFor(spec.vertical).vocab.catalog)} · ${esc(businessLabel(spec))}</span>
           <h1>${esc(heading || spec.name)}<i>.</i></h1>
           <p>${esc(words || spec.tagline)}</p>
         </div>`
@@ -423,7 +438,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
         <span>${esc(heading || 'Search the collection')}</span><kbd>${all.length}</kbd>
       </button>`
     case 'shop-title':
-      return `<div class="fx-shop-title"><span class="fx-eyebrow">${esc(verticalFor(spec.vertical).label)}</span><h1>${esc(heading || spec.tagline)}</h1>${words ? `<p class="fx-block-note">${esc(words)}</p>` : ''}</div>`
+      return `<div class="fx-shop-title"><span class="fx-eyebrow">${esc(businessLabel(spec))}</span><h1>${esc(heading || spec.tagline)}</h1>${words ? `<p class="fx-block-note">${esc(words)}</p>` : ''}</div>`
     case 'shop-products': {
       const selected = all.slice(0, 4)
       return `${heading ? `<div class="fx-shop-head"><span>${esc(heading)}</span><button type="button" data-go="catalog">All ${all.length} pieces</button></div>` : ''}
@@ -432,7 +447,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           ? `<div class="fx-products">${selected
               .map(
                 (entry, index) => `<div class="fx-product" data-item="${entry.key}" role="button" tabindex="0">
-                  ${visual(ctx, node, index, 'card', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media)}
+                  ${visual(ctx, node, index, 'card', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, false, entry.item.image?.url)}
                   <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${price(entry.item, spec.currency)}</span></div>
                 </div>`,
               )
@@ -445,7 +460,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'salon-title':
       return `<div class="fx-salon-head">
-        <span class="fx-eyebrow">${esc(verticalFor(spec.vertical).label)}</span>
+        <span class="fx-eyebrow">${esc(businessLabel(spec))}</span>
         <h1>${esc(heading || spec.tagline)}</h1>
         <p>${esc(words || [spec.name, spec.address].filter(Boolean).join(' · '))}</p>
       </div>`
@@ -469,7 +484,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           ? `<div class="fx-services">${services
               .map(
                 (entry, index) => `<div class="fx-service" data-item="${entry.key}" role="button" tabindex="0">
-                  ${visual(ctx, node, index, 'quiet', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media)}
+                  ${visual(ctx, node, index, 'quiet', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, false, entry.item.image?.url)}
                   <div><b>${esc(entry.item.name)}</b><span>${esc(entry.item.meta || entry.item.desc)}</span></div>
                   <div class="fx-service-tail"><b>${price(entry.item, spec.currency)}</b><span>${esc(entry.section)}</span></div>
                 </div>`,
@@ -516,7 +531,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     case 'pro-facts':
       return `<div class="fx-facts"><span>${esc(heading || hoursLine(spec) || 'Hours')}</span><span>${esc(words || spec.address || '')}</span></div>`
     case 'pro-title':
-      return `<div class="fx-pro-head"><span class="fx-eyebrow">${esc(spec.category || verticalFor(spec.vertical).label)}</span><h1>${esc(heading || spec.name)}</h1><p>${esc(words || spec.tagline)}</p></div>`
+      return `<div class="fx-pro-head"><span class="fx-eyebrow">${esc(businessLabel(spec))}</span><h1>${esc(heading || spec.name)}</h1><p>${esc(words || spec.tagline)}</p></div>`
     case 'pro-intro':
       return `<div class="fx-pro-rule"></div>
         <figure class="fx-pro-photo">${node.media ? photoFor(ctx, node.media, heading) : stockImageTag('professional', 0, { sizes: '100vw' })}</figure>
@@ -568,7 +583,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'cafe-hero':
       return `<div class="fx-cafe-head">
-        <div class="fx-cafe-meta"><span>Riverside coffee</span><span>${esc(hoursLine(spec) || 'Open daily')}</span></div>
+        <div class="fx-cafe-meta"><span>${esc(spec.address || businessLabel(spec))}</span>${spec.sampleContent?.contact ? '<span class="fx-sample">Sample details</span>' : ''}<span>${esc(hoursLine(spec) || 'Open daily')}</span></div>
         <h1>${esc(heading || spec.name)}</h1>
         <p>${esc(words || spec.tagline)}</p>
         <div class="fx-cafe-window">
@@ -861,7 +876,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           <figcaption><span>24/7 emergency</span>${phone ? `<a href="tel:${esc(phone)}">Call ${esc(spec.phone)}</a>` : ''}</figcaption>
         </figure>
         <div class="fx-trade-head">
-          <span class="fx-eyebrow">${esc(spec.category || verticalFor(spec.vertical).label)}</span>
+          <span class="fx-eyebrow">${esc(businessLabel(spec))}</span>
           <h1>${esc(heading || spec.name)}</h1>
           <p>${esc(words || spec.tagline)}</p>
         </div>
@@ -937,7 +952,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'auto-hero':
       return `<div class="fx-auto-hero">
-        <div class="fx-auto-top"><span>${esc(spec.category || verticalFor(spec.vertical).label)}</span><span>${esc(hoursLine(spec) || 'Open today')}</span></div>
+        <div class="fx-auto-top"><span>${esc(businessLabel(spec))}</span><span>${esc(hoursLine(spec) || 'Open today')}</span></div>
         <h1>${esc(heading || spec.name)}</h1>
         <p>${esc(words || spec.tagline)}</p>
         <div class="fx-auto-plate" aria-hidden="true"><i>GB</i><b>${esc((spec.logo || 'PL').slice(0, 4).toUpperCase())}</b></div>
@@ -1076,7 +1091,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'courses-hero':
       return `<div class="fx-course-hero">
-        <div class="fx-course-top"><span>${esc(spec.category || verticalFor(spec.vertical).label)}</span><span>${esc(hoursLine(spec) || 'Self-paced')}</span></div>
+        <div class="fx-course-top"><span>${esc(businessLabel(spec))}</span><span>${esc(hoursLine(spec) || 'Self-paced')}</span></div>
         <h1>${esc(heading || spec.name)}<span>${esc(words || spec.tagline)}</span></h1>
         <figure class="fx-course-cover">${visual(ctx, node, 0, 'room', true, 0)}<figcaption>${all.length} courses · lessons on demand</figcaption></figure>
         <div class="fx-course-strip"><span>${all.length} courses</span><span>Project feedback</span><span>Lifetime access</span></div>
@@ -1662,6 +1677,7 @@ body[data-trade="professional"][data-flagship="1"] .fx-empty { margin-top: 20px;
 body[data-trade="cafe"][data-flagship="1"] .appbar { background: color-mix(in srgb, var(--bg) 90%, transparent); }
 body[data-trade="cafe"][data-flagship="1"] .fx-cafe { padding-top: 6px; }
 body[data-trade="cafe"][data-flagship="1"] .fx-cafe-meta { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0 0; font-size: 8.5px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; opacity: .5; }
+.fx-sample { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 999px; border: 1px dashed currentColor; font-size: 8px; letter-spacing: .1em; text-transform: uppercase; opacity: .8; }
 body[data-trade="cafe"][data-flagship="1"] .fx-cafe-head h1 { font-family: var(--display); font-size: clamp(46px, 14vw, 66px); font-weight: 500; line-height: .9; letter-spacing: -.06em; margin: 18px 0 0; max-width: 10ch; }
 body[data-trade="cafe"][data-flagship="1"] .fx-cafe-head > p { font-family: var(--display); font-size: 16px; line-height: 1.45; margin: 13px 0 0; max-width: 28ch; opacity: .7; }
 body[data-trade="cafe"][data-flagship="1"] .fx-cafe-window { position: relative; margin-top: 24px; }

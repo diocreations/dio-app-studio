@@ -1169,14 +1169,25 @@ const PRODUCT_TYPES = new Set([
   'Course',
 ])
 
+/** The image a page declares for one specific product, and nothing else. */
+function imageFrom(value: unknown): string {
+  const entry = Array.isArray(value) ? value[0] : value
+  const record = entry && typeof entry === 'object' ? (entry as Record<string, unknown>) : null
+  const raw = typeof entry === 'string' ? entry : record ? record.url ?? record.contentUrl : ''
+  const url = typeof raw === 'string' ? raw.trim() : ''
+  return /^https:\/\/[^\s"'<>]{8,600}$/i.test(url) ? url : ''
+}
+
 function itemFromNode(node: Record<string, unknown>): Item | null {
   if (!typeOf(node).some((type) => PRODUCT_TYPES.has(type))) return null
   const name = textOf(node, 'name', 'headline')
   if (!name) return null
+  const image = imageFrom(node.image) || imageFrom(node.thumbnailUrl)
   return {
     name: collapse(name, 60),
     desc: collapse(textOf(node, 'description'), 90),
     price: centsOf(node),
+    ...(image ? { image: { url: image, source: 'website' as const } } : {}),
   }
 }
 
@@ -1840,10 +1851,12 @@ function productFromPage(page: Page): Item | null {
     /itemprop=["']price["'][^>]*content=["']([\d.,]+)/i.exec(page.html)?.[1] ||
     page.html.match(PRICE_PATTERN)?.[0] ||
     ''
+  const image = imageFrom(page.meta['og:image']) || imageFrom(page.meta['twitter:image'])
   return {
     name: collapse(name, 60),
     desc: collapse(page.meta.description ?? page.meta['og:description'] ?? '', 90),
     price: toCents(price),
+    ...(image ? { image: { url: image, source: 'website' as const } } : {}),
   }
 }
 
@@ -1911,6 +1924,13 @@ function sectionFromProductPage(page: Page, site: ImportedSite): MenuSection | n
     const single = productFromPage(page)
     if (!single) return null
     items.push(single)
+  }
+  // A page that sells one thing can attribute its own lead image to that
+  // product. A listing page selling several cannot: no image is better than
+  // the wrong product's photograph.
+  if (items.length === 1 && !items[0]!.image) {
+    const image = imageFrom(page.meta['og:image']) || imageFrom(page.meta['twitter:image'])
+    if (image) items[0] = { ...items[0]!, image: { url: image, source: 'website' } }
   }
 
   let name = ''

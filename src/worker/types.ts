@@ -35,6 +35,10 @@ export type MenuItem = {
   vendor?: string
   /** A photograph owned by this product, service or room. */
   media?: ItemMedia
+  /** The image the source website published for this exact item. Kept as a
+   *  URL with its provenance, so the app never presents another product's
+   *  photograph — or a stock one — as this item's. */
+  image?: { url: string; alt?: string; source: 'website' }
 }
 
 /** The same reference shape as a document image, kept flat so a catalogue item
