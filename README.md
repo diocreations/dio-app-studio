@@ -110,7 +110,8 @@ prose. `/brief` links to it from the website panel.
 - `docs/PHOTOGRAPHY.md` — flagship photo delivery, Unsplash source IDs, licence and replacement policy.
 - `docs/FUNCTIONAL_AUDIT.md` — honest feature status across all 27 trades.
 - `docs/OPERATIONS.md` — Studio/dashboard/customer-app boundaries, permissions and customer-account assessment.
-- `docs/PAYMENTS.md` — business-owned Razorpay/Stripe ownership, settlement and refund architecture (not yet implemented).
+- `docs/PAYMENTS.md` — business-owned Razorpay/Stripe ownership, settlement, refunds and webhook architecture.
+- `docs/PAYMENTS_ACCEPTANCE.md` — route, failure-consistency and acceptance coverage, including the checks that still need real provider credentials.
 - `docs/NOTIFICATIONS.md` — notification outbox, consent and delivery-provider assessment (not yet connected).
 
 ## Starting from an existing website

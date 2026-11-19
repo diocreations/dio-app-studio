@@ -1,0 +1,46 @@
+{
+  "projectTokenPrefix": "32922c",
+  "app": {
+    "chain": [
+      "303 /p/32922c7ac40d8a7ac8e174af",
+      "200 /p/32922c7ac40d8a7ac8e174af/dashboard/login"
+    ],
+    "status": 200,
+    "type": "text/html; charset=UTF-8",
+    "bytes": 3882
+  },
+  "dashboardAnonymous": {
+    "chain": [
+      "303 /p/32922c7ac40d8a7ac8e174af/dashboard",
+      "200 /p/32922c7ac40d8a7ac8e174af/dashboard/login"
+    ],
+    "status": 200,
+    "type": "text/html; charset=UTF-8",
+    "bytes": 3882
+  },
+  "dashboardOwner": {
+    "chain": [
+      "200 /p/32922c7ac40d8a7ac8e174af/dashboard"
+    ],
+    "status": 200,
+    "type": "text/html; charset=UTF-8",
+    "bytes": 50725
+  },
+  "mediaOwner": null,
+  "hostedPayPage": {
+    "chain": [
+      "200 /p/7b1cb1fa716dd35577cd9698/pay/pay_be4b4834b30a7231022e"
+    ],
+    "status": 200,
+    "type": "text/html; charset=UTF-8",
+    "bytes": 5767
+  },
+  "studioClosedWithoutKey": {
+    "chain": [
+      "401 /studio"
+    ],
+    "status": 401,
+    "type": "text/html; charset=UTF-8",
+    "bytes": 14798
+  }
+}

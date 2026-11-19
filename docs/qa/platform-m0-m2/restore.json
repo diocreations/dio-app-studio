@@ -1,0 +1,22 @@
+{
+  "copy": "/Users/jomyjoseph/.config/freebuff-desktop/local-projects/dd12c749-f87a-4f63-8bd7-791c793f775c/.wrangler/backups/restore-rehearsal/restored.sqlite",
+  "integrity": [
+    {
+      "integrity_check": "ok"
+    }
+  ],
+  "foreignKeyViolations": 0,
+  "countsMatch": true,
+  "digestMatch": true,
+  "diff": {
+    "countChanges": [],
+    "digestChanges": [],
+    "preserved": true
+  },
+  "r2Matches": true,
+  "r2": {
+    "objects": 21,
+    "bytes": 488446,
+    "digest": "0472503f66f09b4fe90f208f1bdff2224e82e3f12eb3047035e118e1d9ef2c0e"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "result": {
+    "droppedTables": [
+      "usage_events",
+      "audit_events",
+      "operator_roles",
+      "platform_billing_events",
+      "platform_invoices",
+      "subscription_changes",
+      "subscriptions",
+      "plan_limits",
+      "plans",
+      "ownership_transfers",
+      "project_claims",
+      "invitations",
+      "memberships",
+      "organizations",
+      "auth_tokens",
+      "user_sessions",
+      "users"
+    ],
+    "columnsDropped": true,
+    "remaining": []
+  },
+  "state": {
+    "present": [],
+    "missing": [
+      "users",
+      "user_sessions",
+      "auth_tokens",
+      "organizations",
+      "memberships",
+      "invitations",
+      "project_claims",
+      "ownership_transfers",
+      "plans",
+      "plan_limits",
+      "subscriptions",
+      "subscription_changes",
+      "platform_invoices",
+      "platform_billing_events",
+      "operator_roles",
+      "audit_events",
+      "usage_events"
+    ],
+    "projectColumns": {
+      "org_id": false,
+      "created_by": false
+    },
+    "complete": false
+  }
+}

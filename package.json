@@ -7,7 +7,8 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build && node scripts/postbuild.mjs",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.worker.json",
-    "test": "bun test"
+    "test": "bun test",
+    "migrate:platform": "bun scripts/platform-migrate.ts"
   },
   "dependencies": {
     "@hono/zod-openapi": "^1.6.3",

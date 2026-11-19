@@ -1,0 +1,56 @@
+{
+  "before": {
+    "present": [],
+    "missing": [
+      "users",
+      "user_sessions",
+      "auth_tokens",
+      "organizations",
+      "memberships",
+      "invitations",
+      "project_claims",
+      "ownership_transfers",
+      "plans",
+      "plan_limits",
+      "subscriptions",
+      "subscription_changes",
+      "platform_invoices",
+      "platform_billing_events",
+      "operator_roles",
+      "audit_events",
+      "usage_events"
+    ],
+    "projectColumns": {
+      "org_id": false,
+      "created_by": false
+    },
+    "complete": false
+  },
+  "after": {
+    "present": [
+      "users",
+      "user_sessions",
+      "auth_tokens",
+      "organizations",
+      "memberships",
+      "invitations",
+      "project_claims",
+      "ownership_transfers",
+      "plans",
+      "plan_limits",
+      "subscriptions",
+      "subscription_changes",
+      "platform_invoices",
+      "platform_billing_events",
+      "operator_roles",
+      "audit_events",
+      "usage_events"
+    ],
+    "missing": [],
+    "projectColumns": {
+      "org_id": true,
+      "created_by": true
+    },
+    "complete": true
+  }
+}

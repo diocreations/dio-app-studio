@@ -1,0 +1,30 @@
+{
+  "dir": "/Users/jomyjoseph/.config/freebuff-desktop/local-projects/dd12c749-f87a-4f63-8bd7-791c793f775c/.wrangler/backups/platform-m0-m2-run",
+  "counts": {
+    "projects": 47,
+    "notes": 2,
+    "activity": 343,
+    "doc_versions": 45,
+    "media": 7,
+    "customers": 34,
+    "orders": 13,
+    "order_items": 16,
+    "bookings": 19,
+    "enquiries": 13,
+    "payment_connections": 1,
+    "payment_settings": 1,
+    "payment_transactions": 1,
+    "payment_events": 0,
+    "notifications": 74,
+    "owner_sessions": 17,
+    "variation_counter": 1,
+    "import_budget": 0,
+    "daily_budget": 14
+  },
+  "combined": "2172dd4b5f5da4061e9278c9001c249e5098cebbc2efac0d0195bcf3e454ea59",
+  "r2": {
+    "objects": 21,
+    "bytes": 488446,
+    "digest": "0472503f66f09b4fe90f208f1bdff2224e82e3f12eb3047035e118e1d9ef2c0e"
+  }
+}

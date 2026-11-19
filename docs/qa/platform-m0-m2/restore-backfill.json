@@ -1,0 +1,29 @@
+{
+  "report": {
+    "at": "2026-11-19T07:50:37.832Z",
+    "projects": 47,
+    "linkedProjects": 47,
+    "createdOrganizations": 47,
+    "linkedNow": 47,
+    "alreadyLinked": 0,
+    "invalidProjects": 0,
+    "batches": 1
+  },
+  "reconciliation": {
+    "projects": 47,
+    "linkedProjects": 47,
+    "unlinkedProjects": 0,
+    "organizations": 47,
+    "syntheticOrganizations": 47,
+    "syntheticUnclaimed": 47,
+    "orphanOrganizations": 0,
+    "projectsWithUnknownOrg": 0,
+    "users": 0,
+    "memberships": 0,
+    "invitations": 0,
+    "claims": 0,
+    "transfers": 0,
+    "subscriptions": 0,
+    "ok": true
+  }
+}

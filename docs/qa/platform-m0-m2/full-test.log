@@ -1,0 +1,453 @@
+bun test v1.3.0 (b0a6feca)
+
+tests/importGuards.test.ts:
+(pass) the import endpoint refuses work it should not do > another site cannot spend our outbound requests [8.87ms]
+(pass) the import endpoint refuses work it should not do > a simple form post cannot reach the importer [0.13ms]
+(pass) the import endpoint refuses work it should not do > our own page still gets past the guard [0.21ms]
+(pass) the import endpoint refuses work it should not do > a non-browser caller with no Origin is allowed to try [0.17ms]
+(pass) the import endpoint refuses work it should not do > a junk link costs no unit of the day [0.57ms]
+(pass) the import endpoint refuses work it should not do > the daily cap refuses with its own 429 [1.26ms]
+(pass) the import endpoint refuses work it should not do > one visitor cannot spend the whole day's imports [0.45ms]
+
+tests/social.test.ts:
+(pass) the pages a stranger shares > the home page carries share tags with absolute artwork [8.22ms]
+(pass) the pages a stranger shares > every page gets its own title, and the icons are real files [1.78ms]
+(pass) the pages a stranger shares > assets answer before the not-found page, and 404s still become a page [0.31ms]
+
+tests/seo.test.ts:
+(pass) what a crawler is told > robots keeps private pages out and points at the sitemap [0.28ms]
+(pass) what a crawler is told > the sitemap lists the public pages, never a build link [0.09ms]
+(pass) what a crawler is told > both files follow the origin they were asked on [0.06ms]
+
+tests/videos.test.ts:
+(pass) trailer links on a film build > the project's own links are used, not the demo set [3.00ms]
+(pass) trailer links on a film build > only http and https links survive [0.26ms]
+(pass) trailer links on a film build > a link with no label falls back to "Watch" [0.21ms]
+(pass) trailer links on a film build > a project with no links shows no Watch section at all [0.31ms]
+
+tests/private.test.ts:
+(pass) the private build pages > the token page and its app ask not to be indexed [9.07ms]
+(pass) the private build pages > a demo build stays indexable [0.68ms]
+(pass) the private build pages > a customer app link cannot open the editor or its APIs [2.46ms]
+(pass) the private build pages > the public pages are not noindexed [0.04ms]
+(pass) the operator board > the set-up and locked variants ask not to be indexed [0.48ms]
+(pass) the operator board > the unlocked board is noindexed too [2.31ms]
+(pass) the operator board > a wrong key is noindexed as well [1.13ms]
+(pass) responses that have no head to put a tag in > every private response carries X-Robots-Tag [3.75ms]
+(pass) responses that have no head to put a tag in > public responses do not carry it [1.11ms]
+
+tests/showcase.test.ts:
+(pass) the home carousel > every slide names its own work and carries that work’s section [0.18ms]
+(pass) the home carousel > the catalogue has a filter chip and a section for every jump [0.56ms]
+(pass) the home carousel > a tap opens the catalogue filtered to that jump
+
+tests/money-and-events.test.ts:
+(pass) money > groups thousands, and keeps two decimals only when there are pence
+(pass) money > the currency follows the customer, not the trade
+(pass) the What's on block > each trade shows its own events, with the date first [0.77ms]
+(pass) the What's on block > a trade with no events says nothing rather than inventing them [0.22ms]
+(pass) the What's on block > the block is tied to the events feature [0.13ms]
+
+tests/variety.test.ts:
+(pass) generated builds vary by design > different briefs land on different palettes, type, corners and layouts [1.98ms]
+(pass) generated builds vary by design > the seed separates two briefs that share a trade and a brand colour [0.29ms]
+(pass) generated builds vary by design > a seed reshuffles layout and corners but never the brand [3.09ms]
+(pass) generated builds vary by design > 500 builds are distinct before the 2,304-layout deck wraps [46.49ms]
+(pass) generated builds vary by design > 500 allocated slots stay distinct across projects and versions [35.39ms]
+(pass) generated builds vary by design > 500 allocated slots stay distinct without photos [30.05ms]
+(pass) generated builds vary by design > the four section orders reorder the rendered home page [1.42ms]
+(pass) generated builds vary by design > every trade gets three different home compositions from the designs [8.34ms]
+(pass) generated builds vary by design > a trade with no offers still gets three different home orders [0.41ms]
+(pass) generated builds vary by design > no two builds across briefs and seeds share a whole design [2.79ms]
+(pass) generated builds vary by design > the guard fails when a palette, type, radius or layout collapses [0.12ms]
+
+tests/design.test.ts:
+(pass) reading a site’s own design language > palette, typeface and corners come from the stylesheet [0.46ms]
+(pass) reading a site’s own design language > a serif site keeps a serif display face
+(pass) reading a site’s own design language > an unreadable pair is rejected in favour of the trade theme
+(pass) reading a site’s own design language > a white site still gets a raised card surface [0.10ms]
+(pass) reading a site’s own design language > nothing measurable leaves the trade theme alone
+(pass) reading a site’s own design language > a font alone does not claim their palette [0.04ms]
+(pass) reading a site’s own design language > the trade colours stay when the site declared none
+(pass) reading a site’s own design language > a manifest splash colour is used, and disclosed as such
+(pass) reading a site’s own design language > a dark site is read as dark
+(pass) nav and hero structure > a hamburger header reads as a drawer, with their labels [0.39ms]
+(pass) nav and hero structure > a row of links reads as tabs, and centred copy as a centred hero
+(pass) nav and hero structure > a photo behind the first screen is an image hero
+(pass) nav and hero structure > a logo link is not a nav label [0.10ms]
+(pass) nav and hero structure > a page with no header or hero says nothing
+(pass) nav and hero structure > a posted structure is clamped [0.08ms]
+(pass) nav and hero structure > the app opens a drawer when their mobile nav does [0.34ms]
+(pass) the app shell behaves like an app > search is a screen with a real field [0.13ms]
+(pass) the app shell behaves like an app > saved items have their own screen, badge and per-item hearts
+(pass) the app shell behaves like an app > the catalogue filters by section instead of only scrolling [0.54ms]
+(pass) the app shell behaves like an app > detail owns a sticky action bar
+(pass) the app shell behaves like an app > offline, install and a self-hiding header are part of the shell
+(pass) the app shell behaves like an app > hidden stays hidden, and the detail action is pinned to the bottom [0.56ms]
+(pass) the app shell behaves like an app > filters keep their active state and mobile fields do not zoom
+(pass) the app shell behaves like an app > the Shop tab opens the whole catalogue, a category jump arrives filtered
+(pass) the app shell behaves like an app > every imported palette keeps the active chip readable [4.08ms]
+(pass) the app shell behaves like an app > the active chip gets its own contrasting pair, not the site palette
+(pass) the app shell behaves like an app > system back walks the screens instead of exiting
+(pass) the app shell behaves like an app > a build with no phone number does not offer a dead call button [0.74ms]
+(pass) PWA metadata > a manifest gives the install identity [0.02ms]
+(pass) PWA metadata > junk is not a manifest
+(pass) an import carries the look into the build > design and PWA are reported, and survive the round trip [2.72ms]
+(pass) an import carries the look into the build > the app renders in their palette, not the trade’s [0.22ms]
+(pass) an import carries the look into the build > a hostile design is dropped rather than rendered [0.03ms]
+
+tests/prompt.test.ts:
+(pass) one sentence becomes a brief > a typo still lands on the right trade [140.28ms]
+(pass) one sentence becomes a brief > an art gallery is read as a gallery, not the default trade [0.10ms]
+(pass) one sentence becomes a brief > the trade decides which features are offered [0.28ms]
+(pass) one sentence becomes a brief > what the customer asks for is added on top, with a reason [0.26ms]
+(pass) one sentence becomes a brief > a sentence with no trade in it says it is guessing [0.21ms]
+(pass) one sentence becomes a brief > an empty or hostile prompt is cleaned, not rendered [0.25ms]
+(pass) three designs that are actually different > there are three, each with its own preview
+(pass) three designs that are actually different > no two share a single axis
+(pass) three designs that are actually different > the chosen design is what the build renders
+(pass) three designs that are actually different > an empty preview query never wipes the chosen design
+(pass) three designs that are actually different > the demo route ignores blank axes [1.54ms]
+(pass) three designs that are actually different > the element style a customer picks reaches the build, over the trade
+(pass) three designs that are actually different > the element shapes are optional, and a malformed one is dropped alone
+(pass) three designs that are actually different > a malformed layout is dropped whole, never half-applied
+(pass) the prompt is the first thing on the brief > the page asks in plain words and renders a design picker [0.61ms]
+(pass) the prompt is the first thing on the brief > picking a design lands on features, and the name waits for the build [0.35ms]
+(pass) the prompt is the first thing on the brief > the trade and brand colour stay reachable after a design pick skips that step [0.43ms]
+(pass) the prompt is the first thing on the brief > the brief lets the customer pick the element shapes [0.35ms]
+(pass) the prompt is the first thing on the brief > the endpoint answers with a trade, features and three designs [0.42ms]
+(pass) the prompt is the first thing on the brief > a prompt that says nothing is refused, not guessed at silently [0.22ms]
+
+tests/catalog.test.ts:
+(pass) catalogue editing > saves real names, descriptions and prices used by the app [3.04ms]
+(pass) catalogue editing > rejects cross-site catalogue writes and empty offer titles [2.65ms]
+(pass) catalogue editing > the editable home story is the copy shown on More
+(pass) catalogue editing > generated screens contain no placeholder filler or repeated long copy [8.53ms]
+
+tests/studio.test.ts:
+(pass) studio operator session > the session is an HMAC of the key, not the key itself [0.43ms]
+(pass) studio operator session > a missing key never authenticates, even with a matching cookie [0.06ms]
+(pass) studio operator session > only the session for the configured key opens the board [0.17ms]
+(pass) studio operator session > a submitted key is compared through the same digest [0.16ms]
+
+tests/db.test.ts:
+(pass) variation slot allocation > 500 projects receive 500 distinct stored slots [24.04ms]
+(pass) variation slot allocation > projects and their versions claim 500 distinct slots [19.78ms]
+(pass) variation slot allocation > a rebuild claims a new stored slot [1.85ms]
+(pass) import allowance > every attempt is counted once, on the day it was made [2.13ms]
+
+tests/engine.test.ts:
+(pass) a quote adds the base build, each capability and each store format [0.17ms]
+(pass) the monthly plan charges a setup fee and a retainer instead
+(pass) capabilities pull in what they depend on
+(pass) every trade seeds a usable app with its own vocabulary [0.20ms]
+(pass) a non-restaurant brief builds the right shape
+(pass) unknown trades fall back to a complete build instead of breaking
+(pass) every trade gets its own design system, not a re-labelled clone [11.57ms]
+(pass) the app shell only offers the screens a build actually has [0.64ms]
+(pass) the zip writer produces an archive with a central directory [0.76ms]
+
+tests/platform.test.ts:
+(pass) M0 feature flags > every flag is off when the binding is unset [0.09ms]
+(pass) M0 feature flags > only explicit truthy values turn a flag on [0.04ms]
+(pass) M0 feature flags > unknown names and typos cannot enable anything
+(pass) M1 additive schema > creates every platform table plus the project columns, idempotently [2.13ms]
+(pass) M1 additive schema > existing project reads and writes are unchanged with the schema present [0.01ms]
+(pass) subscription contracts and history > only one contract per organisation may be live, but closed contracts accumulate [4.14ms]
+(pass) subscription contracts and history > the same provider subscription id never forks a contract [1.44ms]
+(pass) subscription contracts and history > an in-place upgrade keeps the contract and appends immutable history [2.20ms]
+(pass) subscription contracts and history > re-subscribing after cancellation leaves the old contract readable [2.11ms]
+(pass) subscription contracts and history > a cancelled contract can be followed by a new one without a second trial [2.34ms]
+(pass) subscription contracts and history > billing reconciliation is idempotent and replayable after a failure [2.96ms]
+(pass) subscription contracts and history > invoices are mirrored once per provider invoice id [0.71ms]
+(pass) subscription contracts and history > a plan-move record cannot be duplicated by a replayed event id [2.89ms]
+(pass) ownership claims and transfers > the claim must use the email registered on the project [1.00ms]
+(pass) ownership claims and transfers > a project without a registered email cannot be self-served [2.54ms]
+(pass) ownership claims and transfers > one open claim per project, and no ownership transfer without proof [1.39ms]
+(pass) ownership claims and transfers > a dispute freezes transfers and the operator can reverse one [2.93ms]
+(pass) ownership claims and transfers > an unverified account cannot invite, change plans or start billing [0.36ms]
+(pass) M2 backfill > creates one unclaimed organisation per project without any owner [4.10ms]
+(pass) M2 backfill > is idempotent and can pick up projects created after the first run [2.22ms]
+(pass) M2 backfill > preserves documents, media, orders, bookings, customers and payment rows [2.95ms]
+(pass) M2 backfill > deleting an app removes its synthetic organisation instead of orphaning it [2.09ms]
+(pass) tenant isolation and integrity > organisation reads never cross tenants [1.04ms]
+(pass) tenant isolation and integrity > foreign keys reject rows that point at another tenant’s absence [2.62ms]
+(pass) tenant isolation and integrity > integrity checks pass on a migrated, backfilled database [2.62ms]
+(pass) rollback > drops only the additive schema and leaves every app row working [4.75ms]
+
+tests/editor.test.ts:
+(pass) the application document > a build starts with screens, navigation and a home screen [0.13ms]
+(pass) the application document > version-1 section documents become the home screen of the app [0.05ms]
+(pass) the application document > screen ids, kinds and initial screen are normalised [0.09ms]
+(pass) screens and navigation > screens can be added, renamed, duplicated, moved and removed [0.23ms]
+(pass) screens and navigation > the rendered app follows screen order, navigation and initial screen [0.84ms]
+(pass) screens and navigation > components can be reordered, hidden and added per screen [0.40ms]
+(pass) screens and navigation > mobile component kinds render as real controls [0.39ms]
+(pass) screens and navigation > components can move between screens without id collisions [0.09ms]
+(pass) screens and navigation > responsive visibility is still real CSS [0.19ms]
+(pass) the local design assistant > design words change the accent and say what they did [0.10ms]
+(pass) the local design assistant > screen instructions edit the same document [0.17ms]
+(pass) the editor and its API > the editor page is private and built around the phone canvas [2.19ms]
+(pass) the editor and its API > screens and components persist and are read back by the app [3.45ms]
+(pass) the editor and its API > saved versions list and restore the previous design [3.42ms]
+(pass) the editor and its API > cross-site, wrong-type and unknown-token writes are refused [2.35ms]
+(pass) the editor and its API > AI previews are returned, not saved [1.97ms]
+
+tests/importer.test.ts:
+(pass) a shop URL becomes a shop app > reads the name, promise and brand colour
+(pass) a shop URL becomes a shop app > recognises the trade and turns products into a catalogue
+(pass) a shop URL becomes a shop app > turns a shop into a cart build
+(pass) a shop URL becomes a shop app > collects contact details and only real social profiles
+(pass) a salon URL becomes an appointment app > detects the trade from the copy, not the URL
+(pass) a salon URL becomes an appointment app > reads opening hours and the address from structured data
+(pass) a salon URL becomes an appointment app > offers booking because the site does
+(pass) a salon URL becomes an appointment app > keeps both social profiles
+(pass) a restaurant menu keeps its sections > sections and prices survive
+(pass) a restaurant menu keeps its sections > the currency comes from the menu data
+(pass) a site with nothing to read still produces a brief > falls back to the title and the trade default colour [0.23ms]
+(pass) a site with nothing to read still produces a brief > says what is missing instead of inventing it [0.22ms]
+(pass) a page cut off mid-bundle is not read as page copy > the unclosed script yields no contact details
+(pass) a page cut off mid-bundle is not read as page copy > leftover JavaScript cannot name the trade either
+(pass) a page cut off mid-bundle is not read as page copy > a guess does not assert a category
+(pass) a page cut off mid-bundle is not read as page copy > one generic word in the copy cannot settle the trade
+(pass) a page cut off mid-bundle is not read as page copy > contact details published as placeholders are dropped
+(pass) a page cut off mid-bundle is not read as page copy > a real tel: or mailto: link is still read
+(pass) the site names its own category > a schema BookStore is a bookshop, and says why
+(pass) the site names its own category > page words name a shop the schema does not [0.52ms]
+(pass) the site names its own category > a non-shop keeps its trade name rather than a retail noun
+(pass) the site names its own category > detection shows the words that decided it [0.10ms]
+(pass) the trade label in the app is the category, not the shape > a free-text category reaches the rendered app [0.25ms]
+(pass) the trade label in the app is the category, not the shape > with no category the trade name is used [0.11ms]
+(pass) the read is always the live page > asks every hop for a fresh copy [0.19ms]
+(pass) a page background is not a brand colour > a white theme-color is ignored [0.03ms]
+(pass) a page background is not a brand colour > a saturated theme-color is kept
+(pass) the crawl goes past the page that was pasted > follows the aisle links and merges their catalogues [0.76ms]
+(pass) the crawl goes past the page that was pasted > never wanders off the origin or into the cart [0.45ms]
+(pass) the crawl goes past the page that was pasted > stops at the page budget and says so [0.94ms]
+(pass) robots.txt decides what the importer may read > our own group beats the wildcard group [0.12ms]
+(pass) robots.txt decides what the importer may read > a wildcard-only file applies to us too
+(pass) robots.txt decides what the importer may read > the longest rule wins, and an allow wins a tie
+(pass) robots.txt decides what the importer may read > wildcards and an end anchor work [0.06ms]
+(pass) robots.txt decides what the importer may read > a byte-order mark does not swallow the first group [0.02ms]
+(pass) robots.txt decides what the importer may read > a group that names us with no rules means no restrictions
+(pass) robots.txt decides what the importer may read > a versioned agent line still matches us [0.02ms]
+(pass) robots.txt decides what the importer may read > a site that excludes us is never fetched, and says why [0.11ms]
+(pass) robots.txt decides what the importer may read > excluded pages behind the entry are skipped with a note [0.35ms]
+(pass) products are read from their links when the card class is hashed > names come from the slug and prices from beside the link
+(pass) products are read from their links when the card class is hashed > a card with no price cannot inherit the next card’s
+(pass) products are read from their links when the card class is hashed > bare numbers and stock codes are not product names
+(pass) products are read from their links when the card class is hashed > a card buried under hundreds of characters of skeleton still counts [0.20ms]
+(pass) products are read from their links when the card class is hashed > a collection page of hashed cards becomes a catalogue [0.43ms]
+(pass) products are read from their links when the card class is hashed > one or two links are not a catalogue [0.18ms]
+(pass) a thin catalogue says when it was drawn in the browser > a framework shell is recognised, a server-rendered page is not
+(pass) a thin catalogue says when it was drawn in the browser > a shell shop reports a client-rendered catalogue, not invented items [0.34ms]
+(pass) a thin catalogue says when it was drawn in the browser > a storefront with no shell markers keeps the ordinary missing line [0.18ms]
+(pass) a thin catalogue says when it was drawn in the browser > a product-grid container or an image preload is not product markup [0.04ms]
+(pass) a thin catalogue says when it was drawn in the browser > a small server-rendered shop gets the ordinary missing-catalogue line [0.15ms]
+(pass) the importer refuses to be a proxy into the network > blocks http://127.0.0.1/ [0.23ms]
+(pass) the importer refuses to be a proxy into the network > blocks http://localhost:8080/admin
+(pass) the importer refuses to be a proxy into the network > blocks http://169.254.169.254/latest/meta-data/
+(pass) the importer refuses to be a proxy into the network > blocks http://10.1.2.3/
+(pass) the importer refuses to be a proxy into the network > blocks http://192.168.0.4/
+(pass) the importer refuses to be a proxy into the network > blocks http://172.20.1.1/
+(pass) the importer refuses to be a proxy into the network > blocks http://[::1]/ [0.01ms]
+(pass) the importer refuses to be a proxy into the network > blocks http://2130706433/
+(pass) the importer refuses to be a proxy into the network > blocks http://intranet/
+(pass) the importer refuses to be a proxy into the network > blocks http://printer.local/
+(pass) the importer refuses to be a proxy into the network > rejects other protocols [0.02ms]
+(pass) the importer refuses to be a proxy into the network > accepts ordinary public addresses, with or without a scheme
+(pass) the importer refuses to be a proxy into the network > checks every redirect hop, not just the first [0.09ms]
+(pass) prices and copy are read the way people write them > handles dollar, euro and thousand separators
+(pass) prices and copy are read the way people write them > splits a shop title at its separators
+(pass) plain shop markup > a price wrapper does not eat the card it belongs to
+(pass) trade detection picks the closest fit > a gym timetable is a gym, not a shop
+(pass) trade detection picks the closest fit > a product feed defaults to retail
+(pass) trade detection picks the closest fit > nothing to go on is flagged as a guess
+(pass) what the browser sends back is not trusted > drops unsafe links and clamps the catalogue [0.30ms]
+(pass) what the browser sends back is not trusted > ignores anything that is not an object
+(pass) the landing page proves a real run > the snapshot is a real capture, not typed sample data [0.04ms]
+(pass) the landing page proves a real run > the app shown on the page is rendered from that capture
+(pass) the landing page proves a real run > the marketing page shows the URL, the numbers and the app [0.58ms]
+(pass) the landing page proves a real run > the brief points at the proof before anyone starts [0.48ms]
+(pass) the pages offer the URL route > the brief has a paste-a-website field [0.19ms]
+(pass) the pages offer the URL route > the landing page posts a URL straight into the brief [0.29ms]
+
+tests/marketplace.test.ts:
+(pass) the marketplace catalogue > every listing names the store it comes from [0.09ms]
+(pass) the marketplace catalogue > a catalogue edit keeps the seller [0.07ms]
+(pass) the marketplace catalogue > items are items in a shop, not listings with a viewing agent [0.14ms]
+(pass) the marketplace catalogue > sellers get a store page, linked from the catalogue and the item [0.15ms]
+(pass) the marketplace catalogue > item prices use the catalogue formatter, not a fixed two decimals
+(pass) the marketplace catalogue > a priced item is added to the order, not booked
+
+tests/flagshipImages.test.ts:
+(pass) flagship photography > every flagship has a distinct local scene set at all three widths [1.21ms]
+(pass) flagship photography > the image markup is responsive, described and local [0.02ms]
+(pass) generated sample content > a professional build carries sample team profiles and declares them [0.02ms]
+(pass) generated sample content > imported catalogue, contact and story stop being labelled sample [0.07ms]
+
+tests/spamGuard.test.ts:
+(pass) the build endpoints are metered > a bucket allows its limit, then refuses, and the next day is fresh [2.31ms]
+(pass) the build endpoints are metered > a visitor over the line is refused before anything is written [0.43ms]
+(pass) the build endpoints are metered > changing X-Forwarded-For does not buy a new allowance [2.55ms]
+(pass) the build endpoints are metered > the bucket is a stable hash, and an absent header has its own
+(pass) the build endpoints are metered > an allowed build still creates a project [1.94ms]
+(pass) the published pages a stranger meets > privacy and terms are one page, linked from the site footer [0.48ms]
+(pass) the published pages a stranger meets > deletion requests fall back to the operator until an inbox is set [0.25ms]
+
+tests/designSystem.test.ts:
+(pass) design directions > every trade has at least three named directions with unique ids [0.06ms]
+(pass) design directions > directions change type, layout, navigation and surfaces together [0.05ms]
+(pass) design directions > a document opens on its trade direction, and legacy builds keep theirs [0.55ms]
+(pass) design directions > owner overrides persist on the shared document and reach the app [0.14ms]
+(pass) design directions > unknown directions and invalid values are rejected, not rendered
+(pass) design directions > direction applies to the published app and the editor preview alike [0.72ms]
+
+tests/figma.test.ts:
+(pass) figma preset import > reads colours, type, radii and spacing from a frame [0.39ms]
+(pass) figma preset import > emits one scoped stylesheet with the tokens and spacing it found [0.12ms]
+(pass) figma preset import > takes a saturated ground from the frame fill instead of guessing the accent [0.06ms]
+(pass) figma preset import > rejects flattened frames and unusable ids
+(pass) figma preset import > parses file keys and node ids from a Figma URL [0.06ms]
+(pass) figma preset import > refuses to call Figma without a token
+(pass) figma preset import > sends the token header and asks only for the selected node
+(pass) figma preset import > reports a Figma error without leaking the token
+(pass) figma preset import > upserts a preset once and preserves the others
+(pass) figma preset import > presets.ts keeps the generated block the writer targets [0.37ms]
+
+tests/flagship.test.ts:
+(pass) flagship compositions > every flagship trade gets its own front page [5.45ms]
+(pass) flagship compositions > the flagship layer keeps the real customer workflows [0.62ms]
+(pass) flagship compositions > trades outside the flagship set remain on the document renderer [1.13ms]
+(pass) flagship compositions > the second batch keeps each trade workflow and its own section language [3.39ms]
+(pass) flagship compositions > the third batch keeps each trade workflow and its own section language [3.16ms]
+(pass) flagship compositions > fallback art is decorative, not a fake product photograph
+(pass) flagship compositions > every flagship starts as document blocks with stable ids [11.81ms]
+(pass) flagship compositions > a saved flagship document drives order, copy, hiding and imagery [0.76ms]
+(pass) flagship compositions > the app API saves, publishes and restores the exact flagship document [5.23ms]
+(pass) flagship compositions > the editor exposes direct component controls and handles canvas drops [2.62ms]
+(pass) flagship compositions > the dashboard edits doctor and coach profile cards without a rebuild [3.87ms]
+(pass) flagship compositions > an owner can relabel and retarget a batch-2 call to action [2.10ms]
+
+tests/families.test.ts:
+(pass) the design families > the theme deck and the families cover the same trades
+(pass) the design families > every trade owns a family with its own corners, chrome and nav [0.52ms]
+(pass) the design families > no two families are the same block [0.19ms]
+(pass) the design families > each trade renders under its family, not a neighbour’s [4.23ms]
+(pass) the design families > the nine newer families re-cut the shared card, button, chip and slot
+(pass) the design families > dropping any single family is reported, not silently accepted [3.92ms]
+(pass) the design families > a family reduced to a stub is reported too
+
+tests/business.test.ts:
+(pass) customer orders > creates a real order using server prices and moves it through the kitchen [5.50ms]
+(pass) customer orders > does not create orders from unknown items, bad quantities or disabled trades [5.57ms]
+(pass) customer orders > rejects cross-site writes [2.24ms]
+(pass) customer bookings > stores a service booking with a chosen staff member and lets the owner confirm it [3.49ms]
+(pass) customer bookings > rejects a past date and a service outside the catalogue [2.41ms]
+(pass) enquiries and dashboard > stores a professional enquiry and lets the owner reply and close it [3.22ms]
+(pass) enquiries and dashboard > the public app token cannot authorize owner operations [3.91ms]
+(pass) enquiries and dashboard > dashboard modules follow the trade and settings update the customer app [2.60ms]
+(pass) enquiries and dashboard > personalisation clears only content still marked as sample [4.27ms]
+(pass) enquiries and dashboard > legacy projects get sample flags backfilled from the trade seed [2.33ms]
+(pass) enquiries and dashboard > saving business details applies the new name, colour and logo everywhere [3.34ms]
+(pass) enquiries and dashboard > the customer app carries real checkout, booking and enquiry controls [4.85ms]
+(pass) enquiries and dashboard > one business dashboard cannot read or mutate another business records [2.85ms]
+(pass) enquiries and dashboard > owner sessions expire after idleness and can be revoked everywhere [2.23ms]
+
+tests/importLimits.test.ts:
+(pass) the importer spends outbound requests carefully > a burst of three, then one more every twenty seconds
+(pass) the importer spends outbound requests carefully > an idle bucket refills to its burst and no further
+(pass) the importer spends outbound requests carefully > the refusal is a 429 that says to wait
+(pass) the importer spends outbound requests carefully > two visitors asking for the same URL share one crawl [0.59ms]
+(pass) the importer spends outbound requests carefully > the shared key is the normalised URL, not the typed string
+(pass) the importer spends outbound requests carefully > the shared crawl is released once it settles
+(pass) the importer spends outbound requests carefully > a failed crawl is not shared with the next attempt [0.16ms]
+
+tests/budgetPrune.test.ts:
+(pass) daily counters do not pile up > the first import of a new day clears yesterday and keeps today [1.80ms]
+(pass) daily counters do not pile up > the first build of a new day clears both tables too [1.38ms]
+(pass) daily counters do not pile up > a failed sweep is logged and never fails the spend [2.38ms]
+(pass) daily counters do not pile up > a visitor bucket alone does not trigger a sweep [1.57ms]
+
+tests/media.test.ts:
+(pass) media library > uploads validated WebP variants and reuses the same content [4.62ms]
+(pass) media library > rejects forged types, oversized dimensions and cross-origin uploads [2.62ms]
+(pass) media library > a failed R2 write leaves no metadata behind [2.27ms]
+(pass) media library > document references persist crop, fitting and delivery markup [3.02ms]
+(pass) media library > deletion is refused while the app uses an image and scrubs old versions [3.32ms]
+(pass) media library > enforces the per-app file quota [2.19ms]
+(pass) media library > enforces the per-app byte quota [0.40ms]
+(pass) media library > delivery is token-scoped and rejects unknown widths or projects [5.31ms]
+(pass) media library > a catalogue item owns its photo, alt text, crop and responsive markup [3.56ms]
+(pass) media library > replacing a photo keeps its id so every item reference survives [3.45ms]
+(pass) media library > each flagship trade renders its own item photo and alt text [44.47ms]
+
+tests/bundle.test.ts:
+(pass) the marketplace bundle > stands in for the base build, and is not a discount
+(pass) the marketplace bundle > carries its platform fee whichever plan is chosen
+(pass) the marketplace bundle > an unknown bundle id is ignored rather than priced
+(pass) the marketplace bundle > the bundle and its fee are on the marketing page, with a way in [0.39ms]
+(pass) the marketplace bundle > a bundle chosen on the brief is stored on the build
+(pass) the marketplace bundle > the brief carries the selector the marketing link preselects [0.33ms]
+
+tests/shells.test.ts:
+(pass) reference trades carry their own shell > a restaurant opens on the menu, not a home page [0.24ms]
+(pass) reference trades carry their own shell > a gym is a session app with an icon-only dock [0.65ms]
+(pass) reference trades carry their own shell > a clinic is a care app, a property app is a listings app [1.00ms]
+(pass) reference trades carry their own shell > six builds of one trade do not share a single variant [0.81ms]
+(pass) reference trades carry their own shell > the seed spreads over the whole variation space [28.64ms]
+(pass) reference trades carry their own shell > the media axis decides whether a build uses photography [0.95ms]
+(pass) reference trades carry their own shell > variant rules actually win the cascade on rows, stack and editorial [69.03ms]
+(pass) reference trades carry their own shell > a reference preset is opt-in and leaves normal builds alone [0.98ms]
+(pass) reference trades carry their own shell > every trade knows what its photographs should show [0.09ms]
+(pass) reference trades carry their own shell > the standard shell is untouched for the other trades [0.21ms]
+
+tests/payments.test.ts:
+(pass) payment credentials > saves encrypted Stripe credentials and never returns a secret [4.24ms]
+(pass) payment credentials > refuses anonymous reads, foreign origins and mismatched modes [2.43ms]
+(pass) payment credentials > Razorpay requires an INR catalogue and a webhook secret [2.92ms]
+(pass) payment credentials > refuses to store anything without a vault key [2.31ms]
+(pass) payment credentials > keeps ciphertext bound to its project and provider [2.55ms]
+(pass) payment credentials > verifies credentials through the provider and records the result [2.77ms]
+(pass) payment credentials > isolates credentials and payment history between businesses [4.23ms]
+(pass) payment credentials > does not enable payment actions on a trade with no payable workflow [4.28ms]
+(pass) payment journeys > leaves the app unchanged until a gateway is connected [2.96ms]
+(pass) payment journeys > moves an order from unpaid to paid through a signed webhook only [5.10ms]
+(pass) payment journeys > rejects an invalid signature and an amount mismatch without marking paid [2.84ms]
+(pass) payment journeys > calculates booking deposits from the catalogue, not the browser [2.48ms]
+(pass) payment journeys > refunds a paid transaction and updates the order [3.92ms]
+(pass) payment journeys > disconnects a gateway, removes its secrets and keeps the non-payment workflow [2.63ms]
+(pass) payment journeys > refuses to start a payment without a gateway or for an unpaid booking with no priced service [3.15ms]
+(pass) Razorpay adapter > requires INR, verifies its webhook signature and marks the payment paid [3.48ms]
+(pass) Razorpay adapter > order.paid never stores the order id as the payment id, and a later capture backfills it [2.90ms]
+(pass) edge cases > supersedes an old pending attempt and records a cancelled transaction [2.32ms]
+(pass) edge cases > records a failed payment without marking the order paid [3.53ms]
+(pass) edge cases > a webhook for a business without that gateway is rejected before processing [4.25ms]
+(pass) edge cases > the owner transactions API returns history and filters metadata without secrets [2.36ms]
+(pass) payment dashboard > summaries and rendered dashboard contain status, provider and amounts but no secrets [3.13ms]
+(pass) payment dashboard > the generated app can render payment options independently of a trade [0.49ms]
+(pass) payment HTTP routes > owner routes reject unknown businesses and anonymous requests [5.24ms]
+(pass) payment HTTP routes > owner payment writes reject a foreign origin [2.87ms]
+(pass) payment HTTP routes > settings route validates the provider and deposit bounds, then persists [3.01ms]
+(pass) payment HTTP routes > connection routes reject unknown providers, malformed JSON and oversized bodies [4.66ms]
+(pass) payment HTTP routes > testing and disconnecting a gateway return clean route errors [2.59ms]
+(pass) payment HTTP routes > refund route rejects cross-origin, unknown and unpaid transactions [3.16ms]
+(pass) payment HTTP routes > customer payment start rejects foreign origins, bad JSON and missing gateways [2.85ms]
+(pass) payment HTTP routes > pay pages hide unknown and other-business transactions [5.21ms]
+(pass) payment HTTP routes > webhook route rejects unknown providers, unwired gateways and bad bodies [2.80ms]
+(pass) payment HTTP routes > a route-level paid webhook updates history and the owner dashboard [2.74ms]
+(pass) payment HTTP routes > disconnecting one business leaves the other connection and history intact [5.15ms]
+plattr_payment_error simulated database failure
+(pass) payment failure consistency > a webhook that fails mid-write is retried and converges exactly once [3.09ms]
+(pass) payment failure consistency > an event left received by an interrupted delivery is processed on retry [2.39ms]
+(pass) payment failure consistency > late failure and mismatched duplicate events cannot un-pay a settled order [3.45ms]
+(pass) payment failure consistency > a signed paid event with no amount or currency is not taken as payment [2.59ms]
+(pass) payment failure consistency > a refund already in progress cannot be submitted twice [3.33ms]
+(pass) payment failure consistency > a refund the gateway definitely refuses releases the claim so it can be retried [2.71ms]
+(pass) payment failure consistency > a refund timeout keeps the claim so a retry cannot refund a second time [2.58ms]
+(pass) payment failure consistency > a refund 5xx keeps the claim because the gateway may have applied it [2.47ms]
+
+ 384 pass
+ 0 fail
+ 4985 expect() calls
+Ran 384 tests across 31 files. [1018.00ms]

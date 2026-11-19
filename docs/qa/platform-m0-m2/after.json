@@ -1,0 +1,41 @@
+{
+  "at": "2026-11-19T07:50:25.009Z",
+  "counts": {
+    "projects": 47,
+    "notes": 2,
+    "activity": 343,
+    "doc_versions": 45,
+    "media": 7,
+    "customers": 34,
+    "orders": 13,
+    "order_items": 16,
+    "bookings": 19,
+    "enquiries": 13,
+    "payment_connections": 1,
+    "payment_settings": 1,
+    "payment_transactions": 1,
+    "payment_events": 0,
+    "notifications": 74,
+    "owner_sessions": 17,
+    "variation_counter": 1,
+    "import_budget": 0,
+    "daily_budget": 14
+  },
+  "digests": {
+    "projects": "710ffa6b3ebfc3824fb15a8c92a2fc47c97a9728fa7bb070c80761575378d30d",
+    "notes": "d1ad6a91ccdcd05773fe1aa5ebdb975d54f4500d0407be1a868ebf33c2900919",
+    "activity": "c2af12e7d0dfd455de397b5acebadd20e766ad22ad65193eb60ad0411432bdee",
+    "doc_versions": "0e1ec624102f2d2f05f062e43656f6a47f0418b2a4551a6a18c62d7bc6f39471",
+    "media": "ac6e1c33deab0616d76bfc4cc425d8e8517c1bce2a7efb16b5f0b72eb49939ef",
+    "customers": "1dfb58fa2eb2b0663101b9cb26447d844b60e569af46dbe4df2e5e8d5a491228",
+    "orders": "e479d83659daab0c0211940a49d074cc2ec6d04b7cda041f6e13d59caa00caca",
+    "order_items": "09708bdb65f0c27daeea3c79fe49a2eca1994c45fa8f8864b8be30e6ab99e387",
+    "bookings": "fe3164da5b62a286e553c8ce6b7a08820405633c01d1a8471e0c9e6c16c2b433",
+    "enquiries": "ef991110292722dd9e6d51d33193938fdb8e2da7a5dc08691fab1263a7c4ec3d",
+    "payment_connections": "d4a684b4837dd97adb165abe1913b407d2b1b690afd07ce349584f75ce18e0db",
+    "payment_settings": "9523128479d321370b1c9c76312dcc5d2c2bf2ae38dd7871db86770915936d06",
+    "payment_transactions": "98c81f3a952fe57751515fb26ac6e577ccddb8eefba52d3ecbc95887bc88a89b",
+    "payment_events": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "combined": "2172dd4b5f5da4061e9278c9001c249e5098cebbc2efac0d0195bcf3e454ea59"
+}

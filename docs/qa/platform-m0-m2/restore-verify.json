@@ -1,0 +1,57 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "sqlite.integrity_check",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "sqlite.foreign_key_check",
+      "ok": true,
+      "detail": "0 violation(s)"
+    },
+    {
+      "name": "schema.platform_tables",
+      "ok": true,
+      "detail": "17 tables, projects.org_id + created_by present"
+    },
+    {
+      "name": "schema.unique_indexes",
+      "ok": true,
+      "detail": "subscriptions_one_live_per_org, subscriptions_by_provider, subscription_changes_by_event, project_claims_one_open, platform_invoices_by_provider, projects_by_org"
+    },
+    {
+      "name": "subscriptions.one_live_per_org",
+      "ok": true,
+      "detail": "0 organisations with more than one live contract"
+    },
+    {
+      "name": "claims.one_open_per_project",
+      "ok": true,
+      "detail": "0 projects with more than one open claim"
+    },
+    {
+      "name": "m2.reconciliation",
+      "ok": true,
+      "detail": "47/47 projects linked; 47/47 synthetic orgs unclaimed; users=0, memberships=0, claims=0, transfers=0, subscriptions=0"
+    }
+  ],
+  "reconciliation": {
+    "projects": 47,
+    "linkedProjects": 47,
+    "unlinkedProjects": 0,
+    "organizations": 47,
+    "syntheticOrganizations": 47,
+    "syntheticUnclaimed": 47,
+    "orphanOrganizations": 0,
+    "projectsWithUnknownOrg": 0,
+    "users": 0,
+    "memberships": 0,
+    "invitations": 0,
+    "claims": 0,
+    "transfers": 0,
+    "subscriptions": 0,
+    "ok": true
+  }
+}
