@@ -1902,13 +1902,19 @@ function productLinks(page: Page, limit: number): URL[] {
     .map((link) => link.url)
 }
 
+/** A page that lists other pages is navigation, not a product: “Shop all
+ *  products” names what the page does, and a price read off it belongs to one
+ *  of the products it links to. */
+const LISTING_TITLE =
+  /^(?:shop|browse|view|see|explore)\s+(?:all|the|our|every)\b|^(?:all|every)\s+(?:products?|items?|collections?|services?|treatments?|courses?|classes|menu)\b|^(?:products|services|menu|collections?|categories)$/i
+
 function productFromPage(page: Page): Item | null {
   for (const node of page.nodes) {
     const item = itemFromNode(node)
     if (item) return item
   }
   const name = cleanName(page.meta['og:title'] ?? '') || cleanName(page.title)
-  if (!name) return null
+  if (!name || LISTING_TITLE.test(name)) return null
   const price =
     page.meta['product:price:amount'] ||
     page.meta['og:price:amount'] ||

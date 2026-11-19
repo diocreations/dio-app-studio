@@ -1,0 +1,1042 @@
+[
+  {
+    "app": "buttertales",
+    "checks": {
+      "dashboard-signs-in": {
+        "pass": true,
+        "detail": "Today at Butter Tales™"
+      },
+      "tabs-present": {
+        "pass": true,
+        "detail": [
+          "overview",
+          "orders",
+          "products",
+          "categories",
+          "customers",
+          "enquiries",
+          "analytics",
+          "payments",
+          "settings"
+        ]
+      },
+      "tab:overview": {
+        "pass": true,
+        "detail": {
+          "heading": "Latest orders",
+          "length": 400
+        }
+      },
+      "tab:orders": {
+        "pass": true,
+        "detail": {
+          "heading": "Orders 2",
+          "length": 370
+        }
+      },
+      "tab:products": {
+        "pass": true,
+        "detail": {
+          "heading": "Products & services",
+          "length": 182
+        }
+      },
+      "tab:categories": {
+        "pass": true,
+        "detail": {
+          "heading": "Categories",
+          "length": 155
+        }
+      },
+      "tab:customers": {
+        "pass": true,
+        "detail": {
+          "heading": "Customers 1",
+          "length": 206
+        }
+      },
+      "tab:enquiries": {
+        "pass": true,
+        "detail": {
+          "heading": "Enquiries 0",
+          "length": 72
+        }
+      },
+      "tab:analytics": {
+        "pass": true,
+        "detail": {
+          "heading": "Sales & analytics",
+          "length": 282
+        }
+      },
+      "tab:payments": {
+        "pass": true,
+        "detail": {
+          "heading": "Payment gateways",
+          "length": 400
+        }
+      },
+      "tab:settings": {
+        "pass": true,
+        "detail": {
+          "heading": "Application settings",
+          "length": 400
+        }
+      },
+      "orders-listed": {
+        "pass": true,
+        "detail": "Orders 2 Status changes are saved to the customer's order and can be checked in the app. #2286 2026-11-19 16:03 · Pickup New QA Tester qa@example.com Letterloo "
+      },
+      "enquiries-listed": {
+        "pass": true,
+        "detail": "Enquiries 0 No enquiries yet Quote and contact requests are stored here."
+      },
+      "customers-listed": {
+        "pass": true,
+        "detail": "Customers 1 Customers are created from guest checkout, bookings and enquiries. They are not forced to create an account to browse. NAME PHONE EMAIL ORDERS BOOKINGS ENQUIRIES QA Tester — qa@example.com"
+      },
+      "products-editable": {
+        "pass": true,
+        "detail": {
+          "rows": 5,
+          "first": "Letterloo",
+          "price": "522.00"
+        }
+      },
+      "payments-disconnected": {
+        "pass": true,
+        "detail": [
+          "Not connected",
+          "Not connected"
+        ]
+      },
+      "settings-saves": {
+        "pass": true,
+        "detail": "Saved. Customer app updated."
+      },
+      "settings-reach-customer-app": {
+        "pass": true,
+        "detail": {
+          "probe": "QA Studio 1795104910568",
+          "header": "CHILDREN'S LEARNING QA Studio 1795104910568 Search the collection 5 CHILDREN'S LEARNING Butter Tales creates warm, imagi"
+        }
+      },
+      "settings-restored": {
+        "pass": true,
+        "detail": {
+          "original": "Butter Tales™",
+          "restored": "Saved. Customer app updated."
+        }
+      }
+    },
+    "tabs": {
+      "overview": {
+        "on": true,
+        "heading": "Latest orders",
+        "text": "ORDER VALUE ₹2088.00 Not settled revenue — payments are not connected OPEN ORDERS 2 2 total UPCOMING BOOKINGS 0 0 total NEW ENQUIRIES 0 1 customers Latest orders #2286 · QA Tester 2026-11-19 16:03 · Pickup New ₹1044.00 #4930 · QA Tester 2026-11-19 16:03 · Pickup New ₹1044.00 View all orders Next bookings This app does not take bookings. Enquiries needing a reply Nothing waiting New quotes and cont",
+        "rows": 0
+      },
+      "orders": {
+        "on": true,
+        "heading": "Orders 2",
+        "text": "Orders 2 Status changes are saved to the customer's order and can be checked in the app. #2286 2026-11-19 16:03 · Pickup New QA Tester qa@example.com Letterloo × 2 ₹1044.00 ₹1044.00 Payment due to the business Preparing Cancelled #4930 2026-11-19 16:03 · Pickup New QA Tester qa@example.com Letterloo × 2 ₹1044.00 ₹1044.00 Payment due to the business Preparing Cancelled",
+        "rows": 0
+      },
+      "products": {
+        "on": true,
+        "heading": "Products & services",
+        "text": "Products & services Prices are in INR. Checkout always uses these server-side prices, never a browser-supplied total. 5 items ✕ ✕ ✕ ✕ ✕ + Product or service + Category Save catalogue",
+        "rows": 0
+      },
+      "categories": {
+        "on": true,
+        "heading": "Categories",
+        "text": "Categories Categories group the products and services shown in the app. Renaming one updates the catalogue navigation. 5 items ✕ + Category Save categories",
+        "rows": 0
+      },
+      "customers": {
+        "on": true,
+        "heading": "Customers 1",
+        "text": "Customers 1 Customers are created from guest checkout, bookings and enquiries. They are not forced to create an account to browse. NAME PHONE EMAIL ORDERS BOOKINGS ENQUIRIES QA Tester — qa@example.com 2 0 0",
+        "rows": 1
+      },
+      "enquiries": {
+        "on": true,
+        "heading": "Enquiries 0",
+        "text": "Enquiries 0 No enquiries yet Quote and contact requests are stored here.",
+        "rows": 0
+      },
+      "analytics": {
+        "on": true,
+        "heading": "Sales & analytics",
+        "text": "Sales & analytics ORDER VALUE ₹2088.00 Committed order value ORDERS 2 2 open BOOKINGS 0 0 upcoming Most ordered ITEM QUANTITY VALUE Letterloo 4 ₹2088.00 These figures describe orders taken in the app. They are not payment settlement figures, because no payment gateway is connected.",
+        "rows": 1
+      },
+      "payments": {
+        "on": true,
+        "heading": "Payment gateways",
+        "text": "COLLECTED ONLINE ₹0.00 Confirmed paid transactions PENDING ₹0.00 Started but not confirmed REFUNDED ₹0.00 Returned to customers FAILED 0 Transactions needing a retry Payment gateways Optional. Connect the business’s own Razorpay or Stripe account to take payments in the app. Customers pay the business directly; Plattr never holds the money. Secret keys are encrypted before storage and are never sh",
+        "rows": 1
+      },
+      "settings": {
+        "on": true,
+        "heading": "Application settings",
+        "text": "Application settings Sample content remains 2 sample offers · sample contact details. Save the catalogue or these details to mark them as yours. Removing samples clears only the groups still marked as examples — your saved catalogue, photos and layout stay. Remove sample content BUSINESS NAME CATEGORY TAGLINE ALLOW SEARCH ENGINES TO INDEX THE CUSTOMER APP Off by default. The app and its previews s",
+        "rows": 0
+      }
+    },
+    "errors": [],
+    "payments": {
+      "badges": [
+        "Not connected",
+        "Not connected"
+      ],
+      "active": "",
+      "text": "COLLECTED ONLINE ₹0.00 Confirmed paid transactions PENDING ₹0.00 Started but not confirmed REFUNDED ₹0.00 Returned to customers FAILED 0 Transactions needing a retry Payment gateways Optional. Connect the business’s own Razorpay or Stripe account to take payments in the app. Customers pay the busine"
+    }
+  },
+  {
+    "app": "cafe",
+    "checks": {
+      "dashboard-signs-in": {
+        "pass": true,
+        "detail": "Today at Good Day Cafe"
+      },
+      "tabs-present": {
+        "pass": true,
+        "detail": [
+          "overview",
+          "orders",
+          "bookings",
+          "products",
+          "categories",
+          "customers",
+          "enquiries",
+          "offers",
+          "analytics",
+          "payments",
+          "settings"
+        ]
+      },
+      "tab:overview": {
+        "pass": true,
+        "detail": {
+          "heading": "Latest orders",
+          "length": 400
+        }
+      },
+      "tab:orders": {
+        "pass": true,
+        "detail": {
+          "heading": "Orders 1",
+          "length": 224
+        }
+      },
+      "tab:bookings": {
+        "pass": true,
+        "detail": {
+          "heading": "Bookings 1",
+          "length": 186
+        }
+      },
+      "tab:products": {
+        "pass": true,
+        "detail": {
+          "heading": "Products & services",
+          "length": 244
+        }
+      },
+      "tab:categories": {
+        "pass": true,
+        "detail": {
+          "heading": "Categories",
+          "length": 175
+        }
+      },
+      "tab:customers": {
+        "pass": true,
+        "detail": {
+          "heading": "Customers 2",
+          "length": 237
+        }
+      },
+      "tab:enquiries": {
+        "pass": true,
+        "detail": {
+          "heading": "Enquiries 0",
+          "length": 72
+        }
+      },
+      "tab:offers": {
+        "pass": true,
+        "detail": {
+          "heading": "Offers",
+          "length": 126
+        }
+      },
+      "tab:analytics": {
+        "pass": true,
+        "detail": {
+          "heading": "Sales & analytics",
+          "length": 277
+        }
+      },
+      "tab:payments": {
+        "pass": true,
+        "detail": {
+          "heading": "Payment gateways",
+          "length": 400
+        }
+      },
+      "tab:settings": {
+        "pass": true,
+        "detail": {
+          "heading": "Application settings",
+          "length": 400
+        }
+      },
+      "orders-listed": {
+        "pass": true,
+        "detail": "Orders 1 Status changes are saved to the customer's order and can be checked in the app. #8224 2026-11-19 16:04 · Pickup New QA Tester qa@example.com Flat white"
+      },
+      "bookings-listed": {
+        "pass": true,
+        "detail": "Bookings 1 Confirm a request only when the time is actually held. Customers see the updated status. 2026-11-21 16:00 #8405 · 2 people Requested QA Tester 0400 0"
+      },
+      "enquiries-listed": {
+        "pass": true,
+        "detail": "Enquiries 0 No enquiries yet Quote and contact requests are stored here."
+      },
+      "customers-listed": {
+        "pass": true,
+        "detail": "Customers 2 Customers are created from guest checkout, bookings and enquiries. They are not forced to create an account to browse. NAME PHONE EMAIL ORDERS BOOKINGS ENQUIRIES QA Tester 0400 000 000 — 0"
+      },
+      "products-editable": {
+        "pass": true,
+        "detail": {
+          "rows": 7,
+          "first": "Flat white",
+          "price": "4.20"
+        }
+      },
+      "payments-disconnected": {
+        "pass": true,
+        "detail": [
+          "Not connected",
+          "Not connected"
+        ]
+      },
+      "settings-saves": {
+        "pass": true,
+        "detail": "Saved. Customer app updated."
+      },
+      "settings-reach-customer-app": {
+        "pass": true,
+        "detail": {
+          "probe": "QA Studio 1795104923437",
+          "header": "QS CAFÉ QA Studio 1795104923437 CAFÉ Good Day Cafe Slow coffee, warm bread, and a seat by the window. Baked here DAILY C"
+        }
+      },
+      "settings-restored": {
+        "pass": true,
+        "detail": {
+          "original": "Good Day Cafe",
+          "restored": "Saved. Customer app updated."
+        }
+      }
+    },
+    "tabs": {
+      "overview": {
+        "on": true,
+        "heading": "Latest orders",
+        "text": "ORDER VALUE $8.40 Not settled revenue — payments are not connected OPEN ORDERS 1 1 total UPCOMING BOOKINGS 1 1 total NEW ENQUIRIES 0 2 customers Latest orders #8224 · QA Tester 2026-11-19 16:04 · Pickup New $8.40 View all orders Next bookings 2026-11-21 16:00 · QA Tester 2 people Requested View all bookings Enquiries needing a reply Nothing waiting New quotes and contact requests appear here. Open",
+        "rows": 0
+      },
+      "orders": {
+        "on": true,
+        "heading": "Orders 1",
+        "text": "Orders 1 Status changes are saved to the customer's order and can be checked in the app. #8224 2026-11-19 16:04 · Pickup New QA Tester qa@example.com Flat white × 2 $8.40 $8.40 Payment due to the business Preparing Cancelled",
+        "rows": 0
+      },
+      "bookings": {
+        "on": true,
+        "heading": "Bookings 1",
+        "text": "Bookings 1 Confirm a request only when the time is actually held. Customers see the updated status. 2026-11-21 16:00 #8405 · 2 people Requested QA Tester 0400 000 000 Confirmed Cancelled",
+        "rows": 0
+      },
+      "products": {
+        "on": true,
+        "heading": "Products & services",
+        "text": "Products & services Prices are in USD. Checkout always uses these server-side prices, never a browser-supplied total. 3 items ✕ ✕ ✕ + Product or service 2 items ✕ ✕ + Product or service 2 items ✕ ✕ + Product or service + Category Save catalogue",
+        "rows": 0
+      },
+      "categories": {
+        "on": true,
+        "heading": "Categories",
+        "text": "Categories Categories group the products and services shown in the app. Renaming one updates the catalogue navigation. 3 items ✕ 2 items ✕ 2 items ✕ + Category Save categories",
+        "rows": 0
+      },
+      "customers": {
+        "on": true,
+        "heading": "Customers 2",
+        "text": "Customers 2 Customers are created from guest checkout, bookings and enquiries. They are not forced to create an account to browse. NAME PHONE EMAIL ORDERS BOOKINGS ENQUIRIES QA Tester 0400 000 000 — 0 1 0 QA Tester — qa@example.com 1 0 0",
+        "rows": 2
+      },
+      "enquiries": {
+        "on": true,
+        "heading": "Enquiries 0",
+        "text": "Enquiries 0 No enquiries yet Quote and contact requests are stored here.",
+        "rows": 0
+      },
+      "offers": {
+        "on": true,
+        "heading": "Offers",
+        "text": "Offers Only publish offers the business can honour. Offers appear in the app immediately after saving. ✕ ✕ + Offer Save offers",
+        "rows": 0
+      },
+      "analytics": {
+        "on": true,
+        "heading": "Sales & analytics",
+        "text": "Sales & analytics ORDER VALUE $8.40 Committed order value ORDERS 1 1 open BOOKINGS 1 1 upcoming Most ordered ITEM QUANTITY VALUE Flat white 2 $8.40 These figures describe orders taken in the app. They are not payment settlement figures, because no payment gateway is connected.",
+        "rows": 1
+      },
+      "payments": {
+        "on": true,
+        "heading": "Payment gateways",
+        "text": "COLLECTED ONLINE $0.00 Confirmed paid transactions PENDING $0.00 Started but not confirmed REFUNDED $0.00 Returned to customers FAILED 0 Transactions needing a retry Payment gateways Optional. Connect the business’s own Razorpay or Stripe account to take payments in the app. Customers pay the business directly; Plattr never holds the money. Secret keys are encrypted before storage and are never sh",
+        "rows": 1
+      },
+      "settings": {
+        "on": true,
+        "heading": "Application settings",
+        "text": "Application settings Sample content remains 7 sample items · 2 sample offers · sample about text · sample contact details. Save the catalogue or these details to mark them as yours. Removing samples clears only the groups still marked as examples — your saved catalogue, photos and layout stay. Remove sample content BUSINESS NAME CATEGORY TAGLINE ALLOW SEARCH ENGINES TO INDEX THE CUSTOMER APP Off b",
+        "rows": 0
+      }
+    },
+    "errors": [],
+    "payments": {
+      "badges": [
+        "Not connected",
+        "Not connected"
+      ],
+      "active": "",
+      "text": "COLLECTED ONLINE $0.00 Confirmed paid transactions PENDING $0.00 Started but not confirmed REFUNDED $0.00 Returned to customers FAILED 0 Transactions needing a retry Payment gateways Optional. Connect the business’s own Razorpay or Stripe account to take payments in the app. Customers pay the busine"
+    }
+  },
+  {
+    "app": "salon",
+    "checks": {
+      "dashboard-signs-in": {
+        "pass": true,
+        "detail": "Today at Halo Hair Studio"
+      },
+      "tabs-present": {
+        "pass": true,
+        "detail": [
+          "overview",
+          "bookings",
+          "products",
+          "categories",
+          "customers",
+          "enquiries",
+          "offers",
+          "analytics",
+          "payments",
+          "settings"
+        ]
+      },
+      "tab:overview": {
+        "pass": true,
+        "detail": {
+          "heading": "Latest orders",
+          "length": 400
+        }
+      },
+      "tab:bookings": {
+        "pass": true,
+        "detail": {
+          "heading": "Bookings 1",
+          "length": 193
+        }
+      },
+      "tab:products": {
+        "pass": true,
+        "detail": {
+          "heading": "Products & services",
+          "length": 244
+        }
+      },
+      "tab:categories": {
+        "pass": true,
+        "detail": {
+          "heading": "Categories",
+          "length": 175
+        }
+      },
+      "tab:customers": {
+        "pass": true,
+        "detail": {
+          "heading": "Customers 2",
+          "length": 237
+        }
+      },
+      "tab:enquiries": {
+        "pass": true,
+        "detail": {
+          "heading": "Enquiries 1",
+          "length": 116
+        }
+      },
+      "tab:offers": {
+        "pass": true,
+        "detail": {
+          "heading": "Offers",
+          "length": 126
+        }
+      },
+      "tab:analytics": {
+        "pass": true,
+        "detail": {
+          "heading": "Sales & analytics",
+          "length": 278
+        }
+      },
+      "tab:payments": {
+        "pass": true,
+        "detail": {
+          "heading": "Payment gateways",
+          "length": 400
+        }
+      },
+      "tab:settings": {
+        "pass": true,
+        "detail": {
+          "heading": "Application settings",
+          "length": 400
+        }
+      },
+      "bookings-listed": {
+        "pass": true,
+        "detail": "Bookings 1 Confirm a request only when the time is actually held. Customers see the updated status. 2026-11-21 18:00 #3264 · 2 people Requested QA Tester 0400 0"
+      },
+      "enquiries-listed": {
+        "pass": true,
+        "detail": "Enquiries 1 QA Tester 2026-11-19 16:04 New Please tell me more about what is on offer. qa@example.com Replied Closed"
+      },
+      "customers-listed": {
+        "pass": true,
+        "detail": "Customers 2 Customers are created from guest checkout, bookings and enquiries. They are not forced to create an account to browse. NAME PHONE EMAIL ORDERS BOOKINGS ENQUIRIES QA Tester — qa@example.com"
+      },
+      "products-editable": {
+        "pass": true,
+        "detail": {
+          "rows": 7,
+          "first": "Cut & finish",
+          "price": "55.00"
+        }
+      },
+      "payments-disconnected": {
+        "pass": true,
+        "detail": [
+          "Not connected",
+          "Not connected"
+        ]
+      },
+      "settings-saves": {
+        "pass": true,
+        "detail": "Saved. Customer app updated."
+      },
+      "settings-reach-customer-app": {
+        "pass": true,
+        "detail": {
+          "probe": "QA Studio 1795104935689",
+          "header": "QS HAIR SALON QA Studio 1795104935689 HAIR SALON Cuts, colour and calm. Cuts, colour, and a quieter kind of appointment."
+        }
+      },
+      "settings-restored": {
+        "pass": true,
+        "detail": {
+          "original": "Halo Hair Studio",
+          "restored": "Saved. Customer app updated."
+        }
+      }
+    },
+    "tabs": {
+      "overview": {
+        "on": true,
+        "heading": "Latest orders",
+        "text": "ORDER VALUE $0.00 Not settled revenue — payments are not connected OPEN ORDERS 0 0 total UPCOMING BOOKINGS 1 1 total NEW ENQUIRIES 1 2 customers Latest orders This app does not take orders. Next bookings 2026-11-21 18:00 · QA Tester 2 people · Colour Requested View all bookings Enquiries needing a reply QA Tester 2026-11-19 16:04 New Please tell me more about what is on offer. Open enquiries Notif",
+        "rows": 0
+      },
+      "bookings": {
+        "on": true,
+        "heading": "Bookings 1",
+        "text": "Bookings 1 Confirm a request only when the time is actually held. Customers see the updated status. 2026-11-21 18:00 #3264 · 2 people Requested QA Tester 0400 000 000 Colour Confirmed Cancelled",
+        "rows": 0
+      },
+      "products": {
+        "on": true,
+        "heading": "Products & services",
+        "text": "Products & services Prices are in USD. Checkout always uses these server-side prices, never a browser-supplied total. 3 items ✕ ✕ ✕ + Product or service 2 items ✕ ✕ + Product or service 2 items ✕ ✕ + Product or service + Category Save catalogue",
+        "rows": 0
+      },
+      "categories": {
+        "on": true,
+        "heading": "Categories",
+        "text": "Categories Categories group the products and services shown in the app. Renaming one updates the catalogue navigation. 3 items ✕ 2 items ✕ 2 items ✕ + Category Save categories",
+        "rows": 0
+      },
+      "customers": {
+        "on": true,
+        "heading": "Customers 2",
+        "text": "Customers 2 Customers are created from guest checkout, bookings and enquiries. They are not forced to create an account to browse. NAME PHONE EMAIL ORDERS BOOKINGS ENQUIRIES QA Tester — qa@example.com 0 0 1 QA Tester 0400 000 000 — 0 1 0",
+        "rows": 2
+      },
+      "enquiries": {
+        "on": true,
+        "heading": "Enquiries 1",
+        "text": "Enquiries 1 QA Tester 2026-11-19 16:04 New Please tell me more about what is on offer. qa@example.com Replied Closed",
+        "rows": 0
+      },
+      "offers": {
+        "on": true,
+        "heading": "Offers",
+        "text": "Offers Only publish offers the business can honour. Offers appear in the app immediately after saving. ✕ ✕ + Offer Save offers",
+        "rows": 0
+      },
+      "analytics": {
+        "on": true,
+        "heading": "Sales & analytics",
+        "text": "Sales & analytics ORDER VALUE $0.00 Committed order value ORDERS 0 0 open BOOKINGS 1 1 upcoming Most ordered ITEM QUANTITY VALUE No order lines yet. These figures describe orders taken in the app. They are not payment settlement figures, because no payment gateway is connected.",
+        "rows": 1
+      },
+      "payments": {
+        "on": true,
+        "heading": "Payment gateways",
+        "text": "COLLECTED ONLINE $0.00 Confirmed paid transactions PENDING $0.00 Started but not confirmed REFUNDED $0.00 Returned to customers FAILED 0 Transactions needing a retry Payment gateways Optional. Connect the business’s own Razorpay or Stripe account to take payments in the app. Customers pay the business directly; Plattr never holds the money. Secret keys are encrypted before storage and are never sh",
+        "rows": 1
+      },
+      "settings": {
+        "on": true,
+        "heading": "Application settings",
+        "text": "Application settings Sample content remains 7 sample items · 2 sample offers · sample about text · sample contact details. Save the catalogue or these details to mark them as yours. Removing samples clears only the groups still marked as examples — your saved catalogue, photos and layout stay. Remove sample content BUSINESS NAME CATEGORY TAGLINE ALLOW SEARCH ENGINES TO INDEX THE CUSTOMER APP Off b",
+        "rows": 0
+      }
+    },
+    "errors": [],
+    "payments": {
+      "badges": [
+        "Not connected",
+        "Not connected"
+      ],
+      "active": "",
+      "text": "COLLECTED ONLINE $0.00 Confirmed paid transactions PENDING $0.00 Started but not confirmed REFUNDED $0.00 Returned to customers FAILED 0 Transactions needing a retry Payment gateways Optional. Connect the business’s own Razorpay or Stripe account to take payments in the app. Customers pay the busine"
+    }
+  },
+  {
+    "app": "gym",
+    "checks": {
+      "dashboard-signs-in": {
+        "pass": true,
+        "detail": "Today at Iron Yard"
+      },
+      "tabs-present": {
+        "pass": true,
+        "detail": [
+          "overview",
+          "bookings",
+          "products",
+          "categories",
+          "customers",
+          "enquiries",
+          "offers",
+          "analytics",
+          "payments",
+          "settings"
+        ]
+      },
+      "tab:overview": {
+        "pass": true,
+        "detail": {
+          "heading": "Latest orders",
+          "length": 400
+        }
+      },
+      "tab:bookings": {
+        "pass": true,
+        "detail": {
+          "heading": "Bookings 1",
+          "length": 201
+        }
+      },
+      "tab:products": {
+        "pass": true,
+        "detail": {
+          "heading": "Products & services",
+          "length": 246
+        }
+      },
+      "tab:categories": {
+        "pass": true,
+        "detail": {
+          "heading": "Categories",
+          "length": 175
+        }
+      },
+      "tab:customers": {
+        "pass": true,
+        "detail": {
+          "heading": "Customers 2",
+          "length": 237
+        }
+      },
+      "tab:enquiries": {
+        "pass": true,
+        "detail": {
+          "heading": "Enquiries 1",
+          "length": 116
+        }
+      },
+      "tab:offers": {
+        "pass": true,
+        "detail": {
+          "heading": "Offers",
+          "length": 126
+        }
+      },
+      "tab:analytics": {
+        "pass": true,
+        "detail": {
+          "heading": "Sales & analytics",
+          "length": 278
+        }
+      },
+      "tab:payments": {
+        "pass": true,
+        "detail": {
+          "heading": "Payment gateways",
+          "length": 400
+        }
+      },
+      "tab:settings": {
+        "pass": true,
+        "detail": {
+          "heading": "Application settings",
+          "length": 400
+        }
+      },
+      "bookings-listed": {
+        "pass": true,
+        "detail": "Bookings 1 Confirm a request only when the time is actually held. Customers see the updated status. 2026-11-21 18:30 #6223 · 2 people Requested QA Tester 0400 0"
+      },
+      "enquiries-listed": {
+        "pass": true,
+        "detail": "Enquiries 1 QA Tester 2026-11-19 16:04 New Please tell me more about what is on offer. qa@example.com Replied Closed"
+      },
+      "customers-listed": {
+        "pass": true,
+        "detail": "Customers 2 Customers are created from guest checkout, bookings and enquiries. They are not forced to create an account to browse. NAME PHONE EMAIL ORDERS BOOKINGS ENQUIRIES QA Tester — qa@example.com"
+      },
+      "products-editable": {
+        "pass": true,
+        "detail": {
+          "rows": 8,
+          "first": "Unlimited monthly",
+          "price": "89.00"
+        }
+      },
+      "payments-disconnected": {
+        "pass": true,
+        "detail": [
+          "Not connected",
+          "Not connected"
+        ]
+      },
+      "settings-saves": {
+        "pass": true,
+        "detail": "Saved. Customer app updated."
+      },
+      "settings-reach-customer-app": {
+        "pass": true,
+        "detail": {
+          "probe": "QA Studio 1795104947991",
+          "header": "QS GYM QA STUDIO 1795104947991 GYM IRON YARD Small classes, heavy progress, honest coaching. 3 MEMBERSHIPS 3 WEEKLY CLAS"
+        }
+      },
+      "settings-restored": {
+        "pass": true,
+        "detail": {
+          "original": "Iron Yard",
+          "restored": "Saved. Customer app updated."
+        }
+      }
+    },
+    "tabs": {
+      "overview": {
+        "on": true,
+        "heading": "Latest orders",
+        "text": "ORDER VALUE $0.00 Not settled revenue — payments are not connected OPEN ORDERS 0 0 total UPCOMING BOOKINGS 1 1 total NEW ENQUIRIES 1 2 customers Latest orders This app does not take orders. Next bookings 2026-11-21 18:30 · QA Tester 2 people · Class pack ×10 Requested View all bookings Enquiries needing a reply QA Tester 2026-11-19 16:04 New Please tell me more about what is on offer. Open enquiri",
+        "rows": 0
+      },
+      "bookings": {
+        "on": true,
+        "heading": "Bookings 1",
+        "text": "Bookings 1 Confirm a request only when the time is actually held. Customers see the updated status. 2026-11-21 18:30 #6223 · 2 people Requested QA Tester 0400 000 000 Class pack ×10 Confirmed Cancelled",
+        "rows": 0
+      },
+      "products": {
+        "on": true,
+        "heading": "Products & services",
+        "text": "Products & services Prices are in USD. Checkout always uses these server-side prices, never a browser-supplied total. 3 items ✕ ✕ ✕ + Product or service 2 items ✕ ✕ + Product or service 3 items ✕ ✕ ✕ + Product or service + Category Save catalogue",
+        "rows": 0
+      },
+      "categories": {
+        "on": true,
+        "heading": "Categories",
+        "text": "Categories Categories group the products and services shown in the app. Renaming one updates the catalogue navigation. 3 items ✕ 2 items ✕ 3 items ✕ + Category Save categories",
+        "rows": 0
+      },
+      "customers": {
+        "on": true,
+        "heading": "Customers 2",
+        "text": "Customers 2 Customers are created from guest checkout, bookings and enquiries. They are not forced to create an account to browse. NAME PHONE EMAIL ORDERS BOOKINGS ENQUIRIES QA Tester — qa@example.com 0 0 1 QA Tester 0400 000 000 — 0 1 0",
+        "rows": 2
+      },
+      "enquiries": {
+        "on": true,
+        "heading": "Enquiries 1",
+        "text": "Enquiries 1 QA Tester 2026-11-19 16:04 New Please tell me more about what is on offer. qa@example.com Replied Closed",
+        "rows": 0
+      },
+      "offers": {
+        "on": true,
+        "heading": "Offers",
+        "text": "Offers Only publish offers the business can honour. Offers appear in the app immediately after saving. ✕ ✕ + Offer Save offers",
+        "rows": 0
+      },
+      "analytics": {
+        "on": true,
+        "heading": "Sales & analytics",
+        "text": "Sales & analytics ORDER VALUE $0.00 Committed order value ORDERS 0 0 open BOOKINGS 1 1 upcoming Most ordered ITEM QUANTITY VALUE No order lines yet. These figures describe orders taken in the app. They are not payment settlement figures, because no payment gateway is connected.",
+        "rows": 1
+      },
+      "payments": {
+        "on": true,
+        "heading": "Payment gateways",
+        "text": "COLLECTED ONLINE $0.00 Confirmed paid transactions PENDING $0.00 Started but not confirmed REFUNDED $0.00 Returned to customers FAILED 0 Transactions needing a retry Payment gateways Optional. Connect the business’s own Razorpay or Stripe account to take payments in the app. Customers pay the business directly; Plattr never holds the money. Secret keys are encrypted before storage and are never sh",
+        "rows": 1
+      },
+      "settings": {
+        "on": true,
+        "heading": "Application settings",
+        "text": "Application settings Sample content remains 8 sample items · 2 sample offers · sample about text · sample contact details · sample team. Save the catalogue or these details to mark them as yours. Removing samples clears only the groups still marked as examples — your saved catalogue, photos and layout stay. Remove sample content BUSINESS NAME CATEGORY TAGLINE ALLOW SEARCH ENGINES TO INDEX THE CUST",
+        "rows": 0
+      }
+    },
+    "errors": [],
+    "payments": {
+      "badges": [
+        "Not connected",
+        "Not connected"
+      ],
+      "active": "",
+      "text": "COLLECTED ONLINE $0.00 Confirmed paid transactions PENDING $0.00 Started but not confirmed REFUNDED $0.00 Returned to customers FAILED 0 Transactions needing a retry Payment gateways Optional. Connect the business’s own Razorpay or Stripe account to take payments in the app. Customers pay the busine"
+    }
+  },
+  {
+    "app": "dishoom",
+    "checks": {
+      "dashboard-signs-in": {
+        "pass": true,
+        "detail": "Today at Dishoom Indian Restaurants"
+      },
+      "tabs-present": {
+        "pass": true,
+        "detail": [
+          "overview",
+          "orders",
+          "products",
+          "categories",
+          "customers",
+          "enquiries",
+          "analytics",
+          "payments",
+          "settings"
+        ]
+      },
+      "tab:overview": {
+        "pass": true,
+        "detail": {
+          "heading": "Latest orders",
+          "length": 400
+        }
+      },
+      "tab:orders": {
+        "pass": true,
+        "detail": {
+          "heading": "Orders 1",
+          "length": 231
+        }
+      },
+      "tab:products": {
+        "pass": true,
+        "detail": {
+          "heading": "Products & services",
+          "length": 400
+        }
+      },
+      "tab:categories": {
+        "pass": true,
+        "detail": {
+          "heading": "Categories",
+          "length": 267
+        }
+      },
+      "tab:customers": {
+        "pass": true,
+        "detail": {
+          "heading": "Customers 1",
+          "length": 206
+        }
+      },
+      "tab:enquiries": {
+        "pass": true,
+        "detail": {
+          "heading": "Enquiries 0",
+          "length": 72
+        }
+      },
+      "tab:analytics": {
+        "pass": true,
+        "detail": {
+          "heading": "Sales & analytics",
+          "length": 284
+        }
+      },
+      "tab:payments": {
+        "pass": true,
+        "detail": {
+          "heading": "Payment gateways",
+          "length": 400
+        }
+      },
+      "tab:settings": {
+        "pass": true,
+        "detail": {
+          "heading": "Application settings",
+          "length": 400
+        }
+      },
+      "orders-listed": {
+        "pass": true,
+        "detail": "Orders 1 Status changes are saved to the customer's order and can be checked in the app. #6140 2026-11-19 16:05 · Pickup New QA Tester qa@example.com Bacon Naan"
+      },
+      "enquiries-listed": {
+        "pass": true,
+        "detail": "Enquiries 0 No enquiries yet Quote and contact requests are stored here."
+      },
+      "customers-listed": {
+        "pass": true,
+        "detail": "Customers 1 Customers are created from guest checkout, bookings and enquiries. They are not forced to create an account to browse. NAME PHONE EMAIL ORDERS BOOKINGS ENQUIRIES QA Tester — qa@example.com"
+      },
+      "products-editable": {
+        "pass": true,
+        "detail": {
+          "rows": 61,
+          "first": "Dishoom House Chai",
+          "price": "0.00"
+        }
+      },
+      "payments-disconnected": {
+        "pass": true,
+        "detail": [
+          "Not connected",
+          "Not connected"
+        ]
+      },
+      "settings-saves": {
+        "pass": true,
+        "detail": "Saved. Customer app updated."
+      },
+      "settings-reach-customer-app": {
+        "pass": true,
+        "detail": {
+          "probe": "QA Studio 1795104959819",
+          "header": "RESTAURANT QA Studio 1795104959819 KITCHEN MENU · RESTAURANT Dishoom Indian Restaurants. Bombay comfort food, from break"
+        }
+      },
+      "settings-restored": {
+        "pass": true,
+        "detail": {
+          "original": "Dishoom Indian Restaurants",
+          "restored": "Saved. Customer app updated."
+        }
+      }
+    },
+    "tabs": {
+      "overview": {
+        "on": true,
+        "heading": "Latest orders",
+        "text": "ORDER VALUE £23.40 Not settled revenue — payments are not connected OPEN ORDERS 1 1 total UPCOMING BOOKINGS 0 0 total NEW ENQUIRIES 0 1 customers Latest orders #6140 · QA Tester 2026-11-19 16:05 · Pickup New £23.40 View all orders Next bookings This app does not take bookings. Enquiries needing a reply Nothing waiting New quotes and contact requests appear here. Open enquiries Notification outbox ",
+        "rows": 0
+      },
+      "orders": {
+        "on": true,
+        "heading": "Orders 1",
+        "text": "Orders 1 Status changes are saved to the customer's order and can be checked in the app. #6140 2026-11-19 16:05 · Pickup New QA Tester qa@example.com Bacon Naan Roll × 2 £23.40 £23.40 Payment due to the business Preparing Cancelled",
+        "rows": 0
+      },
+      "products": {
+        "on": true,
+        "heading": "Products & services",
+        "text": "Products & services Prices are in GBP. Checkout always uses these server-side prices, never a browser-supplied total. 3 items ✕ ✕ ✕ + Product or service 12 items ✕ ✕ ✕ ✕ ✕ ✕ ✕ ✕ ✕ ✕ ✕ ✕ + Product or service 3 items ✕ ✕ ✕ + Product or service 6 items ✕ ✕ ✕ ✕ ✕ ✕ + Product or service 1 items ✕ + Product or service 2 items ✕ ✕ + Product or service 3 items ✕ ✕ ✕ + Product or service 5 items ✕ ✕ ✕ ✕ ✕ ",
+        "rows": 0
+      },
+      "categories": {
+        "on": true,
+        "heading": "Categories",
+        "text": "Categories Categories group the products and services shown in the app. Renaming one updates the catalogue navigation. 3 items ✕ 12 items ✕ 3 items ✕ 6 items ✕ 1 items ✕ 2 items ✕ 3 items ✕ 5 items ✕ 6 items ✕ 3 items ✕ 3 items ✕ 14 items ✕ + Category Save categories",
+        "rows": 0
+      },
+      "customers": {
+        "on": true,
+        "heading": "Customers 1",
+        "text": "Customers 1 Customers are created from guest checkout, bookings and enquiries. They are not forced to create an account to browse. NAME PHONE EMAIL ORDERS BOOKINGS ENQUIRIES QA Tester — qa@example.com 1 0 0",
+        "rows": 1
+      },
+      "enquiries": {
+        "on": true,
+        "heading": "Enquiries 0",
+        "text": "Enquiries 0 No enquiries yet Quote and contact requests are stored here.",
+        "rows": 0
+      },
+      "analytics": {
+        "on": true,
+        "heading": "Sales & analytics",
+        "text": "Sales & analytics ORDER VALUE £23.40 Committed order value ORDERS 1 1 open BOOKINGS 0 0 upcoming Most ordered ITEM QUANTITY VALUE Bacon Naan Roll 2 £23.40 These figures describe orders taken in the app. They are not payment settlement figures, because no payment gateway is connected.",
+        "rows": 1
+      },
+      "payments": {
+        "on": true,
+        "heading": "Payment gateways",
+        "text": "COLLECTED ONLINE £0.00 Confirmed paid transactions PENDING £0.00 Started but not confirmed REFUNDED £0.00 Returned to customers FAILED 0 Transactions needing a retry Payment gateways Optional. Connect the business’s own Razorpay or Stripe account to take payments in the app. Customers pay the business directly; Plattr never holds the money. Secret keys are encrypted before storage and are never sh",
+        "rows": 1
+      },
+      "settings": {
+        "on": true,
+        "heading": "Application settings",
+        "text": "Application settings Sample content remains 2 sample offers · sample contact details. Save the catalogue or these details to mark them as yours. Removing samples clears only the groups still marked as examples — your saved catalogue, photos and layout stay. Remove sample content BUSINESS NAME CATEGORY TAGLINE ALLOW SEARCH ENGINES TO INDEX THE CUSTOMER APP Off by default. The app and its previews s",
+        "rows": 0
+      }
+    },
+    "errors": [],
+    "payments": {
+      "badges": [
+        "Not connected",
+        "Not connected"
+      ],
+      "active": "",
+      "text": "COLLECTED ONLINE £0.00 Confirmed paid transactions PENDING £0.00 Started but not confirmed REFUNDED £0.00 Returned to customers FAILED 0 Transactions needing a retry Payment gateways Optional. Connect the business’s own Razorpay or Stripe account to take payments in the app. Customers pay the busine"
+    }
+  }
+]

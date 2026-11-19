@@ -436,6 +436,55 @@ describe('the crawl goes past the page that was pasted', () => {
     expect(pageViews.length).toBeLessThanOrEqual(MAX_PAGES)
     expect(report.notes.join(' ')).toContain(`capped at ${MAX_PAGES} pages`)
   })
+
+  test('a listing page is not a product, even when it calls itself Shop All Products', async () => {
+    const home = `<html><head><title>Butter Tales</title></head><body>
+      <nav><a href="/shop">Shop All Products</a></nav>
+      <p>Screen-free learning.</p></body></html>`
+    const products = ['letterloo', 'releaf', 'alphabet-book']
+    const sitemap =
+      '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
+      ['/shop', ...products.map((slug) => `/shop/${slug}`)]
+        .map((path) => `<url><loc>https://buttertales.example.com${path}</loc></url>`)
+        .join('') +
+      '</urlset>'
+    const productPage = (slug: string) =>
+      `<html><head><title>${slug} — Butter Tales</title>` +
+      '<meta property="og:price:amount" content="522" /></head><body><h1>' +
+      `${slug}</h1></body></html>`
+    // A shop's “see everything” page, with a shipping threshold that looks like
+    // a price: the sitemap lists it, and it used to become an item of its own.
+    const listingPage =
+      '<html><head><title>Shop All Products — Butter Tales</title>' +
+      '<meta property="og:price:amount" content="2048" /></head>' +
+      '<body><p>Free shipping over ₹2048.</p></body></html>'
+
+    const fetchImpl = (async (input: string) => {
+      const path = new URL(input).pathname
+      if (path === '/robots.txt')
+        return new Response('', { status: 404, headers: { 'content-type': 'text/plain' } })
+      const slug = products.find((entry) => path === `/shop/${entry}`)
+      const html =
+        path === '/sitemap.xml'
+          ? sitemap
+          : path === '/'
+            ? home
+            : path === '/shop'
+              ? listingPage
+              : slug
+                ? productPage(slug)
+                : ''
+      return html
+        ? new Response(html, { headers: { 'content-type': 'text/html' } })
+        : new Response('gone', { status: 404, headers: { 'content-type': 'text/html' } })
+    }) as unknown as typeof fetch
+
+    const report = await importWebsite('https://buttertales.example.com/', fetchImpl)
+    const names = report.site.menu.flatMap((group) => group.items.map((item) => item.name))
+
+    expect(names).toHaveLength(3)
+    expect(names.join(' | ')).not.toMatch(/shop all/i)
+  })
 })
 
 describe('robots.txt decides what the importer may read', () => {

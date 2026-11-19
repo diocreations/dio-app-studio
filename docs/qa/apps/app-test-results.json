@@ -1,0 +1,1777 @@
+{
+  "startedAt": "2026-11-19T16:03:42.972Z",
+  "apps": [
+    {
+      "app": "buttertales",
+      "checks": {
+        "tabs-rendered": {
+          "pass": true,
+          "detail": [
+            {
+              "go": "home",
+              "label": "HOME"
+            },
+            {
+              "go": "catalog",
+              "label": "SHOP"
+            },
+            {
+              "go": "more",
+              "label": "MORE"
+            }
+          ]
+        },
+        "home-first": {
+          "pass": true,
+          "detail": "Butter Tales™"
+        },
+        "tab:home": {
+          "pass": true,
+          "detail": {
+            "shown": "home",
+            "length": 165
+          }
+        },
+        "tab:catalog": {
+          "pass": true,
+          "detail": {
+            "shown": "catalog",
+            "length": 664
+          }
+        },
+        "tab:more": {
+          "pass": true,
+          "detail": {
+            "shown": "more",
+            "length": 590
+          }
+        },
+        "search-filters": {
+          "pass": true,
+          "detail": {
+            "query": "a",
+            "hits": 5,
+            "text": "RESULTS 5 Letterloo A playful Malayalam letter tile game with a built-in slate that builds vocabulary and… ₹522 തറ പറ ചങ്ങാതി A set of 10 books that makes Malayalam alphabet learning easy! Learning Ma"
+          }
+        },
+        "search-empty-state": {
+          "pass": true,
+          "detail": {
+            "hits": 0,
+            "text": "Nothing matches “zzzzqqq”.\nTry one word, or a broader term."
+          }
+        },
+        "detail-opens": {
+          "pass": true,
+          "detail": {
+            "card": "Letterloo A playful Malayalam letter tile game with a built-in slate that builds",
+            "on": true,
+            "text": "SHOP ₹522 Letterloo A playful Malayalam letter tile game with a built-in slate that builds vocabulary and… shop ₹522 Prices include tax. Ask the team about allergies or access needs — they would rather know. shop ₹522 Add to order"
+          }
+        },
+        "saved-persists": {
+          "pass": true,
+          "detail": {
+            "count": "1",
+            "list": "Letterloo A playful Malayalam letter tile game with a built-in slate that builds vocabulary and… ₹522"
+          }
+        },
+        "cart-adds-item": {
+          "pass": true,
+          "detail": {
+            "added": "0-0",
+            "lines": 1,
+            "inc": 2,
+            "totals": "Subtotal ₹522 Total ₹522"
+          }
+        },
+        "cart-quantity": {
+          "pass": true,
+          "detail": {
+            "qty": "2"
+          }
+        },
+        "checkout-completes": {
+          "pass": true,
+          "detail": {
+            "visible": true,
+            "text": "✓ Order #2286 Pickup · ₹1,044 Sent to Butter Tales™. They will confirm when it is ready. Done",
+            "payButton": 0
+          }
+        },
+        "order-persists-in-app": {
+          "pass": true,
+          "detail": {
+            "number": "2286",
+            "head": "Butter Tales™ Butter Tales creates warm, imaginative, screen-free learning products for children. ABOUT Butter Tales creates warm, imaginative, screen-free learning products for children. Explore our "
+          }
+        },
+        "responsive:320": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 320,
+              "innerWidth": 320,
+              "widest": 320
+            },
+            "catalog": {
+              "scrollWidth": 320,
+              "innerWidth": 320
+            }
+          }
+        },
+        "responsive:360": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 360,
+              "innerWidth": 360,
+              "widest": 360
+            },
+            "catalog": {
+              "scrollWidth": 360,
+              "innerWidth": 360
+            }
+          }
+        },
+        "responsive:375": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 375,
+              "innerWidth": 375,
+              "widest": 375
+            },
+            "catalog": {
+              "scrollWidth": 375,
+              "innerWidth": 375
+            }
+          }
+        },
+        "responsive:390": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 390,
+              "innerWidth": 390,
+              "widest": 390
+            },
+            "catalog": {
+              "scrollWidth": 390,
+              "innerWidth": 390
+            }
+          }
+        },
+        "responsive:430": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 430,
+              "innerWidth": 430,
+              "widest": 430
+            },
+            "catalog": {
+              "scrollWidth": 430,
+              "innerWidth": 430
+            }
+          }
+        },
+        "layout:768": {
+          "pass": true,
+          "detail": {
+            "shell": 520,
+            "scrollWidth": 768,
+            "innerWidth": 768
+          }
+        },
+        "layout:1280": {
+          "pass": true,
+          "detail": {
+            "shell": 520,
+            "scrollWidth": 1280,
+            "innerWidth": 1280
+          }
+        }
+      },
+      "screenText": {
+        "home": "Search the collection 5 CHILDREN'S LEARNING Butter Tales creates warm, imaginative, screen-free learning Screen-free stories, made to be handled. Browse everything →",
+        "catalog": "THE COLLECTION Butter Tales creates warm, imaginative, screen-free learning products for children. 5 pieces ALL CHILDREN'S LEARNING CHILDREN'S LEARNING 5 Letterloo A playful Malayalam letter tile game with a built-in slate that builds vocabulary and… ₹522 തറ പറ ചങ്ങാതി A set of 10 books that makes Malayalam alphabet learning easy! Learning Malayalam letters… ₹999 തറ പറ ചങ്ങാതി + Letterloo + ReLeaf",
+        "more": "Butter Tales™ Butter Tales creates warm, imaginative, screen-free learning products for children. ABOUT Butter Tales creates warm, imaginative, screen-free learning products for children. Explore our Malayalam Alphabet Book, Brain Game, and Kids Creative Library. Find us Website YOUR ACTIVITY Orders and bookings you make on this device will be listed here. No account is needed to browse or order. ",
+        "detail": "SHOP ₹522 Letterloo A playful Malayalam letter tile game with a built-in slate that builds vocabulary and… shop ₹522 Prices include tax. Ask the team about allergies or access needs — they would rather know. shop ₹522 Add to order"
+      },
+      "screenshots": [
+        "buttertales-home-390.png",
+        "buttertales-catalog-390.png",
+        "buttertales-more-390.png",
+        "buttertales-search-390.png",
+        "buttertales-detail-390.png",
+        "buttertales-saved-390.png",
+        "buttertales-cart-390.png",
+        "buttertales-order-done-390.png",
+        "buttertales-catalog-320.png",
+        "buttertales-home-430.png",
+        "buttertales-home-768.png",
+        "buttertales-home-1280.png"
+      ],
+      "errors": [],
+      "orders": [
+        {
+          "number": "2286",
+          "payButton": 0,
+          "text": "✓ Order #2286 Pickup · ₹1,044 Sent to Butter Tales™. They will confirm when it is ready. Done"
+        }
+      ],
+      "bookings": [],
+      "enquiries": [],
+      "structure": {
+        "trade": "shop",
+        "shell": "standard",
+        "screens": [
+          {
+            "id": "home",
+            "title": "Butter Tales™"
+          },
+          {
+            "id": "catalog",
+            "title": "Shop"
+          },
+          {
+            "id": "search",
+            "title": "Search"
+          },
+          {
+            "id": "saved",
+            "title": "Saved"
+          },
+          {
+            "id": "more",
+            "title": "More"
+          },
+          {
+            "id": "detail",
+            "title": "Details"
+          }
+        ],
+        "tabs": [
+          {
+            "go": "home",
+            "label": "HOME"
+          },
+          {
+            "go": "catalog",
+            "label": "SHOP"
+          },
+          {
+            "go": "more",
+            "label": "MORE"
+          }
+        ],
+        "items": 5,
+        "adds": 5,
+        "filters": 2
+      },
+      "responsive": {
+        "320": {
+          "home": {
+            "scrollWidth": 320,
+            "innerWidth": 320,
+            "widest": 320
+          },
+          "catalog": {
+            "scrollWidth": 320,
+            "innerWidth": 320
+          }
+        },
+        "360": {
+          "home": {
+            "scrollWidth": 360,
+            "innerWidth": 360,
+            "widest": 360
+          },
+          "catalog": {
+            "scrollWidth": 360,
+            "innerWidth": 360
+          }
+        },
+        "375": {
+          "home": {
+            "scrollWidth": 375,
+            "innerWidth": 375,
+            "widest": 375
+          },
+          "catalog": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        "390": {
+          "home": {
+            "scrollWidth": 390,
+            "innerWidth": 390,
+            "widest": 390
+          },
+          "catalog": {
+            "scrollWidth": 390,
+            "innerWidth": 390
+          }
+        },
+        "430": {
+          "home": {
+            "scrollWidth": 430,
+            "innerWidth": 430,
+            "widest": 430
+          },
+          "catalog": {
+            "scrollWidth": 430,
+            "innerWidth": 430
+          }
+        },
+        "768": {
+          "shell": 520,
+          "scrollWidth": 768,
+          "innerWidth": 768
+        },
+        "1280": {
+          "shell": 520,
+          "scrollWidth": 1280,
+          "innerWidth": 1280
+        }
+      }
+    },
+    {
+      "app": "cafe",
+      "checks": {
+        "tabs-rendered": {
+          "pass": true,
+          "detail": [
+            {
+              "go": "home",
+              "label": "Café"
+            },
+            {
+              "go": "catalog",
+              "label": "Menu"
+            },
+            {
+              "go": "book",
+              "label": "Reserve"
+            },
+            {
+              "go": "more",
+              "label": "Visit"
+            }
+          ]
+        },
+        "home-first": {
+          "pass": true,
+          "detail": "Good Day Cafe"
+        },
+        "tab:home": {
+          "pass": true,
+          "detail": {
+            "shown": "home",
+            "length": 505
+          }
+        },
+        "tab:catalog": {
+          "pass": true,
+          "detail": {
+            "shown": "catalog",
+            "length": 425
+          }
+        },
+        "tab:book": {
+          "pass": true,
+          "detail": {
+            "shown": "book",
+            "length": 154
+          }
+        },
+        "tab:more": {
+          "pass": true,
+          "detail": {
+            "shown": "more",
+            "length": 536
+          }
+        },
+        "search-filters": {
+          "pass": true,
+          "detail": {
+            "query": "a",
+            "hits": 6,
+            "text": "RESULTS 6 Flat white House blend, 6oz $4.20 Filter of the week Rotating single origin $3.60 Croissant Laminated over three days $3.80 Cardamom bun Baked at 5am $4.50 Granola bowl Yoghurt, honey, poach"
+          }
+        },
+        "search-empty-state": {
+          "pass": true,
+          "detail": {
+            "hits": 0,
+            "text": "Nothing matches “zzzzqqq”.\nTry one word, or a broader term."
+          }
+        },
+        "detail-opens": {
+          "pass": true,
+          "detail": {
+            "card": "Flat white House blend, 6oz $4.20",
+            "on": true,
+            "text": "MENU $4.20 Flat white House blend, 6oz menu $4.20 Prices include tax. Ask the team about allergies or access needs — they would rather know. menu $4.20 Add to order"
+          }
+        },
+        "saved-persists": {
+          "pass": true,
+          "detail": {
+            "count": "1",
+            "list": "Flat white House blend, 6oz $4.20"
+          }
+        },
+        "cart-adds-item": {
+          "pass": true,
+          "detail": {
+            "added": "0-0",
+            "lines": 1,
+            "inc": 2,
+            "totals": "Subtotal $4.20 Total $4.20"
+          }
+        },
+        "cart-quantity": {
+          "pass": true,
+          "detail": {
+            "qty": "2"
+          }
+        },
+        "checkout-completes": {
+          "pass": true,
+          "detail": {
+            "visible": true,
+            "text": "✓ Order #8224 Pickup · $8.40 Sent to Good Day Cafe. They will confirm when it is ready. Done",
+            "payButton": 0
+          }
+        },
+        "order-persists-in-app": {
+          "pass": true,
+          "detail": {
+            "number": "8224",
+            "head": "Good Day Cafe Slow coffee, warm bread, all day. ABOUT One grinder, a rotating filter list, and a bakehouse that finishes before the sun is up. Find us HOW WAS IT? Your rating goes straight to the team"
+          }
+        },
+        "booking-submits": {
+          "pass": true,
+          "detail": {
+            "slot": "16:00",
+            "service": null,
+            "note": "✓ Request sent Sat 21 at 16:00 · 2 guests The business will confirm this request. You can check its status in More. Done"
+          }
+        },
+        "responsive:320": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 320,
+              "innerWidth": 320,
+              "widest": 395
+            },
+            "catalog": {
+              "scrollWidth": 320,
+              "innerWidth": 320
+            }
+          }
+        },
+        "responsive:360": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 360,
+              "innerWidth": 360,
+              "widest": 395
+            },
+            "catalog": {
+              "scrollWidth": 360,
+              "innerWidth": 360
+            }
+          }
+        },
+        "responsive:375": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 375,
+              "innerWidth": 375,
+              "widest": 398
+            },
+            "catalog": {
+              "scrollWidth": 375,
+              "innerWidth": 375
+            }
+          }
+        },
+        "responsive:390": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 390,
+              "innerWidth": 390,
+              "widest": 398
+            },
+            "catalog": {
+              "scrollWidth": 390,
+              "innerWidth": 390
+            }
+          }
+        },
+        "responsive:430": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 430,
+              "innerWidth": 430,
+              "widest": 430
+            },
+            "catalog": {
+              "scrollWidth": 430,
+              "innerWidth": 430
+            }
+          }
+        },
+        "layout:768": {
+          "pass": true,
+          "detail": {
+            "shell": 520,
+            "scrollWidth": 768,
+            "innerWidth": 768
+          }
+        },
+        "layout:1280": {
+          "pass": true,
+          "detail": {
+            "shell": 520,
+            "scrollWidth": 1280,
+            "innerWidth": 1280
+          }
+        }
+      },
+      "screenText": {
+        "home": "CAFÉ Good Day Cafe Slow coffee, warm bread, and a seat by the window. Baked here DAILY COFFEE BAKERY ALL DAY From the counter Full menu COFFEE BAKERY ALL DAY COFFEE Flat white $4.20 COFFEE Filter of the week $3.60 COFFEE Cold brew $4.80 BAKERY Croissant $3.80 TAKEAWAY Takeaway, ready when you are Order ahead and collect at the bar. 01 CHOOSE 02 PAY 03 COLLECT Start an order → TABLES A table, held ",
+        "catalog": "COUNTER MENU Slow coffee, warm bread, all day. Order takeaway Reserve a table MENU 7 All Coffee Bakery All day COFFEE 3 Flat white House blend, 6oz $4.20 Filter of the week NEW Rotating single origin $3.60 Cold brew 18-hour steep, over ice $4.80 BAKERY 2 Croissant Laminated over three days $3.80 Cardamom bun Baked at 5am $4.50 ALL DAY 2 Granola bowl Yoghurt, honey, poached pear $8 Eggs on rye POPU",
+        "book": "GUESTS 2 CHOOSE A DAY Today Tomorrow Sat 21 Sun 22 Mon 23 CHOOSE A TIME 08:30 09:30 10:30 12:00 13:00 14:30 16:00 YOUR NAME PHONE OR EMAIL Request booking",
+        "more": "Good Day Cafe Slow coffee, warm bread, all day. ABOUT One grinder, a rotating filter list, and a bakehouse that finishes before the sun is up. Find us HOW WAS IT? Your rating goes straight to the team. ★ ★ ★ ★ ★ Send feedback YOUR ACTIVITY Orders and bookings you make on this device will be listed here. No account is needed to browse or order. YOURS Saved Items you kept for later 0 INSTALL Add to ",
+        "detail": "MENU $4.20 Flat white House blend, 6oz menu $4.20 Prices include tax. Ask the team about allergies or access needs — they would rather know. menu $4.20 Add to order"
+      },
+      "screenshots": [
+        "cafe-home-390.png",
+        "cafe-catalog-390.png",
+        "cafe-book-390.png",
+        "cafe-more-390.png",
+        "cafe-search-390.png",
+        "cafe-detail-390.png",
+        "cafe-saved-390.png",
+        "cafe-cart-390.png",
+        "cafe-order-done-390.png",
+        "cafe-booking-done-390.png",
+        "cafe-catalog-320.png",
+        "cafe-home-430.png",
+        "cafe-home-768.png",
+        "cafe-home-1280.png"
+      ],
+      "errors": [],
+      "orders": [
+        {
+          "number": "8224",
+          "payButton": 0,
+          "text": "✓ Order #8224 Pickup · $8.40 Sent to Good Day Cafe. They will confirm when it is ready. Done"
+        }
+      ],
+      "bookings": [
+        {
+          "slot": "16:00",
+          "service": null,
+          "note": "✓ Request sent Sat 21 at 16:00 · 2 guests The business will confirm this request. You can check its status in More. Done"
+        }
+      ],
+      "enquiries": [],
+      "structure": {
+        "trade": "cafe",
+        "shell": "standard",
+        "screens": [
+          {
+            "id": "home",
+            "title": "Good Day Cafe"
+          },
+          {
+            "id": "catalog",
+            "title": "Menu"
+          },
+          {
+            "id": "search",
+            "title": "Search"
+          },
+          {
+            "id": "saved",
+            "title": "Saved"
+          },
+          {
+            "id": "book",
+            "title": "Reserve a table"
+          },
+          {
+            "id": "more",
+            "title": "Visit"
+          },
+          {
+            "id": "detail",
+            "title": "Details"
+          }
+        ],
+        "tabs": [
+          {
+            "go": "home",
+            "label": "Café"
+          },
+          {
+            "go": "catalog",
+            "label": "Menu"
+          },
+          {
+            "go": "book",
+            "label": "Reserve"
+          },
+          {
+            "go": "more",
+            "label": "Visit"
+          }
+        ],
+        "items": 11,
+        "adds": 7,
+        "filters": 4
+      },
+      "responsive": {
+        "320": {
+          "home": {
+            "scrollWidth": 320,
+            "innerWidth": 320,
+            "widest": 395
+          },
+          "catalog": {
+            "scrollWidth": 320,
+            "innerWidth": 320
+          }
+        },
+        "360": {
+          "home": {
+            "scrollWidth": 360,
+            "innerWidth": 360,
+            "widest": 395
+          },
+          "catalog": {
+            "scrollWidth": 360,
+            "innerWidth": 360
+          }
+        },
+        "375": {
+          "home": {
+            "scrollWidth": 375,
+            "innerWidth": 375,
+            "widest": 398
+          },
+          "catalog": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        "390": {
+          "home": {
+            "scrollWidth": 390,
+            "innerWidth": 390,
+            "widest": 398
+          },
+          "catalog": {
+            "scrollWidth": 390,
+            "innerWidth": 390
+          }
+        },
+        "430": {
+          "home": {
+            "scrollWidth": 430,
+            "innerWidth": 430,
+            "widest": 430
+          },
+          "catalog": {
+            "scrollWidth": 430,
+            "innerWidth": 430
+          }
+        },
+        "768": {
+          "shell": 520,
+          "scrollWidth": 768,
+          "innerWidth": 768
+        },
+        "1280": {
+          "shell": 520,
+          "scrollWidth": 1280,
+          "innerWidth": 1280
+        }
+      }
+    },
+    {
+      "app": "salon",
+      "checks": {
+        "tabs-rendered": {
+          "pass": true,
+          "detail": [
+            {
+              "go": "home",
+              "label": "HOME"
+            },
+            {
+              "go": "catalog",
+              "label": "SERVICES"
+            },
+            {
+              "go": "book",
+              "label": "BOOK"
+            },
+            {
+              "go": "more",
+              "label": "VISIT"
+            },
+            {
+              "go": "quote",
+              "label": "ENQUIRY"
+            }
+          ]
+        },
+        "home-first": {
+          "pass": true,
+          "detail": "Halo Hair Studio"
+        },
+        "tab:home": {
+          "pass": true,
+          "detail": {
+            "shown": "home",
+            "length": 344
+          }
+        },
+        "tab:catalog": {
+          "pass": true,
+          "detail": {
+            "shown": "catalog",
+            "length": 388
+          }
+        },
+        "tab:book": {
+          "pass": true,
+          "detail": {
+            "shown": "book",
+            "length": 246
+          }
+        },
+        "tab:more": {
+          "pass": true,
+          "detail": {
+            "shown": "more",
+            "length": 585
+          }
+        },
+        "tab:quote": {
+          "pass": true,
+          "detail": {
+            "shown": "quote",
+            "length": 201
+          }
+        },
+        "search-filters": {
+          "pass": true,
+          "detail": {
+            "query": "a",
+            "hits": 7,
+            "text": "RESULTS 7 Cut & finish 45 min $55 Colour 2 hr $120 Blow dry 30 min $38 Keratin smoothing 2 hr 30 $140 Scalp ritual 40 min $45 Brow shape 20 min $25 Gel manicure 45 min $42"
+          }
+        },
+        "search-empty-state": {
+          "pass": true,
+          "detail": {
+            "hits": 0,
+            "text": "Nothing matches “zzzzqqq”.\nTry one word, or a broader term."
+          }
+        },
+        "detail-opens": {
+          "pass": true,
+          "detail": {
+            "card": "Cut & finish Consultation, wash, cut, style 45 MIN $55",
+            "on": true,
+            "text": "SERVICES $55 Cut & finish Consultation, wash, cut, style 45 min $55 Prices include tax. Ask the team about allergies or access needs — they would rather know. Book an appointment"
+          }
+        },
+        "saved-persists": {
+          "pass": true,
+          "detail": {
+            "count": "1",
+            "list": "Cut & finish 45 min $55"
+          }
+        },
+        "booking-submits": {
+          "pass": true,
+          "detail": {
+            "slot": "18:00",
+            "service": "Colour",
+            "note": "✓ Request sent Sat 21 at 18:00 · 2 people The business will confirm this request. You can check its status in More. Done"
+          }
+        },
+        "enquiry-submits": {
+          "pass": true,
+          "detail": "✓ Request sent Thanks QA Tester — the business will reply on qa@example.com. Your request is now in their dashboard. Done"
+        },
+        "responsive:320": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 320,
+              "innerWidth": 320,
+              "widest": 395
+            },
+            "catalog": {
+              "scrollWidth": 320,
+              "innerWidth": 320
+            }
+          }
+        },
+        "responsive:360": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 360,
+              "innerWidth": 360,
+              "widest": 395
+            },
+            "catalog": {
+              "scrollWidth": 360,
+              "innerWidth": 360
+            }
+          }
+        },
+        "responsive:375": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 375,
+              "innerWidth": 375,
+              "widest": 398
+            },
+            "catalog": {
+              "scrollWidth": 375,
+              "innerWidth": 375
+            }
+          }
+        },
+        "responsive:390": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 390,
+              "innerWidth": 390,
+              "widest": 398
+            },
+            "catalog": {
+              "scrollWidth": 390,
+              "innerWidth": 390
+            }
+          }
+        },
+        "responsive:430": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 430,
+              "innerWidth": 430,
+              "widest": 430
+            },
+            "catalog": {
+              "scrollWidth": 430,
+              "innerWidth": 430
+            }
+          }
+        },
+        "layout:768": {
+          "pass": true,
+          "detail": {
+            "shell": 520,
+            "scrollWidth": 768,
+            "innerWidth": 768
+          }
+        },
+        "layout:1280": {
+          "pass": true,
+          "detail": {
+            "shell": 520,
+            "scrollWidth": 1280,
+            "innerWidth": 1280
+          }
+        }
+      },
+      "screenText": {
+        "home": "HAIR SALON Cuts, colour and calm. Cuts, colour, and a quieter kind of appointment. CHOOSE A DAY TODAY 19 TOMORROW 20 SAT 21 SUN 22 CHOOSE A TREATMENT All services Cut & finish 45 min $55 HAIR Colour 2 hr $120 HAIR Blow dry 30 min $38 HAIR Keratin smoothing 2 hr 30 $140 TREATMENTS With Maya Chen, Noa Williams, Elena Rossi Book an appointment →",
+        "catalog": "SERVICES 7 All Hair Treatments Beauty HAIR 3 Cut & finish Consultation, wash, cut, style 45 MIN $55 Colour POPULAR Full head, toner included 2 HR $120 Blow dry Wash and finish 30 MIN $38 TREATMENTS 2 Keratin smoothing Lasts 12 weeks 2 HR 30 $140 Scalp ritual Massage, mask, steam 40 MIN $45 BEAUTY 2 Brow shape Wax and tint 20 MIN $25 Gel manicure Shape, buff, long-wear colour 45 MIN $42",
+        "book": "PEOPLE 2 CHOOSE A DAY Today Tomorrow Sat 21 Sun 22 Mon 23 CHOOSE A TIME 09:00 10:30 12:00 13:30 15:00 16:30 18:00 SERVICE Cut & finish Colour Blow dry Keratin smoothing Scalp ritual Brow shape Gel manicure YOUR NAME PHONE OR EMAIL Request booking",
+        "more": "Halo Hair Studio Cuts, colour and calm. ABOUT Four chairs, two treatment rooms and a rule that nothing runs late. Everyone here is booked by name. Find us THE WORK HOW WAS IT? Your rating goes straight to the team. ★ ★ ★ ★ ★ Send feedback ASK ABOUT A TREATMENT Open the form YOUR ACTIVITY Orders and bookings you make on this device will be listed here. No account is needed to browse or order. YOURS",
+        "quote": "ASK ABOUT A TREATMENT A short description is enough. We reply within one working day. YOUR NAME PHONE OR EMAIL WHAT DO YOU NEED? Send request Goes straight to the business dashboard. No account needed.",
+        "detail": "SERVICES $55 Cut & finish Consultation, wash, cut, style 45 min $55 Prices include tax. Ask the team about allergies or access needs — they would rather know. Book an appointment"
+      },
+      "screenshots": [
+        "salon-home-390.png",
+        "salon-catalog-390.png",
+        "salon-book-390.png",
+        "salon-more-390.png",
+        "salon-search-390.png",
+        "salon-detail-390.png",
+        "salon-saved-390.png",
+        "salon-booking-done-390.png",
+        "salon-enquiry-done-390.png",
+        "salon-catalog-320.png",
+        "salon-home-430.png",
+        "salon-home-768.png",
+        "salon-home-1280.png"
+      ],
+      "errors": [],
+      "orders": [],
+      "bookings": [
+        {
+          "slot": "18:00",
+          "service": "Colour",
+          "note": "✓ Request sent Sat 21 at 18:00 · 2 people The business will confirm this request. You can check its status in More. Done"
+        }
+      ],
+      "enquiries": [
+        "✓ Request sent Thanks QA Tester — the business will reply on qa@example.com. Your request is now in their dashboard. Done"
+      ],
+      "structure": {
+        "trade": "salon",
+        "shell": "standard",
+        "screens": [
+          {
+            "id": "home",
+            "title": "Halo Hair Studio"
+          },
+          {
+            "id": "catalog",
+            "title": "Services"
+          },
+          {
+            "id": "search",
+            "title": "Search"
+          },
+          {
+            "id": "saved",
+            "title": "Saved"
+          },
+          {
+            "id": "book",
+            "title": "Book an appointment"
+          },
+          {
+            "id": "quote",
+            "title": "Ask about a treatment"
+          },
+          {
+            "id": "more",
+            "title": "Visit"
+          },
+          {
+            "id": "detail",
+            "title": "Details"
+          }
+        ],
+        "tabs": [
+          {
+            "go": "home",
+            "label": "HOME"
+          },
+          {
+            "go": "catalog",
+            "label": "SERVICES"
+          },
+          {
+            "go": "book",
+            "label": "BOOK"
+          },
+          {
+            "go": "more",
+            "label": "VISIT"
+          },
+          {
+            "go": "quote",
+            "label": "ENQUIRY"
+          }
+        ],
+        "items": 11,
+        "adds": 0,
+        "filters": 4
+      },
+      "responsive": {
+        "320": {
+          "home": {
+            "scrollWidth": 320,
+            "innerWidth": 320,
+            "widest": 395
+          },
+          "catalog": {
+            "scrollWidth": 320,
+            "innerWidth": 320
+          }
+        },
+        "360": {
+          "home": {
+            "scrollWidth": 360,
+            "innerWidth": 360,
+            "widest": 395
+          },
+          "catalog": {
+            "scrollWidth": 360,
+            "innerWidth": 360
+          }
+        },
+        "375": {
+          "home": {
+            "scrollWidth": 375,
+            "innerWidth": 375,
+            "widest": 398
+          },
+          "catalog": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        "390": {
+          "home": {
+            "scrollWidth": 390,
+            "innerWidth": 390,
+            "widest": 398
+          },
+          "catalog": {
+            "scrollWidth": 390,
+            "innerWidth": 390
+          }
+        },
+        "430": {
+          "home": {
+            "scrollWidth": 430,
+            "innerWidth": 430,
+            "widest": 430
+          },
+          "catalog": {
+            "scrollWidth": 430,
+            "innerWidth": 430
+          }
+        },
+        "768": {
+          "shell": 520,
+          "scrollWidth": 768,
+          "innerWidth": 768
+        },
+        "1280": {
+          "shell": 520,
+          "scrollWidth": 1280,
+          "innerWidth": 1280
+        }
+      }
+    },
+    {
+      "app": "gym",
+      "checks": {
+        "tabs-rendered": {
+          "pass": true,
+          "detail": [
+            {
+              "go": "home",
+              "label": "TRAIN"
+            },
+            {
+              "go": "catalog",
+              "label": "PLANS"
+            },
+            {
+              "go": "book",
+              "label": "CLASSES"
+            },
+            {
+              "go": "more",
+              "label": "VISIT"
+            },
+            {
+              "go": "quote",
+              "label": "JOIN"
+            }
+          ]
+        },
+        "home-first": {
+          "pass": true,
+          "detail": "Iron Yard"
+        },
+        "tab:home": {
+          "pass": true,
+          "detail": {
+            "shown": "home",
+            "length": 503
+          }
+        },
+        "tab:catalog": {
+          "pass": true,
+          "detail": {
+            "shown": "catalog",
+            "length": 765
+          }
+        },
+        "tab:book": {
+          "pass": true,
+          "detail": {
+            "shown": "book",
+            "length": 394
+          }
+        },
+        "tab:more": {
+          "pass": true,
+          "detail": {
+            "shown": "more",
+            "length": 576
+          }
+        },
+        "tab:quote": {
+          "pass": true,
+          "detail": {
+            "shown": "quote",
+            "length": 208
+          }
+        },
+        "search-filters": {
+          "pass": true,
+          "detail": {
+            "query": "a",
+            "hits": 8,
+            "text": "RESULTS 8 Unlimited monthly per month $89 Class pack ×10 Valid six months $120 Drop-in class Pay as you go $15 1:1 session 60 min $60 Movement screen 45 min $45 Strength 101 Mon · Wed · Fri 06:30 $15 "
+          }
+        },
+        "search-empty-state": {
+          "pass": true,
+          "detail": {
+            "hits": 0,
+            "text": "Nothing matches “zzzzqqq”.\nTry one word, or a broader term."
+          }
+        },
+        "detail-opens": {
+          "pass": true,
+          "detail": {
+            "card": "UNLIMITED MONTHLY $89 All classes, no contract per month Popular plan Tap for de",
+            "on": true,
+            "text": "POPULAR UNLIMITED MONTHLY All classes, no contract per month SESSION $89 DROP-IN You might also like MEMBERSHIPS Class pack ×10 $120 Drop-in class $15 1:1 session $60 Movement screen $45 JOIN A CLASS"
+          }
+        },
+        "saved-persists": {
+          "pass": true,
+          "detail": {
+            "count": "1",
+            "list": "Unlimited monthly per month $89"
+          }
+        },
+        "booking-submits": {
+          "pass": true,
+          "detail": {
+            "slot": "18:30",
+            "service": "Class pack ×10",
+            "note": "✓ Request sent Sat 21 at 18:30 · 2 spots The business will confirm this request. You can check its status in More. DONE"
+          }
+        },
+        "enquiry-submits": {
+          "pass": true,
+          "detail": "✓ Request sent Thanks QA Tester — the business will reply on qa@example.com. Your request is now in their dashboard. DONE"
+        },
+        "responsive:320": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 320,
+              "innerWidth": 320,
+              "widest": 395
+            },
+            "catalog": {
+              "scrollWidth": 320,
+              "innerWidth": 320
+            }
+          }
+        },
+        "responsive:360": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 360,
+              "innerWidth": 360,
+              "widest": 395
+            },
+            "catalog": {
+              "scrollWidth": 360,
+              "innerWidth": 360
+            }
+          }
+        },
+        "responsive:375": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 375,
+              "innerWidth": 375,
+              "widest": 398
+            },
+            "catalog": {
+              "scrollWidth": 375,
+              "innerWidth": 375
+            }
+          }
+        },
+        "responsive:390": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 390,
+              "innerWidth": 390,
+              "widest": 398
+            },
+            "catalog": {
+              "scrollWidth": 390,
+              "innerWidth": 390
+            }
+          }
+        },
+        "responsive:430": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 430,
+              "innerWidth": 430,
+              "widest": 430
+            },
+            "catalog": {
+              "scrollWidth": 430,
+              "innerWidth": 430
+            }
+          }
+        },
+        "layout:768": {
+          "pass": true,
+          "detail": {
+            "shell": 520,
+            "scrollWidth": 768,
+            "innerWidth": 768
+          }
+        },
+        "layout:1280": {
+          "pass": true,
+          "detail": {
+            "shell": 520,
+            "scrollWidth": 1280,
+            "innerWidth": 1280
+          }
+        }
+      },
+      "screenText": {
+        "home": "GYM IRON YARD Small classes, heavy progress, honest coaching. 3 MEMBERSHIPS 3 WEEKLY CLASSES MEMBERSHIPS ALL PLANS 01 UNLIMITED MONTHLY All classes, no contract $89 PER MONTH 02 CLASS PACK ×10 Valid six months $120 ONE OFF 03 DROP-IN CLASS Pay as you go $15 ONE OFF THIS WEEK BOOK A CLASS 01 Strength 101 Mon · Wed · Fri 06:30 + 02 Barbell club Tue · Thu 18:30 + 03 Conditioning Sat 09:00 + START HER",
+        "catalog": "MEMBERSHIPS SMALL CLASSES, HEAVY PROGRESS. SEE THE CLASS TIMETABLE MEMBERSHIPS 8 All Memberships Coaching Classes MEMBERSHIPS 3 UNLIMITED MONTHLY $89 All classes, no contract per month Popular plan Tap for details VIEW CLASS PACK ×10 $120 Valid six months plan Tap for details VIEW DROP-IN CLASS $15 Pay as you go plan Tap for details VIEW COACHING 2 1:1 SESSION $60 With a strength coach 60 min plan",
+        "book": "THIS WEEK 3 classes Strength 101 Mon · Wed · Fri 06:30 Reserve Barbell club Tue · Thu 18:30 Reserve Conditioning Sat 09:00 Reserve SPOTS 2 CHOOSE A DAY Today Tomorrow Sat 21 Sun 22 Mon 23 CHOOSE A TIME 06:30 07:30 12:00 17:30 18:30 SERVICE Unlimited monthly Class pack ×10 Drop-in class 1:1 session Movement screen Strength 101 Barbell club Conditioning YOUR NAME PHONE OR EMAIL REQUEST BOOKING",
+        "more": "Iron Yard Small classes, heavy progress. ABOUT Small groups, a coach who knows your name, and a programme written for you rather than for the mirror. Find us HOW WAS IT? Your rating goes straight to the team. ★ ★ ★ ★ ★ SEND FEEDBACK MEMBERSHIP ENQUIRY OPEN THE FORM YOUR ACTIVITY Orders and bookings you make on this device will be listed here. No account is needed to browse or order. YOURS Saved It",
+        "quote": "MEMBERSHIP ENQUIRY Tell us your goal and any experience you have. No medical history needed. YOUR NAME PHONE OR EMAIL WHAT DO YOU NEED? SEND REQUEST Goes straight to the business dashboard. No account needed.",
+        "detail": "POPULAR UNLIMITED MONTHLY All classes, no contract per month SESSION $89 DROP-IN You might also like MEMBERSHIPS Class pack ×10 $120 Drop-in class $15 1:1 session $60 Movement screen $45 JOIN A CLASS"
+      },
+      "screenshots": [
+        "gym-home-390.png",
+        "gym-catalog-390.png",
+        "gym-book-390.png",
+        "gym-more-390.png",
+        "gym-search-390.png",
+        "gym-detail-390.png",
+        "gym-saved-390.png",
+        "gym-booking-done-390.png",
+        "gym-enquiry-done-390.png",
+        "gym-catalog-320.png",
+        "gym-home-430.png",
+        "gym-home-768.png",
+        "gym-home-1280.png"
+      ],
+      "errors": [],
+      "orders": [],
+      "bookings": [
+        {
+          "slot": "18:30",
+          "service": "Class pack ×10",
+          "note": "✓ Request sent Sat 21 at 18:30 · 2 spots The business will confirm this request. You can check its status in More. DONE"
+        }
+      ],
+      "enquiries": [
+        "✓ Request sent Thanks QA Tester — the business will reply on qa@example.com. Your request is now in their dashboard. DONE"
+      ],
+      "structure": {
+        "trade": "gym",
+        "shell": "session",
+        "screens": [
+          {
+            "id": "home",
+            "title": "Iron Yard"
+          },
+          {
+            "id": "catalog",
+            "title": "Memberships"
+          },
+          {
+            "id": "search",
+            "title": "Search"
+          },
+          {
+            "id": "saved",
+            "title": "Saved"
+          },
+          {
+            "id": "book",
+            "title": "Join a class"
+          },
+          {
+            "id": "quote",
+            "title": "Membership enquiry"
+          },
+          {
+            "id": "more",
+            "title": "Visit"
+          },
+          {
+            "id": "detail",
+            "title": "Details"
+          }
+        ],
+        "tabs": [
+          {
+            "go": "home",
+            "label": "TRAIN"
+          },
+          {
+            "go": "catalog",
+            "label": "PLANS"
+          },
+          {
+            "go": "book",
+            "label": "CLASSES"
+          },
+          {
+            "go": "more",
+            "label": "VISIT"
+          },
+          {
+            "go": "quote",
+            "label": "JOIN"
+          }
+        ],
+        "items": 11,
+        "adds": 0,
+        "filters": 4
+      },
+      "responsive": {
+        "320": {
+          "home": {
+            "scrollWidth": 320,
+            "innerWidth": 320,
+            "widest": 395
+          },
+          "catalog": {
+            "scrollWidth": 320,
+            "innerWidth": 320
+          }
+        },
+        "360": {
+          "home": {
+            "scrollWidth": 360,
+            "innerWidth": 360,
+            "widest": 395
+          },
+          "catalog": {
+            "scrollWidth": 360,
+            "innerWidth": 360
+          }
+        },
+        "375": {
+          "home": {
+            "scrollWidth": 375,
+            "innerWidth": 375,
+            "widest": 398
+          },
+          "catalog": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        "390": {
+          "home": {
+            "scrollWidth": 390,
+            "innerWidth": 390,
+            "widest": 398
+          },
+          "catalog": {
+            "scrollWidth": 390,
+            "innerWidth": 390
+          }
+        },
+        "430": {
+          "home": {
+            "scrollWidth": 430,
+            "innerWidth": 430,
+            "widest": 430
+          },
+          "catalog": {
+            "scrollWidth": 430,
+            "innerWidth": 430
+          }
+        },
+        "768": {
+          "shell": 520,
+          "scrollWidth": 768,
+          "innerWidth": 768
+        },
+        "1280": {
+          "shell": 520,
+          "scrollWidth": 1280,
+          "innerWidth": 1280
+        }
+      }
+    },
+    {
+      "app": "dishoom",
+      "checks": {
+        "tabs-rendered": {
+          "pass": true,
+          "detail": [
+            {
+              "go": "home",
+              "label": "Dine"
+            },
+            {
+              "go": "catalog",
+              "label": "Menu"
+            },
+            {
+              "go": "more",
+              "label": "Visit"
+            }
+          ]
+        },
+        "home-first": {
+          "pass": true,
+          "detail": "Dishoom Indian Restaurants"
+        },
+        "tab:home": {
+          "pass": true,
+          "detail": {
+            "shown": "home",
+            "length": 213
+          }
+        },
+        "tab:catalog": {
+          "pass": true,
+          "detail": {
+            "shown": "catalog",
+            "length": 5956
+          }
+        },
+        "tab:more": {
+          "pass": true,
+          "detail": {
+            "shown": "more",
+            "length": 594
+          }
+        },
+        "search-filters": {
+          "pass": true,
+          "detail": {
+            "query": "a",
+            "hits": 61,
+            "text": "RESULTS 61 Dishoom House Chai menu On request Dishoom Masala Dabba menu On request Market Bag: Lemon Cooler menu On request Bacon Naan Roll Ramsay of Carluke’s smoked streaky bacon is matured in the t"
+          }
+        },
+        "search-empty-state": {
+          "pass": true,
+          "detail": {
+            "hits": 0,
+            "text": "Nothing matches “zzzzqqq”.\nTry one word, or a broader term."
+          }
+        },
+        "detail-opens": {
+          "pass": true,
+          "detail": {
+            "card": "Dishoom House Chai On request",
+            "on": true,
+            "text": "MENU Dishoom House Chai HOUSE On request You might also like MENU Dishoom Masala Dabba On request Market Bag: Lemon Cooler On request Bacon Naan Roll £11.70 Sausage Naan Roll £12.50 Book a table"
+          }
+        },
+        "saved-persists": {
+          "pass": true,
+          "detail": {
+            "count": "1",
+            "list": "Dishoom House Chai menu On request"
+          }
+        },
+        "cart-adds-item": {
+          "pass": true,
+          "detail": {
+            "added": "1-0",
+            "lines": 1,
+            "inc": 2,
+            "totals": "Subtotal £11.70 Total £11.70"
+          }
+        },
+        "cart-quantity": {
+          "pass": true,
+          "detail": {
+            "qty": "2"
+          }
+        },
+        "checkout-completes": {
+          "pass": true,
+          "detail": {
+            "visible": true,
+            "text": "✓ Order #6140 Pickup · £23.40 Sent to Dishoom Indian Restaurants. They will confirm when it is ready. Done",
+            "payButton": 0
+          }
+        },
+        "order-persists-in-app": {
+          "pass": true,
+          "detail": {
+            "number": "6140",
+            "head": "Dishoom Indian Restaurants Dishoom cafés pay homage to the food of Bombay. ABOUT Dishoom cafés pay homage to the food of Bombay. Open all day, from breakfast to dinner and later. Enjoy Bombay comfort "
+          }
+        },
+        "responsive:320": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 320,
+              "innerWidth": 320,
+              "widest": 1373
+            },
+            "catalog": {
+              "scrollWidth": 320,
+              "innerWidth": 320
+            }
+          }
+        },
+        "responsive:360": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 360,
+              "innerWidth": 360,
+              "widest": 1373
+            },
+            "catalog": {
+              "scrollWidth": 360,
+              "innerWidth": 360
+            }
+          }
+        },
+        "responsive:375": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 375,
+              "innerWidth": 375,
+              "widest": 1376
+            },
+            "catalog": {
+              "scrollWidth": 375,
+              "innerWidth": 375
+            }
+          }
+        },
+        "responsive:390": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 390,
+              "innerWidth": 390,
+              "widest": 1376
+            },
+            "catalog": {
+              "scrollWidth": 390,
+              "innerWidth": 390
+            }
+          }
+        },
+        "responsive:430": {
+          "pass": true,
+          "detail": {
+            "home": {
+              "scrollWidth": 430,
+              "innerWidth": 430,
+              "widest": 1376
+            },
+            "catalog": {
+              "scrollWidth": 430,
+              "innerWidth": 430
+            }
+          }
+        },
+        "layout:768": {
+          "pass": true,
+          "detail": {
+            "shell": 520,
+            "scrollWidth": 768,
+            "innerWidth": 768
+          }
+        },
+        "layout:1280": {
+          "pass": true,
+          "detail": {
+            "shell": 520,
+            "scrollWidth": 1280,
+            "innerWidth": 1280
+          }
+        }
+      },
+      "screenText": {
+        "home": "KITCHEN MENU · RESTAURANT Dishoom Indian Restaurants. Bombay comfort food, from breakfast to dinner. FROM THE KITCHEN Dishoom House Chai The kitchen is writing its first menu. On request SEASONAL · COOKED TO ORDER",
+        "catalog": "THE MENU Dishoom cafés pay homage to the food of Bombay. MENU 61 All Restaurant Breakfast Biryani Ruby Murray and Daal Salad Rolls Small plates Side Orders Drinks Shop All Festive Tipples Tipples RESTAURANT 3 Dishoom House Chai On request Dishoom Masala Dabba On request Market Bag: Lemon Cooler On request BREAKFAST 12 Bacon Naan Roll Ramsay of Carluke’s smoked streaky bacon is matured in the tradi",
+        "more": "Dishoom Indian Restaurants Dishoom cafés pay homage to the food of Bombay. ABOUT Dishoom cafés pay homage to the food of Bombay. Open all day, from breakfast to dinner and later. Enjoy Bombay comfort food and first-class drinks. All welcome. Find us Website Instagram LinkedIn TikTok YOUR ACTIVITY Orders and bookings you make on this device will be listed here. No account is needed to browse or ord",
+        "detail": "MENU Dishoom House Chai HOUSE On request You might also like MENU Dishoom Masala Dabba On request Market Bag: Lemon Cooler On request Bacon Naan Roll £11.70 Sausage Naan Roll £12.50 Book a table"
+      },
+      "screenshots": [
+        "dishoom-home-390.png",
+        "dishoom-catalog-390.png",
+        "dishoom-more-390.png",
+        "dishoom-search-390.png",
+        "dishoom-detail-390.png",
+        "dishoom-saved-390.png",
+        "dishoom-cart-390.png",
+        "dishoom-order-done-390.png",
+        "dishoom-catalog-320.png",
+        "dishoom-home-430.png",
+        "dishoom-home-768.png",
+        "dishoom-home-1280.png"
+      ],
+      "errors": [],
+      "orders": [
+        {
+          "number": "6140",
+          "payButton": 0,
+          "text": "✓ Order #6140 Pickup · £23.40 Sent to Dishoom Indian Restaurants. They will confirm when it is ready. Done"
+        }
+      ],
+      "bookings": [],
+      "enquiries": [],
+      "structure": {
+        "trade": "restaurant",
+        "shell": "menu",
+        "screens": [
+          {
+            "id": "home",
+            "title": "Dishoom Indian Restaurants"
+          },
+          {
+            "id": "catalog",
+            "title": "Menu"
+          },
+          {
+            "id": "search",
+            "title": "Search"
+          },
+          {
+            "id": "saved",
+            "title": "Saved"
+          },
+          {
+            "id": "more",
+            "title": "Visit"
+          },
+          {
+            "id": "detail",
+            "title": "Details"
+          }
+        ],
+        "tabs": [
+          {
+            "go": "home",
+            "label": "Dine"
+          },
+          {
+            "go": "catalog",
+            "label": "Menu"
+          },
+          {
+            "go": "more",
+            "label": "Visit"
+          }
+        ],
+        "items": 62,
+        "adds": 55,
+        "filters": 13
+      },
+      "responsive": {
+        "320": {
+          "home": {
+            "scrollWidth": 320,
+            "innerWidth": 320,
+            "widest": 1373
+          },
+          "catalog": {
+            "scrollWidth": 320,
+            "innerWidth": 320
+          }
+        },
+        "360": {
+          "home": {
+            "scrollWidth": 360,
+            "innerWidth": 360,
+            "widest": 1373
+          },
+          "catalog": {
+            "scrollWidth": 360,
+            "innerWidth": 360
+          }
+        },
+        "375": {
+          "home": {
+            "scrollWidth": 375,
+            "innerWidth": 375,
+            "widest": 1376
+          },
+          "catalog": {
+            "scrollWidth": 375,
+            "innerWidth": 375
+          }
+        },
+        "390": {
+          "home": {
+            "scrollWidth": 390,
+            "innerWidth": 390,
+            "widest": 1376
+          },
+          "catalog": {
+            "scrollWidth": 390,
+            "innerWidth": 390
+          }
+        },
+        "430": {
+          "home": {
+            "scrollWidth": 430,
+            "innerWidth": 430,
+            "widest": 1376
+          },
+          "catalog": {
+            "scrollWidth": 430,
+            "innerWidth": 430
+          }
+        },
+        "768": {
+          "shell": 520,
+          "scrollWidth": 768,
+          "innerWidth": 768
+        },
+        "1280": {
+          "shell": 520,
+          "scrollWidth": 1280,
+          "innerWidth": 1280
+        }
+      }
+    }
+  ],
+  "finishedAt": "2026-11-19T16:05:11.407Z"
+}
