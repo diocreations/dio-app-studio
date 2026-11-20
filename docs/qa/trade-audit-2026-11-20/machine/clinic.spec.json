@@ -1,0 +1,119 @@
+{
+  "name": "Clinic & health",
+  "kind": "Dental and health clinic",
+  "tagline": "Careful hands, clear pricing.",
+  "story": "A calm practice with two surgeries, a hygienist and a policy of quoting before anything begins.",
+  "accent": "#2a5a8f",
+  "logo": "CL",
+  "hours": "Mon–Fri 8:00–18:00",
+  "phone": "+1 555 0135",
+  "address": "9 Wellfield Road, Northside",
+  "vertical": "clinic",
+  "features": [
+    "catalog",
+    "booking",
+    "quote",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Check-ups",
+      "items": [
+        {
+          "name": "New patient exam",
+          "desc": "Includes x-rays",
+          "price": 6500,
+          "meta": "40 min",
+          "tag": "Start here"
+        },
+        {
+          "name": "Hygiene visit",
+          "desc": "Scale and polish",
+          "price": 9000,
+          "meta": "30 min"
+        }
+      ]
+    },
+    {
+      "name": "Restorative",
+      "items": [
+        {
+          "name": "Composite filling",
+          "desc": "Tooth-coloured",
+          "price": 14500,
+          "meta": "45 min"
+        },
+        {
+          "name": "Crown",
+          "desc": "Porcelain, two visits",
+          "price": 69000
+        }
+      ]
+    },
+    {
+      "name": "Cosmetic",
+      "items": [
+        {
+          "name": "Whitening",
+          "desc": "In-chair, one visit",
+          "price": 32000,
+          "meta": "90 min"
+        },
+        {
+          "name": "Clear aligners",
+          "desc": "Full case, quoted after scan",
+          "price": 0,
+          "meta": "from $2,400"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "New patient exam $55",
+      "body": "Includes x-rays. First visit only."
+    },
+    {
+      "title": "Evening slots",
+      "body": "Until 8pm on Wednesdays."
+    }
+  ],
+  "loyalty": {
+    "goal": 2,
+    "reward": "A free hygiene visit after two check-ups"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": true,
+    "staff": true,
+    "tagline": true
+  },
+  "staff": [
+    "Dr Amara Osei",
+    "Dr Theo Marsh",
+    "Lena Park"
+  ],
+  "team": [
+    {
+      "name": "Dr Amara Osei",
+      "role": "Principal dentist",
+      "credential": "GDC 84210"
+    },
+    {
+      "name": "Dr Theo Marsh",
+      "role": "Dentist",
+      "credential": "GDC 90117"
+    },
+    {
+      "name": "Lena Park",
+      "role": "Hygienist",
+      "credential": "GDC 76542"
+    }
+  ],
+  "custom": "",
+  "direction": "clinical"
+}

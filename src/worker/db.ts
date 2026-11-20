@@ -480,6 +480,8 @@ export type NewProjectInput = {
   site?: SiteInfo
   /** The design picked from the three previews, already sanitised. */
   layout?: LayoutChoice
+  /** The concept direction picked on the brief; seeds the new document. */
+  direction?: string
   /** Trailer and clip links the customer typed; cleaned in `buildSpec`. */
   videos?: VideoLink[]
   /** A platform bundle to quote and build alongside the app. */
@@ -520,6 +522,7 @@ export async function createProject(
     custom,
     category,
     layout: input.layout,
+    direction: input.direction,
     videos: input.videos,
     bundle: input.bundle,
     site: input.site,

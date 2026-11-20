@@ -602,7 +602,9 @@ function briefScript(verticals: string): string {
   function useRead(data) {
     read = data
     applyReadFeatures(data)
-    const designs = data.designs || []
+    // Concepts are the trade's own directions, each previewed on the real
+    // application document. The old designs stay as an advanced override.
+    const designs = data.concepts || data.designs || []
     const features = (data.suggestions || []).map((entry) =>
       '<li><b>' + esc(entry.label) + '</b> <span class="tiny">— ' + esc(entry.why) + '</span></li>'
     ).join('')
@@ -736,6 +738,7 @@ function briefScript(verticals: string): string {
       platforms: platforms(),
       plan: currentPlan,
       layout: chosenDesign ? { ...chosenDesign.axes, ...chosenElements() } : null,
+      direction: chosenDesign ? chosenDesign.id : undefined,
       site: imported,
     }
   }

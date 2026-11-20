@@ -1,0 +1,132 @@
+{
+  "name": "Gym & studio",
+  "kind": "Strength and conditioning gym",
+  "tagline": "Coaching, not guesswork.",
+  "story": "Small groups, a coach who knows your name, and a programme written for you rather than for the mirror.",
+  "accent": "#1f6b52",
+  "logo": "GY",
+  "hours": "Mon–Fri 6:00–21:00 · Sat 8:00–14:00",
+  "phone": "+1 555 0121",
+  "address": "Unit 4, Gasworks Lane",
+  "vertical": "gym",
+  "features": [
+    "catalog",
+    "booking",
+    "classes",
+    "quote",
+    "loyalty",
+    "offers",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Memberships",
+      "items": [
+        {
+          "name": "Unlimited monthly",
+          "desc": "All classes, no contract",
+          "price": 8900,
+          "meta": "per month",
+          "tag": "Popular"
+        },
+        {
+          "name": "Class pack ×10",
+          "desc": "Valid six months",
+          "price": 12000
+        },
+        {
+          "name": "Drop-in class",
+          "desc": "Pay as you go",
+          "price": 1500
+        }
+      ]
+    },
+    {
+      "name": "Coaching",
+      "items": [
+        {
+          "name": "1:1 session",
+          "desc": "With a strength coach",
+          "price": 6000,
+          "meta": "60 min"
+        },
+        {
+          "name": "Movement screen",
+          "desc": "Assessment and plan",
+          "price": 4500,
+          "meta": "45 min"
+        }
+      ]
+    },
+    {
+      "name": "Classes",
+      "items": [
+        {
+          "name": "Strength 101",
+          "desc": "Barbell basics in a small group",
+          "price": 1500,
+          "meta": "Mon · Wed · Fri 06:30"
+        },
+        {
+          "name": "Barbell club",
+          "desc": "Coached lifting, all levels",
+          "price": 1500,
+          "meta": "Tue · Thu 18:30"
+        },
+        {
+          "name": "Conditioning",
+          "desc": "Engine work, no burpees",
+          "price": 1500,
+          "meta": "Sat 09:00"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "First class free",
+      "body": "Any class, any level. Just book a spot."
+    },
+    {
+      "title": "Bring a friend Fridays",
+      "body": "Second person trains free."
+    }
+  ],
+  "loyalty": {
+    "goal": 10,
+    "reward": "A guest pass for a friend"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": true,
+    "staff": true,
+    "tagline": true
+  },
+  "staff": [
+    "Ada Okafor",
+    "Marcus Bell",
+    "Priya Shah"
+  ],
+  "team": [
+    {
+      "name": "Ada Okafor",
+      "role": "Head coach",
+      "credential": "Strength & conditioning"
+    },
+    {
+      "name": "Marcus Bell",
+      "role": "Barbell coach",
+      "credential": "Level 3"
+    },
+    {
+      "name": "Priya Shah",
+      "role": "Conditioning coach",
+      "credential": "Endurance"
+    }
+  ],
+  "custom": "",
+  "direction": "performance"
+}

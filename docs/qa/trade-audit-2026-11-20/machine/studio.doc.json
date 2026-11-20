@@ -1,0 +1,148 @@
+{
+  "v": 2,
+  "accent": "#17110d",
+  "design": {
+    "direction": "gallery"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Work",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_studio_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "studio-hero",
+          "title": "Creative studio",
+          "text": "Light, patience, timing.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_studio_work",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "studio-work",
+          "title": "Selected work"
+        },
+        {
+          "id": "sec_fx_studio_services",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "studio-services",
+          "title": "Ways to work together"
+        },
+        {
+          "id": "sec_fx_studio_team",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "studio-team",
+          "title": "The studio"
+        },
+        {
+          "id": "sec_fx_studio_book",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "studio-book",
+          "title": "Start a project",
+          "text": "Tell us what you are making. We will reply with availability and a clear quote.",
+          "cta": {
+            "label": "Request a shoot brief",
+            "screen": "scr_quote"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Book",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Visit",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Enquire",
+      "icon": "quote",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

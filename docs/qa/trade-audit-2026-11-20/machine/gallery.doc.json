@@ -1,0 +1,143 @@
+{
+  "v": 2,
+  "accent": "#6a4a30",
+  "design": {
+    "direction": "gallery"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_c_gallery_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-gallery-hero",
+          "title": "Art gallery",
+          "text": "Hung slowly, looked at for longer.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_c_gallery_show",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-gallery-show",
+          "title": "On view"
+        },
+        {
+          "id": "sec_fx_c_gallery_works",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-gallery-works",
+          "title": "Works on view"
+        },
+        {
+          "id": "sec_fx_c_gallery_facts",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-gallery-facts",
+          "title": "Plan your visit",
+          "text": "Wed–Sun 11:00–18:00",
+          "follows": {
+            "text": "hours"
+          }
+        },
+        {
+          "id": "sec_fx_c_gallery_visit",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-gallery-visit",
+          "title": "Plan your visit",
+          "text": "Private views are on Thursday evenings; members have the rooms to themselves on Sunday morning.",
+          "cta": {
+            "label": "Book a viewing",
+            "screen": "scr_book"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Consult",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Contact",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

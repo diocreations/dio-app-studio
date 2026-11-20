@@ -1,3 +1,4 @@
+import { directionsFor } from './directions'
 import { detectVertical } from './importer'
 import { FEATURES, normalizeFeatures } from './pricing'
 import type { ElementShape, FeatureId, LayoutChoice, VerticalId } from './types'
@@ -201,6 +202,39 @@ export const DESIGNS: DesignOption[] = [
     },
   },
 ]
+
+/**
+ * The three concepts a trade is offered. They are the trade's own design
+ * directions — type, palette, navigation, density and section order together —
+ * not a global layout preset. Each preview is the real application route with a
+ * seeded document, so what the customer judges is what the build renders.
+ *
+ * `DESIGNS` above stays as the advanced layout override; it is not a concept.
+ */
+export type ConceptPreview = {
+  id: string
+  name: string
+  note: string
+  axes: LayoutChoice
+  preview: string
+}
+
+export function conceptsFor(vertical: VerticalId): ConceptPreview[] {
+  return directionsFor(vertical).map((entry) => {
+    const axes: LayoutChoice = {
+      variant: entry.options.variant,
+      density: entry.options.density,
+      corners: entry.options.cards === 'square' ? 'sharp' : entry.options.cards === 'round' ? 'round' : 'soft',
+      hero: entry.theme.layout === 'grid' ? 'split' : 'image',
+      order: 'catalog',
+      heroScale: entry.theme.layout === 'editorial' ? 'tall' : 'regular',
+      buttons: entry.options.buttons,
+      cards: entry.options.cards,
+    }
+    const query = new URLSearchParams({ biz: vertical, direction: entry.id, media: 'photo' })
+    return { id: entry.id, name: entry.label, note: entry.blurb, axes, preview: `/demo/app?${query.toString()}` }
+  })
+}
 
 export function designsFor(vertical: VerticalId): DesignPreview[] {
   return DESIGNS.map((design) => {

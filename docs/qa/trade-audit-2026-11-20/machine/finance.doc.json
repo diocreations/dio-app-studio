@@ -1,0 +1,171 @@
+{
+  "v": 2,
+  "accent": "#145a4a",
+  "design": {
+    "direction": "classic"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Advice",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_finance_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "finance-hero",
+          "title": "Financial services",
+          "text": "Plain numbers, no surprises.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_finance_disclosure",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "finance-disclosure",
+          "title": "How we are paid",
+          "text": "Ask how the adviser is paid and what the fee covers before you commit."
+        },
+        {
+          "id": "sec_fx_finance_services",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "finance-services",
+          "title": "Services & fees"
+        },
+        {
+          "id": "sec_fx_finance_process",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "finance-process",
+          "title": "What a review looks like"
+        },
+        {
+          "id": "sec_fx_finance_advisers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "finance-advisers",
+          "title": "Your advisers"
+        },
+        {
+          "id": "sec_fx_finance_review",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "finance-review",
+          "title": "Book a first meeting",
+          "text": "Thirty minutes, no paperwork, no obligation. We will tell you if advice is not the right answer.",
+          "cta": {
+            "label": "Book a meeting",
+            "screen": "scr_book"
+          }
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Meeting",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Enquiry",
+      "icon": "quote",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Contact",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

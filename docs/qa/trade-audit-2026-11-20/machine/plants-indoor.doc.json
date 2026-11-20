@@ -1,0 +1,131 @@
+{
+  "v": 2,
+  "accent": "#2f6b3a",
+  "design": {
+    "direction": "editorial"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_c_plants_indoor_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-plants-indoor-hero",
+          "title": "Indoor plant shop",
+          "text": "Green that tolerates a north window.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_c_plants_indoor_shelf",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-plants-indoor-shelf",
+          "title": "Easy care, in stock"
+        },
+        {
+          "id": "sec_fx_c_plants_indoor_care",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-plants-indoor-care",
+          "title": "Light and water",
+          "text": "Every plant here is chosen for a real flat: low light, radiators, a fortnight away."
+        },
+        {
+          "id": "sec_fx_c_plants_indoor_help",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-plants-indoor-help",
+          "title": "Not sure which plant?",
+          "text": "Tell us the room and the light. We will answer with two or three that will live.",
+          "cta": {
+            "label": "Ask about a plant",
+            "screen": "scr_catalog"
+          }
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Contact",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

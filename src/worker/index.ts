@@ -108,7 +108,7 @@ function foreignMedia(doc: Doc | null, menu: MenuSection[] | null, owned: Set<st
     for (const item of section.items) if (item.media && !owned.has(item.media.id)) found.push(item.media.id)
   return [...new Set(found)]
 }
-import { cleanLayout, designsFor, readPrompt } from './prompt'
+import { cleanLayout, conceptsFor, designsFor, readPrompt } from './prompt'
 import { sampleSpec } from './proof'
 import { briefPage } from './views/brief'
 import { legalPage } from './views/legal'
@@ -571,8 +571,10 @@ app.get('/p/:token/app', async (c) => {
       // editor bridge is the only difference. A concept review is the one
       // exception: it shows the seeded composition the three designs come from,
       // with the owner's own catalogue, and saves nothing.
-      doc: concept ? undefined : starterDoc(project),
-      flagship: concept ? false : FLAGSHIP_TRADES.has(project.spec.vertical),
+      // A concept review renders the real saved document with that direction
+      // applied: the concepts are judged on the app they will become.
+      doc: starterDoc(project),
+      flagship: FLAGSHIP_TRADES.has(project.spec.vertical),
       payments: capability.enabled
         ? { payOrders: capability.payOrders, payBookings: capability.payBookings, provider: capability.provider ?? '' }
         : undefined,
@@ -727,12 +729,17 @@ app.get('/demo/app', async (c) => {
     .filter(Boolean)
     .slice(0, 20)
   const menu = previewMenu(c.req.query('items'))
+  const conceptDirection = (c.req.query('direction') || '').trim()
+  const direction = directionsFor(demo.vertical).some((entry) => entry.id === conceptDirection)
+    ? conceptDirection
+    : undefined
   const spec = buildSpec({
     name: name || demo.name,
     vertical: demo.vertical,
     accent: accent || demo.accent,
     logo: logo || demo.logo,
     features,
+    ...(direction ? { direction } : {}),
     ...(tagline ? { tagline } : {}),
     ...(category ? { category } : {}),
     ...(menu.length ? { site: { menu } } : {}),
@@ -753,6 +760,11 @@ app.get('/demo/app', async (c) => {
       token: `demo-${demo.vertical}`,
       live: false,
       photos,
+      // A concept is reviewed on the real document and composition, never on a
+      // stripped renderer: the same data, the same blocks, the same CSS.
+      ...(direction
+        ? { doc: flagshipDocFromSpec(spec), flagship: FLAGSHIP_TRADES.has(demo.vertical) }
+        : {}),
       preview: {
         variant,
         density: axis('density'),
@@ -813,7 +825,9 @@ app.post('/api/prompt', async (c) => {
   if (read.prompt.length < 3)
     return fail(c, 422, 'prompt_required', 'Say what the business needs, even roughly.')
 
-  return c.json({ ...read, designs: designsFor(read.vertical) })
+  // A concept is the trade's own direction, previewed on the real application
+  // route. `designs` stays for the advanced layout override.
+  return c.json({ ...read, concepts: conceptsFor(read.vertical), designs: designsFor(read.vertical) })
 })
 
 app.post('/api/quote', async (c) => {
@@ -921,6 +935,7 @@ app.post('/api/projects', async (c) => {
     platforms: strings(body.platforms),
     plan: body.plan === 'monthly' ? 'monthly' : 'onetime',
     layout: cleanLayout(body.layout),
+    direction: str(body.direction, 24),
     videos: Array.isArray(body.videos) ? (body.videos as VideoLink[]) : undefined,
     bundle: str(body.bundle, 20),
     site: sanitizeImported(body.site),

@@ -1,0 +1,82 @@
+{
+  "name": "Property & estate agency",
+  "kind": "Independent estate agency",
+  "tagline": "Homes with a story.",
+  "story": "A two-branch agency that still measures rooms by hand and writes its own listings.",
+  "accent": "#5b3f8f",
+  "logo": "PR",
+  "hours": "Mon–Sat 9:00–18:00",
+  "phone": "+1 555 0118",
+  "address": "41 Kestrel Square, Gardens",
+  "vertical": "property",
+  "features": [
+    "catalog",
+    "booking",
+    "quote",
+    "offers",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "For sale",
+      "items": [
+        {
+          "name": "Kestrel Square",
+          "desc": "South-facing garden, original floors",
+          "price": 68500000,
+          "meta": "3 bed · 2 bath · Gardens",
+          "tag": "New"
+        },
+        {
+          "name": "Mill Lane",
+          "desc": "Top floor, river view",
+          "price": 42500000,
+          "meta": "2 bed · 1 bath · Riverside"
+        }
+      ]
+    },
+    {
+      "name": "To rent",
+      "items": [
+        {
+          "name": "Lantern Court",
+          "desc": "Furnished, bills included",
+          "price": 240000,
+          "meta": "2 bed · furnished · per month"
+        },
+        {
+          "name": "Gasworks Loft",
+          "desc": "Studio, exposed steel",
+          "price": 185000,
+          "meta": "Studio · 1 bath · per month"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Free valuation this month",
+      "body": "Twenty minutes, no obligation."
+    },
+    {
+      "title": "Saturday viewings",
+      "body": "Book a slot from 10am."
+    }
+  ],
+  "loyalty": {
+    "goal": 3,
+    "reward": "A free floor plan on your next sale"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "editorial"
+}

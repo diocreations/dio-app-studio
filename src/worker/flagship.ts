@@ -1,3 +1,4 @@
+import { compositionBlock, compositionCss, isCompositionVariant } from './compositions'
 import { appScreenId, flagshipDocFromSpec, homeSections, type Doc, type DocNode } from './doc'
 import { stockImageTag } from './flagshipImages'
 import { moneyIn } from './pricing'
@@ -27,6 +28,18 @@ export const FLAGSHIP_TRADES = new Set<VerticalId>([
   'ecommerce',
   'courses',
   'finance',
+  'hospital',
+  'plants-indoor',
+  'plants-outdoor',
+  'tuition',
+  'school',
+  'kindergarten',
+  'agency',
+  'influencer',
+  'portfolio',
+  'film',
+  'gallery',
+  'marketplace',
 ])
 
 function esc(value: string): string {
@@ -414,6 +427,10 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
   const first = all[0]
   const heading = node.title || ''
   const words = node.text || ''
+  // The twelve trade compositions keep their blocks in their own module; they
+  // are document nodes like every other, so the editor, versions and publish
+  // path need to know nothing about them.
+  if (isCompositionVariant(node.variant)) return compositionBlock(ctx, node)
   switch (node.variant) {
     case 'dine-title':
       return `<div class="fx-kicker"><span>${esc(spec.hours ? hoursLine(spec) : 'Kitchen')}</span><span>${esc(spec.address || '')}</span></div>
@@ -1276,8 +1293,34 @@ function tradeClass(spec: AppSpec): string {
       return 'fx-courses'
     case 'finance':
       return 'fx-finance'
-    default:
+    case 'professional':
       return 'fx-pro'
+    case 'hospital':
+      return 'fx-hospital'
+    case 'plants-indoor':
+      return 'fx-plants-indoor'
+    case 'plants-outdoor':
+      return 'fx-plants-outdoor'
+    case 'tuition':
+      return 'fx-tuition'
+    case 'school':
+      return 'fx-school'
+    case 'kindergarten':
+      return 'fx-kindergarten'
+    case 'agency':
+      return 'fx-agency'
+    case 'influencer':
+      return 'fx-influencer'
+    case 'portfolio':
+      return 'fx-portfolio'
+    case 'film':
+      return 'fx-film'
+    case 'gallery':
+      return 'fx-gallery'
+    case 'marketplace':
+      return 'fx-marketplace'
+    default:
+      return 'fx-generic'
   }
 }
 
@@ -1446,7 +1489,8 @@ export function flagshipCatalogLead(spec: AppSpec): string {
 }
 
 export function flagshipCss(): string {
-  return `
+  return `${compositionCss()}
+
 /* ---- flagship base -------------------------------------------------- */
 body[data-flagship="1"] { background: var(--bg); }
 body[data-flagship="1"] .app { max-width: 520px; margin-inline: auto; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 5%, transparent); }
@@ -1852,15 +1896,15 @@ body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book { margin-top: 24px;
 body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book > div:first-child > b { display: block; font-size: 19px; line-height: 1.1; letter-spacing: -.03em; font-weight: 650; margin-top: 5px; }
 body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book > div:first-child > p { font-size: 9px; line-height: 1.45; color: var(--muted); margin: 5px 0 0; }
 body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book .fx-dayrow { grid-template-columns: repeat(3, 1fr); }
-body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book .fx-dayrow button { border-color: var(--line); }
+body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book .fx-dayrow button { border-color: var(--line); min-height: 44px; }
 body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book .fx-dayrow button.on { background: var(--accent); border-color: var(--accent); }
 body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book-foot { display: flex; gap: 7px; margin-top: 12px; }
-body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book-foot button { flex: 1; min-height: 43px; border: 0; border-radius: 7px; background: var(--accent); color: #fff; font: inherit; font-size: 9.5px; font-weight: 650; }
+body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book-foot button { flex: 1; min-height: 44px; border: 0; border-radius: 7px; background: var(--accent); color: #fff; font: inherit; font-size: 9.5px; font-weight: 650; }
 body[data-trade="clinic"][data-flagship="1"] .fx-clinic-book-foot a { display: grid; place-items: center; min-width: 76px; min-height: 43px; border: 1px solid var(--line); border-radius: 7px; color: inherit; text-decoration: none; font-size: 9.5px; }
 body[data-trade="clinic"][data-flagship="1"] .fx-clinic-lead { padding: 21px 0 16px; }
 body[data-trade="clinic"][data-flagship="1"] .fx-clinic-lead h1 { font-size: 28px; line-height: 1.02; letter-spacing: -.04em; font-weight: 650; margin: 7px 0 0; max-width: 18ch; }
 body[data-trade="clinic"][data-flagship="1"] .fx-clinic-lead p { font-size: 9px; color: var(--muted); margin: 8px 0 0; }
-body[data-trade="clinic"][data-flagship="1"] .fx-clinic-lead button { min-height: 38px; margin-top: 12px; padding: 0 13px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; font: inherit; font-size: 8.5px; font-weight: 650; }
+body[data-trade="clinic"][data-flagship="1"] .fx-clinic-lead button { min-height: 44px; margin-top: 12px; padding: 0 13px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; font: inherit; font-size: 8.5px; font-weight: 650; }
 
 /* ---- property: a printed listing sheet ----------------------------- */
 body[data-trade="property"][data-flagship="1"] .appbar { background: color-mix(in srgb, var(--bg) 92%, transparent); }

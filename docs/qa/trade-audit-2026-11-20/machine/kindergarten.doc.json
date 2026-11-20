@@ -1,0 +1,140 @@
+{
+  "v": 2,
+  "accent": "#c2557a",
+  "design": {
+    "direction": "playful"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_c_kindergarten_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-kindergarten-hero",
+          "title": "Kindergarten",
+          "text": "Small days, big discoveries.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_c_kindergarten_day",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-kindergarten-day",
+          "title": "A day here",
+          "text": "One room, eighteen children, and a garden with a mud kitchen."
+        },
+        {
+          "id": "sec_fx_c_kindergarten_sessions",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-kindergarten-sessions",
+          "title": "Sessions and fees"
+        },
+        {
+          "id": "sec_fx_c_kindergarten_visit",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-kindergarten-visit",
+          "title": "Book a visit",
+          "text": "Come and see a morning. We will answer the funding and ratio questions plainly.",
+          "cta": {
+            "label": "Book a visit",
+            "screen": "scr_book"
+          }
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Consult",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Contact",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

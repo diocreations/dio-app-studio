@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test'
 import { renderApp } from '../src/worker/app'
 import { createProject } from '../src/worker/db'
 import {
+  docFromSpec,
   flagshipDocFromSpec,
   homeScreen,
   homeSections,
@@ -31,6 +32,18 @@ const MARKERS: Partial<Record<VerticalId, string>> = {
   ecommerce: 'fx-ecom',
   courses: 'fx-courses',
   finance: 'fx-finance',
+  hospital: 'fx-hospital',
+  'plants-indoor': 'fx-plants-indoor',
+  'plants-outdoor': 'fx-plants-outdoor',
+  tuition: 'fx-tuition',
+  school: 'fx-school',
+  kindergarten: 'fx-kindergarten',
+  agency: 'fx-agency',
+  influencer: 'fx-influencer',
+  portfolio: 'fx-portfolio',
+  film: 'fx-film',
+  gallery: 'fx-gallery',
+  marketplace: 'fx-marketplace',
 }
 
 function probeSpec(vertical: VerticalId) {
@@ -68,7 +81,7 @@ describe('flagship compositions', () => {
       expect(html, `${vertical} catalogue`).toContain('data-screen="catalog"')
       signatures.add(html.length + '|' + marker)
     }
-    expect(signatures.size).toBe(15)
+    expect(signatures.size).toBe(27)
   })
 
   test('the flagship layer keeps the real customer workflows', () => {
@@ -87,9 +100,14 @@ describe('flagship compositions', () => {
     expect(professional).toMatch(/Book a consultation|Send an enquiry/)
   })
 
-  test('trades outside the flagship set remain on the document renderer', () => {
+  test('a saved document without flagship blocks keeps the document renderer', () => {
+    // The published page must never show static flagship markup that ignores a
+    // saved document: a build whose document has no flagship nodes stays on the
+    // document renderer even for a flagship trade.
     for (const vertical of ['hospital', 'tuition', 'school'] as VerticalId[]) {
-      const html = renderFlagship(vertical)
+      const spec = probeSpec(vertical)
+      const legacy = docFromSpec(spec)
+      const html = renderApp(spec, { token: `legacy-${vertical}`, live: false, flagship: true, doc: legacy })
       expect(html).not.toContain('data-flagship="1"')
       expect(html).toContain(`data-trade="${vertical}"`)
     }

@@ -1,0 +1,160 @@
+{
+  "v": 2,
+  "accent": "#2a5a8f",
+  "design": {
+    "direction": "clinical"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Care",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_clinic_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "clinic-hero",
+          "title": "Clinic & health",
+          "text": "Careful hands, clear pricing.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_clinic_specialities",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "clinic-specialities",
+          "title": "Specialities"
+        },
+        {
+          "id": "sec_fx_clinic_doctors",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "clinic-doctors",
+          "title": "The clinical team"
+        },
+        {
+          "id": "sec_fx_clinic_care",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "clinic-care",
+          "title": "How a visit works"
+        },
+        {
+          "id": "sec_fx_clinic_privacy",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "clinic-privacy",
+          "title": "Your information stays yours",
+          "text": "We only ask for what we need to arrange your appointment. Please leave medical details out of this form; we will discuss them privately at the clinic."
+        },
+        {
+          "id": "sec_fx_clinic_appointments",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "clinic-appointments",
+          "title": "Book an appointment",
+          "text": "Choose a treatment and a time that suits you.",
+          "cta": {
+            "label": "Book an appointment",
+            "screen": "scr_book"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Book",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Visit",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Enquire",
+      "icon": "quote",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

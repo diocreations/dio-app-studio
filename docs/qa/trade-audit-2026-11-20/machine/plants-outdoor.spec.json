@@ -1,0 +1,97 @@
+{
+  "name": "Garden centre",
+  "kind": "Plant nursery and garden centre",
+  "tagline": "Grown outside, ready for outside.",
+  "story": "Six polytunnels behind a farm gate: hardy stock raised without heat, so it takes the weather when it is planted.",
+  "accent": "#4a6b1f",
+  "logo": "GA",
+  "hours": "Mon–Sat 8:30–17:30 · Sun 10:00–16:00",
+  "phone": "+1 555 0127",
+  "address": "Ridgeway Farm, Lower Lane",
+  "vertical": "plants-outdoor",
+  "features": [
+    "catalog",
+    "ordering",
+    "booking",
+    "offers",
+    "gallery"
+  ],
+  "menu": [
+    {
+      "name": "Shrubs",
+      "items": [
+        {
+          "name": "Lavender",
+          "desc": "9cm pots, hardy",
+          "price": 800
+        },
+        {
+          "name": "Hydrangea",
+          "desc": "2 litre, pink or white",
+          "price": 2600,
+          "tag": "Popular"
+        },
+        {
+          "name": "Bay tree",
+          "desc": "Half standard, 60cm",
+          "price": 4800
+        }
+      ]
+    },
+    {
+      "name": "Trees",
+      "items": [
+        {
+          "name": "Field maple",
+          "desc": "Bare root, 1.2m",
+          "price": 3600
+        },
+        {
+          "name": "Rowan",
+          "desc": "Bare root, 1.5m",
+          "price": 4200
+        }
+      ]
+    },
+    {
+      "name": "Bedding & compost",
+      "items": [
+        {
+          "name": "Wildflower tray",
+          "desc": "Six plugs, native mix",
+          "price": 1400
+        },
+        {
+          "name": "Compost",
+          "desc": "40 litres, peat free",
+          "price": 1100
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Bare root season",
+      "body": "Trees in while the ground is cold."
+    },
+    {
+      "title": "Free trailer loan",
+      "body": "For anything over a metre."
+    }
+  ],
+  "loyalty": {
+    "goal": 5,
+    "reward": "A bag of compost on us"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "technical"
+}

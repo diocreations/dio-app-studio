@@ -1,0 +1,164 @@
+{
+  "v": 2,
+  "accent": "#5b3f8f",
+  "design": {
+    "direction": "editorial"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Homes",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_property_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "property-hero",
+          "title": "Property & estate agency",
+          "text": "Homes with a story.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_property_search",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "property-search",
+          "title": "Search homes"
+        },
+        {
+          "id": "sec_fx_property_listings",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "property-listings",
+          "title": "On the market"
+        },
+        {
+          "id": "sec_fx_property_viewing",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "property-viewing",
+          "title": "See it for yourself",
+          "text": "Viewings run Monday to Saturday, at the property.",
+          "cta": {
+            "label": "Book a viewing",
+            "screen": "scr_book"
+          }
+        },
+        {
+          "id": "sec_fx_property_enquire",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "property-enquire",
+          "title": "Thinking of selling?",
+          "text": "A measured valuation, with the numbers explained in person.",
+          "cta": {
+            "label": "Request a valuation",
+            "screen": "scr_quote"
+          }
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Listings",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Viewings",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Visit",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Enquire",
+      "icon": "quote",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

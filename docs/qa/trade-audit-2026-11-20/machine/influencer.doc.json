@@ -1,0 +1,140 @@
+{
+  "v": 2,
+  "accent": "#c72f6b",
+  "design": {
+    "direction": "bold"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_c_influencer_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-influencer-hero",
+          "title": "Influencer & creator",
+          "text": "One camera, a hundred briefs.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_c_influencer_formats",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-influencer-formats",
+          "title": "Formats and rates"
+        },
+        {
+          "id": "sec_fx_c_influencer_reach",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-influencer-reach",
+          "title": "Reach and turnaround",
+          "text": "Three formats a month, shot and edited in-house."
+        },
+        {
+          "id": "sec_fx_c_influencer_brief",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-influencer-brief",
+          "title": "Request the rate card",
+          "text": "Send the brief, the dates and the usage you need. Rates are per format.",
+          "cta": {
+            "label": "Request the rate card",
+            "screen": "scr_quote"
+          }
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Contact",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Enquire",
+      "icon": "quote",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

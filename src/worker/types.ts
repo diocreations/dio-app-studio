@@ -192,6 +192,9 @@ export type AppSpec = {
   layout?: LayoutChoice
   /** The look read from their own site: palette, type, corners, light or dark. */
   design?: DesignKit
+  /** The design direction chosen as a concept on the brief. It seeds the new
+   *  document's direction; after birth the document is the source of truth. */
+  direction?: string
   /** Their nav and hero composition, so the app's structure matches. */
   structure?: SiteStructure
   /** Present when the brief was read off an existing website. */

@@ -1,0 +1,99 @@
+{
+  "name": "Professional services",
+  "kind": "Accounting and tax advisory",
+  "tagline": "Clean books, no surprises.",
+  "story": "A three-person practice for owner-managed businesses: fixed fees, plain English, and a phone that gets answered.",
+  "accent": "#17110d",
+  "logo": "PR",
+  "hours": "Mon–Fri 9:00–18:00",
+  "phone": "+1 555 0156",
+  "address": "Second floor, 12 Corn Exchange",
+  "vertical": "professional",
+  "features": [
+    "catalog",
+    "booking",
+    "quote",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Compliance",
+      "items": [
+        {
+          "name": "Annual accounts",
+          "desc": "Limited company, filed",
+          "price": 95000,
+          "meta": "per year"
+        },
+        {
+          "name": "Self assessment",
+          "desc": "One director, one property",
+          "price": 32000
+        },
+        {
+          "name": "Payroll",
+          "desc": "Up to ten staff",
+          "price": 4500,
+          "meta": "per month"
+        }
+      ]
+    },
+    {
+      "name": "Advisory",
+      "items": [
+        {
+          "name": "Business plan",
+          "desc": "Forecasts and funding pack",
+          "price": 120000
+        },
+        {
+          "name": "Quarterly review",
+          "desc": "Two hours with a partner",
+          "price": 60000
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Free 20-minute intro call",
+      "body": "No pitch, just questions answered."
+    },
+    {
+      "title": "Fixed-fee self assessment",
+      "body": "Quoted before we start."
+    }
+  ],
+  "loyalty": {
+    "goal": 2,
+    "reward": "A free quarterly review"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": true,
+    "staff": true,
+    "tagline": true
+  },
+  "staff": [
+    "Maya Chen",
+    "Alex Reed",
+    "Priya Shah"
+  ],
+  "team": [
+    {
+      "name": "Maya Chen",
+      "role": "Managing partner",
+      "credential": "FCA"
+    },
+    {
+      "name": "Alex Reed",
+      "role": "Tax adviser",
+      "credential": "ATT"
+    }
+  ],
+  "custom": "",
+  "direction": "classic"
+}

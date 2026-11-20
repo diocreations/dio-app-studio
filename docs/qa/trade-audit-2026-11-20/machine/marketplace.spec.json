@@ -1,0 +1,118 @@
+{
+  "name": "Marketplace",
+  "kind": "Multi-vendor delivery marketplace",
+  "tagline": "Every shop on the street, one basket.",
+  "story": "Neighbourhood stores deliver in under half an hour: groceries, snacks, a hot meal and the late-night pharmacy, ordered together and tracked to the door.",
+  "accent": "#d98324",
+  "logo": "MA",
+  "hours": "Delivery 09:00–23:00",
+  "phone": "+1 555 0188",
+  "address": "Riverside · two delivery zones",
+  "vertical": "marketplace",
+  "features": [
+    "catalog",
+    "ordering",
+    "delivery",
+    "loyalty",
+    "offers",
+    "gallery"
+  ],
+  "menu": [
+    {
+      "name": "Food delivery",
+      "items": [
+        {
+          "name": "Family Pack Special",
+          "desc": "Biryani, kebabs and breads, serves 2–3",
+          "vendor": "Food Square",
+          "price": 19900,
+          "meta": "15 min",
+          "tag": "Popular"
+        },
+        {
+          "name": "Chicken Momos",
+          "desc": "Steamed, chilli oil, eight pieces",
+          "vendor": "Food Corner",
+          "price": 12000,
+          "meta": "20 min"
+        }
+      ]
+    },
+    {
+      "name": "Groceries",
+      "items": [
+        {
+          "name": "Fresh Fruit Basket",
+          "desc": "Seasonal fruit, 2 kg box",
+          "vendor": "Fresh Mart Grocery",
+          "price": 7000,
+          "meta": "18 min"
+        },
+        {
+          "name": "Lucky Day Veg Box",
+          "desc": "Eight vegetables, market weight",
+          "vendor": "Fresh Mart Grocery",
+          "price": 10000,
+          "meta": "18 min",
+          "tag": "20% off"
+        }
+      ]
+    },
+    {
+      "name": "Snacks & drinks",
+      "items": [
+        {
+          "name": "Chips & Namkeen Combo",
+          "desc": "Three packs, party size",
+          "vendor": "Snack Stop",
+          "price": 5000,
+          "meta": "12 min"
+        },
+        {
+          "name": "Biscuits & Cookies Pack",
+          "desc": "Family tin, four varieties",
+          "vendor": "Snack Stop",
+          "price": 2500,
+          "meta": "12 min"
+        }
+      ]
+    },
+    {
+      "name": "Wellness",
+      "items": [
+        {
+          "name": "Vitamin C & D3",
+          "desc": "60 tablets, one a day",
+          "vendor": "Health Choice",
+          "price": 14000,
+          "meta": "25 min"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "HouseFull Sale",
+      "body": "Up to 30% off groceries, until 7 Dec."
+    },
+    {
+      "title": "Free delivery over $25",
+      "body": "One basket, any number of stores."
+    }
+  ],
+  "loyalty": {
+    "goal": 4,
+    "reward": "$5 wallet credit on your next order"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "minimal"
+}

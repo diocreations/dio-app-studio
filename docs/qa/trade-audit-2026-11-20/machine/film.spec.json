@@ -1,0 +1,110 @@
+{
+  "name": "Film & production",
+  "kind": "Independent film production",
+  "tagline": "Ninety minutes, one house, two actors.",
+  "story": "Shot over nineteen days in a rented terrace: a two-hander about a house being sold, and everyone who has to leave it.",
+  "accent": "#b8862b",
+  "logo": "FI",
+  "hours": "Screenings 18:00–22:00",
+  "phone": "+1 555 0112",
+  "address": "Unit 2, Mercury Works",
+  "vertical": "film",
+  "features": [
+    "catalog",
+    "booking",
+    "offers",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Cast",
+      "items": [
+        {
+          "name": "Mara Ellison",
+          "desc": "Viv",
+          "price": 0,
+          "meta": "lead"
+        },
+        {
+          "name": "Jonah Reed",
+          "desc": "Sam",
+          "price": 0,
+          "meta": "lead"
+        },
+        {
+          "name": "Priya Nair",
+          "desc": "The neighbour",
+          "price": 0,
+          "meta": "support",
+          "tag": "Ensemble"
+        }
+      ]
+    },
+    {
+      "name": "Crew",
+      "items": [
+        {
+          "name": "Ruth Calder",
+          "desc": "Director, co-writer",
+          "price": 0,
+          "meta": "crew"
+        },
+        {
+          "name": "Ade Ogun",
+          "desc": "Cinematographer",
+          "price": 0,
+          "meta": "crew"
+        },
+        {
+          "name": "Lena Vos",
+          "desc": "Editor and score",
+          "price": 0,
+          "meta": "crew"
+        }
+      ]
+    },
+    {
+      "name": "Screenings",
+      "items": [
+        {
+          "name": "Opening night",
+          "desc": "With director Q&A",
+          "price": 1600,
+          "meta": "18 Oct"
+        },
+        {
+          "name": "Saturday matinee",
+          "desc": "Subtitled",
+          "price": 1200,
+          "meta": "20 Oct"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Festival run",
+      "body": "Four screenings with the cast present."
+    },
+    {
+      "title": "Director Q&A",
+      "body": "Stay after the Friday show."
+    }
+  ],
+  "loyalty": {
+    "goal": 2,
+    "reward": "A signed still from the shoot"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "cinema"
+}

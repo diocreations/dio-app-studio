@@ -1,0 +1,107 @@
+{
+  "name": "Garage & auto",
+  "kind": "Independent garage",
+  "tagline": "Fixed properly, explained plainly.",
+  "story": "Four bays, two lifts and a rule that nobody leaves without seeing the old part.",
+  "accent": "#2a5a8f",
+  "logo": "GA",
+  "hours": "Mon–Fri 8:00–18:00 · Sat 8:00–13:00",
+  "phone": "+1 555 0165",
+  "address": "Rear of 90 Dock Road",
+  "vertical": "auto",
+  "features": [
+    "catalog",
+    "booking",
+    "quote",
+    "offers",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Servicing",
+      "items": [
+        {
+          "name": "Interim service",
+          "desc": "Oil, filters, inspection",
+          "price": 14500,
+          "meta": "1 hr 30"
+        },
+        {
+          "name": "Full service",
+          "desc": "All fluids, plugs, brakes checked",
+          "price": 29000,
+          "meta": "half day"
+        },
+        {
+          "name": "MOT",
+          "desc": "Class 4, test only",
+          "price": 5500,
+          "meta": "1 hr"
+        }
+      ]
+    },
+    {
+      "name": "Repairs",
+      "items": [
+        {
+          "name": "Brake pads",
+          "desc": "Front or rear, fitted",
+          "price": 18000
+        },
+        {
+          "name": "Clutch",
+          "desc": "Most hatchbacks",
+          "price": 0,
+          "meta": "from $650"
+        },
+        {
+          "name": "Diagnostics",
+          "desc": "Full fault scan",
+          "price": 6500,
+          "meta": "45 min"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Free brake check",
+      "body": "With any service this month."
+    },
+    {
+      "title": "MOT + service, $310",
+      "body": "Book both together."
+    }
+  ],
+  "loyalty": {
+    "goal": 4,
+    "reward": "A free MOT next year"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": true,
+    "staff": true,
+    "tagline": true
+  },
+  "staff": [
+    "Sam Iles",
+    "Priya Nair"
+  ],
+  "team": [
+    {
+      "name": "Sam Iles",
+      "role": "Master technician",
+      "credential": "IMI 44102"
+    },
+    {
+      "name": "Priya Nair",
+      "role": "Service adviser",
+      "credential": "Customer care"
+    }
+  ],
+  "custom": "",
+  "direction": "technical"
+}

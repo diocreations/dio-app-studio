@@ -1,0 +1,98 @@
+{
+  "name": "Business agency",
+  "kind": "Brand and growth agency",
+  "tagline": "Strategy first, then the work.",
+  "story": "Nine people, no account managers: the strategist who pitches the work is the one who does it.",
+  "accent": "#b8400f",
+  "logo": "BU",
+  "hours": "Mon–Fri 9:00–18:00",
+  "phone": "+1 555 0188",
+  "address": "Second floor, 4 Wharf Street",
+  "vertical": "agency",
+  "features": [
+    "catalog",
+    "quote",
+    "offers",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Strategy",
+      "items": [
+        {
+          "name": "Positioning sprint",
+          "desc": "Two weeks, one workshop",
+          "price": 850000,
+          "meta": "from"
+        },
+        {
+          "name": "Brand audit",
+          "desc": "Where you stand, plainly",
+          "price": 320000,
+          "meta": "from"
+        }
+      ]
+    },
+    {
+      "name": "Build",
+      "items": [
+        {
+          "name": "Website",
+          "desc": "Design and build, six weeks",
+          "price": 1400000,
+          "meta": "from",
+          "tag": "Popular"
+        },
+        {
+          "name": "Campaign",
+          "desc": "Launch assets, one quarter",
+          "price": 650000,
+          "meta": "from"
+        }
+      ]
+    },
+    {
+      "name": "Ongoing",
+      "items": [
+        {
+          "name": "Retainer",
+          "desc": "Two days a month",
+          "price": 240000,
+          "meta": "per month"
+        },
+        {
+          "name": "Advisory",
+          "desc": "Monthly session",
+          "price": 90000,
+          "meta": "per month"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Two-week audit",
+      "body": "Fixed fee, no pitch deck."
+    },
+    {
+      "title": "Referral credit",
+      "body": "A day off your next project."
+    }
+  ],
+  "loyalty": {
+    "goal": 2,
+    "reward": "A free strategy session"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "bold"
+}

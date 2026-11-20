@@ -1,0 +1,129 @@
+{
+  "v": 2,
+  "accent": "#2b2b2b",
+  "design": {
+    "direction": "gallery"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_c_portfolio_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-portfolio-hero",
+          "title": "Personal portfolio",
+          "text": "Quiet work, made carefully.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_c_portfolio_work",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-portfolio-work",
+          "title": "Selected work"
+        },
+        {
+          "id": "sec_fx_c_portfolio_about",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-portfolio-about",
+          "title": "About the studio",
+          "text": "Identity and editorial design for small presses, studios and the odd museum. One person, no account managers."
+        },
+        {
+          "id": "sec_fx_c_portfolio_contact",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-portfolio-contact",
+          "title": "Start a project",
+          "text": "A few lines about the work, the dates and the budget is plenty.",
+          "cta": {
+            "label": "Start a project",
+            "screen": "scr_quote"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Contact",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Enquire",
+      "icon": "quote",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

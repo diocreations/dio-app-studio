@@ -1,5 +1,5 @@
 import { sanitizeHex } from './pricing'
-import { directionsFor } from './directions'
+import { directionFor, directionsFor } from './directions'
 import type { AppSpec, ElementShape } from './types'
 import { themeFor } from './themes'
 import { verticalFor } from './verticals'
@@ -137,6 +137,58 @@ export const FLAGSHIP_VARIANTS = [
   'finance-process',
   'finance-advisers',
   'finance-review',
+  'c-hospital-hero',
+  'c-hospital-departments',
+  'c-hospital-visiting',
+  'c-hospital-urgent',
+  'c-plants-indoor-hero',
+  'c-plants-indoor-shelf',
+  'c-plants-indoor-care',
+  'c-plants-indoor-help',
+  'c-plants-outdoor-hero',
+  'c-plants-outdoor-season',
+  'c-plants-outdoor-stock',
+  'c-plants-outdoor-visit',
+  'c-tuition-hero',
+  'c-tuition-subjects',
+  'c-tuition-trial',
+  'c-tuition-enquire',
+  'c-school-hero',
+  'c-school-term',
+  'c-school-clubs',
+  'c-school-events',
+  'c-school-contact',
+  'c-kindergarten-hero',
+  'c-kindergarten-day',
+  'c-kindergarten-sessions',
+  'c-kindergarten-visit',
+  'c-agency-hero',
+  'c-agency-work',
+  'c-agency-services',
+  'c-agency-contact',
+  'c-influencer-hero',
+  'c-influencer-formats',
+  'c-influencer-reach',
+  'c-influencer-brief',
+  'c-portfolio-hero',
+  'c-portfolio-work',
+  'c-portfolio-about',
+  'c-portfolio-contact',
+  'c-film-hero',
+  'c-film-screenings',
+  'c-film-cast',
+  'c-film-stills',
+  'c-film-book',
+  'c-gallery-hero',
+  'c-gallery-show',
+  'c-gallery-works',
+  'c-gallery-facts',
+  'c-gallery-visit',
+  'c-marketplace-hero',
+  'c-marketplace-vendors',
+  'c-marketplace-categories',
+  'c-marketplace-delivery',
+  'c-marketplace-shop',
   'offers',
 ] as const
 
@@ -479,7 +531,7 @@ export function docFromSpec(spec: AppSpec): Doc {
   return {
     v: 2,
     accent: spec.accent,
-    design: { direction: directionsFor(vertical.id)[0].id },
+    design: { direction: directionFor(vertical.id, spec.direction).id },
     initialScreen: initial?.id ?? 'scr_home',
     screens,
   }
@@ -725,7 +777,7 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
         cta: { label: 'Book a meeting', screen: bookingScreen },
       }),
     ]
-  } else {
+  } else if (spec.vertical === 'professional') {
     sections = [
       flagshipSection('pro-title', { title: spec.name, text: spec.tagline }),
       flagshipSection('pro-intro', { title: 'How we can help', text: spec.story }),
@@ -741,6 +793,148 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
       flagshipSection('pro-facts', {
         title: hours || 'Hours',
         text: address,
+      }),
+    ]
+  } else if (spec.vertical === 'hospital') {
+    sections = [
+      flagshipSection('c-hospital-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-hospital-departments', { title: 'Departments & clinics' }),
+      flagshipSection('c-hospital-visiting', {
+        title: 'Visiting and clinics',
+        text: hours ? `Visiting from ${hours.replace(/^[^0-9]*/, '').toLowerCase()}` : '',
+      }),
+      flagshipSection('c-hospital-urgent', {
+        title: 'Need care today?',
+        text: 'Walk-in clinics and the urgent treatment centre need no appointment.',
+        cta: { label: 'Find a clinic', screen: 'scr_catalog' },
+      }),
+    ]
+  } else if (spec.vertical === 'plants-indoor') {
+    sections = [
+      flagshipSection('c-plants-indoor-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-plants-indoor-shelf', { title: 'Easy care, in stock' }),
+      flagshipSection('c-plants-indoor-care', {
+        title: 'Light and water',
+        text: 'Every plant here is chosen for a real flat: low light, radiators, a fortnight away.',
+      }),
+      flagshipSection('c-plants-indoor-help', {
+        title: 'Not sure which plant?',
+        text: 'Tell us the room and the light. We will answer with two or three that will live.',
+        cta: { label: 'Ask about a plant', screen: 'scr_catalog' },
+      }),
+    ]
+  } else if (spec.vertical === 'plants-outdoor') {
+    sections = [
+      flagshipSection('c-plants-outdoor-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-plants-outdoor-season', { title: 'Bare-root season' }),
+      flagshipSection('c-plants-outdoor-stock', { title: 'Ready to plant' }),
+      flagshipSection('c-plants-outdoor-visit', {
+        title: 'At the nursery',
+        text: [spec.hours, address].filter(Boolean).join(' · '),
+        cta: { label: 'Plan a visit', screen: 'scr_catalog' },
+      }),
+    ]
+  } else if (spec.vertical === 'tuition') {
+    sections = [
+      flagshipSection('c-tuition-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-tuition-subjects', { title: 'Subjects and groups' }),
+      flagshipSection('c-tuition-trial', { title: 'Trial lessons' }),
+      flagshipSection('c-tuition-enquire', {
+        title: 'Ask about a place',
+        text: 'Small groups, six to a table. Tell us the year group and the subject.',
+        cta: { label: 'Book a trial lesson', screen: bookingScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'school') {
+    sections = [
+      flagshipSection('c-school-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-school-term', { title: 'Term dates' }),
+      flagshipSection('c-school-clubs', { title: 'Clubs' }),
+      flagshipSection('c-school-events', {
+        title: 'This half term',
+        text: 'Parents’ evenings and the winter fair are booked through the app.',
+        cta: { label: 'Book a parents’ evening', screen: bookingScreen },
+      }),
+      flagshipSection('c-school-contact', { title: 'The school day', text: hours }),
+    ]
+  } else if (spec.vertical === 'kindergarten') {
+    sections = [
+      flagshipSection('c-kindergarten-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-kindergarten-day', { title: 'A day here', text: 'One room, eighteen children, and a garden with a mud kitchen.' }),
+      flagshipSection('c-kindergarten-sessions', { title: 'Sessions and fees' }),
+      flagshipSection('c-kindergarten-visit', {
+        title: 'Book a visit',
+        text: 'Come and see a morning. We will answer the funding and ratio questions plainly.',
+        cta: { label: 'Book a visit', screen: bookingScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'agency') {
+    sections = [
+      flagshipSection('c-agency-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-agency-work', { title: 'Selected work' }),
+      flagshipSection('c-agency-services', { title: 'What we do' }),
+      flagshipSection('c-agency-contact', {
+        title: 'Start with a conversation',
+        text: 'The strategist who pitches the work is the one who does it.',
+        cta: { label: 'Request a proposal', screen: quoteScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'influencer') {
+    sections = [
+      flagshipSection('c-influencer-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-influencer-formats', { title: 'Formats and rates' }),
+      flagshipSection('c-influencer-reach', { title: 'Reach and turnaround', text: 'Three formats a month, shot and edited in-house.' }),
+      flagshipSection('c-influencer-brief', {
+        title: 'Request the rate card',
+        text: 'Send the brief, the dates and the usage you need. Rates are per format.',
+        cta: { label: 'Request the rate card', screen: quoteScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'portfolio') {
+    sections = [
+      flagshipSection('c-portfolio-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-portfolio-work', { title: 'Selected work' }),
+      flagshipSection('c-portfolio-about', { title: 'About the studio', text: spec.story }),
+      flagshipSection('c-portfolio-contact', {
+        title: 'Start a project',
+        text: 'A few lines about the work, the dates and the budget is plenty.',
+        cta: { label: 'Start a project', screen: quoteScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'film') {
+    sections = [
+      flagshipSection('c-film-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-film-screenings', { title: 'Screenings' }),
+      flagshipSection('c-film-cast', { title: 'Cast and crew' }),
+      flagshipSection('c-film-stills', { title: 'Stills & posters' }),
+      flagshipSection('c-film-book', {
+        title: 'Book a screening',
+        text: 'Q&A screenings with the director after the Friday show.',
+        cta: { label: 'Book a screening', screen: bookingScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'gallery') {
+    sections = [
+      flagshipSection('c-gallery-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-gallery-show', { title: 'On view' }),
+      flagshipSection('c-gallery-works', { title: 'Works on view' }),
+      flagshipSection('c-gallery-facts', { title: 'Plan your visit', text: hours }),
+      flagshipSection('c-gallery-visit', {
+        title: 'Plan your visit',
+        text: 'Private views are on Thursday evenings; members have the rooms to themselves on Sunday morning.',
+        cta: { label: 'Book a viewing', screen: bookingScreen },
+      }),
+    ]
+  } else if (spec.vertical === 'marketplace') {
+    sections = [
+      flagshipSection('c-marketplace-hero', { title: spec.name, text: spec.tagline }),
+      flagshipSection('c-marketplace-vendors', { title: 'The shops' }),
+      flagshipSection('c-marketplace-categories', { title: 'Categories' }),
+      flagshipSection('c-marketplace-delivery', { title: 'Delivery and collection', text: hours }),
+      flagshipSection('c-marketplace-shop', {
+        title: 'One basket, any store',
+        text: 'Order from several shops at once and track it to the door.',
+        cta: { label: 'Shop the market', screen: 'scr_catalog' },
       }),
     ]
   }

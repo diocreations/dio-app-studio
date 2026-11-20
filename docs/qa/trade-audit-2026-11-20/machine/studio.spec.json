@@ -1,0 +1,103 @@
+{
+  "name": "Creative studio",
+  "kind": "Photography studio",
+  "tagline": "Light, patience, timing.",
+  "story": "Two photographers, one studio with north light, and a lot of weddings in between.",
+  "accent": "#17110d",
+  "logo": "CR",
+  "hours": "Mon–Fri 10:00–19:00",
+  "phone": "+1 555 0174",
+  "address": "Studio 6, Old Print Works",
+  "vertical": "studio",
+  "features": [
+    "catalog",
+    "booking",
+    "quote",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Weddings",
+      "items": [
+        {
+          "name": "Full day",
+          "desc": "Prep to first dance",
+          "price": 0,
+          "meta": "from $3,200"
+        },
+        {
+          "name": "Half day",
+          "desc": "Ceremony and portraits",
+          "price": 0,
+          "meta": "from $1,900"
+        }
+      ]
+    },
+    {
+      "name": "Portraits",
+      "items": [
+        {
+          "name": "Studio session",
+          "desc": "Two hours, ten edits",
+          "price": 38000,
+          "meta": "2 hr"
+        },
+        {
+          "name": "Family session",
+          "desc": "Outdoors, one hour",
+          "price": 45000,
+          "meta": "1 hr"
+        }
+      ]
+    },
+    {
+      "name": "Commercial",
+      "items": [
+        {
+          "name": "Product day rate",
+          "desc": "Studio, styling included",
+          "price": 120000,
+          "meta": "per day"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Winter wedding dates",
+      "body": "Two dates left before April."
+    },
+    {
+      "title": "Half-day studio hire",
+      "body": "Weekday rate for members."
+    }
+  ],
+  "loyalty": {
+    "goal": 2,
+    "reward": "A free print from your next shoot"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": true,
+    "staff": false,
+    "tagline": true
+  },
+  "team": [
+    {
+      "name": "Nell Fraser",
+      "role": "Photographer",
+      "credential": "Editorial & weddings"
+    },
+    {
+      "name": "Ivo Mercer",
+      "role": "Photographer",
+      "credential": "Studio & product"
+    }
+  ],
+  "custom": "",
+  "direction": "gallery"
+}

@@ -1,0 +1,99 @@
+{
+  "name": "Café & bakery",
+  "kind": "Coffee bar and bakery",
+  "tagline": "Slow mornings, fast coffee.",
+  "story": "One grinder, a rotating filter list, and a bakehouse that finishes before the sun is up.",
+  "accent": "#8a5a2b",
+  "logo": "CA",
+  "hours": "Mon–Fri 7:00–16:00 · Sat–Sun 8:00–17:00",
+  "phone": "+1 555 0198",
+  "address": "14 Mill Lane, Riverside",
+  "vertical": "cafe",
+  "features": [
+    "catalog",
+    "ordering",
+    "booking",
+    "loyalty",
+    "offers",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Coffee",
+      "items": [
+        {
+          "name": "Flat white",
+          "desc": "House blend, 6oz",
+          "price": 420
+        },
+        {
+          "name": "Filter of the week",
+          "desc": "Rotating single origin",
+          "price": 360,
+          "tag": "New"
+        },
+        {
+          "name": "Cold brew",
+          "desc": "18-hour steep, over ice",
+          "price": 480
+        }
+      ]
+    },
+    {
+      "name": "Bakery",
+      "items": [
+        {
+          "name": "Croissant",
+          "desc": "Laminated over three days",
+          "price": 380
+        },
+        {
+          "name": "Cardamom bun",
+          "desc": "Baked at 5am",
+          "price": 450
+        }
+      ]
+    },
+    {
+      "name": "All day",
+      "items": [
+        {
+          "name": "Granola bowl",
+          "desc": "Yoghurt, honey, poached pear",
+          "price": 800
+        },
+        {
+          "name": "Eggs on rye",
+          "desc": "Chilli oil, herbs",
+          "price": 1200,
+          "tag": "Popular"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Filter + bun, $7",
+      "body": "Weekdays before 10am."
+    },
+    {
+      "title": "Bring your own cup",
+      "body": "50c off every hot drink, all day."
+    }
+  ],
+  "loyalty": {
+    "goal": 8,
+    "reward": "A free coffee"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "editorial"
+}

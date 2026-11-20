@@ -1,3 +1,4 @@
+import { directionsFor } from './directions'
 import type {
   AppSpec,
   BundleId,
@@ -650,6 +651,9 @@ export function buildSpec(input: {
   /** Already validated by `cleanLayout`; stored so the build keeps the design
    *  the customer chose rather than a fresh deck slot. */
   layout?: LayoutChoice
+  /** The direction the customer picked as a concept. Seeding only: the document
+   *  it creates is the source of truth from then on. */
+  direction?: string
   /** Trailers and clips the project supplied: one door in, cleaned below. */
   videos?: VideoLink[]
   /** A platform bundle to sell with the build, by id. */
@@ -665,6 +669,7 @@ export function buildSpec(input: {
   const category = cleanCategory(input.category ?? site.category)
   const design = cleanDesign(site.design)
   const structure = cleanStructure(site.structure)
+  const direction = directionsFor(vertical.id).find((entry) => entry.id === input.direction)?.id
   const videos = cleanVideos(input.videos)
   const bundle = BUNDLES.find((entry) => entry.id === input.bundle)?.id
   return {
@@ -716,6 +721,7 @@ export function buildSpec(input: {
     ...(vertical.team?.length ? { team: vertical.team.map((person) => ({ ...person })) } : {}),
     custom: (input.custom ?? '').trim().slice(0, 600),
     ...(input.layout ? { layout: input.layout } : {}),
+    ...(direction ? { direction } : {}),
     ...(category ? { category } : {}),
     ...(design ? { design } : {}),
     ...(structure ? { structure } : {}),

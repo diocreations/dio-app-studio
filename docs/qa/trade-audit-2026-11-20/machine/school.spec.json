@@ -1,0 +1,88 @@
+{
+  "name": "School",
+  "kind": "Primary school",
+  "tagline": "Curious children, capable adults.",
+  "story": "Two-form entry, a garden with chickens, and a head who knows every name by the second week.",
+  "accent": "#1f4f8f",
+  "logo": "SC",
+  "hours": "Gates 8:40 · Pick-up 15:15",
+  "phone": "+1 555 0153",
+  "address": "Fernhill Road, Westbury",
+  "vertical": "school",
+  "features": [
+    "catalog",
+    "booking",
+    "classes",
+    "offers",
+    "events",
+    "gallery"
+  ],
+  "menu": [
+    {
+      "name": "Clubs",
+      "items": [
+        {
+          "name": "Forest school",
+          "desc": "Thursdays, years 2–4",
+          "price": 6000,
+          "meta": "per term"
+        },
+        {
+          "name": "Choir",
+          "desc": "Tuesdays, all years",
+          "price": 0,
+          "meta": "free"
+        },
+        {
+          "name": "Coding club",
+          "desc": "Fridays, years 4–6",
+          "price": 4500,
+          "meta": "per term",
+          "tag": "Popular"
+        }
+      ]
+    },
+    {
+      "name": "Term dates",
+      "items": [
+        {
+          "name": "Autumn term",
+          "desc": "3 Sept – 19 Dec",
+          "price": 0,
+          "meta": "89 days"
+        },
+        {
+          "name": "Half term",
+          "desc": "27–31 Oct",
+          "price": 0,
+          "meta": "closed"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Open morning",
+      "body": "First Tuesday of the month, 9:30."
+    },
+    {
+      "title": "Breakfast club",
+      "body": "From 7:45, no need to book."
+    }
+  ],
+  "loyalty": {
+    "goal": 2,
+    "reward": "Priority club places"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "warm"
+}

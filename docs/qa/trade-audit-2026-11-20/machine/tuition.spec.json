@@ -1,0 +1,97 @@
+{
+  "name": "Tuition centre",
+  "kind": "Tuition centre",
+  "tagline": "Small groups, steady progress.",
+  "story": "Four rooms above a bakery, six students to a table, and a report home every half term that says what actually changed.",
+  "accent": "#a2521f",
+  "logo": "TU",
+  "hours": "Mon–Thu 15:30–20:00 · Sat 9:00–13:00",
+  "phone": "+1 555 0141",
+  "address": "First floor, 22 Mill Street",
+  "vertical": "tuition",
+  "features": [
+    "catalog",
+    "booking",
+    "offers",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Maths",
+      "items": [
+        {
+          "name": "GCSE maths",
+          "desc": "Weekly, six to a group",
+          "price": 3200,
+          "meta": "per lesson"
+        },
+        {
+          "name": "A-level maths",
+          "desc": "Weekly, four to a group",
+          "price": 4200,
+          "meta": "per lesson"
+        }
+      ]
+    },
+    {
+      "name": "English",
+      "items": [
+        {
+          "name": "GCSE English",
+          "desc": "Weekly, six to a group",
+          "price": 3200,
+          "meta": "per lesson",
+          "tag": "Popular"
+        },
+        {
+          "name": "Reading support",
+          "desc": "One to one, 45 minutes",
+          "price": 4800,
+          "meta": "per lesson"
+        }
+      ]
+    },
+    {
+      "name": "Sciences",
+      "items": [
+        {
+          "name": "Combined science",
+          "desc": "Weekly, six to a group",
+          "price": 3400,
+          "meta": "per lesson"
+        },
+        {
+          "name": "Exam technique",
+          "desc": "Six-week block, May",
+          "price": 18000,
+          "meta": "block"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Free assessment",
+      "body": "Half an hour, written feedback."
+    },
+    {
+      "title": "Sibling rate",
+      "body": "Ten per cent off the second place."
+    }
+  ],
+  "loyalty": {
+    "goal": 10,
+    "reward": "A free lesson"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "editorial"
+}

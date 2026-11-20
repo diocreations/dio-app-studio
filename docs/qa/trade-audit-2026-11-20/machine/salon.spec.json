@@ -1,0 +1,111 @@
+{
+  "name": "Salon & spa",
+  "kind": "Hair and beauty salon",
+  "tagline": "Time that belongs to you.",
+  "story": "Four chairs, two treatment rooms and a rule that nothing runs late. Everyone here is booked by name.",
+  "accent": "#7a4b8f",
+  "logo": "SA",
+  "hours": "Tue–Sat 9:00–19:00",
+  "phone": "+1 555 0177",
+  "address": "22 Orchard Row, High Street",
+  "vertical": "salon",
+  "features": [
+    "catalog",
+    "booking",
+    "quote",
+    "loyalty",
+    "offers",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Hair",
+      "items": [
+        {
+          "name": "Cut & finish",
+          "desc": "Consultation, wash, cut, style",
+          "price": 5500,
+          "meta": "45 min"
+        },
+        {
+          "name": "Colour",
+          "desc": "Full head, toner included",
+          "price": 12000,
+          "meta": "2 hr",
+          "tag": "Popular"
+        },
+        {
+          "name": "Blow dry",
+          "desc": "Wash and finish",
+          "price": 3800,
+          "meta": "30 min"
+        }
+      ]
+    },
+    {
+      "name": "Treatments",
+      "items": [
+        {
+          "name": "Keratin smoothing",
+          "desc": "Lasts 12 weeks",
+          "price": 14000,
+          "meta": "2 hr 30"
+        },
+        {
+          "name": "Scalp ritual",
+          "desc": "Massage, mask, steam",
+          "price": 4500,
+          "meta": "40 min"
+        }
+      ]
+    },
+    {
+      "name": "Beauty",
+      "items": [
+        {
+          "name": "Brow shape",
+          "desc": "Wax and tint",
+          "price": 2500,
+          "meta": "20 min"
+        },
+        {
+          "name": "Gel manicure",
+          "desc": "Shape, buff, long-wear colour",
+          "price": 4200,
+          "meta": "45 min"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Tuesday colour, 15% off",
+      "body": "Any full-head colour, all day Tuesday."
+    },
+    {
+      "title": "Refer a friend",
+      "body": "You both get $20 off the next visit."
+    }
+  ],
+  "loyalty": {
+    "goal": 6,
+    "reward": "A free blow dry"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": true,
+    "tagline": true
+  },
+  "staff": [
+    "Maya Chen",
+    "Noa Williams",
+    "Elena Rossi"
+  ],
+  "custom": "",
+  "direction": "luxe"
+}

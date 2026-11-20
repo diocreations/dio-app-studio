@@ -1,0 +1,4566 @@
+[
+  {
+    "id": "restaurant",
+    "label": "Restaurant",
+    "kind": "Seasonal neighbourhood restaurant",
+    "owner": "Marta Ruiz",
+    "prompt": "Restaurant — seasonal neighbourhood restaurant. Menu, orders, table bookings. I need an app for my restaurant.",
+    "readAs": "restaurant",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "editorial",
+        "name": "Editorial dining",
+        "note": "Photo-led, generous, serif-led"
+      },
+      {
+        "id": "modern",
+        "name": "Modern casual",
+        "note": "Fast, friendly, two-column menu"
+      },
+      {
+        "id": "luxe",
+        "name": "Premium luxury",
+        "note": "Dark, quiet, reservations first"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_dine_title",
+        "variant": "dine-title",
+        "title": "Restaurant"
+      },
+      {
+        "id": "sec_fx_dine_feature",
+        "variant": "dine-feature",
+        "title": "Burrata, heirloom tomatoes"
+      },
+      {
+        "id": "sec_fx_dine_actions",
+        "variant": "dine-actions",
+        "title": "See the menu"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Dine",
+      "catalog:Menu",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Reserve",
+      "more:Visit"
+    ],
+    "photoLibrary": 9,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as restaurant from \"Restaurant — seasonal neighbourhood restaurant. Menu, orders, table bo…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Editorial dining · Modern casual · Premium luxury"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "4 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "8 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "9 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Burrata, heirloom tomatoes"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "cafe",
+    "label": "Café & bakery",
+    "kind": "Coffee bar and bakery",
+    "owner": "Nell Hart",
+    "prompt": "Café & bakery — coffee bar and bakery. Coffee, pastry, quick pickup. I need an app for my café & bakery.",
+    "readAs": "cafe",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "editorial",
+        "name": "Daylight editorial",
+        "note": "Airy, tactile, slow mornings"
+      },
+      {
+        "id": "modern",
+        "name": "Counter service",
+        "note": "Quick ordering, clean grid"
+      },
+      {
+        "id": "warm",
+        "name": "Neighbourhood bakery",
+        "note": "Warm surfaces, rounded cards"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_cafe_hero",
+        "variant": "cafe-hero",
+        "title": "Café & bakery"
+      },
+      {
+        "id": "sec_fx_cafe_menu",
+        "variant": "cafe-menu",
+        "title": "From the counter"
+      },
+      {
+        "id": "sec_fx_cafe_order",
+        "variant": "cafe-order",
+        "title": "Takeaway, ready when you are"
+      },
+      {
+        "id": "sec_fx_cafe_reserve",
+        "variant": "cafe-reserve",
+        "title": "A table, held for you"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Café",
+      "catalog:Menu",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Reserve",
+      "more:Visit"
+    ],
+    "photoLibrary": 5,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as cafe from \"Café & bakery — coffee bar and bakery. Coffee, pastry, quick pickup. I…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Daylight editorial · Counter service · Neighbourhood bakery"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "8 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "5 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Flat white"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "shop",
+    "label": "Shop & retail",
+    "kind": "Independent homeware shop",
+    "owner": "Ivo Mercer",
+    "prompt": "Shop & retail — independent homeware shop. Catalogue, cart, pickup. I need an app for my shop & retail.",
+    "readAs": "shop",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "minimal",
+        "name": "Minimal boutique",
+        "note": "Hairlines, list rows, quiet type"
+      },
+      {
+        "id": "editorial",
+        "name": "Gallery retail",
+        "note": "Large imagery, editorial pacing"
+      },
+      {
+        "id": "lifestyle",
+        "name": "Contemporary lifestyle",
+        "note": "Soft, photographic, roomy"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_shop_search",
+        "variant": "shop-search",
+        "title": "Search the collection"
+      },
+      {
+        "id": "sec_fx_shop_title",
+        "variant": "shop-title",
+        "title": "Things worth keeping."
+      },
+      {
+        "id": "sec_fx_shop_products",
+        "variant": "shop-products",
+        "title": "New in"
+      },
+      {
+        "id": "sec_fx_shop_all",
+        "variant": "shop-all",
+        "title": "Browse everything"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Shop",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "more:More"
+    ],
+    "photoLibrary": 7,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as shop from \"Shop & retail — independent homeware shop. Catalogue, cart, pickup. I …\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Minimal boutique · Gallery retail · Contemporary lifestyle"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "18 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "7 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Stoneware mug"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "salon",
+    "label": "Salon & spa",
+    "kind": "Hair and beauty salon",
+    "owner": "Maya Chen",
+    "prompt": "Salon & spa — hair and beauty salon. Treatments, durations, appointments. I need an app for my salon & spa.",
+    "readAs": "salon",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "luxe",
+        "name": "Luxury beauty",
+        "note": "Dark, poised, appointment-led"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern minimal",
+        "note": "Calm list, no decoration"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial wellness",
+        "note": "Warm serif, generous spacing"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_salon_title",
+        "variant": "salon-title",
+        "title": "Time that belongs to you."
+      },
+      {
+        "id": "sec_fx_salon_dates",
+        "variant": "salon-dates",
+        "title": "Choose a day"
+      },
+      {
+        "id": "sec_fx_salon_services",
+        "variant": "salon-services",
+        "title": "Choose a treatment"
+      },
+      {
+        "id": "sec_fx_salon_staff",
+        "variant": "salon-staff",
+        "title": ""
+      },
+      {
+        "id": "sec_fx_salon_action",
+        "variant": "salon-action",
+        "title": "Book an appointment"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Book",
+      "more:Visit",
+      "quote:Enquiry"
+    ],
+    "photoLibrary": 8,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as salon from \"Salon & spa — hair and beauty salon. Treatments, durations, appointmen…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Luxury beauty · Modern minimal · Editorial wellness"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "6 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "11 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "8 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Cut & finish"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "gym",
+    "label": "Gym & studio",
+    "kind": "Strength and conditioning gym",
+    "owner": "Ada Okafor",
+    "prompt": "Gym & studio — strength and conditioning gym. Memberships, timetable, class booking. I need an app for my gym & studio.",
+    "readAs": "gym",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "performance",
+        "name": "Performance",
+        "note": "Dark, condensed, numbers first"
+      },
+      {
+        "id": "minimal",
+        "name": "Studio minimal",
+        "note": "Light, direct, classe-focused"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial fitness",
+        "note": "Coaching story told visually"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_gym_hero",
+        "variant": "gym-hero",
+        "title": "Gym & studio"
+      },
+      {
+        "id": "sec_fx_gym_plans",
+        "variant": "gym-plans",
+        "title": "Memberships"
+      },
+      {
+        "id": "sec_fx_gym_timetable",
+        "variant": "gym-timetable",
+        "title": "This week"
+      },
+      {
+        "id": "sec_fx_gym_trainers",
+        "variant": "gym-trainers",
+        "title": "Your coaches"
+      },
+      {
+        "id": "sec_fx_gym_join",
+        "variant": "gym-join",
+        "title": "Not sure where to start?"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Train",
+      "catalog:Plans",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Classes",
+      "more:Visit",
+      "quote:Join"
+    ],
+    "photoLibrary": 7,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as gym from \"Gym & studio — strength and conditioning gym. Memberships, timetable, …\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Performance · Studio minimal · Editorial fitness"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "6 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "classes needs the book screen"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "14 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "7 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Unlimited monthly"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "clinic",
+    "label": "Clinic & health",
+    "kind": "Dental and health clinic",
+    "owner": "Amara Osei",
+    "prompt": "Clinic & health — dental and health clinic. Treatments, appointments, patient info. I need an app for my clinic & health.",
+    "readAs": "clinic",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "clinical",
+        "name": "Calm clinical",
+        "note": "Soft mist palette, clear booking"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern practice",
+        "note": "Quiet rows, plain language"
+      },
+      {
+        "id": "editorial",
+        "name": "Considered care",
+        "note": "Warm, human, editorial"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_clinic_hero",
+        "variant": "clinic-hero",
+        "title": "Clinic & health"
+      },
+      {
+        "id": "sec_fx_clinic_specialities",
+        "variant": "clinic-specialities",
+        "title": "Specialities"
+      },
+      {
+        "id": "sec_fx_clinic_doctors",
+        "variant": "clinic-doctors",
+        "title": "The clinical team"
+      },
+      {
+        "id": "sec_fx_clinic_care",
+        "variant": "clinic-care",
+        "title": "How a visit works"
+      },
+      {
+        "id": "sec_fx_clinic_privacy",
+        "variant": "clinic-privacy",
+        "title": "Your information stays yours"
+      },
+      {
+        "id": "sec_fx_clinic_appointments",
+        "variant": "clinic-appointments",
+        "title": "Book an appointment"
+      }
+    ],
+    "screens": [
+      "home:Care",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Book",
+      "more:Visit",
+      "quote:Enquire"
+    ],
+    "photoLibrary": 7,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as clinic from \"Clinic & health — dental and health clinic. Treatments, appointments, …\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Calm clinical · Modern practice · Considered care"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "6 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "14 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "7 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "New patient exam"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "trades",
+    "label": "Trades & home services",
+    "kind": "Plumbing and heating",
+    "owner": "Dan Mercer",
+    "prompt": "Trades & home services — plumbing and heating. Services, quote requests, call-outs. I need an app for my trades & home services.",
+    "readAs": "trades",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "technical",
+        "name": "Direct trades",
+        "note": "Compact, priced, phone-first"
+      },
+      {
+        "id": "modern",
+        "name": "Modern service",
+        "note": "Clean grid, quote-led"
+      },
+      {
+        "id": "warm",
+        "name": "Trusted local",
+        "note": "Warm, personal, proof-heavy"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_trades_hero",
+        "variant": "trades-hero",
+        "title": "Trades & home services"
+      },
+      {
+        "id": "sec_fx_trades_jobs",
+        "variant": "trades-jobs",
+        "title": "What we fix"
+      },
+      {
+        "id": "sec_fx_trades_proof",
+        "variant": "trades-proof",
+        "title": "The promise"
+      },
+      {
+        "id": "sec_fx_trades_quote",
+        "variant": "trades-quote",
+        "title": "Send a photo, get a price"
+      },
+      {
+        "id": "sec_fx_trades_area",
+        "variant": "trades-area",
+        "title": "Where we work"
+      },
+      {
+        "id": "sec_fx_trades_book",
+        "variant": "trades-book",
+        "title": "Book a call-out"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Call-out",
+      "quote:Quote",
+      "more:Contact"
+    ],
+    "photoLibrary": 6,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as trades from \"Trades & home services — plumbing and heating. Services, quote request…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Direct trades · Modern service · Trusted local"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "7 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "16 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "6 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Leak repair"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "professional",
+    "label": "Professional services",
+    "kind": "Accounting and tax advisory",
+    "owner": "Helen Marsh",
+    "prompt": "Professional services — accounting and tax advisory. Services, proposals, consultations. I need an app for my professional services.",
+    "readAs": "professional",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "classic",
+        "name": "Classic counsel",
+        "note": "Understated, serif, fixed fees"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern advisory",
+        "note": "Plain, precise, list-led"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial practice",
+        "note": "Warm authority, long-form"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_pro_title",
+        "variant": "pro-title",
+        "title": "Professional services"
+      },
+      {
+        "id": "sec_fx_pro_intro",
+        "variant": "pro-intro",
+        "title": "How we can help"
+      },
+      {
+        "id": "sec_fx_pro_team",
+        "variant": "pro-team",
+        "title": "The people you'll work with"
+      },
+      {
+        "id": "sec_fx_pro_index",
+        "variant": "pro-index",
+        "title": "Services"
+      },
+      {
+        "id": "sec_fx_pro_actions",
+        "variant": "pro-actions",
+        "title": "Book a consultation"
+      },
+      {
+        "id": "sec_fx_pro_facts",
+        "variant": "pro-facts",
+        "title": "Mon–Fri 9:00–18:00"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Consult",
+      "more:Contact",
+      "quote:Enquire"
+    ],
+    "photoLibrary": 6,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as professional from \"Professional services — accounting and tax advisory. Services, proposa…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Classic counsel · Modern advisory · Editorial practice"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "6 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "4 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "6 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Annual accounts"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "property",
+    "label": "Property & estate agency",
+    "kind": "Independent estate agency",
+    "owner": "Ruth Calder",
+    "prompt": "Property & estate agency — independent estate agency. Listings, viewings, valuations. I need an app for my property & estate agency.",
+    "readAs": "property",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "editorial",
+        "name": "Editorial property",
+        "note": "Listings as stories, large media"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern agency",
+        "note": "Dense list, fast scanning"
+      },
+      {
+        "id": "luxe",
+        "name": "Premium homes",
+        "note": "Dark, cinematic, exclusive"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_property_hero",
+        "variant": "property-hero",
+        "title": "Property & estate agency"
+      },
+      {
+        "id": "sec_fx_property_search",
+        "variant": "property-search",
+        "title": "Search homes"
+      },
+      {
+        "id": "sec_fx_property_listings",
+        "variant": "property-listings",
+        "title": "On the market"
+      },
+      {
+        "id": "sec_fx_property_viewing",
+        "variant": "property-viewing",
+        "title": "See it for yourself"
+      },
+      {
+        "id": "sec_fx_property_enquire",
+        "variant": "property-enquire",
+        "title": "Thinking of selling?"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Homes",
+      "catalog:Listings",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Viewings",
+      "more:Visit",
+      "quote:Enquire"
+    ],
+    "photoLibrary": 5,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as property from \"Property & estate agency — independent estate agency. Listings, viewin…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Editorial property · Modern agency · Premium homes"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "6 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "12 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "5 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Kestrel Square"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "hotel",
+    "label": "Hotel & guesthouse",
+    "kind": "Small guesthouse",
+    "owner": "Jonah Reed",
+    "prompt": "Hotel & guesthouse — small guesthouse. Rooms, rates, availability. I need an app for my hotel & guesthouse.",
+    "readAs": "hotel",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "luxe",
+        "name": "Coastal luxury",
+        "note": "Dark, quiet, rooms first"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial stay",
+        "note": "Warm serif, place-led"
+      },
+      {
+        "id": "minimal",
+        "name": "Quiet modern",
+        "note": "Light, restrained, direct booking"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_hotel_cover",
+        "variant": "hotel-cover",
+        "title": "Hotel & guesthouse"
+      },
+      {
+        "id": "sec_fx_hotel_stay",
+        "variant": "hotel-stay",
+        "title": "View rooms"
+      },
+      {
+        "id": "sec_fx_hotel_rooms",
+        "variant": "hotel-rooms",
+        "title": "Rooms"
+      },
+      {
+        "id": "sec_fx_hotel_facts",
+        "variant": "hotel-facts",
+        "title": "Reception 7:00–22:00"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Stay",
+      "catalog:Rooms",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Dates",
+      "more:More",
+      "quote:Enquiry"
+    ],
+    "photoLibrary": 7,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as hotel from \"Hotel & guesthouse — small guesthouse. Rooms, rates, availability. I n…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Coastal luxury · Editorial stay · Quiet modern"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "11 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "7 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Garden double"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "studio",
+    "label": "Creative studio",
+    "kind": "Photography studio",
+    "owner": "Nell Fraser",
+    "prompt": "Creative studio — photography studio. Portfolio, packages, enquiries. I need an app for my creative studio.",
+    "readAs": "studio",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "gallery",
+        "name": "Gallery",
+        "note": "Full-bleed work, minimal chrome"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern studio",
+        "note": "Index-like, typographic"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial portfolio",
+        "note": "Narrative, warm, spacious"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_studio_hero",
+        "variant": "studio-hero",
+        "title": "Creative studio"
+      },
+      {
+        "id": "sec_fx_studio_work",
+        "variant": "studio-work",
+        "title": "Selected work"
+      },
+      {
+        "id": "sec_fx_studio_services",
+        "variant": "studio-services",
+        "title": "Ways to work together"
+      },
+      {
+        "id": "sec_fx_studio_team",
+        "variant": "studio-team",
+        "title": "The studio"
+      },
+      {
+        "id": "sec_fx_studio_book",
+        "variant": "studio-book",
+        "title": "Start a project"
+      }
+    ],
+    "screens": [
+      "home:Work",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Book",
+      "more:Visit",
+      "quote:Enquire"
+    ],
+    "photoLibrary": 5,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as studio from \"Creative studio — photography studio. Portfolio, packages, enquiries. …\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Gallery · Modern studio · Editorial portfolio"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "13 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "5 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Full day"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "auto",
+    "label": "Garage & auto",
+    "kind": "Independent garage",
+    "owner": "Sam Iles",
+    "prompt": "Garage & auto — independent garage. Servicing, bookings, quotes. I need an app for my garage & auto.",
+    "readAs": "auto",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "technical",
+        "name": "Workshop technical",
+        "note": "Condensed, job-first, compact"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern garage",
+        "note": "Clean, trustworthy, list rows"
+      },
+      {
+        "id": "performance",
+        "name": "Performance garage",
+        "note": "Dark, bold, enthusiast-led"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_auto_hero",
+        "variant": "auto-hero",
+        "title": "Garage & auto"
+      },
+      {
+        "id": "sec_fx_auto_vehicle",
+        "variant": "auto-vehicle",
+        "title": "What we look after"
+      },
+      {
+        "id": "sec_fx_auto_jobs",
+        "variant": "auto-jobs",
+        "title": "Work & prices"
+      },
+      {
+        "id": "sec_fx_auto_slots",
+        "variant": "auto-slots",
+        "title": "Next available"
+      },
+      {
+        "id": "sec_fx_auto_promise",
+        "variant": "auto-promise",
+        "title": "What a service includes"
+      },
+      {
+        "id": "sec_fx_auto_quote",
+        "variant": "auto-quote",
+        "title": "Not sure what it needs?"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Garage",
+      "catalog:Work",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Book",
+      "quote:Quote",
+      "more:Visit"
+    ],
+    "photoLibrary": 5,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as auto from \"Garage & auto — independent garage. Servicing, bookings, quotes. I nee…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Workshop technical · Modern garage · Performance garage"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "7 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "13 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "5 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Interim service"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "hospital",
+    "label": "Hospital & health",
+    "kind": "Community hospital",
+    "owner": "Theo Marsh",
+    "prompt": "Hospital & health — community hospital. Departments, clinics, visiting. I need an app for my hospital & health.",
+    "readAs": "hospital",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "clinical",
+        "name": "Clear care",
+        "note": "Mist palette, wayfinding first"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern hospital",
+        "note": "Plain, fast, accessible rows"
+      },
+      {
+        "id": "editorial",
+        "name": "Human care",
+        "note": "Warm, dignified, story-led"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_hospital_hero",
+        "variant": "c-hospital-hero",
+        "title": "Hospital & health"
+      },
+      {
+        "id": "sec_fx_c_hospital_departments",
+        "variant": "c-hospital-departments",
+        "title": "Departments & clinics"
+      },
+      {
+        "id": "sec_fx_c_hospital_visiting",
+        "variant": "c-hospital-visiting",
+        "title": "Visiting and clinics"
+      },
+      {
+        "id": "sec_fx_c_hospital_urgent",
+        "variant": "c-hospital-urgent",
+        "title": "Need care today?"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Consult",
+      "more:Contact",
+      "quote:Enquire"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as hospital from \"Hospital & health — community hospital. Departments, clinics, visiting…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Clear care · Modern hospital · Human care"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "no-borrowed-blocks",
+        "pass": true,
+        "detail": "hospital"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Outpatient clinic"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "ecommerce",
+    "label": "Online store",
+    "kind": "Independent online shop",
+    "owner": "Rosa Bell",
+    "prompt": "Online store — independent online shop. Catalogue, checkout, delivery. I need an app for my online store.",
+    "readAs": "ecommerce",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "minimal",
+        "name": "Minimal commerce",
+        "note": "Product grid, no noise"
+      },
+      {
+        "id": "editorial",
+        "name": "Boutique commerce",
+        "note": "Lookbook pacing, large media"
+      },
+      {
+        "id": "lifestyle",
+        "name": "Contemporary lifestyle",
+        "note": "Soft colour, rounded cards"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_ecom_hero",
+        "variant": "ecom-hero",
+        "title": "Online store"
+      },
+      {
+        "id": "sec_fx_ecom_drop",
+        "variant": "ecom-drop",
+        "title": "New this week"
+      },
+      {
+        "id": "sec_fx_ecom_products",
+        "variant": "ecom-products",
+        "title": "The shelf"
+      },
+      {
+        "id": "sec_fx_ecom_delivery",
+        "variant": "ecom-delivery",
+        "title": "Packed and posted"
+      },
+      {
+        "id": "sec_fx_ecom_rewards",
+        "variant": "ecom-rewards",
+        "title": "Keep coming back"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Shop",
+      "catalog:Browse",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "more:Visit"
+    ],
+    "photoLibrary": 6,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as ecommerce from \"Online store — independent online shop. Catalogue, checkout, delivery.…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Minimal commerce · Boutique commerce · Contemporary lifestyle"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "6 home blocks, flagship=true"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "22 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "6 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Everyday tote"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "plants-indoor",
+    "label": "Indoor plant shop",
+    "kind": "Houseplant shop",
+    "owner": "Priya Nair",
+    "prompt": "Indoor plant shop — houseplant shop. Houseplants, pots, care. I need an app for my indoor plant shop.",
+    "readAs": "plants-indoor",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "editorial",
+        "name": "Botanical editorial",
+        "note": "Lush, warm, roomy"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern plant shop",
+        "note": "Clean grid, care notes"
+      },
+      {
+        "id": "lifestyle",
+        "name": "Green living",
+        "note": "Soft surfaces, lifestyle imagery"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_plants_indoor_hero",
+        "variant": "c-plants-indoor-hero",
+        "title": "Indoor plant shop"
+      },
+      {
+        "id": "sec_fx_c_plants_indoor_shelf",
+        "variant": "c-plants-indoor-shelf",
+        "title": "Easy care, in stock"
+      },
+      {
+        "id": "sec_fx_c_plants_indoor_care",
+        "variant": "c-plants-indoor-care",
+        "title": "Light and water"
+      },
+      {
+        "id": "sec_fx_c_plants_indoor_help",
+        "variant": "c-plants-indoor-help",
+        "title": "Not sure which plant?"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "more:Contact"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as plants-indoor from \"Indoor plant shop — houseplant shop. Houseplants, pots, care. I need a…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Botanical editorial · Modern plant shop · Green living"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Snake plant"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "plants-outdoor",
+    "label": "Garden centre",
+    "kind": "Plant nursery and garden centre",
+    "owner": "Tomas Reed",
+    "prompt": "Garden centre — plant nursery and garden centre. Outdoor plants, trees, advice. I need an app for my garden centre.",
+    "readAs": "plants-outdoor",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "technical",
+        "name": "Grower technical",
+        "note": "Compact, seasonal, practical"
+      },
+      {
+        "id": "editorial",
+        "name": "Nursery editorial",
+        "note": "Warm, outdoor, photo-led"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern garden",
+        "note": "Clean rows, clear prices"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_plants_outdoor_hero",
+        "variant": "c-plants-outdoor-hero",
+        "title": "Garden centre"
+      },
+      {
+        "id": "sec_fx_c_plants_outdoor_season",
+        "variant": "c-plants-outdoor-season",
+        "title": "Bare-root season"
+      },
+      {
+        "id": "sec_fx_c_plants_outdoor_stock",
+        "variant": "c-plants-outdoor-stock",
+        "title": "Ready to plant"
+      },
+      {
+        "id": "sec_fx_c_plants_outdoor_visit",
+        "variant": "c-plants-outdoor-visit",
+        "title": "At the nursery"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Consult",
+      "more:Contact"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as plants-outdoor from \"Garden centre — plant nursery and garden centre. Outdoor plants, trees…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Grower technical · Nursery editorial · Modern garden"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Lavender"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "courses",
+    "label": "Online courses",
+    "kind": "Online learning platform",
+    "owner": "Rosa Bell",
+    "prompt": "Online courses — online learning platform. Course catalogue, lessons, access. I need an app for my online courses.",
+    "readAs": "courses",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "modern",
+        "name": "Modern learning",
+        "note": "Structured grid, progress-led"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial academy",
+        "note": "Serif, long-form, considered"
+      },
+      {
+        "id": "technical",
+        "name": "Practical school",
+        "note": "Dense, outcome-focused"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_courses_hero",
+        "variant": "courses-hero",
+        "title": "Online courses"
+      },
+      {
+        "id": "sec_fx_courses_path",
+        "variant": "courses-path",
+        "title": "How a course runs"
+      },
+      {
+        "id": "sec_fx_courses_list",
+        "variant": "courses-list",
+        "title": "Courses open now"
+      },
+      {
+        "id": "sec_fx_courses_included",
+        "variant": "courses-included",
+        "title": "What's included"
+      },
+      {
+        "id": "sec_fx_courses_enrol",
+        "variant": "courses-enrol",
+        "title": "Start with the free lesson"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Learn",
+      "catalog:Courses",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "more:More"
+    ],
+    "photoLibrary": 5,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as courses from \"Online courses — online learning platform. Course catalogue, lessons, …\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Modern learning · Editorial academy · Practical school"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "6 home blocks, flagship=true"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "13 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "5 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Read a set of accounts"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "tuition",
+    "label": "Tuition centre",
+    "kind": "Tuition centre",
+    "owner": "Alex Reed",
+    "prompt": "Tuition centre — tuition centre. Subjects, tutors, term bookings. I need an app for my tuition centre.",
+    "readAs": "tuition",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "editorial",
+        "name": "Editorial tuition",
+        "note": "Warm, academic, reassuring"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern tuition",
+        "note": "Clear programmes, tidy rows"
+      },
+      {
+        "id": "warm",
+        "name": "Friendly centre",
+        "note": "Rounded, personal, calm"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_tuition_hero",
+        "variant": "c-tuition-hero",
+        "title": "Tuition centre"
+      },
+      {
+        "id": "sec_fx_c_tuition_subjects",
+        "variant": "c-tuition-subjects",
+        "title": "Subjects and groups"
+      },
+      {
+        "id": "sec_fx_c_tuition_trial",
+        "variant": "c-tuition-trial",
+        "title": "Trial lessons"
+      },
+      {
+        "id": "sec_fx_c_tuition_enquire",
+        "variant": "c-tuition-enquire",
+        "title": "Ask about a place"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Consult",
+      "more:Contact"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as tuition from \"Tuition centre — tuition centre. Subjects, tutors, term bookings. I ne…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Editorial tuition · Modern tuition · Friendly centre"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "GCSE maths"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "school",
+    "label": "School",
+    "kind": "Primary school",
+    "owner": "Lena Park",
+    "prompt": "School — primary school. Term dates, clubs, parents’ evenings. I need an app for my school.",
+    "readAs": "school",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "warm",
+        "name": "Friendly school",
+        "note": "Open, warm, community-led"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern school",
+        "note": "Clear information, quiet UI"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial school",
+        "note": "Stories and term highlights"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_school_hero",
+        "variant": "c-school-hero",
+        "title": "School"
+      },
+      {
+        "id": "sec_fx_c_school_term",
+        "variant": "c-school-term",
+        "title": "Term dates"
+      },
+      {
+        "id": "sec_fx_c_school_clubs",
+        "variant": "c-school-clubs",
+        "title": "Clubs"
+      },
+      {
+        "id": "sec_fx_c_school_events",
+        "variant": "c-school-events",
+        "title": "This half term"
+      },
+      {
+        "id": "sec_fx_c_school_contact",
+        "variant": "c-school-contact",
+        "title": "The school day"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Consult",
+      "more:Contact"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as school from \"School — primary school. Term dates, clubs, parents’ evenings. I need …\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Friendly school · Modern school · Editorial school"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "6 home blocks, flagship=true"
+      },
+      {
+        "name": "no-borrowed-blocks",
+        "pass": true,
+        "detail": "school"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "classes needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Forest school"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "kindergarten",
+    "label": "Kindergarten",
+    "kind": "Kindergarten and preschool",
+    "owner": "Elena Rossi",
+    "prompt": "Kindergarten — kindergarten and preschool. Sessions, fees, enrolment. I need an app for my kindergarten.",
+    "readAs": "kindergarten",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "playful",
+        "name": "Playful days",
+        "note": "Rounded, bright, tactile"
+      },
+      {
+        "id": "warm",
+        "name": "Gentle start",
+        "note": "Soft, calm, parent-first"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern nursery",
+        "note": "Clean sessions and fees"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_kindergarten_hero",
+        "variant": "c-kindergarten-hero",
+        "title": "Kindergarten"
+      },
+      {
+        "id": "sec_fx_c_kindergarten_day",
+        "variant": "c-kindergarten-day",
+        "title": "A day here"
+      },
+      {
+        "id": "sec_fx_c_kindergarten_sessions",
+        "variant": "c-kindergarten-sessions",
+        "title": "Sessions and fees"
+      },
+      {
+        "id": "sec_fx_c_kindergarten_visit",
+        "variant": "c-kindergarten-visit",
+        "title": "Book a visit"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Consult",
+      "more:Contact"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as kindergarten from \"Kindergarten — kindergarten and preschool. Sessions, fees, enrolment. …\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Playful days · Gentle start · Modern nursery"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Morning session"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "finance",
+    "label": "Financial services",
+    "kind": "Independent financial adviser",
+    "owner": "Owen Shah",
+    "prompt": "Financial services — independent financial adviser. Advice, mortgages, protection. I need an app for my financial services.",
+    "readAs": "finance",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "classic",
+        "name": "Classic advice",
+        "note": "Understated serif, fixed fees"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern advisory",
+        "note": "Plain numbers, quiet rows"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial finance",
+        "note": "Warm authority, explainers"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_finance_hero",
+        "variant": "finance-hero",
+        "title": "Financial services"
+      },
+      {
+        "id": "sec_fx_finance_disclosure",
+        "variant": "finance-disclosure",
+        "title": "How we are paid"
+      },
+      {
+        "id": "sec_fx_finance_services",
+        "variant": "finance-services",
+        "title": "Services & fees"
+      },
+      {
+        "id": "sec_fx_finance_process",
+        "variant": "finance-process",
+        "title": "What a review looks like"
+      },
+      {
+        "id": "sec_fx_finance_advisers",
+        "variant": "finance-advisers",
+        "title": "Your advisers"
+      },
+      {
+        "id": "sec_fx_finance_review",
+        "variant": "finance-review",
+        "title": "Book a first meeting"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Advice",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Meeting",
+      "quote:Enquiry",
+      "more:Contact"
+    ],
+    "photoLibrary": 6,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as finance from \"Financial services — independent financial adviser. Advice, mortgages,…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Classic advice · Modern advisory · Editorial finance"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "7 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "9 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": true,
+        "detail": "6 curated photos"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Financial review"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "agency",
+    "label": "Business agency",
+    "kind": "Brand and growth agency",
+    "owner": "Ruth Okafor",
+    "prompt": "Business agency — brand and growth agency. Capabilities, case studies, proposals. I need an app for my business agency.",
+    "readAs": "agency",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "bold",
+        "name": "Bold studio",
+        "note": "Large type, case studies first"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern agency",
+        "note": "Index-like, restrained"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial agency",
+        "note": "Strategy told as stories"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_agency_hero",
+        "variant": "c-agency-hero",
+        "title": "Business agency"
+      },
+      {
+        "id": "sec_fx_c_agency_work",
+        "variant": "c-agency-work",
+        "title": "Selected work"
+      },
+      {
+        "id": "sec_fx_c_agency_services",
+        "variant": "c-agency-services",
+        "title": "What we do"
+      },
+      {
+        "id": "sec_fx_c_agency_contact",
+        "variant": "c-agency-contact",
+        "title": "Start with a conversation"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "more:Contact",
+      "quote:Enquire"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as agency from \"Business agency — brand and growth agency. Capabilities, case studies,…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Bold studio · Modern agency · Editorial agency"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Positioning sprint"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "influencer",
+    "label": "Influencer & creator",
+    "kind": "Creator and presenter",
+    "owner": "Nadia Cole",
+    "prompt": "Influencer & creator — creator and presenter. Formats, rates, brand collabs. I need an app for my influencer & creator.",
+    "readAs": "influencer",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "bold",
+        "name": "Creator bold",
+        "note": "High contrast, format-led"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial creator",
+        "note": "Magazine pacing, warm"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern creator",
+        "note": "Clean rate card, quiet"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_influencer_hero",
+        "variant": "c-influencer-hero",
+        "title": "Influencer & creator"
+      },
+      {
+        "id": "sec_fx_c_influencer_formats",
+        "variant": "c-influencer-formats",
+        "title": "Formats and rates"
+      },
+      {
+        "id": "sec_fx_c_influencer_reach",
+        "variant": "c-influencer-reach",
+        "title": "Reach and turnaround"
+      },
+      {
+        "id": "sec_fx_c_influencer_brief",
+        "variant": "c-influencer-brief",
+        "title": "Request the rate card"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "more:Contact",
+      "quote:Enquire"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as influencer from \"Influencer & creator — creator and presenter. Formats, rates, brand co…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Creator bold · Editorial creator · Modern creator"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Sponsored reel"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "portfolio",
+    "label": "Personal portfolio",
+    "kind": "Designer and art director",
+    "owner": "Noor Haddad",
+    "prompt": "Personal portfolio — designer and art director. Selected work, process, enquiries. I need an app for my personal portfolio.",
+    "readAs": "portfolio",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "gallery",
+        "name": "Gallery portfolio",
+        "note": "Work first, chrome last"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern portfolio",
+        "note": "Type-led index"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial portfolio",
+        "note": "Narrative, warm, spacious"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_portfolio_hero",
+        "variant": "c-portfolio-hero",
+        "title": "Personal portfolio"
+      },
+      {
+        "id": "sec_fx_c_portfolio_work",
+        "variant": "c-portfolio-work",
+        "title": "Selected work"
+      },
+      {
+        "id": "sec_fx_c_portfolio_about",
+        "variant": "c-portfolio-about",
+        "title": "About the studio"
+      },
+      {
+        "id": "sec_fx_c_portfolio_contact",
+        "variant": "c-portfolio-contact",
+        "title": "Start a project"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "more:Contact",
+      "quote:Enquire"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as portfolio from \"Personal portfolio — designer and art director. Selected work, process…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Gallery portfolio · Modern portfolio · Editorial portfolio"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "4 home blocks, flagship=true"
+      },
+      {
+        "name": "no-borrowed-blocks",
+        "pass": true,
+        "detail": "portfolio"
+      },
+      {
+        "name": "screen-quote",
+        "pass": true,
+        "detail": "quote needs the quote screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Field Notes Press"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "film",
+    "label": "Film & production",
+    "kind": "Independent film production",
+    "owner": "Ruth Calder",
+    "prompt": "Film & production — independent film production. Cast, crew, stills, trailers. I need an app for my film & production.",
+    "readAs": "film",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "cinema",
+        "name": "Cinematic",
+        "note": "Dark, poster-led, widescreen"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial film",
+        "note": "Warm serif, story-first"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern film",
+        "note": "Quiet type, screening details"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_film_hero",
+        "variant": "c-film-hero",
+        "title": "Film & production"
+      },
+      {
+        "id": "sec_fx_c_film_screenings",
+        "variant": "c-film-screenings",
+        "title": "Screenings"
+      },
+      {
+        "id": "sec_fx_c_film_cast",
+        "variant": "c-film-cast",
+        "title": "Cast and crew"
+      },
+      {
+        "id": "sec_fx_c_film_stills",
+        "variant": "c-film-stills",
+        "title": "Stills & posters"
+      },
+      {
+        "id": "sec_fx_c_film_book",
+        "variant": "c-film-book",
+        "title": "Book a screening"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Consult",
+      "more:Contact"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as film from \"Film & production — independent film production. Cast, crew, stills, t…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Cinematic · Editorial film · Modern film"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "6 home blocks, flagship=true"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Mara Ellison"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "gallery",
+    "label": "Art gallery",
+    "kind": "Contemporary art gallery",
+    "owner": "Ines Kaur",
+    "prompt": "Art gallery — contemporary art gallery. Exhibitions, artists, works. I need an app for my art gallery.",
+    "readAs": "gallery",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "gallery",
+        "name": "White cube",
+        "note": "Minimal chrome, full-bleed art"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial gallery",
+        "note": "Warm, narrative, exhibition-led"
+      },
+      {
+        "id": "minimal",
+        "name": "Modern gallery",
+        "note": "List-led, practical visiting"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_gallery_hero",
+        "variant": "c-gallery-hero",
+        "title": "Art gallery"
+      },
+      {
+        "id": "sec_fx_c_gallery_show",
+        "variant": "c-gallery-show",
+        "title": "On view"
+      },
+      {
+        "id": "sec_fx_c_gallery_works",
+        "variant": "c-gallery-works",
+        "title": "Works on view"
+      },
+      {
+        "id": "sec_fx_c_gallery_facts",
+        "variant": "c-gallery-facts",
+        "title": "Plan your visit"
+      },
+      {
+        "id": "sec_fx_c_gallery_visit",
+        "variant": "c-gallery-visit",
+        "title": "Plan your visit"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "book:Consult",
+      "more:Contact"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as gallery from \"Art gallery — contemporary art gallery. Exhibitions, artists, works. I…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "White cube · Editorial gallery · Modern gallery"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "5 home blocks, flagship=true"
+      },
+      {
+        "name": "no-borrowed-blocks",
+        "pass": true,
+        "detail": "gallery"
+      },
+      {
+        "name": "screen-book",
+        "pass": true,
+        "detail": "booking needs the book screen"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Kiln Study II"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  },
+  {
+    "id": "marketplace",
+    "label": "Marketplace",
+    "kind": "Multi-vendor delivery marketplace",
+    "owner": "Ade Ogun",
+    "prompt": "Marketplace — multi-vendor delivery marketplace. Many stores, one basket. I need an app for my marketplace.",
+    "readAs": "marketplace",
+    "confidence": "detected",
+    "concepts": [
+      {
+        "id": "minimal",
+        "name": "Modern market",
+        "note": "Dense grid, fast search"
+      },
+      {
+        "id": "lifestyle",
+        "name": "Weekend market",
+        "note": "Warm, vendor-led, roomy"
+      },
+      {
+        "id": "editorial",
+        "name": "Editorial market",
+        "note": "Stories behind the stalls"
+      }
+    ],
+    "flagship": true,
+    "blocks": [
+      {
+        "id": "sec_fx_c_marketplace_hero",
+        "variant": "c-marketplace-hero",
+        "title": "Marketplace"
+      },
+      {
+        "id": "sec_fx_c_marketplace_vendors",
+        "variant": "c-marketplace-vendors",
+        "title": "The shops"
+      },
+      {
+        "id": "sec_fx_c_marketplace_categories",
+        "variant": "c-marketplace-categories",
+        "title": "Categories"
+      },
+      {
+        "id": "sec_fx_c_marketplace_delivery",
+        "variant": "c-marketplace-delivery",
+        "title": "Delivery and collection"
+      },
+      {
+        "id": "sec_fx_c_marketplace_shop",
+        "variant": "c-marketplace-shop",
+        "title": "One basket, any store"
+      },
+      {
+        "id": "sec_fx_offers",
+        "variant": "offers",
+        "title": "Right now"
+      }
+    ],
+    "screens": [
+      "home:Home",
+      "catalog:Services",
+      "search:Search",
+      "saved:Saved",
+      "detail:Details",
+      "more:Contact"
+    ],
+    "photoLibrary": 0,
+    "checks": [
+      {
+        "name": "prompt-reads-trade",
+        "pass": true,
+        "detail": "read as marketplace from \"Marketplace — multi-vendor delivery marketplace. Many stores, one bask…\""
+      },
+      {
+        "name": "three-concepts",
+        "pass": true,
+        "detail": "Modern market · Weekend market · Editorial market"
+      },
+      {
+        "name": "owned-composition",
+        "pass": true,
+        "detail": "6 home blocks, flagship=true"
+      },
+      {
+        "name": "published-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "editor-renders-doc",
+        "pass": true,
+        "detail": "every block present"
+      },
+      {
+        "name": "save-reload-identical",
+        "pass": true,
+        "detail": "identical"
+      },
+      {
+        "name": "no-undefined",
+        "pass": true,
+        "detail": "no undefined or NaN in visible markup"
+      },
+      {
+        "name": "images-have-alt",
+        "pass": true,
+        "detail": "3 images, 0 without alt"
+      },
+      {
+        "name": "blocks-have-copy",
+        "pass": true,
+        "detail": "0 blocks with neither title nor text"
+      },
+      {
+        "name": "no-fake-art",
+        "pass": true,
+        "detail": "no invented artwork"
+      },
+      {
+        "name": "trade-photography",
+        "pass": false,
+        "detail": "no curated photo library yet"
+      },
+      {
+        "name": "controls-labelled",
+        "pass": true,
+        "detail": "0 controls without a label"
+      },
+      {
+        "name": "no-empty-price-prefix",
+        "pass": true,
+        "detail": "no dangling price prefixes"
+      },
+      {
+        "name": "catalogue-is-trades-own",
+        "pass": true,
+        "detail": "Family Pack Special"
+      },
+      {
+        "name": "no-horizontal-overflow",
+        "pass": true,
+        "detail": "0px"
+      },
+      {
+        "name": "tap-targets",
+        "pass": true,
+        "detail": "0 under 44px"
+      },
+      {
+        "name": "images-load",
+        "pass": true,
+        "detail": "0 broken"
+      }
+    ],
+    "metrics": {
+      "overflow": 0,
+      "smallTargets": 0,
+      "smallClasses": [],
+      "smallHtml": [],
+      "images": 0,
+      "tabHeight": 58
+    }
+  }
+]
