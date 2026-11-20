@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import { flagshipHome } from '../src/worker/flagship'
+import { flagshipHome, flagshipSection } from '../src/worker/flagship'
 import { docFromSpec, flagshipDocFromSpec, homeSections, normalizeDoc } from '../src/worker/doc'
 import { buildSpec, sanitizeMenu } from '../src/worker/pricing'
 
@@ -247,5 +247,39 @@ describe('document visibility integrity', () => {
     const nodes = homeSections(doc)
     expect(nodes.length).toBe(1)
     expect(nodes[0].hidden).toBe(false)
+  })
+})
+
+describe('business records that are not references', () => {
+  test('a price change reaches the app without touching the document', () => {
+    const spec = dishSpec()
+    const doc = flagshipDocFromSpec(spec)
+    const before = render(spec, doc)
+    const dearer = {
+      ...spec,
+      menu: spec.menu.map((section) => ({
+        ...section,
+        items: section.items.map((item) => ({ ...item, price: item.price + 500 })),
+      })),
+    }
+    const after = render(dearer, normalizeDoc(doc, dearer))
+    expect(before).not.toBe(after)
+    expect(after).toContain('$16.70')
+  })
+
+  test('an offer the owner withdraws stops appearing', () => {
+    const spec = { ...dishSpec(), offers: [{ title: 'Free chai', body: 'With every roll.' }] }
+    const node = {
+      id: 'sec_fx_offers',
+      kind: 'flagship' as const,
+      variant: 'offers' as const,
+      style: {},
+      responsive: { hideOn: [] },
+      hidden: false,
+    }
+    const ctx = { spec, token: 'probe', booking: false, doc: null }
+    expect(flagshipSection(ctx, node)).toContain('Free chai')
+    const withdrawn = { ...spec, offers: [] }
+    expect(flagshipSection({ ...ctx, spec: withdrawn }, node)).not.toContain('Free chai')
   })
 })

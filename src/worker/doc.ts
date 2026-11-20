@@ -212,11 +212,19 @@ export type MediaRef = {
   aspect?: 'auto' | 'wide' | 'square' | 'portrait'
 }
 
+/** Business values a generated component copied from the specification. */
+export type CopiedField = 'name' | 'tagline' | 'hours' | 'address'
+export type Follows = { title?: CopiedField; text?: CopiedField }
+
 export type DocNode = {
   id: string
   kind: SectionKind
   title?: string
   text?: string
+  /** Set when the heading or words are a copy of a specification value rather
+   *  than the owner's own writing. A copied value follows the business when it
+   *  changes; anything the owner typed is left alone. */
+  follows?: Follows
   cta?: { label: string; screen: string }
   /** Presentation inside a flagship composition. Never used by generic kinds. */
   variant?: FlagshipVariant
@@ -791,7 +799,7 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
     doc.screens.splice(visit, 0, entry)
   }
   doc.initialScreen = home.id
-  return doc
+  return followCopies(doc, spec)
 }
 
 export function homeScreen(doc: Doc): ScreenNode {
@@ -971,8 +979,11 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
     if (!home) screens.unshift(fallback.screens.find((entry) => entry.kind === 'home')!)
     else home.hidden = false
     const initial = screens.find((entry) => entry.id === raw.initialScreen) ?? screens[0]!
-    return bindItemRefs(
-      { v: 2, accent, design: sanitizeDesign(raw.design, spec), initialScreen: initial.id, screens },
+    return followCopies(
+      bindItemRefs(
+        { v: 2, accent, design: sanitizeDesign(raw.design, spec), initialScreen: initial.id, screens },
+        spec,
+      ),
       spec,
     )
   }
@@ -982,14 +993,17 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
   const screens = fallback.screens.map((entry) =>
     entry.kind === 'home' && legacySections.length ? { ...entry, sections: legacySections } : entry,
   )
-  return bindItemRefs(
-    {
-      v: 2,
-      accent,
-      design: sanitizeDesign(raw.design, spec) ?? fallback.design,
-      initialScreen: fallback.initialScreen,
-      screens,
-    },
+  return followCopies(
+    bindItemRefs(
+      {
+        v: 2,
+        accent,
+        design: sanitizeDesign(raw.design, spec) ?? fallback.design,
+        initialScreen: fallback.initialScreen,
+        screens,
+      },
+      spec,
+    ),
     spec,
   )
 }
@@ -1004,6 +1018,40 @@ const ITEM_BOUND: FlagshipVariant[] = ['dine-feature']
  * product. Documents written before references existed are matched once by
  * name, which is the only evidence they carry.
  */
+const FOLLOW_FIELDS: CopiedField[] = ['name', 'tagline', 'hours', 'address']
+
+/**
+ * Records where a generated heading or paragraph came from. The rule is exact
+ * equality with a specification value: a component that says exactly what the
+ * business says is a copy and may follow it, and a component the owner has
+ * rewritten no longer matches, so it is never touched again.
+ */
+function followCopies(doc: Doc, spec: AppSpec): Doc {
+  const source = (value: string | undefined): CopiedField | undefined => {
+    const text = value?.trim()
+    if (!text) return undefined
+    return FOLLOW_FIELDS.find((field) => {
+      const candidate = spec[field]
+      return typeof candidate === 'string' && candidate.trim() === text
+    })
+  }
+  return {
+    ...doc,
+    screens: doc.screens.map((screen) => ({
+      ...screen,
+      sections: screen.sections.map((node) => {
+        if (!node.follows) {
+          const title = node.kind === 'flagship' && !node.itemRef ? source(node.title) : undefined
+          const text = node.kind === 'flagship' ? source(node.text) : undefined
+          if (!title && !text) return node
+          return { ...node, follows: { ...(title ? { title } : {}), ...(text ? { text } : {}) } }
+        }
+        return node
+      }),
+    })),
+  }
+}
+
 export function bindItemRefs(doc: Doc, spec: AppSpec): Doc {
   const items = spec.menu.flatMap((section) => section.items).filter((item) => item.id)
   if (!items.length) return doc

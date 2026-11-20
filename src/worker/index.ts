@@ -72,6 +72,7 @@ import {
 } from './media'
 import type { MenuSection, VideoLink } from './types'
 import type { Doc } from './doc'
+import { pruneEmptySections, refreshCopiedCopy } from './publish'
 
 /**
  * Media references a document or catalogue carries that this project does not
@@ -975,6 +976,13 @@ app.patch('/api/projects/:token', async (c) => {
     },
   })
 
+  // A saved heading that still reads exactly what the old specification said
+  // follows the new one; anything the owner rewrote is left as it is.
+  if (updated.doc) {
+    const copied = refreshCopiedCopy(starterDoc(updated), project.spec, updated.spec)
+    if (copied.changed) await saveDoc(c.env.DB, updated, copied.doc)
+  }
+
   return c.json({ version: updated.version, quote: updated.quote, status: updated.status })
 })
 
@@ -1014,9 +1022,10 @@ app.put('/api/projects/:token/doc', async (c) => {
       'invalid_media_reference',
       'That image belongs to another build. Choose one from this build library.',
     )
-  await saveDoc(c.env.DB, project, doc)
+  const pruned = pruneEmptySections(doc, project.spec, project.token)
+  await saveDoc(c.env.DB, project, pruned.doc)
   c.header('Cache-Control', 'private, no-store')
-  return c.json({ ok: true, doc, savedAt: new Date().toISOString() })
+  return c.json({ ok: true, doc: pruned.doc, hidden: pruned.hidden, savedAt: new Date().toISOString() })
 })
 
 /**
@@ -1085,6 +1094,10 @@ app.post('/api/projects/:token/import/apply', async (c) => {
         'The source refers to an image this build does not own.',
       )
     const updated = await saveVersion(c.env.DB, project, { spec: { menu } })
+    if (updated.doc) {
+      const copied = refreshCopiedCopy(starterDoc(updated), project.spec, updated.spec)
+      if (copied.changed) await saveDoc(c.env.DB, updated, copied.doc)
+    }
     await log(c.env.DB, project.id, 'import', 'Catalogue updated', `Re-import applied from ${url.href}`)
     return c.json({ version: updated.version })
   } catch (error) {
@@ -1948,8 +1961,12 @@ app.post('/api/projects/:token/notes', async (c) => {
 app.post('/api/projects/:token/approve', async (c) => {
   const project = await loadProject(c)
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  // Approval is the last chance to catch a component that draws nothing: the
+  // document is repaired here even if it was stored by an older build.
+  const pruned = pruneEmptySections(starterDoc(project), project.spec, project.token)
+  if (pruned.hidden.length) await saveDoc(c.env.DB, project, pruned.doc)
   await approveProject(c.env.DB, project)
-  return c.json({ ok: true, version: project.version, status: 'approved' })
+  return c.json({ ok: true, version: project.version, status: 'approved', hidden: pruned.hidden })
 })
 
 /* ------------------------------- fallbacks ----------------------------- */

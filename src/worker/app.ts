@@ -1222,6 +1222,40 @@ body[data-editor="1"] .doc-section { cursor: pointer; }
 })()
 </script>`
 
+/**
+ * The specification as a customer may see it. A description-built app carries
+ * the trade's sample phone, address, hours and team; they stay editable in the
+ * studio, but the customer never sees them as if the owner had confirmed them.
+ * A value equal to the trade's seed is sample, while anything the owner or
+ * their site supplied is kept.
+ *
+ * The publishing guard uses this too, so deciding whether a component has
+ * anything to show is made against exactly the data the customer receives.
+ */
+export function customerSpec(inputSpec: AppSpec): AppSpec {
+  const seed = verticalFor(inputSpec.vertical)
+  const contact = (value: string | undefined, sample: string | undefined): string => {
+    const text = (value ?? '').trim()
+    if (!text) return ''
+    return sample && text === sample.trim() ? '' : text
+  }
+  const sampleTeam = inputSpec.sampleContent?.team === true || inputSpec.sampleContent?.staff === true
+  return {
+    ...inputSpec,
+    ...(inputSpec.sampleContent?.contact
+      ? {
+          phone: contact(inputSpec.phone, seed.phone),
+          address: contact(inputSpec.address, seed.address),
+          hours: contact(inputSpec.hours, seed.hours),
+        }
+      : {}),
+    ...(sampleTeam ? { team: [], staff: [] } : {}),
+    // The customer never sees a sample ribbon on hidden details; the editor
+    // keeps the flag so the owner still knows what is theirs to replace.
+    ...(inputSpec.sampleContent ? { sampleContent: { ...inputSpec.sampleContent, contact: false } } : {}),
+  }
+}
+
 export function renderApp(
   inputSpec: AppSpec,
   options: {
@@ -1249,37 +1283,7 @@ export function renderApp(
     payments?: { payOrders: boolean; payBookings: boolean; provider?: string }
   },
 ): string {
-  // A description-built app carries the trade's sample phone, address and hours.
-  // They stay editable in the studio, but the customer never sees them as if the
-  // owner had confirmed them: a value equal to the trade's seed is sample, while
-  // anything the owner or their site supplied is kept.
-  const seed = verticalFor(inputSpec.vertical)
-  const contact = (value: string | undefined, sample: string | undefined): string => {
-    const text = (value ?? '').trim()
-    if (!text) return ''
-    return sample && text === sample.trim() ? '' : text
-  }
-  // The trade's sample team is a demonstration, not this business's people: a
-  // named coach, clinician or registration number must never reach a customer
-  // as if the owner had confirmed it. The editor keeps it, so it stays editable.
-  const sampleTeam =
-    !options.editor && (inputSpec.sampleContent?.team === true || inputSpec.sampleContent?.staff === true)
-  const spec: AppSpec = {
-    ...inputSpec,
-    ...(options.editor || !inputSpec.sampleContent?.contact
-      ? {}
-      : {
-          phone: contact(inputSpec.phone, seed.phone),
-          address: contact(inputSpec.address, seed.address),
-          hours: contact(inputSpec.hours, seed.hours),
-        }),
-    ...(sampleTeam ? { team: [], staff: [] } : {}),
-    // The customer never sees a "sample" ribbon on hidden details; the editor
-    // keeps the flag so the owner still knows what is theirs to replace.
-    ...(!options.editor && inputSpec.sampleContent
-      ? { sampleContent: { ...inputSpec.sampleContent, contact: false } }
-      : {}),
-  }
+  const spec: AppSpec = options.editor ? inputSpec : customerSpec(inputSpec)
   const live = options.live !== false
   const vertical = verticalFor(spec.vertical)
   const vocab: Vocab = vertical.vocab
