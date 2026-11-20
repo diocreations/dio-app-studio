@@ -1,4 +1,5 @@
 import { sanitizeHex } from './pricing'
+import { composeDoc } from './blueprints'
 import { directionFor, directionsFor } from './directions'
 import type { AppSpec, ElementShape } from './types'
 import { themeFor } from './themes'
@@ -997,7 +998,7 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
     doc.screens.splice(visit, 0, entry)
   }
   doc.initialScreen = home.id
-  return followCopies(doc, spec)
+  return composeDoc(spec, followCopies(doc, spec))
 }
 
 export function homeScreen(doc: Doc): ScreenNode {

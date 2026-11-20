@@ -577,9 +577,13 @@ app.get('/p/:token/app', async (c) => {
       // editor bridge is the only difference. A concept review is the one
       // exception: it shows the seeded composition the three designs come from,
       // with the owner's own catalogue, and saves nothing.
-      // A concept review renders the real saved document with that direction
-      // applied: the concepts are judged on the app they will become.
-      doc: starterDoc(project),
+      // A concept review renders that concept's own document, not the saved
+      // one with a different palette: the three structures are the choice.
+      doc: concept
+        ? FLAGSHIP_TRADES.has(project.spec.vertical)
+          ? flagshipDocFromSpec({ ...project.spec, direction: concept.direction })
+          : docFromSpec({ ...project.spec, direction: concept.direction })
+        : starterDoc(project),
       flagship: FLAGSHIP_TRADES.has(project.spec.vertical),
       payments: capability.enabled
         ? { payOrders: capability.payOrders, payBookings: capability.payBookings, provider: capability.provider ?? '' }
@@ -943,6 +947,7 @@ const importRoute = (mode: 'import' | 'discover') => async (c: Context) => {
         discovery,
         blockers: plan.blockers,
         confirmations: plan.confirmations,
+        diversity: plan.diversity,
         concepts: plan.concepts.map((concept) => ({
           id: concept.id,
           name: concept.name,

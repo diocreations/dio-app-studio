@@ -1,5 +1,6 @@
 import type { ImportedSite, ImportReport } from './importer'
 import { directionsFor } from './directions'
+import { blueprintFor, validateConcepts, type Diversity } from './blueprints'
 import { buildSpec } from './pricing'
 import { flagshipDocFromSpec, type Doc } from './doc'
 import type { AppSpec, MenuItem, VerticalId } from './types'
@@ -96,6 +97,9 @@ export type DiscoveryConcept = {
 export type DiscoveryPlan = {
   discovery: Discovery
   concepts: DiscoveryConcept[]
+  /** The structural comparison of the three documents. A plan whose concepts
+   *  are the same application in three skins must not reach the owner. */
+  diversity: Diversity
   /** Only the fields a build genuinely cannot proceed without. */
   blockers: DiscoveryQuestion[]
   /** Questions worth asking, never blocking. */
@@ -445,11 +449,22 @@ export function discoverPlan(
       direction: direction.id,
       site: facts,
     })
-    return { id: direction.id, name: direction.label, note: direction.blurb, spec, doc: flagshipDocFromSpec(spec) }
+    const blueprint = blueprintFor(spec)
+    return {
+      id: direction.id,
+      name: direction.label,
+      note: `${direction.blurb} · ${blueprint.label}`,
+      spec,
+      doc: flagshipDocFromSpec(spec),
+    }
   })
   return {
     discovery,
     concepts,
+    diversity: validateConcepts(
+      concepts[0].spec,
+      concepts.map((concept) => ({ id: concept.id, doc: concept.doc })),
+    ),
     // Questions are keyed by field: an owner never sees the same question twice.
 
     blockers: uniqueQuestions(discovery.questions.filter((question) => question.kind === 'blocker')),
