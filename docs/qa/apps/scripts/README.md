@@ -19,10 +19,27 @@ bunx playwright install chromium
 ## Run
 
 ```sh
-bun docs/qa/apps/scripts/sessions.mjs      # mints local owner sessions
-node docs/qa/apps/scripts/run-apps.cjs     # customer app: screens, workflows, widths
+bun docs/qa/apps/scripts/sessions.mjs       # mints local owner sessions
+bun docs/qa/apps/scripts/repair-fixtures.mjs # repairs the fixture documents (idempotent)
+bun docs/qa/apps/scripts/run-regression.mjs  # the five-app regression sweep
+node docs/qa/apps/scripts/run-apps.cjs      # customer app: screens, workflows, widths
 node docs/qa/apps/scripts/run-dashboard.cjs # owner dashboard: tabs, records, settings
 ```
+
+`repair-fixtures` is the versioned repair for state that only lives in the local
+database: photographs of the app that were uploaded as business photography
+while testing, sections left hidden by the visibility toggle, catalogue items
+without a stable id, and feature blocks whose copy was copied instead of
+referenced. It is idempotent — a second run reports no changes — and accepts
+`--dry-run` to print the plan without writing. Run it after a fresh import so a
+clean database produces the corrected fixtures.
+
+`run-regression` is the acceptance sweep: business identity, catalogue and
+prices, featured items, section visibility, offers, media ownership, stale
+document data, invented copy, parity between the editor preview and the
+published app, horizontal overflow at 320, 360, 375, 390, 430, 768 and 1280, and
+a measured contrast pass. `--no-browser` runs only the data and HTML checks.
+Results land in `docs/qa/apps/regression-results.json`.
 
 Environment overrides: `BASE`, `APPS_OUT` (screenshot and JSON destination),
 `QA_COOKIES` (session file), `ONLY` (comma-separated app keys for `run-apps`),
@@ -36,6 +53,10 @@ Environment overrides: `BASE`, `APPS_OUT` (screenshot and JSON destination),
   catalogue at 320, 360, 375, 390, 430, 768 and 1280 and asserts there is no
   horizontal overflow. A scroll-width assertion says nothing about how a screen
   looks — review the screenshots for that.
+- `run-regression` is read-only apart from nothing at all: it reads the fixture
+  database, fetches both rendered surfaces and measures the open screen in a
+  browser. Contrast is measured against the composited background the text sits
+  on, and text over photography is skipped rather than guessed at.
 - `run-dashboard` signs in as the owner, opens every tab, proves the records the
   customer workflows created are visible, then renames the business, confirms the
   customer app shows the new name, and restores it.

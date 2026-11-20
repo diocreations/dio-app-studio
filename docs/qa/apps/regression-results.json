@@ -1,0 +1,926 @@
+{
+  "startedAt": "2026-11-20T03:41:50.750Z",
+  "base": "http://127.0.0.1:8795",
+  "widths": [
+    320,
+    360,
+    375,
+    390,
+    430,
+    768,
+    1280
+  ],
+  "apps": [
+    {
+      "app": "buttertales",
+      "checks": [
+        {
+          "name": "identity: business name",
+          "pass": true,
+          "detail": "Butter Tales™"
+        },
+        {
+          "name": "catalogue: has priced items",
+          "pass": true,
+          "detail": "4 items"
+        },
+        {
+          "name": "catalogue: every item has a stable id",
+          "pass": true,
+          "detail": "4 items"
+        },
+        {
+          "name": "catalogue: duplicate ids are scoped",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "media: every reference is owned by this build",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "sections: no duplicate node ids",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sections: the home has visible content",
+          "pass": true,
+          "detail": "4 visible"
+        },
+        {
+          "name": "app responds",
+          "pass": true,
+          "detail": 200
+        },
+        {
+          "name": "identity: name rendered",
+          "pass": true,
+          "detail": "Butter Tales™"
+        },
+        {
+          "name": "media: no other build media path",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "copy: no generator placeholder rendered",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sections: visible sec_fx_shop_search is published",
+          "pass": true,
+          "detail": "sec_fx_shop_search"
+        },
+        {
+          "name": "sections: visible sec_fx_shop_title is published",
+          "pass": true,
+          "detail": "sec_fx_shop_title"
+        },
+        {
+          "name": "sections: visible sec_fx_shop_all is published",
+          "pass": true,
+          "detail": "sec_fx_shop_all"
+        },
+        {
+          "name": "sections: visible sec_fx_shop_products is published",
+          "pass": true,
+          "detail": "sec_fx_shop_products"
+        },
+        {
+          "name": "catalogue: priced items appear in the app",
+          "pass": true,
+          "detail": "4/4"
+        },
+        {
+          "name": "parity: same sections in editor and published app",
+          "pass": true,
+          "detail": {
+            "published": 4,
+            "editor": 4
+          }
+        },
+        {
+          "name": "parity: same catalogue names in both surfaces",
+          "pass": true,
+          "detail": "4/4"
+        },
+        {
+          "name": "layout: no horizontal overflow at 320px",
+          "pass": true,
+          "detail": {
+            "scroll": 320,
+            "client": 320,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 360px",
+          "pass": true,
+          "detail": {
+            "scroll": 360,
+            "client": 360,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 375px",
+          "pass": true,
+          "detail": {
+            "scroll": 375,
+            "client": 375,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 390px",
+          "pass": true,
+          "detail": {
+            "scroll": 390,
+            "client": 390,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 430px",
+          "pass": true,
+          "detail": {
+            "scroll": 430,
+            "client": 430,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 768px",
+          "pass": true,
+          "detail": {
+            "scroll": 768,
+            "client": 768,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 1280px",
+          "pass": true,
+          "detail": {
+            "scroll": 1280,
+            "client": 1280,
+            "wide": []
+          }
+        },
+        {
+          "name": "contrast: no text below 3:1 on the opened screen",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "runtime: no page errors",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "app": "cafe",
+      "checks": [
+        {
+          "name": "identity: business name",
+          "pass": true,
+          "detail": "Good Day Cafe"
+        },
+        {
+          "name": "catalogue: has priced items",
+          "pass": true,
+          "detail": "7 items"
+        },
+        {
+          "name": "catalogue: every item has a stable id",
+          "pass": true,
+          "detail": "7 items"
+        },
+        {
+          "name": "catalogue: duplicate ids are scoped",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "media: every reference is owned by this build",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "sections: no duplicate node ids",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sections: the home has visible content",
+          "pass": true,
+          "detail": "5 visible"
+        },
+        {
+          "name": "offers: a build with offers publishes them",
+          "pass": true,
+          "detail": "visible"
+        },
+        {
+          "name": "app responds",
+          "pass": true,
+          "detail": 200
+        },
+        {
+          "name": "identity: name rendered",
+          "pass": true,
+          "detail": "Good Day Cafe"
+        },
+        {
+          "name": "media: no other build media path",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "copy: no generator placeholder rendered",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sections: visible sec_fx_cafe_hero is published",
+          "pass": true,
+          "detail": "sec_fx_cafe_hero"
+        },
+        {
+          "name": "sections: visible sec_fx_cafe_menu is published",
+          "pass": true,
+          "detail": "sec_fx_cafe_menu"
+        },
+        {
+          "name": "sections: visible sec_fx_cafe_reserve is published",
+          "pass": true,
+          "detail": "sec_fx_cafe_reserve"
+        },
+        {
+          "name": "sections: visible sec_fx_cafe_order is published",
+          "pass": true,
+          "detail": "sec_fx_cafe_order"
+        },
+        {
+          "name": "sections: visible sec_fx_offers is published",
+          "pass": true,
+          "detail": "sec_fx_offers"
+        },
+        {
+          "name": "catalogue: priced items appear in the app",
+          "pass": true,
+          "detail": "7/7"
+        },
+        {
+          "name": "parity: same sections in editor and published app",
+          "pass": true,
+          "detail": {
+            "published": 5,
+            "editor": 5
+          }
+        },
+        {
+          "name": "parity: same catalogue names in both surfaces",
+          "pass": true,
+          "detail": "7/7"
+        },
+        {
+          "name": "layout: no horizontal overflow at 320px",
+          "pass": true,
+          "detail": {
+            "scroll": 320,
+            "client": 320,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 360px",
+          "pass": true,
+          "detail": {
+            "scroll": 360,
+            "client": 360,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 375px",
+          "pass": true,
+          "detail": {
+            "scroll": 375,
+            "client": 375,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 390px",
+          "pass": true,
+          "detail": {
+            "scroll": 390,
+            "client": 390,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 430px",
+          "pass": true,
+          "detail": {
+            "scroll": 430,
+            "client": 430,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 768px",
+          "pass": true,
+          "detail": {
+            "scroll": 768,
+            "client": 768,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 1280px",
+          "pass": true,
+          "detail": {
+            "scroll": 1280,
+            "client": 1280,
+            "wide": []
+          }
+        },
+        {
+          "name": "contrast: no text below 3:1 on the opened screen",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "runtime: no page errors",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "app": "salon",
+      "checks": [
+        {
+          "name": "identity: business name",
+          "pass": true,
+          "detail": "Halo Hair Studio"
+        },
+        {
+          "name": "catalogue: has priced items",
+          "pass": true,
+          "detail": "7 items"
+        },
+        {
+          "name": "catalogue: every item has a stable id",
+          "pass": true,
+          "detail": "7 items"
+        },
+        {
+          "name": "catalogue: duplicate ids are scoped",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "media: every reference is owned by this build",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "sections: no duplicate node ids",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sections: the home has visible content",
+          "pass": true,
+          "detail": "6 visible"
+        },
+        {
+          "name": "offers: a build with offers publishes them",
+          "pass": true,
+          "detail": "visible"
+        },
+        {
+          "name": "app responds",
+          "pass": true,
+          "detail": 200
+        },
+        {
+          "name": "identity: name rendered",
+          "pass": true,
+          "detail": "Halo Hair Studio"
+        },
+        {
+          "name": "media: no other build media path",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "copy: no generator placeholder rendered",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sections: visible sec_fx_salon_title is published",
+          "pass": true,
+          "detail": "sec_fx_salon_title"
+        },
+        {
+          "name": "sections: visible sec_fx_salon_dates is published",
+          "pass": true,
+          "detail": "sec_fx_salon_dates"
+        },
+        {
+          "name": "sections: visible sec_fx_salon_staff is published",
+          "pass": true,
+          "detail": "sec_fx_salon_staff"
+        },
+        {
+          "name": "sections: visible sec_fx_salon_services is published",
+          "pass": true,
+          "detail": "sec_fx_salon_services"
+        },
+        {
+          "name": "sections: visible sec_fx_salon_action is published",
+          "pass": true,
+          "detail": "sec_fx_salon_action"
+        },
+        {
+          "name": "sections: visible sec_fx_offers is published",
+          "pass": true,
+          "detail": "sec_fx_offers"
+        },
+        {
+          "name": "catalogue: priced items appear in the app",
+          "pass": true,
+          "detail": "7/7"
+        },
+        {
+          "name": "parity: same sections in editor and published app",
+          "pass": true,
+          "detail": {
+            "published": 6,
+            "editor": 6
+          }
+        },
+        {
+          "name": "parity: same catalogue names in both surfaces",
+          "pass": true,
+          "detail": "7/7"
+        },
+        {
+          "name": "layout: no horizontal overflow at 320px",
+          "pass": true,
+          "detail": {
+            "scroll": 320,
+            "client": 320,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 360px",
+          "pass": true,
+          "detail": {
+            "scroll": 360,
+            "client": 360,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 375px",
+          "pass": true,
+          "detail": {
+            "scroll": 375,
+            "client": 375,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 390px",
+          "pass": true,
+          "detail": {
+            "scroll": 390,
+            "client": 390,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 430px",
+          "pass": true,
+          "detail": {
+            "scroll": 430,
+            "client": 430,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 768px",
+          "pass": true,
+          "detail": {
+            "scroll": 768,
+            "client": 768,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 1280px",
+          "pass": true,
+          "detail": {
+            "scroll": 1280,
+            "client": 1280,
+            "wide": []
+          }
+        },
+        {
+          "name": "contrast: no text below 3:1 on the opened screen",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "runtime: no page errors",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "app": "gym",
+      "checks": [
+        {
+          "name": "identity: business name",
+          "pass": true,
+          "detail": "Iron Yard"
+        },
+        {
+          "name": "catalogue: has priced items",
+          "pass": true,
+          "detail": "8 items"
+        },
+        {
+          "name": "catalogue: every item has a stable id",
+          "pass": true,
+          "detail": "8 items"
+        },
+        {
+          "name": "catalogue: duplicate ids are scoped",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "media: every reference is owned by this build",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "sections: no duplicate node ids",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sections: the home has visible content",
+          "pass": true,
+          "detail": "5 visible"
+        },
+        {
+          "name": "offers: a build with offers publishes them",
+          "pass": true,
+          "detail": "visible"
+        },
+        {
+          "name": "app responds",
+          "pass": true,
+          "detail": 200
+        },
+        {
+          "name": "identity: name rendered",
+          "pass": true,
+          "detail": "Iron Yard"
+        },
+        {
+          "name": "media: no other build media path",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "copy: no generator placeholder rendered",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sections: visible sec_fx_gym_hero is published",
+          "pass": true,
+          "detail": "sec_fx_gym_hero"
+        },
+        {
+          "name": "sections: visible sec_fx_gym_plans is published",
+          "pass": true,
+          "detail": "sec_fx_gym_plans"
+        },
+        {
+          "name": "sections: hidden sec_fx_gym_trainers is not published",
+          "pass": true,
+          "detail": "sec_fx_gym_trainers"
+        },
+        {
+          "name": "sections: visible sec_fx_gym_timetable is published",
+          "pass": true,
+          "detail": "sec_fx_gym_timetable"
+        },
+        {
+          "name": "sections: visible sec_fx_gym_join is published",
+          "pass": true,
+          "detail": "sec_fx_gym_join"
+        },
+        {
+          "name": "sections: visible sec_fx_offers is published",
+          "pass": true,
+          "detail": "sec_fx_offers"
+        },
+        {
+          "name": "catalogue: priced items appear in the app",
+          "pass": true,
+          "detail": "8/8"
+        },
+        {
+          "name": "parity: same sections in editor and published app",
+          "pass": true,
+          "detail": {
+            "published": 5,
+            "editor": 5
+          }
+        },
+        {
+          "name": "parity: same catalogue names in both surfaces",
+          "pass": true,
+          "detail": "8/8"
+        },
+        {
+          "name": "layout: no horizontal overflow at 320px",
+          "pass": true,
+          "detail": {
+            "scroll": 320,
+            "client": 320,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 360px",
+          "pass": true,
+          "detail": {
+            "scroll": 360,
+            "client": 360,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 375px",
+          "pass": true,
+          "detail": {
+            "scroll": 375,
+            "client": 375,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 390px",
+          "pass": true,
+          "detail": {
+            "scroll": 390,
+            "client": 390,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 430px",
+          "pass": true,
+          "detail": {
+            "scroll": 430,
+            "client": 430,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 768px",
+          "pass": true,
+          "detail": {
+            "scroll": 768,
+            "client": 768,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 1280px",
+          "pass": true,
+          "detail": {
+            "scroll": 1280,
+            "client": 1280,
+            "wide": []
+          }
+        },
+        {
+          "name": "contrast: no text below 3:1 on the opened screen",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "runtime: no page errors",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "pass": true
+    },
+    {
+      "app": "dishoom",
+      "checks": [
+        {
+          "name": "identity: business name",
+          "pass": true,
+          "detail": "Dishoom Indian Restaurants"
+        },
+        {
+          "name": "catalogue: has priced items",
+          "pass": true,
+          "detail": "52 items"
+        },
+        {
+          "name": "catalogue: every item has a stable id",
+          "pass": true,
+          "detail": "52 items"
+        },
+        {
+          "name": "catalogue: duplicate ids are scoped",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "media: every reference is owned by this build",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "sections: no duplicate node ids",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sections: the home has visible content",
+          "pass": true,
+          "detail": "3 visible"
+        },
+        {
+          "name": "featured: a dish component references the catalogue",
+          "pass": true,
+          "detail": "itm_77e8e338"
+        },
+        {
+          "name": "featured: the reference resolves",
+          "pass": true,
+          "detail": "itm_77e8e338"
+        },
+        {
+          "name": "app responds",
+          "pass": true,
+          "detail": 200
+        },
+        {
+          "name": "identity: name rendered",
+          "pass": true,
+          "detail": "Dishoom Indian Restaurants"
+        },
+        {
+          "name": "media: no other build media path",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "copy: no generator placeholder rendered",
+          "pass": true,
+          "detail": ""
+        },
+        {
+          "name": "sections: visible sec_fx_dine_title is published",
+          "pass": true,
+          "detail": "sec_fx_dine_title"
+        },
+        {
+          "name": "sections: visible sec_fx_dine_feature is published",
+          "pass": true,
+          "detail": "sec_fx_dine_feature"
+        },
+        {
+          "name": "sections: visible sec_fx_dine_actions is published",
+          "pass": true,
+          "detail": "sec_fx_dine_actions"
+        },
+        {
+          "name": "sections: hidden sec_fx_dine_facts is not published",
+          "pass": true,
+          "detail": "sec_fx_dine_facts"
+        },
+        {
+          "name": "catalogue: priced items appear in the app",
+          "pass": true,
+          "detail": "52/52"
+        },
+        {
+          "name": "parity: same sections in editor and published app",
+          "pass": true,
+          "detail": {
+            "published": 3,
+            "editor": 3
+          }
+        },
+        {
+          "name": "parity: same catalogue names in both surfaces",
+          "pass": true,
+          "detail": "52/52"
+        },
+        {
+          "name": "layout: no horizontal overflow at 320px",
+          "pass": true,
+          "detail": {
+            "scroll": 320,
+            "client": 320,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 360px",
+          "pass": true,
+          "detail": {
+            "scroll": 360,
+            "client": 360,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 375px",
+          "pass": true,
+          "detail": {
+            "scroll": 375,
+            "client": 375,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 390px",
+          "pass": true,
+          "detail": {
+            "scroll": 390,
+            "client": 390,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 430px",
+          "pass": true,
+          "detail": {
+            "scroll": 430,
+            "client": 430,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 768px",
+          "pass": true,
+          "detail": {
+            "scroll": 768,
+            "client": 768,
+            "wide": []
+          }
+        },
+        {
+          "name": "layout: no horizontal overflow at 1280px",
+          "pass": true,
+          "detail": {
+            "scroll": 1280,
+            "client": 1280,
+            "wide": []
+          }
+        },
+        {
+          "name": "contrast: no text below 3:1 on the opened screen",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "runtime: no page errors",
+          "pass": true,
+          "detail": []
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "pass": true
+}
