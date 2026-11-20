@@ -125,6 +125,9 @@ export type ImportReport = {
   pagesFailed: { url: string; reason: string }[]
   /** Whether a sitemap supplied the pages the home page did not link to. */
   usedSitemap: boolean
+  /** The entry page's own HTML, only when the caller asked for it so the
+   *  discovery record can say how a value was found. Never sent to a browser. */
+  entryHtml?: string
 }
 
 /* ------------------------------------------------------------------ */
@@ -2313,6 +2316,7 @@ const PHOTO_NOTE =
 export async function importWebsite(
   input: string,
   fetchImpl: typeof fetch = fetch,
+  options: { withHtml?: boolean } = {},
 ): Promise<ImportReport> {
   const deadline = Date.now() + CRAWL_BUDGET_MS
   const entryUrl = normaliseUrl(input)
@@ -2525,6 +2529,7 @@ export async function importWebsite(
     pagesRead: [...new Set(crawl.read)].slice(0, 20),
     pagesFailed: crawl.failed.slice(0, 10),
     usedSitemap: crawl.usedSitemap,
+    ...(options.withHtml ? { entryHtml: page.html } : {}),
   }
 }
 

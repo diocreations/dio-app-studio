@@ -206,6 +206,7 @@ function auditTrade(id) {
 /* ---------------------------- render + capture --------------------------- */
 
 await mkdir(MACHINE, { recursive: true })
+await mkdir(`${OUT}/screens`, { recursive: true })
 
 const only = (process.env.TRADES || '').split(',').map((entry) => entry.trim()).filter(Boolean)
 const ids = only.length ? VERTICAL_IDS.filter((id) => only.includes(id)) : VERTICAL_IDS
@@ -311,6 +312,58 @@ for (const trade of results) {
   trade.metrics = metrics
   const capture = await call('Page.captureScreenshot', { format: 'png', fromSurface: true })
   await writeFile(`${OUT}/${trade.id}.png`, Buffer.from(capture.data, 'base64'))
+
+  // A business-specific screen, not just the shop window: the first screen past
+  // home in this trade's own document, opened the way a customer opens it.
+  // The screen that shows how this business actually transacts — booking, a
+  // quote, a timetable — rather than the catalogue every trade shares.
+  const generic = new Set(['home', 'catalog', 'detail', 'search', 'saved', 'more', 'visit'])
+  const kinds = trade.screens.map((entry) => entry.split(':')[0])
+  const secondary = kinds.find((kind) => !generic.has(kind)) ?? kinds.find((kind) => kind !== 'home')
+  if (secondary) {
+    await call('Runtime.evaluate', {
+      expression: `(() => {
+        const kind = ${JSON.stringify(secondary)}
+        const el = document.querySelector('[data-go="' + kind + '"]') || document.querySelector('[data-screen="' + kind + '"]') || document.querySelector('[data-tab="' + kind + '"]')
+        if (!el) return 'no control'
+        el.click(); return 'clicked'
+      })()`,
+      returnByValue: true,
+    })
+    await new Promise((resolve) => setTimeout(resolve, 350))
+    const screenMetrics = await call('Runtime.evaluate', {
+      expression: `(() => {
+        const doc = document.documentElement
+        const heading = document.querySelector('.screen.on h1, .screen.on h2, .fx-title')
+        return {
+          overflow: doc.scrollWidth - window.innerWidth,
+          heading: heading ? heading.textContent.trim().slice(0, 60) : '',
+          text: (document.querySelector('.screen.on')?.innerText || '').length,
+        }
+      })()`,
+      returnByValue: true,
+    })
+    const screenShot = await call('Page.captureScreenshot', { format: 'png', fromSurface: true })
+    await writeFile(`${OUT}/screens/${trade.id}--${secondary}.png`, Buffer.from(screenShot.data, 'base64'))
+    trade.secondary = { kind: secondary, ...(screenMetrics.result?.value ?? {}) }
+  }
+
+  // A small phone is the width that breaks fixed rows: 320 is the cheap proof.
+  await call('Emulation.setDeviceMetricsOverride', { width: 320, height: 700, deviceScaleFactor: 1, mobile: true, screenWidth: 320, screenHeight: 700 })
+  await new Promise((resolve) => setTimeout(resolve, 200))
+  const narrow = await call('Runtime.evaluate', {
+    expression: 'document.documentElement.scrollWidth - window.innerWidth',
+    returnByValue: true,
+  })
+  trade.checks.push({ name: 'fits-320', pass: (narrow.result?.value ?? 0) <= 0, detail: `${narrow.result?.value ?? 0}px overflow at 320` })
+  await call('Emulation.setDeviceMetricsOverride', {
+    width: WIDTH,
+    height: HEIGHT,
+    deviceScaleFactor: 1,
+    mobile: true,
+    screenWidth: WIDTH,
+    screenHeight: HEIGHT,
+  })
   await writeFile(`${MACHINE}/${trade.id}.spec.json`, JSON.stringify(trade.spec, null, 2))
   await writeFile(`${MACHINE}/${trade.id}.doc.json`, JSON.stringify(trade.doc, null, 2))
   const failed = trade.checks.filter((check) => !check.pass).length
@@ -364,10 +417,10 @@ ${failing.length ? failing.map((check) => `- **${check.trade}** · \`${check.nam
 ## Known gaps this run proves
 
 ${noPhoto.length ? `1. **No photography for ${noPhoto.map((trade) => trade.id).join(', ')}.** These trades render text-led compositions with no image boxes at all: no stock photograph stands in for the business. Premium imagery for them is a content task (licensed photography through the existing \`docs/PHOTOGRAPHY.md\` pipeline), not a code change.\n2. **Data models are still catalogue-shaped.** Hotel nights, class places, job records, sessions, enrolments and vendors have no entity yet; those trades stop at the catalogue.` : '1. Photography is present for every trade.'}
-3. **A customer render omits sample people by design** (\`team\`, \`staff\`), so blocks built on them are full in the editor and absent for a customer. That is intentional and tested.\n
+3. **Workflow-screen defects** (hotel has no nights, film books a cast member, gallery books an artwork, school books a club) are listed in VISUAL_REVIEW.md; they need the trade data models in docs/TRADE_DATA_MODELS.md, not a styling change.\n4. **A customer render omits sample people by design** (\`team\`, \`staff\`), so blocks built on them are full in the editor and absent for a customer. That is intentional and tested.\n
 ## What this does not prove
 
-- Design quality. These captures show structure, type and spacing; they were reviewed by eye for the trades named in the report, not all 27.\n- Live URL discovery. No external site was crawled in this run.\n- That 27 documents equal 27 finished products. They do not: a trade passes here when it has its own composition, its screens, its controls and no fake art — not when it is complete.\n`
+- Design quality by implication. Structure, type and spacing are measured here; the visual judgement of all 27 home screens and all 27 workflow screens is in VISUAL_REVIEW.md, with its own defect list.\n- Live URL discovery. No external site was crawled in this run.\n- That 27 documents equal 27 finished products. They do not: a trade passes here when it has its own composition, its screens, its controls and no fake art — not when it is complete.\n`
 
 await writeFile(`${OUT}/REPORT.md`, report)
 console.log(`report: ${OUT}/REPORT.md`)

@@ -26,11 +26,13 @@ import {
   checkImportUrl,
   ImportError,
   importOnce,
+  importWebsite,
   sanitizeImported,
   throttleImports,
 } from './importer'
 import { applyApproval, diffCatalogue } from './reimport'
 import { buildSpec, initialsFor, quote, sanitizeHex, sanitizeMenu, type VerticalId } from './pricing'
+import { buildDiscovery, discoverPlan } from './discovery'
 import { applyCommand, docFromSpec, flagshipDocFromSpec, normalizeDoc } from './doc'
 import { FLAGSHIP_TRADES } from './flagship'
 import { directionsFor } from './directions'
@@ -842,7 +844,7 @@ app.post('/api/quote', async (c) => {
   return c.json({ quote: priced })
 })
 
-app.post('/api/import', async (c) => {
+const importRoute = (mode: 'import' | 'discover') => async (c: Context) => {
   // An import spends outbound requests, so a page on another site may not
   // trigger one. Browsers send Origin on cross-site POSTs; a form post cannot
   // claim application/json without a preflight this endpoint never answers.
@@ -874,8 +876,41 @@ app.post('/api/import', async (c) => {
         'The live importer has used its reads for today. Fill the brief in by hand and the studio will read the site when you send it.',
         429,
       )
-    const report = await importOnce(url.href)
+    const report = await importOnce(url.href, (href) =>
+      importWebsite(href, fetch, { withHtml: mode === 'discover' }),
+    )
     c.header('Cache-Control', 'no-store')
+    // The URL-first entry: the same read, answered with what it established,
+    // what it could not, and the three documents it would generate. Nothing is
+    // written to the database and no customer is asked for a fact just read.
+    if (mode === 'discover') {
+      const discovery = buildDiscovery({
+        report,
+        site: report.site,
+        source: report.source,
+        html: report.entryHtml,
+        pagesRead: report.pagesRead,
+        pagesFailed: report.pagesFailed,
+        usedSitemap: report.usedSitemap,
+        clientRendered: report.notes.some((line) => /client-rendered/i.test(line)),
+      })
+      const plan = discoverPlan(discovery, report.site)
+      return c.json({
+        source: report.source,
+        host: report.host,
+        pages: report.pages,
+        discovery,
+        blockers: plan.blockers,
+        confirmations: plan.confirmations,
+        concepts: plan.concepts.map((concept) => ({
+          id: concept.id,
+          name: concept.name,
+          note: concept.note,
+          spec: concept.spec,
+          doc: concept.doc,
+        })),
+      })
+    }
     return c.json({
       site: report.site,
       source: report.source,
@@ -900,7 +935,11 @@ app.post('/api/import', async (c) => {
     console.error('plattr_import_error', error)
     return fail(c, 502, 'import_failed', 'That site could not be read. Try again, or fill the brief in by hand.')
   }
-})
+}
+
+app.post('/api/import', importRoute('import'))
+// The URL-first entry point. Same guards, same budget, same crawl.
+app.post('/api/discover', importRoute('discover'))
 
 app.post('/api/projects', async (c) => {
   const body = await readJson(c)
