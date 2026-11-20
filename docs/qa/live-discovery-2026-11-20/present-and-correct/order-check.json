@@ -1,0 +1,58 @@
+{
+  "projectToken": "a3f7177cff6164d73634dfd4",
+  "builtFrom": "report.json (live crawl, 2026-11-20)",
+  "catalogue": {
+    "publishedItems": 33,
+    "multiOptionItems": 5,
+    "menuSections": {
+      "Catalogue": 30,
+      "Pad": 2,
+      "Geyer instructional": 1
+    }
+  },
+  "order": {
+    "request": {
+      "key": "0-8",
+      "qty": 2,
+      "variant": "39858944671779"
+    },
+    "meaning": "Candy Cards, option Bon Bons (the second option in the feed, not the marked default)",
+    "status": 201,
+    "response": {
+      "order": {
+        "id": "ord_62bce14b4f8d15ca5b",
+        "number": "2658",
+        "status": "new",
+        "fulfilment": "Pickup",
+        "total": 600,
+        "items": [
+          {
+            "name": "Candy Cards",
+            "variant": "Bon Bons",
+            "price": 300,
+            "qty": 2
+          }
+        ],
+        "createdAt": "2026-11-20T14:17:14.915Z",
+        "updatedAt": "2026-11-20T14:17:14.915Z"
+      }
+    }
+  },
+  "unknownOption": {
+    "request": {
+      "key": "0-8",
+      "qty": 1,
+      "variant": "999999"
+    },
+    "status": 422,
+    "body": {
+      "error": {
+        "code": "variant_unknown"
+      }
+    }
+  },
+  "display": {
+    "currencyShownInApp": "$",
+    "declaredCurrency": ""
+  }
+}

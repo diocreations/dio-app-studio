@@ -215,20 +215,20 @@ const checks = {
     longestRequestMs: requests.reduce((max, entry) => Math.max(max, entry.ms), 0),
     requests: requests.map((entry) => ({ url: entry.url, status: entry.status, bytes: entry.bytes, ms: entry.ms })),
   },
-  1_feed: {
+  '1_feed': {
     pageStatuses: feedPages.map((page) => ({ url: page.url, status: page.status })),
     products: feedProducts.length,
     contentType: requests.find((entry) => new URL(entry.url).pathname === '/products.json')?.contentType ?? '',
     notes: report.notes.filter((line) => /feed|products\.json|shopify/i.test(line)),
     pagesRead: report.pagesRead,
   },
-  2_pagination: {
+  '2_pagination': {
     pages: feedPages,
     total: feedProducts.length,
     lastPageShort: feedPages.length ? feedPages[feedPages.length - 1].count < 250 : null,
     pageCapNote: report.notes.filter((line) => /750|page cap|pagination/i.test(line)),
   },
-  3_names: {
+  '3_names': {
     published: items.length,
     feedProducts: feedProducts.length,
     matchedFeed: items.length - pageOnly.length,
@@ -237,7 +237,7 @@ const checks = {
     feedOnlyCount: feedOnly.length,
     first: items.slice(0, 5).map((item) => item.name),
   },
-  4_images: {
+  '4_images': {
     publishedWithImage: images.length,
     feedProductsWithImages,
     associated: images.filter((entry) => entry.listedByFeed === true).length,
@@ -245,21 +245,21 @@ const checks = {
     sample: images.slice(0, 5),
     report: report.images,
   },
-  5_variants: {
+  '5_variants': {
     multiOptionItems: variants.length,
     sample: variantSample,
     everySampleSingleSelected: variantSample.every((entry) => entry.selectedCount === 1),
   },
-  6_currency: {
+  '6_currency': {
     declared: report.site.currency ?? '',
     variantCurrencies: currencies,
     formatted: lowest,
   },
-  7_conflicts: {
+  '7_conflicts': {
     count: (quality.priceConflicts ?? []).length,
     list: (quality.priceConflicts ?? []).slice(0, 10),
   },
-  8_missing: {
+  '8_missing': {
     unpriced: unpriced.length,
     unpricedSample: unpriced.slice(0, 10).map((item) => item.name),
     dropped: (quality.dropped ?? []).length,
@@ -269,7 +269,7 @@ const checks = {
     feedOnlyCount: feedOnly.length,
     pageOnlyCount: pageOnly.length,
   },
-  9_budget: {
+  '9_budget': {
     withinBudget:
       pageReads.length <= MAX_PAGE_READS &&
       feedPages.length <= 3 &&

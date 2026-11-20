@@ -1,12 +1,14 @@
 # Present & Correct: final live verification plan
 
-Status: **plan only — the crawl is not authorised and has not been run.** No
-figure in this repository is a live reading from presentandcorrect.com. The
-fixture evidence and the automated tests behind every check below are in
-[`shopify-feed.md`](./shopify-feed.md).
+Status: **run once, 20 November 2026, under the authorisation given for that
+date.** The nine results and their evidence are in
+[`live-discovery-2026-11-20/present-and-correct/notes.md`](./live-discovery-2026-11-20/present-and-correct/notes.md):
+seven passed and two failed (only 33 of 706 feed products were published because
+of a 30-per-section cap, and no currency was declared so the app formatted
+dollars). The plan below is kept as the record of what that run had to decide and
+as the script any further run must follow.
 
-A live run needs a separate, explicit authorisation. Until then this document is
-the script a run would follow and the receipt it would have to produce.
+Any further read of the site is a new crawl and needs its own authorisation.
 
 ## Why this shop
 

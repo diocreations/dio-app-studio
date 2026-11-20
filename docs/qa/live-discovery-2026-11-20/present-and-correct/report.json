@@ -1,0 +1,874 @@
+{
+  "source": "https://www.presentandcorrect.com/",
+  "host": "presentandcorrect.com",
+  "images": {
+    "products": 33,
+    "withImage": 33,
+    "withoutImage": 0,
+    "methods": {
+      "public-data": 33
+    },
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 33,
+    "kept": 33,
+    "dropped": [],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "Catalogue",
+      "Pad",
+      "Geyer instructional"
+    ]
+  },
+  "pages": 4,
+  "site": {
+    "name": "Present & Correct",
+    "tagline": "Office sundries for the modern workspace.",
+    "story": "Office sundries for the modern workspace. New & vintage stationery available online & from our London store.",
+    "vertical": "shop",
+    "verticalConfidence": "detected",
+    "category": "Stationery shop",
+    "categoryBasis": "the words on the page",
+    "accent": "#1990c6",
+    "logo": "",
+    "logoImage": {
+      "url": "https://www.presentandcorrect.com/cdn/shop/files/logo.png?v=1652625278&width=873",
+      "alt": "Present & Correct logo"
+    },
+    "phone": "",
+    "email": "info@presentandcorrect.com",
+    "address": "",
+    "hours": "",
+    "website": "https://www.presentandcorrect.com",
+    "currency": "",
+    "socials": [
+      {
+        "label": "Instagram",
+        "url": "https://instagram.com/presentandcorrect/"
+      },
+      {
+        "label": "X",
+        "url": "http://twitter.com/presentcorrect"
+      }
+    ],
+    "menu": [
+      {
+        "name": "Catalogue",
+        "items": [
+          {
+            "name": "'While You Were Out' Pad (1990s)",
+            "desc": "50 sheets of classic 'While you were out' message pads for when your colleague, or you,…",
+            "price": 750,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "7.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/wywo_0cd00c73-110f-4d46-b10e-acb44984b457.jpg?v=1795175257",
+              "alt": "'While You Were Out' Pad (1990s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Osama 'King' Crayons (1960s)",
+            "desc": "From 1960s Japan, impeccable playing card inspired wax crayons. Slim boxes of 12 colours,…",
+            "price": 1950,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "19.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/osama1.jpg?v=1794988159",
+              "alt": "Osama 'King' Crayons (1960s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "The Sun Our Nearest Star (1960)",
+            "desc": "One of a large science series, developed in the 1960s for kids, and illustrated by…",
+            "price": 3200,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "32.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/sun2.jpg?v=1714032994",
+              "alt": "The Sun Our Nearest Star (1960)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Gift Gift Wrap (1950s)",
+            "desc": "Is this meta? Gift wrap, from the 1950s, featuring beautifully illustrated gifts printed…",
+            "price": 650,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "6.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/giftswrap.jpg?v=1699540593",
+              "alt": "Gift Gift Wrap (1950s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "The Holiday Candy Book (1952)",
+            "desc": "A lovely gift for a baker in your life, a 118 page book of Christmas candy recipes -…",
+            "price": 3200,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "32.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/candybook1.jpg?v=1730882341",
+              "alt": "The Holiday Candy Book (1952)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Message Tree (1990s)",
+            "desc": "Something silly, for the silly season. Inside these cardboard tubes lies a miniature…",
+            "price": 1250,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "12.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/messagetree.jpg?v=1761668816",
+              "alt": "Message Tree (1990s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "HO HO HO Card",
+            "desc": "A graphic, concertina card die cut with HO HO HO - a popular greeting at this time of…",
+            "price": 500,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "5.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/products/hohoho.jpg?v=1635952247",
+              "alt": "HO HO HO Card",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Dear Santa Letter Card",
+            "desc": "A heavily letterpress missive template for writing to Santa Claus, simply fill it in and…",
+            "price": 425,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "4.25",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/santaletter.jpg?v=1732819718",
+              "alt": "Dear Santa Letter Card",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Candy Cards",
+            "desc": "Delightful little cards, Riso printed with cheerful Christmas candy illustrations.…",
+            "price": 300,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "3.00",
+              "currency": "",
+              "validated": true,
+              "variant": "Gingerbread"
+            },
+            "variants": [
+              {
+                "id": "39858944639011",
+                "name": "Gingerbread",
+                "price": 300,
+                "currency": "",
+                "selected": true
+              },
+              {
+                "id": "39858944671779",
+                "name": "Bon Bons",
+                "price": 300,
+                "currency": ""
+              }
+            ],
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/products/candy.jpg?v=1667644264",
+              "alt": "Candy Cards",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "New Year Countdown",
+            "desc": "The final countdown of the year, tear off each page as you get towards midnight. A fun,…",
+            "price": 450,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "4.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/countdownny.jpg?v=1699361562",
+              "alt": "New Year Countdown",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Christmas Price Cards (1970s)",
+            "desc": "Sturdy, vintage price cards which will also happily act as a Christmas card or gift tag…",
+            "price": 250,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "2.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/gdrprice1.jpg?v=1763122747",
+              "alt": "Christmas Price Cards (1970s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Lametta (1980s)",
+            "desc": "As with many of the best Christmas things these old boxes of lametta hail from Germany,…",
+            "price": 1250,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "12.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/lametta.jpg?v=1794596553",
+              "alt": "Lametta (1980s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "HO Cubed Card",
+            "desc": "A letterpress card so thickly printed it is like a footprint in snow. Hand printed in the…",
+            "price": 475,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "4.75",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/ho3.jpg?v=1762863599",
+              "alt": "HO Cubed Card",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Christmas Foil Seals (1950s)",
+            "desc": "For gifts, for tags, these old foil Christmas and New Year seals are deliciously shiny…",
+            "price": 750,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "7.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/foils.jpg?v=1794474833",
+              "alt": "Christmas Foil Seals (1950s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Nativity Set (1970s)",
+            "desc": "An old, and extensive, wooden Nativity set which is covering all character bases plus…",
+            "price": 7500,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "75.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/nativity_1a96d865-a16d-4e29-a769-25048ffdaf99.jpg?v=1793809806",
+              "alt": "Nativity Set (1970s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "4 x Spanish Type Samplers (1960s)",
+            "desc": "We've got a nice stack of these old type sampler sheets from Spain, most of which fall…",
+            "price": 1000,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "10.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/typesampler1_1.jpg?v=1725554496",
+              "alt": "4 x Spanish Type Samplers (1960s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Holiday Coasters (x5)",
+            "desc": "A mix of 5 old Christmas coasters, all paper, which were printed around the 60s & 70s…",
+            "price": 800,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "8.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/coasters_e30d39d0-36ed-489c-9a95-0e6b8a24dc87.jpg?v=1794474517",
+              "alt": "Holiday Coasters (x5)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Wood/Brass Angel Ornament (1970s)",
+            "desc": "Wood angels, with brass wings, that were found as shown - a box of delights if ever there…",
+            "price": 950,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "9.50",
+              "currency": "",
+              "validated": true,
+              "variant": "Pink"
+            },
+            "variants": [
+              {
+                "id": "56578117730683",
+                "name": "Pink",
+                "price": 950,
+                "currency": "",
+                "selected": true
+              },
+              {
+                "id": "56578117763451",
+                "name": "Orange",
+                "price": 950,
+                "currency": ""
+              },
+              {
+                "id": "56578117796219",
+                "name": "Red",
+                "price": 950,
+                "currency": ""
+              },
+              {
+                "id": "56578117828987",
+                "name": "Yellow",
+                "price": 950,
+                "currency": ""
+              },
+              {
+                "id": "56578117861755",
+                "name": "Blue",
+                "price": 950,
+                "currency": ""
+              },
+              {
+                "id": "56578117894523",
+                "name": "Mint",
+                "price": 950,
+                "currency": ""
+              }
+            ],
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/angels_856e5503-0aef-446a-802e-4ac22e439fbc.jpg?v=1794474467",
+              "alt": "Wood/Brass Angel Ornament (1970s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Bon Bon Bag (1950s)",
+            "desc": "Whilst not overtly festive these old French bon bon bags are a lovely way to present a…",
+            "price": 500,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "5.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/bonbon_2df1bec0-9dd6-49ba-82df-f497cf1e85ce.jpg?v=1794479705",
+              "alt": "Bon Bon Bag (1950s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Wreath Wrap (1980s)",
+            "desc": "Reminiscent of a huge sheet of postage stamps, this eighties gift wrap has a dense…",
+            "price": 400,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "4.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/hollywrap.jpg?v=1762272659",
+              "alt": "Wreath Wrap (1980s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Shiny Brite Bauble Set (1960s)",
+            "desc": "A set of 12 glass baubles, each is 1\" diameter, and in a mixture of colours. From the…",
+            "price": 2950,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "29.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/shinybrite_80ae400f-d925-4199-a46a-2502c025b59f.jpg?v=1794335084",
+              "alt": "Shiny Brite Bauble Set (1960s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Office Tangram (1980s)",
+            "desc": "An office set issued in 1985, Japan, which is also a Tangram puzzle. Each shape is a…",
+            "price": 8500,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "85.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/paletta2.jpg?v=1781793034",
+              "alt": "Office Tangram (1980s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Ice Cream Bags (1960s)",
+            "desc": "Very special ice cream bags from Japan, a light textured paper, in excellent condition.…",
+            "price": 350,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "3.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/icecream2.jpg?v=1742377342",
+              "alt": "Ice Cream Bags (1960s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Santa Sticker strip (1994)",
+            "desc": "Not one but four Santas on a strip, ready to peel and stick. These are old m, 1994 to be…",
+            "price": 300,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "3.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/abcgross_a06fb622-da6f-4575-808e-d0a5a495dd20.jpg?v=1793807561",
+              "alt": "Santa Sticker strip (1994)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Toyo Pas Crayon Set(1970s)",
+            "desc": "Exceptional old set of oil pastel/crayons from 1970s Japan, in a truly great box. Each…",
+            "price": 2500,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "25.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/toyopas1.jpg?v=1794228882",
+              "alt": "Toyo Pas Crayon Set(1970s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Village Carolling Set",
+            "desc": "A fine Winter scene comprising carol singers amongst a village and trees, produced in…",
+            "price": 5950,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "59.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/choir_villagr.jpg?v=1731000322",
+              "alt": "Village Carolling Set",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Gift Greeting Card (1980s)",
+            "desc": "If you’re wearing shoulder pads then this exuberant greeting card in the form of a gift,…",
+            "price": 400,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "4.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/giftcard_03e43e77-b44d-4d9c-ae2a-5c7599a4a0b8.jpg?v=1793796580",
+              "alt": "Gift Greeting Card (1980s)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Helter Skelter Birthday Card",
+            "desc": "A joyful birthday helter skelter drawn in pen and ink before being letterpress in East…",
+            "price": 700,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "7.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/skelter.jpg?v=1794071386",
+              "alt": "Helter Skelter Birthday Card",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Christmas Tapes",
+            "desc": "A selection of seasonal washi tapes for wrapping & fancy dress. Choose your favourite.…",
+            "price": 350,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "3.50",
+              "currency": "",
+              "validated": true,
+              "variant": "Silver"
+            },
+            "variants": [
+              {
+                "id": "40162885206051",
+                "name": "Silver",
+                "price": 350,
+                "currency": "",
+                "selected": true
+              },
+              {
+                "id": "40162885238819",
+                "name": "Diagonal Gold",
+                "price": 350,
+                "currency": ""
+              },
+              {
+                "id": "40162885271587",
+                "name": "Red",
+                "price": 350,
+                "currency": ""
+              },
+              {
+                "id": "40162885304355",
+                "name": "Silver Pin Stripe",
+                "price": 350,
+                "currency": ""
+              },
+              {
+                "id": "40162885337123",
+                "name": "Solid Gold",
+                "price": 350,
+                "currency": ""
+              },
+              {
+                "id": "40162885369891",
+                "name": "Red Pin Stripe",
+                "price": 350,
+                "currency": ""
+              },
+              {
+                "id": "40162885402659",
+                "name": "Green",
+                "price": 350,
+                "currency": ""
+              },
+              {
+                "id": "40162885435427",
+                "name": "Diagonal Red",
+                "price": 350,
+                "currency": ""
+              }
+            ],
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/tapes.jpg?v=1699369662",
+              "alt": "Christmas Tapes",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Honeycomb Tree",
+            "desc": "For us honeycomb tissue is evocative of Christmas decorations from childhood. We love…",
+            "price": 1100,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "11.00",
+              "currency": "",
+              "validated": true,
+              "variant": "Small (25cm)"
+            },
+            "variants": [
+              {
+                "id": "55920444342651",
+                "name": "Small (25cm)",
+                "price": 1100,
+                "currency": "",
+                "selected": true
+              },
+              {
+                "id": "55920444375419",
+                "name": "Large (40cm)",
+                "price": 1750,
+                "currency": ""
+              }
+            ],
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/trees_c8a1f626-26a9-4c46-bf8a-4f25fa54bd46.jpg?v=1763374489",
+              "alt": "Honeycomb Tree",
+              "source": "website",
+              "method": "public-data"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Pad",
+        "items": [
+          {
+            "name": "Vintage Midori Airmail Pad (1992)",
+            "desc": "Deadstock from Midori, in the form of super lightweight airmail paper which, unsually,…",
+            "price": 1000,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "10.00",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/midairmail.jpg?v=1784101836",
+              "alt": "Vintage Midori Airmail Pad (1992)",
+              "source": "website",
+              "method": "public-data"
+            }
+          },
+          {
+            "name": "Airmail Pad",
+            "desc": "A new book which harks back to the yesteryear. Beautifully light, onion skin paper, for…",
+            "price": 850,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=1",
+              "raw": "8.50",
+              "currency": "",
+              "validated": true
+            },
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/products/airmail_fc23255a-08fd-40fd-9b4e-aa6476cd9789.jpg?v=1653667109",
+              "alt": "Airmail Pad",
+              "source": "website",
+              "method": "public-data"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Geyer instructional",
+        "items": [
+          {
+            "name": "Graph Sticky Notes",
+            "desc": "A life essential if ever there was one. A regular sized pad of Post it notes, but with…",
+            "price": 425,
+            "priceEvidence": {
+              "method": "shopify-variant",
+              "source": "/products.json?limit=250&page=3",
+              "raw": "4.25",
+              "currency": "",
+              "validated": true,
+              "variant": "Simple Grid"
+            },
+            "variants": [
+              {
+                "id": "39645188980771",
+                "name": "Simple Grid",
+                "price": 425,
+                "currency": "",
+                "selected": true
+              },
+              {
+                "id": "39645189013539",
+                "name": "Radial",
+                "price": 425,
+                "currency": ""
+              },
+              {
+                "id": "39645189046307",
+                "name": "Multi Grid",
+                "price": 425,
+                "currency": ""
+              }
+            ],
+            "image": {
+              "url": "https://cdn.shopify.com/s/files/1/0952/3604/products/graphstickie_30e6a58c-5ef5-4339-96a8-6c63d9623629.jpg?v=1653946049",
+              "alt": "Graph Sticky Notes",
+              "source": "website",
+              "method": "public-data"
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+      "catalog",
+      "ordering",
+      "delivery"
+    ],
+    "design": {
+      "bg": "#faf9f5",
+      "surface": "#f1f0ed",
+      "surface2": "#e6e6e3",
+      "ink": "#111a24",
+      "muted": "#60666b",
+      "radius": 4,
+      "display": "\"Inter\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+      "fontLabel": "Inter",
+      "dark": false,
+      "palette": false,
+      "basis": "Inter · 4px corners"
+    },
+    "structure": {
+      "nav": "tabs",
+      "stickyHeader": false,
+      "navLabels": [
+        "Display",
+        "Desk Calendars",
+        "Play",
+        "Prints",
+        "Storage"
+      ],
+      "hero": "image",
+      "basis": "nav in a row · Display, Desk Calendars, Play · hero image"
+    }
+  },
+  "found": [
+    "33 catalogue entries in 3 sections, read from 4 pages",
+    "name: Present & Correct",
+    "their logo — taken from the image the site itself declares as its mark",
+    "category: Stationery shop — from the words on the page",
+    "a one-line description",
+    "brand colour #1990c6",
+    "their look: Inter · 4px corners",
+    "their layout: nav in a row · Display, Desk Calendars, Play · hero image",
+    "email info@presentandcorrect.com",
+    "2 social links",
+    "33 of 33 items with a photograph the site published for that item (public-data: 33)"
+  ],
+  "missing": [
+    "phone number",
+    "address",
+    "opening hours"
+  ],
+  "notes": [
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded."
+  ],
+  "pagesRead": [
+    "/",
+    "/products.json?limit=250&page=3"
+  ],
+  "pagesFailed": [],
+  "usedSitemap": false
+}

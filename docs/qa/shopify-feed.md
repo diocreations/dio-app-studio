@@ -1,7 +1,12 @@
 # Hosted storefront feed: how it is read, and what is not yet live-verified
 
-Status: **fixture-tested, not live-verified.** Present & Correct has not been
-crawled since the second approved round; nothing below claims a live result.
+Status: **live-verified with exceptions, 20 November 2026.** One authorised read
+of `presentandcorrect.com` was run (see
+[the run notes](./live-discovery-2026-11-20/present-and-correct/notes.md)). The
+feed, pagination, images, variant fidelity, missing-product handling and crawl
+budget passed; two checks failed — only 33 of the 706 feed products reached the
+build (a 30-per-section cap), and no currency was declared so the app formatted
+dollars. Both are open and need their own authorised re-run to verify a fix.
 
 ## Endpoint
 
@@ -156,8 +161,34 @@ brief.
   two options as two lines, a browser price ignored, and unknown/foreign/absent
   options refused.
 
-## What a live run still has to prove
+## Live run, 20 November 2026
 
-The checks are listed, with pass criteria and evidence to capture, in
-[`present-and-correct-crawl-plan.md`](./present-and-correct-crawl-plan.md). That
-run has not been authorised; this document claims no live result.
+The run followed [`present-and-correct-crawl-plan.md`](./present-and-correct-crawl-plan.md)
+once, within budget (7.9 s, 3 feed pages, 9 non-asset reads, largest body 519 KB).
+Evidence: `docs/qa/live-discovery-2026-11-20/present-and-correct/`
+(`report.json`, `requests.json`, `feed.json`, `spec.json`, `app.html`,
+`app-served.html`, `order-check.json`, `notes.md`).
+
+- **Passed:** feed available (3 × `200`, JSON, 706 products); pagination
+  250 + 250 + 206 with a short last page; the 33 published names match the feed
+  and 33/33 images belong to their own product record; 5 multi-option products
+  keep their option names, prices and feed IDs with exactly one marked (all
+  same-price here, so the tie rule ran on live data); 0 unpriced items, 0 drops,
+  0 failed pages; 0 conflicts among the compared products; order #2658 charged
+  the chosen option ("Bon Bons", 2 × 300 = 600) and an unknown option was
+  refused with `422`; budget respected.
+- **Failed — product coverage:** the reader groups feed products by
+  `product_type` and keeps at most 30 per group (`items.slice(0, 30)` in
+  `shopifyProducts`). This shop is almost one group, so 33 of 706 products were
+  kept. Not fixed; a fix needs its own authorised run to verify.
+- **Failed — currency:** the entry page declared no currency the reader
+  recognised, so `site.currency` is empty and the app shows `$7.50` where the
+  shop charges £7.50. Not fixed, not re-crawled.
+- Not live-exercised: "From" pricing (no product with differently-priced
+  options was published), a conflict decision (no conflicts), and the 673
+  products the cap dropped.
+
+## Re-running
+
+That run was a single authorised read. Another one needs explicit authorisation,
+and the plan's budget and evidence rules still apply.

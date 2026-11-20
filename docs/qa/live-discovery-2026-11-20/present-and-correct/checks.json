@@ -1,0 +1,575 @@
+{
+  "entry": "https://www.presentandcorrect.com/",
+  "at": "2026-11-20T14:14:33.376Z",
+  "budget": {
+    "wallMs": 7904,
+    "pageReads": 9,
+    "pageReadLimit": 10,
+    "feedPages": 3,
+    "feedPageLimit": 3,
+    "largestBodyBytes": 530838,
+    "bodyLimitBytes": 921600,
+    "longestRequestMs": 1780,
+    "requests": [
+      {
+        "url": "https://www.presentandcorrect.com/robots.txt",
+        "status": 200,
+        "bytes": 3735,
+        "ms": 728
+      },
+      {
+        "url": "https://www.presentandcorrect.com/",
+        "status": 200,
+        "bytes": 130998,
+        "ms": 566
+      },
+      {
+        "url": "https://www.presentandcorrect.com/cdn/shopifycloud/portable-wallets/latest/accelerated-checkout-backwards-compat.css",
+        "status": 200,
+        "bytes": 13812,
+        "ms": 38
+      },
+      {
+        "url": "https://www.presentandcorrect.com/cdn/shop/t/13/assets/base.css?v=37047530915295751971735991241",
+        "status": 200,
+        "bytes": 58177,
+        "ms": 53
+      },
+      {
+        "url": "https://www.presentandcorrect.com/sitemap.xml",
+        "status": 200,
+        "bytes": 1012,
+        "ms": 315
+      },
+      {
+        "url": "https://www.presentandcorrect.com/sitemap_agentic_discovery.xml",
+        "status": 200,
+        "bytes": 222,
+        "ms": 343
+      },
+      {
+        "url": "https://www.presentandcorrect.com/sitemap_products_1.xml?from=1263457092&to=15467971772795",
+        "status": 200,
+        "bytes": 299048,
+        "ms": 1189
+      },
+      {
+        "url": "https://www.presentandcorrect.com/sitemap_pages_1.xml?from=55755716&to=693339652475",
+        "status": 200,
+        "bytes": 1189,
+        "ms": 389
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=1",
+        "status": 200,
+        "bytes": 472871,
+        "ms": 1123
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=2",
+        "status": 200,
+        "bytes": 530838,
+        "ms": 1780
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=3",
+        "status": 200,
+        "bytes": 480368,
+        "ms": 1332
+      }
+    ]
+  },
+  "1_feed": {
+    "pageStatuses": [
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=1",
+        "status": 200
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=2",
+        "status": 200
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=3",
+        "status": 200
+      }
+    ],
+    "products": 706,
+    "contentType": "application/json; charset=utf-8",
+    "notes": [],
+    "pagesRead": [
+      "/",
+      "/products.json?limit=250&page=3"
+    ]
+  },
+  "2_pagination": {
+    "pages": [
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=1",
+        "status": 200,
+        "count": 250,
+        "bytes": 472871
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=2",
+        "status": 200,
+        "count": 250,
+        "bytes": 530838
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=3",
+        "status": 200,
+        "count": 206,
+        "bytes": 480368
+      }
+    ],
+    "total": 706,
+    "lastPageShort": true,
+    "pageCapNote": []
+  },
+  "3_names": {
+    "published": 33,
+    "feedProducts": 706,
+    "matchedFeed": 33,
+    "pageOnly": [],
+    "feedOnly": [
+      "Snowman & Robin Card",
+      "Stripe Bow Christmas Card",
+      "Stuffing Badge Card",
+      "Write a Letter Card",
+      "Letterpress Santa Delivery",
+      "Christmas Mailbox Card",
+      "Foiled Fern Wreath",
+      "Santa / Rudolph Card",
+      "Snowman / Tree Card",
+      "Wooden Doll Spinning Top (1960s)"
+    ],
+    "feedOnlyCount": 673,
+    "first": [
+      "'While You Were Out' Pad (1990s)",
+      "Osama 'King' Crayons (1960s)",
+      "The Sun Our Nearest Star (1960)",
+      "Gift Gift Wrap (1950s)",
+      "The Holiday Candy Book (1952)"
+    ]
+  },
+  "4_images": {
+    "publishedWithImage": 33,
+    "feedProductsWithImages": 706,
+    "associated": 33,
+    "unassociated": [],
+    "sample": [
+      {
+        "name": "'While You Were Out' Pad (1990s)",
+        "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/wywo_0cd00c73-110f-4d46-b10e-acb44984b457.jpg?v=1795175257",
+        "listedByFeed": true
+      },
+      {
+        "name": "Osama 'King' Crayons (1960s)",
+        "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/osama1.jpg?v=1794988159",
+        "listedByFeed": true
+      },
+      {
+        "name": "The Sun Our Nearest Star (1960)",
+        "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/sun2.jpg?v=1714032994",
+        "listedByFeed": true
+      },
+      {
+        "name": "Gift Gift Wrap (1950s)",
+        "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/giftswrap.jpg?v=1699540593",
+        "listedByFeed": true
+      },
+      {
+        "name": "The Holiday Candy Book (1952)",
+        "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/candybook1.jpg?v=1730882341",
+        "listedByFeed": true
+      }
+    ],
+    "report": {
+      "products": 33,
+      "withImage": 33,
+      "withoutImage": 0,
+      "methods": {
+        "public-data": 33
+      },
+      "rejected": [],
+      "ambiguous": []
+    }
+  },
+  "5_variants": {
+    "multiOptionItems": 5,
+    "sample": [
+      {
+        "name": "Candy Cards",
+        "published": [
+          {
+            "id": "39858944639011",
+            "name": "Gingerbread",
+            "price": 300,
+            "currency": "",
+            "selected": true
+          },
+          {
+            "id": "39858944671779",
+            "name": "Bon Bons",
+            "price": 300,
+            "currency": "",
+            "selected": false
+          }
+        ],
+        "feed": [
+          {
+            "id": "39858944639011",
+            "title": "Gingerbread",
+            "price": "3.00"
+          },
+          {
+            "id": "39858944671779",
+            "title": "Bon Bons",
+            "price": "3.00"
+          }
+        ],
+        "selectedCount": 1,
+        "namesMatch": true,
+        "pricesMatch": true,
+        "idsKept": 2
+      },
+      {
+        "name": "Wood/Brass Angel Ornament (1970s)",
+        "published": [
+          {
+            "id": "56578117730683",
+            "name": "Pink",
+            "price": 950,
+            "currency": "",
+            "selected": true
+          },
+          {
+            "id": "56578117763451",
+            "name": "Orange",
+            "price": 950,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "56578117796219",
+            "name": "Red",
+            "price": 950,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "56578117828987",
+            "name": "Yellow",
+            "price": 950,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "56578117861755",
+            "name": "Blue",
+            "price": 950,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "56578117894523",
+            "name": "Mint",
+            "price": 950,
+            "currency": "",
+            "selected": false
+          }
+        ],
+        "feed": [
+          {
+            "id": "56578117730683",
+            "title": "Pink",
+            "price": "9.50"
+          },
+          {
+            "id": "56578117763451",
+            "title": "Orange",
+            "price": "9.50"
+          },
+          {
+            "id": "56578117796219",
+            "title": "Red",
+            "price": "9.50"
+          },
+          {
+            "id": "56578117828987",
+            "title": "Yellow",
+            "price": "9.50"
+          },
+          {
+            "id": "56578117861755",
+            "title": "Blue",
+            "price": "9.50"
+          },
+          {
+            "id": "56578117894523",
+            "title": "Mint",
+            "price": "9.50"
+          }
+        ],
+        "selectedCount": 1,
+        "namesMatch": true,
+        "pricesMatch": true,
+        "idsKept": 6
+      },
+      {
+        "name": "Christmas Tapes",
+        "published": [
+          {
+            "id": "40162885206051",
+            "name": "Silver",
+            "price": 350,
+            "currency": "",
+            "selected": true
+          },
+          {
+            "id": "40162885238819",
+            "name": "Diagonal Gold",
+            "price": 350,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "40162885271587",
+            "name": "Red",
+            "price": 350,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "40162885304355",
+            "name": "Silver Pin Stripe",
+            "price": 350,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "40162885337123",
+            "name": "Solid Gold",
+            "price": 350,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "40162885369891",
+            "name": "Red Pin Stripe",
+            "price": 350,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "40162885402659",
+            "name": "Green",
+            "price": 350,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "40162885435427",
+            "name": "Diagonal Red",
+            "price": 350,
+            "currency": "",
+            "selected": false
+          }
+        ],
+        "feed": [
+          {
+            "id": "40162885206051",
+            "title": "Silver",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885238819",
+            "title": "Diagonal Gold",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885271587",
+            "title": "Red",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885304355",
+            "title": "Silver Pin Stripe",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885337123",
+            "title": "Solid Gold",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885369891",
+            "title": "Red Pin Stripe",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885402659",
+            "title": "Green",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885435427",
+            "title": "Diagonal Red",
+            "price": "3.50"
+          }
+        ],
+        "selectedCount": 1,
+        "namesMatch": true,
+        "pricesMatch": true,
+        "idsKept": 8
+      },
+      {
+        "name": "Honeycomb Tree",
+        "published": [
+          {
+            "id": "55920444342651",
+            "name": "Small (25cm)",
+            "price": 1100,
+            "currency": "",
+            "selected": true
+          },
+          {
+            "id": "55920444375419",
+            "name": "Large (40cm)",
+            "price": 1750,
+            "currency": "",
+            "selected": false
+          }
+        ],
+        "feed": [
+          {
+            "id": "55920444342651",
+            "title": "Small (25cm)",
+            "price": "11.00"
+          },
+          {
+            "id": "55920444375419",
+            "title": "Large (40cm)",
+            "price": "17.50"
+          }
+        ],
+        "selectedCount": 1,
+        "namesMatch": true,
+        "pricesMatch": true,
+        "idsKept": 2
+      },
+      {
+        "name": "Graph Sticky Notes",
+        "published": [
+          {
+            "id": "39645188980771",
+            "name": "Simple Grid",
+            "price": 425,
+            "currency": "",
+            "selected": true
+          },
+          {
+            "id": "39645189013539",
+            "name": "Radial",
+            "price": 425,
+            "currency": "",
+            "selected": false
+          },
+          {
+            "id": "39645189046307",
+            "name": "Multi Grid",
+            "price": 425,
+            "currency": "",
+            "selected": false
+          }
+        ],
+        "feed": [
+          {
+            "id": "39645188980771",
+            "title": "Simple Grid",
+            "price": "4.25"
+          },
+          {
+            "id": "39645189013539",
+            "title": "Radial",
+            "price": "4.25"
+          },
+          {
+            "id": "39645189046307",
+            "title": "Multi Grid",
+            "price": "4.25"
+          }
+        ],
+        "selectedCount": 1,
+        "namesMatch": true,
+        "pricesMatch": true,
+        "idsKept": 3
+      }
+    ],
+    "everySampleSingleSelected": true
+  },
+  "6_currency": {
+    "declared": "",
+    "variantCurrencies": [],
+    "formatted": [
+      {
+        "name": "Christmas Price Cards (1970s)",
+        "price": 250,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Candy Cards",
+        "price": 300,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Santa Sticker strip (1994)",
+        "price": 300,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Ice Cream Bags (1960s)",
+        "price": 350,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Christmas Tapes",
+        "price": 350,
+        "evidence": "shopify-variant"
+      }
+    ]
+  },
+  "7_conflicts": {
+    "count": 0,
+    "list": []
+  },
+  "8_missing": {
+    "unpriced": 0,
+    "unpricedSample": [],
+    "dropped": 0,
+    "droppedSample": [],
+    "suspectPrices": 0,
+    "pagesFailed": [],
+    "feedOnlyCount": 673,
+    "pageOnlyCount": 0
+  },
+  "9_budget": {
+    "withinBudget": true,
+    "wallMs": 7904,
+    "pageReads": 9,
+    "feedPages": 3
+  },
+  "quality": {
+    "discovered": 33,
+    "kept": 33,
+    "dropped": [],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "Catalogue",
+      "Pad",
+      "Geyer instructional"
+    ]
+  }
+}
