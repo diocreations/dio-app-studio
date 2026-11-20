@@ -13,6 +13,7 @@
     "backup:offsite": "bun scripts/offsite-backup.mjs",
     "backup:fetch": "bun scripts/offsite-fetch.mjs",
     "backup:sweep": "bun scripts/backup-sweep.mjs",
+    "backup:sweep:fixture": "bun scripts/backup-sweep-fixture.mjs",
     "owner:keys": "bun scripts/owner-keys.mjs",
     "cleanup:review": "bun scripts/data-cleanup-review.mjs",
     "drill": "bun scripts/recovery-drill.mjs"

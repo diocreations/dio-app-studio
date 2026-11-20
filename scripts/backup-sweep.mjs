@@ -30,10 +30,11 @@
  *
  * Where the key list comes from: the run's own index entry and the run document
  * in the bucket both record every key the run intended to upload (`expected`),
- * written before the first byte. Runs started before that record existed have
- * no list, so their candidates are the fixed names plus the key layout of the
- * newest verified run, translated to this prefix. Those are probes: nothing is
- * deleted unless it exists, and only under the abandoned run's prefix.
+ * written before the first byte. A run that recorded neither is swept by the
+ * fixed names only. Nothing borrows a layout from another run: a key this run
+ * never claimed is left in place, because deleting it would be a guess. The
+ * only runs without a record are ones started before `expected` existed, and
+ * every bucket that had those has been swept.
  */
 import fs from 'node:fs'
 import os from 'node:os'
@@ -103,10 +104,10 @@ function exists(key) {
 }
 
 /**
- * Every key this run might have uploaded, from its own records first. The
- * borrowed layout is a probe list, not a claim: the run's own prefix gates it.
+ * Every key this run recorded for itself, plus the fixed names every run
+ * writes. Nothing is derived from another run's layout.
  */
-function candidatesFor(run, verifiedLayout) {
+function candidatesFor(run) {
   const keys = new Set()
   const add = (key) => {
     if (ownedKey(key, run.id)) keys.add(key)
@@ -126,10 +127,6 @@ function candidatesFor(run, verifiedLayout) {
   }
 
   for (const suffix of ['run.json', 'database.sqlite', 'media/manifest.json']) add(`${runPrefix(run.id)}/${suffix}`)
-  for (const key of verifiedLayout.files) {
-    const suffix = key.slice(`${runPrefix(verifiedLayout.id)}/`.length)
-    if (suffix) add(`${runPrefix(run.id)}/${suffix}`)
-  }
   return [...keys].sort()
 }
 
@@ -150,10 +147,6 @@ async function main() {
 
   const index = readBackupIndex({ r2, work, readBack, bucket })
   const pending = index.runs.filter((run) => run.status === 'pending')
-  const verified = index.runs
-    .filter((run) => run.status === 'verified')
-    .sort((left, right) => String(right.createdAt).localeCompare(String(left.createdAt)))
-  const verifiedLayout = verified[0] ? { id: verified[0].id, files: verified[0].files ?? [] } : { id: '', files: [] }
 
   const summary = { bucket, olderThanMinutes: olderThan, dryRun: !execute, runs: [], deleted: 0, wouldDelete: 0 }
 
@@ -177,7 +170,7 @@ async function main() {
 
     let keys
     try {
-      keys = candidatesFor(run, verifiedLayout)
+      keys = candidatesFor(run)
     } catch (error) {
       log({
         action: 'skip',

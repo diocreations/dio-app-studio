@@ -103,6 +103,13 @@ bun scripts/backup-sweep.mjs --remote --backup-bucket plattr-staging-backups --e
 
 The staging evidence is in `docs/qa/remote/REPORT.md`: 25 objects from the two
 failed acceptance runs, both marked `abandoned`, both verified runs untouched.
+The sweeper's rules are re-runnable against a local bucket — recorded list,
+document-only list, too young, verified, already abandoned, unindexed,
+unrecorded and one claiming keys outside its prefix:
+
+```bash
+bun run backup:sweep:fixture
+```
 
 ## Isolation rules
 

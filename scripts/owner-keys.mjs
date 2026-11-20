@@ -129,5 +129,9 @@ async function verify() {
 
 const check = await verify()
 console.log('')
-for (const project of keys) console.log(`${project.name}\t${project.token}\t${project.key}`)
+// Names and tokens only: a token is in every dashboard URL, a key is the
+// credential for it. Printing keys to a terminal is how they end up in a
+// report, a screenshot or a log.
+for (const project of keys) console.log(`${project.name}\t${project.token}`)
 console.log(`\n${check}`)
+console.log(`owner keys are in ${out}; read them there, they are not printed`)

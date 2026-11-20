@@ -260,10 +260,18 @@ a minute), or a prefix the index does not name. A run with no readable
 `createdAt` is skipped rather than guessed at, and a probe that cannot decide
 whether an object exists stops that run. The index entry is kept and marked
 `abandoned`, so the attempt stays in the audit log; a second sweep finds nothing.
-Runs from before this record existed are still swept: their candidate keys come
-from the newest verified run's layout, translated to the abandoned prefix and
-probed one at a time. The workflow runs the sweep after every backup, including
-a failed one.
+A run with no record at all is swept by the fixed names only — `run.json`,
+`database.sqlite`, `media/manifest.json` — and anything else under its prefix is
+left in place, because a key the run never claimed cannot be shown to belong to
+it. That is why the list is written before the first upload. The workflow runs
+the sweep after every backup, including a failed one.
+
+The rules are re-runnable against a local bucket, with one run per case, and the
+script asserts the survivors after an execute sweep and after a second one:
+
+```bash
+bun run backup:sweep:fixture
+```
 
 `BACKUP_ALERT_WEBHOOK` receives a JSON `{text, stage, runId, mode}` on failure —
 a Slack or Discord incoming webhook accepts it as is. `BACKUP_HEARTBEAT_URL` is
