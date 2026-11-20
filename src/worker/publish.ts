@@ -43,17 +43,21 @@ export function refreshCopiedCopy(
  * the published page silently skips it. Examples are the coach profiles on a
  * gym with no team and the visit details on a restaurant with no hours.
  *
- * This runs where a document is stored and where it is approved, so a section
- * that cannot draw itself is marked hidden in the document and stays that way
- * until it has something to say. Nothing an owner wrote is touched: the block
- * is checked with the customer renderer, and a component is only hidden when
- * that renderer returns no markup at all.
+ * The guard runs both ways. A visible block that draws nothing is hidden and
+ * marked `hiddenBecause: 'empty'`; a block that was hidden for that reason is
+ * shown again as soon as the business has the details it needs. A block the
+ * owner hid by hand has no marker and is never touched.
+ *
+ * This runs where a document is stored, where it is approved, and wherever the
+ * business details or catalogue change, because that is what can make a block
+ * draw itself. Nothing an owner wrote is touched: the block is checked with the
+ * customer renderer, and only a completely empty rendering changes the flag.
  */
 export function pruneEmptySections(
   doc: Doc,
   spec: AppSpec,
   token: string,
-): { doc: Doc; hidden: string[] } {
+): { doc: Doc; hidden: string[]; restored: string[] } {
   // The same specification the published page renders with, so a block that
   // only holds sample data counts as empty here exactly as it does there.
   const customer = customerSpec(spec)
@@ -64,10 +68,14 @@ export function pruneEmptySections(
     doc,
   }
   const hidden: string[] = []
+  const restored: string[] = []
   const screens = doc.screens.map((screen) => {
-    let emptied = false
+    let changed = false
     const sections = screen.sections.map((node) => {
-      if (node.hidden || node.kind !== 'flagship') return node
+      if (node.kind !== 'flagship') return node
+      // Hidden by the owner: their decision stands, whatever the business has.
+      const automatic = node.hidden === true && node.hiddenBecause === 'empty'
+      if (node.hidden && !automatic) return node
       let markup = ''
       try {
         markup = flagshipSection(ctx, node)
@@ -75,12 +83,21 @@ export function pruneEmptySections(
         // A renderer that trips over unusual data must not take the save down.
         return node
       }
-      if (markup.trim()) return node
-      emptied = true
+      if (markup.trim()) {
+        if (!automatic) return node
+        changed = true
+        restored.push(node.id)
+        return { ...node, hidden: false, hiddenBecause: undefined }
+      }
+      // Still nothing to draw. Leave an automatic hide exactly as it is.
+      if (automatic) return node
+      changed = true
       hidden.push(node.id)
       return { ...node, hidden: true, hiddenBecause: 'empty' as const }
     })
-    return emptied ? { ...screen, sections } : screen
+    return changed ? { ...screen, sections } : screen
   })
-  return hidden.length ? { doc: { ...doc, screens }, hidden } : { doc, hidden }
+  return hidden.length || restored.length
+    ? { doc: { ...doc, screens }, hidden, restored }
+    : { doc, hidden, restored }
 }

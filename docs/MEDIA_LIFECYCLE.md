@@ -170,7 +170,18 @@ team, a visit block with no hours), the document save hides it and records
 - explains it in the inspector when selected;
 - adopts the saved document, so the page and the server agree.
 
-Showing it again is allowed, but saving re-hides it until the business has
-something to put there. Once the data exists, the next save leaves it visible and
-the reason is cleared. `docs/qa/apps/scripts/run-autohide.mjs` drives this in a
-real browser (6/6 checks).
+The hide is a loop, not a one-way door. The same check runs wherever the
+business can gain the missing content — the document save, the dashboard's
+business details, the catalogue, a re-import and approval. A block marked
+`hiddenBecause: "empty"` that now renders is un-hidden in the stored document
+and the reason is cleared; the editor then shows it without the owner doing
+anything. A block the owner hid by hand carries no marker and is never touched.
+
+```text
+team/hours/menu empty  →  block hidden (hiddenBecause: "empty")
+team/hours/menu added  →  block visible, marker cleared
+```
+
+`docs/qa/apps/scripts/run-autohide.mjs` drives both halves in a real browser:
+show an empty block, read the notice, add coaches through the dashboard, then
+reload and confirm the block is back (9/9 checks).

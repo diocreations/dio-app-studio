@@ -457,11 +457,17 @@ function save() {
       // document only when nothing was typed while this save was in flight, so
       // a late response can never overwrite newer words.
       const hidden = payload && Array.isArray(payload.hidden) ? payload.hidden : [];
-      if (hidden.length) {
+      const restored = payload && Array.isArray(payload.restored) ? payload.restored : [];
+      if (hidden.length || restored.length) {
         if (payload.doc && JSON.stringify({ doc: state.doc }) === body) { state.doc = payload.doc; render(); }
-        toast(hidden.length === 1
-          ? 'One section was hidden automatically: it has nothing to show yet'
-          : hidden.length + ' sections were hidden automatically: they have nothing to show yet');
+        if (hidden.length)
+          toast(hidden.length === 1
+            ? 'One section was hidden automatically: it has nothing to show yet'
+            : hidden.length + ' sections were hidden automatically: they have nothing to show yet');
+        else
+          toast(restored.length === 1
+            ? 'A section is visible again: the business now has details for it'
+            : restored.length + ' sections are visible again: the business now has details for them');
       }
       return true;
     })
@@ -586,7 +592,7 @@ function renderInspector() {
   const style = node.style || {}; const hides = (node.responsive && node.responsive.hideOn) || [];
   $('inspector').innerHTML =
     (node.hidden && node.hiddenBecause === 'empty'
-      ? '<div class="sec"><p class="hint" role="status">Hidden automatically: this section has nothing to show for this business yet. Add its details and it appears again.</p></div>'
+      ? '<div class="sec"><p class="hint" role="status">Hidden automatically: this section has nothing to show yet. It comes back on its own when the business has the details it needs.</p></div>'
       : '') +
     '<div class="sec">' +
       '<div class="field"><label>Heading</label><input id="pTitle" type="text" maxlength="60" value="' + esc(node.title || '') + '" placeholder="' + (VARIANT_LABELS[node.variant] || SECTION_LABELS[node.kind]) + '" /></div>' +

@@ -639,7 +639,12 @@ async function backfillProjectSampleContent(db: D1Database, project: Project): P
  * Autosaves the editor's document. It does not bump the build version: an
  * editor session is continuous work, and versions are for approved builds.
  */
-export async function saveDoc(db: D1Database, project: Project, doc: Doc): Promise<void> {
+export async function saveDoc(
+  db: D1Database,
+  project: Project,
+  doc: Doc,
+  options: { log?: boolean } = {},
+): Promise<void> {
   await ensureSchema(db)
   const previous = await db
     .prepare('SELECT doc FROM projects WHERE id = ?')
@@ -681,7 +686,9 @@ export async function saveDoc(db: D1Database, project: Project, doc: Doc): Promi
         .run()
     }
   }
-  await log(db, project.id, 'edit', 'Design edited', `${doc.screens.length} screens`)
+  // Reconciliation after a settings or catalogue change is not an edit the
+  // owner made to the design, so it does not add an activity entry.
+  if (options.log !== false) await log(db, project.id, 'edit', 'Design edited', `${doc.screens.length} screens`)
 }
 
 export type DocVersion = { id: string; createdAt: string }

@@ -19,6 +19,7 @@ import {
   saveVersion,
   spendImportBudget,
   spendDailyBudget,
+  type Project,
 } from './db'
 import { bundleFilename, bundleFor } from './export'
 import {
@@ -71,9 +72,21 @@ import {
   uploadMedia,
   type MediaBucket,
 } from './media'
-import type { MenuSection, VideoLink } from './types'
+import type { AppSpec, MenuSection, VideoLink } from './types'
 import type { Doc } from './doc'
 import { pruneEmptySections, refreshCopiedCopy } from './publish'
+
+/**
+ * A business change (settings, catalogue, import) can give a section the data it
+ * was missing. Re-check the stored document and persist the result, so an
+ * automatically hidden block comes back without the owner reopening the editor.
+ * Projects that never saved a document have nothing to reconcile.
+ */
+async function reconcileDoc(db: D1Database, project: Project, doc: Doc, spec: AppSpec) {
+  const result = pruneEmptySections(doc, spec, project.token)
+  if (result.hidden.length || result.restored.length) await saveDoc(db, project, result.doc, { log: false })
+  return result
+}
 import {
   MediaCleanupError,
   clampGraceHours,
@@ -988,7 +1001,9 @@ app.patch('/api/projects/:token', async (c) => {
   // follows the new one; anything the owner rewrote is left as it is.
   if (updated.doc) {
     const copied = refreshCopiedCopy(starterDoc(updated), project.spec, updated.spec)
-    if (copied.changed) await saveDoc(c.env.DB, updated, copied.doc)
+    const pruned = pruneEmptySections(copied.doc, updated.spec, updated.token)
+    if (copied.changed || pruned.hidden.length || pruned.restored.length)
+      await saveDoc(c.env.DB, updated, pruned.doc, { log: false })
   }
 
   return c.json({ version: updated.version, quote: updated.quote, status: updated.status })
@@ -1033,7 +1048,13 @@ app.put('/api/projects/:token/doc', async (c) => {
   const pruned = pruneEmptySections(doc, project.spec, project.token)
   await saveDoc(c.env.DB, project, pruned.doc)
   c.header('Cache-Control', 'private, no-store')
-  return c.json({ ok: true, doc: pruned.doc, hidden: pruned.hidden, savedAt: new Date().toISOString() })
+  return c.json({
+    ok: true,
+    doc: pruned.doc,
+    hidden: pruned.hidden,
+    restored: pruned.restored,
+    savedAt: new Date().toISOString(),
+  })
 })
 
 /**
@@ -1104,7 +1125,9 @@ app.post('/api/projects/:token/import/apply', async (c) => {
     const updated = await saveVersion(c.env.DB, project, { spec: { menu } })
     if (updated.doc) {
       const copied = refreshCopiedCopy(starterDoc(updated), project.spec, updated.spec)
-      if (copied.changed) await saveDoc(c.env.DB, updated, copied.doc)
+      const pruned = pruneEmptySections(copied.doc, updated.spec, updated.token)
+      if (copied.changed || pruned.hidden.length || pruned.restored.length)
+        await saveDoc(c.env.DB, updated, pruned.doc, { log: false })
     }
     await log(c.env.DB, project.id, 'import', 'Catalogue updated', `Re-import applied from ${url.href}`)
     return c.json({ version: updated.version })
@@ -1771,8 +1794,14 @@ app.put('/api/projects/:token/app-settings', async (c) => {
     .bind(name, JSON.stringify(spec), accent, logo, new Date().toISOString(), project.id)
     .run()
   await log(c.env.DB, project.id, 'settings', 'Business details updated', name)
+  // Adding coaches, hours or a story is exactly what an auto-hidden section was
+  // waiting for, so the document is reconciled here rather than at the next
+  // editor visit.
+  let sections = { hidden: [] as string[], restored: [] as string[] }
+  if (project.doc)
+    sections = await reconcileDoc(c.env.DB, project, project.doc, spec as AppSpec)
   c.header('Cache-Control', 'private, no-store')
-  return c.json({ ok: true, spec })
+  return c.json({ ok: true, spec, ...sections })
 })
 
 /* --------------------------- owner payments --------------------------- */
@@ -1993,8 +2022,12 @@ async function saveCatalogHandler(c: Context<{ Bindings: Bindings }, '/api/proje
     .run()
   if (menuChanged || offersChanged)
     await log(c.env.DB, project.id, 'catalogue', 'Catalogue updated', 'Saved from an owner surface.')
+  // A featured item gaining a photograph or price can bring a block back.
+  const sections = project.doc
+    ? await reconcileDoc(c.env.DB, project, project.doc, spec as AppSpec)
+    : { hidden: [] as string[], restored: [] as string[] }
   c.header('Cache-Control', 'private, no-store')
-  return c.json({ ok: true, menu, offers })
+  return c.json({ ok: true, menu, offers, ...sections })
 }
 
 // The visual editor addresses the catalogue through the project's private
@@ -2026,9 +2059,15 @@ app.post('/api/projects/:token/approve', async (c) => {
   // Approval is the last chance to catch a component that draws nothing: the
   // document is repaired here even if it was stored by an older build.
   const pruned = pruneEmptySections(starterDoc(project), project.spec, project.token)
-  if (pruned.hidden.length) await saveDoc(c.env.DB, project, pruned.doc)
+  if (pruned.hidden.length || pruned.restored.length) await saveDoc(c.env.DB, project, pruned.doc)
   await approveProject(c.env.DB, project)
-  return c.json({ ok: true, version: project.version, status: 'approved', hidden: pruned.hidden })
+  return c.json({
+    ok: true,
+    version: project.version,
+    status: 'approved',
+    hidden: pruned.hidden,
+    restored: pruned.restored,
+  })
 })
 
 /* ------------------------------- fallbacks ----------------------------- */

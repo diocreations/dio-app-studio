@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test'
 import { buildSpec } from '../src/worker/pricing'
 import { flagshipDocFromSpec, homeSections } from '../src/worker/doc'
 import { pruneEmptySections } from '../src/worker/publish'
+import type { AppSpec } from '../src/worker/types'
 
 /**
  * A component the owner saved but that draws nothing must not stay visible:
@@ -65,6 +66,63 @@ describe('sections that render nothing', () => {
     const twice = pruneEmptySections(once.doc, spec, 'probe')
     const still = homeSections(twice.doc).filter((node) => node.hidden).map((node) => node.id)
     expect(still.sort()).toEqual([...once.hidden].sort())
+  })
+
+  test('a section hidden for being empty comes back when the business supplies the content', () => {
+    const empty = gymSpec()
+    const pruned = pruneEmptySections(gymDoc(), empty, 'probe')
+    expect(pruned.hidden).toContain('sec_fx_gym_trainers')
+
+    // The owner adds real coaches in the dashboard. The saved block was hidden
+    // automatically, so the next reconciliation shows it again.
+    const filled = {
+      ...pruned.doc,
+    }
+    const withTeam: AppSpec = {
+      ...empty,
+      team: [{ name: 'Ada Okafor', role: 'Head coach' }],
+      staff: ['Ada Okafor'],
+      // The dashboard clears both sample flags when the owner edits the team.
+      sampleContent: { ...empty.sampleContent!, team: false, staff: false },
+    }
+    const after = pruneEmptySections(filled, withTeam, 'probe')
+    expect(after.restored).toContain('sec_fx_gym_trainers')
+    const node = homeSections(after.doc).find((entry) => entry.id === 'sec_fx_gym_trainers')
+    expect(node?.hidden).toBe(false)
+    expect(node?.hiddenBecause).toBeUndefined()
+  })
+
+  test('a section the owner hid by hand stays hidden when the data arrives', () => {
+    const base = gymSpec()
+    const spec: AppSpec = {
+      ...base,
+      team: [{ name: 'Ada Okafor', role: 'Head coach' }],
+      sampleContent: { ...base.sampleContent!, team: false, staff: false },
+    }
+    const doc = flagshipDocFromSpec(spec)
+    const trainers = homeSections(doc).find((entry) => entry.variant === 'gym-trainers')
+    expect(trainers).toBeDefined()
+    // No `hiddenBecause`, so this is the owner's own decision.
+    const ownerHidden = {
+      ...doc,
+      screens: doc.screens.map((screen) => ({
+        ...screen,
+        sections: screen.sections.map((node) =>
+          node.id === trainers!.id ? { ...node, hidden: true } : node,
+        ),
+      })),
+    }
+    const after = pruneEmptySections(ownerHidden, spec, 'probe')
+    expect(after.restored).toEqual([])
+    expect(homeSections(after.doc).find((entry) => entry.id === trainers!.id)?.hidden).toBe(true)
+  })
+
+  test('a block that stays empty is not reported again', () => {
+    const spec = gymSpec()
+    const once = pruneEmptySections(gymDoc(), spec, 'probe')
+    const twice = pruneEmptySections(once.doc, spec, 'probe')
+    expect(twice.hidden).toEqual([])
+    expect(twice.restored).toEqual([])
   })
 
   test('a team the trade supplied as a sample does not keep the block alive', () => {

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T06:08:15.449Z",
+  "at": "2026-11-20T06:22:59.573Z",
   "app": "gym",
   "token": "a209e7ebde55c44f57444ad5",
   "node": "sec_fx_gym_trainers",
@@ -17,7 +17,7 @@
     {
       "name": "the selected component explains why it is hidden",
       "ok": true,
-      "detail": "Hidden automatically: this section has nothing to show for this business yet. Add its details and it appears again.Headi"
+      "detail": "Hidden automatically: this section has nothing to show yet. It comes back on its own when the business has the details i"
     },
     {
       "name": "the component is marked auto-hidden in the list",
@@ -28,6 +28,21 @@
       "name": "the stored document keeps the reason",
       "ok": true,
       "detail": "{\"hidden\":true,\"hiddenBecause\":\"empty\"}"
+    },
+    {
+      "name": "the dashboard reports the section restored",
+      "ok": true,
+      "detail": "[\"sec_fx_gym_trainers\"]"
+    },
+    {
+      "name": "the stored document shows it again",
+      "ok": true,
+      "detail": "{\"hidden\":false}"
+    },
+    {
+      "name": "the editor shows the section without any manual step",
+      "ok": true,
+      "detail": ""
     },
     {
       "name": "the page raised no errors",

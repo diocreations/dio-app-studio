@@ -6,15 +6,20 @@
  * saved as visible, the server prunes it, and the page has to say so instead of
  * silently disagreeing with the document.
  *
+ * The second half proves the loop closes: adding real coaches through the
+ * dashboard brings the block back without anyone reopening the editor.
+ *
  * Run against the local dev server with the fixture sessions minted:
  *   bun docs/qa/apps/scripts/sessions.mjs
  *   bun docs/qa/apps/scripts/run-autohide.mjs
  */
+import { Database } from 'bun:sqlite'
 import { createRequire } from 'node:module'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { localDatabase } from './sessions.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const require = createRequire(path.join(here, 'package.json'))
@@ -55,9 +60,39 @@ async function putDoc(doc) {
     body: JSON.stringify({ doc }),
   })
   if (!response.ok) throw new Error(`doc PUT ${response.status}`)
+  return response.json()
+}
+
+async function putSettings(team) {
+  const response = await fetch(`${BASE}/api/projects/${token}/app-settings`, {
+    method: 'PUT',
+    headers: { 'content-type': 'application/json', cookie, origin: BASE },
+    body: JSON.stringify({ team }),
+  })
+  if (!response.ok) throw new Error(`settings PUT ${response.status}`)
+  return response.json()
+}
+
+function readSpec() {
+  const db = new Database(localDatabase())
+  try {
+    return db.query('select spec from projects where token = ?').get(token).spec
+  } finally {
+    db.close()
+  }
+}
+
+function writeSpec(spec) {
+  const db = new Database(localDatabase())
+  try {
+    db.query('update projects set spec = ?, updated_at = ? where token = ?').run(spec, new Date().toISOString(), token)
+  } finally {
+    db.close()
+  }
 }
 
 const original = await serverDoc()
+const originalSpec = readSpec()
 const nodeIn = (doc) =>
   doc.screens.flatMap((screen) => screen.sections).find((entry) => entry.id === NODE)
 if (!nodeIn(original)) {
@@ -104,9 +139,21 @@ try {
   )
   const stored = nodeIn(await serverDoc())
   check('the stored document keeps the reason', stored?.hidden === true && stored?.hiddenBecause === 'empty', JSON.stringify({ hidden: stored?.hidden, hiddenBecause: stored?.hiddenBecause }))
+
+  // The business finally names its coaches, through the dashboard route.
+  const settings = await putSettings('Ada Okafor|Head coach\nBen Silva|Strength coach')
+  check('the dashboard reports the section restored', (settings.restored ?? []).includes(NODE), JSON.stringify(settings.restored ?? []))
+  const after = nodeIn(await serverDoc())
+  check('the stored document shows it again', after?.hidden === false && after?.hiddenBecause === undefined, JSON.stringify({ hidden: after?.hidden, hiddenBecause: after?.hiddenBecause }))
+
+  await page.reload({ waitUntil: 'domcontentloaded' })
+  await page.waitForSelector(`#structure [data-node="${NODE}"]`, { timeout: 15000 })
+  const visible = await page.$eval(`[data-node="${NODE}"]`, (el) => !el.classList.contains('off') && !/auto-hidden/i.test(el.textContent))
+  check('the editor shows the section without any manual step', visible)
   check('the page raised no errors', errors.length === 0, errors.join('; '))
 } finally {
   // Put the fixture back exactly as it was.
+  writeSpec(originalSpec)
   await putDoc(original)
   await browser.close()
 }
