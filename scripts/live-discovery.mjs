@@ -18,7 +18,7 @@ import { importWebsite } from '../src/worker/importer'
 import { buildDiscovery, discoverPlan } from '../src/worker/discovery'
 import { renderApp } from '../src/worker/app'
 
-const OUT = 'docs/qa/live-discovery-2026-11-20'
+const OUT = process.env.OUT || 'docs/qa/live-discovery-2026-11-20'
 
 /**
  * The five approved sites, chosen for five different structures:

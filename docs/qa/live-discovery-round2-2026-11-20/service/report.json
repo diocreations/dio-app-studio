@@ -1,0 +1,241 @@
+{
+  "source": "https://www.pimlicoplumbers.com/",
+  "host": "pimlicoplumbers.com",
+  "images": {
+    "products": 9,
+    "withImage": 0,
+    "withoutImage": 9,
+    "methods": {},
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 9,
+    "kept": 9,
+    "dropped": [],
+    "suspectPrices": [
+      {
+        "name": "Emergency Maintenance & Repairs London",
+        "section": "Trades & home services",
+        "value": 100000
+      },
+      {
+        "name": "Landlord Maintenance Services in London",
+        "section": "Trades & home services",
+        "value": 100000
+      },
+      {
+        "name": "Appliance Services London",
+        "section": "Trades & home services",
+        "value": 100000
+      },
+      {
+        "name": "Air Conditioning Services",
+        "section": "Trades & home services",
+        "value": 100000
+      },
+      {
+        "name": "Commercial Heating Engineers in London",
+        "section": "Services",
+        "value": 100000
+      },
+      {
+        "name": "Commercial Plumbers in London",
+        "section": "Services",
+        "value": 100000
+      },
+      {
+        "name": "Commercial Electricians in London",
+        "section": "Services",
+        "value": 100000
+      },
+      {
+        "name": "Commercial Drainage Services in London",
+        "section": "Services",
+        "value": 100000
+      },
+      {
+        "name": "Commercial Carpentry London",
+        "section": "Services",
+        "value": 100000
+      }
+    ],
+    "duplicates": 0,
+    "categories": [
+      "Trades & home services",
+      "Services"
+    ]
+  },
+  "pages": 19,
+  "site": {
+    "name": "Pimlico Plumbers",
+    "tagline": "Pimlico Plumbers is London’s trusted property maintenance service company, handling your…",
+    "story": "Pimlico Plumbers is London’s trusted property maintenance service company, handling your plumbing, heating, electrical, building, renovation and HVAC needs.",
+    "vertical": "trades",
+    "verticalConfidence": "detected",
+    "category": "Trades & home services",
+    "categoryBasis": "the nearest trade, from “plumbing”",
+    "accent": "#a8741a",
+    "logo": "",
+    "logoImage": {
+      "url": "https://www.pimlicoplumbers.com/wp-content/themes/pimlico/images/meta-icon.png",
+      "alt": "Pimlico Plumbers logo"
+    },
+    "phone": "+442081080808",
+    "email": "",
+    "address": "",
+    "hours": "",
+    "website": "https://www.pimlicoplumbers.com",
+    "currency": "GBP",
+    "socials": [
+      {
+        "label": "Facebook",
+        "url": "https://www.facebook.com/pimlicoplumbersltd/"
+      },
+      {
+        "label": "X",
+        "url": "https://x.com/pimlicoplumbers"
+      },
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/pimlicoplumbers/"
+      }
+    ],
+    "menu": [
+      {
+        "name": "Trades & home services",
+        "items": [
+          {
+            "name": "Emergency Maintenance & Repairs London",
+            "desc": "We’re available 24/7 for any emergency plumbing, heating, electric, drainage and more.…",
+            "price": 0
+          },
+          {
+            "name": "Landlord Maintenance Services in London",
+            "desc": "We provide landlord maintenance services across London. Available 365 days a year, call…",
+            "price": 0
+          },
+          {
+            "name": "Appliance Services London",
+            "desc": "Looking for appliance services? We offer white goods repairs, installs, and services…",
+            "price": 0
+          },
+          {
+            "name": "Air Conditioning Services",
+            "desc": "Specialising in air con installation, maintenance and repairs, call for 1 hour response…",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Trades & home services",
+        "items": [
+          {
+            "name": "Commercial Heating Engineers in London",
+            "desc": "Available 24/7, with 1-hour response times in emergencies, we provide premium heating…",
+            "price": 0
+          },
+          {
+            "name": "Commercial Plumbers in London",
+            "desc": "With 24/7 availability and 1-hour response times in emergencies, we provide premium…",
+            "price": 0
+          },
+          {
+            "name": "Commercial Electricians in London",
+            "desc": "With 24/7 availability and 1-hour response times in emergencies, we provide electrical…",
+            "price": 0
+          },
+          {
+            "name": "Commercial Drainage Services in London",
+            "desc": "Available 24/7, with 1-hour response times in emergencies, we provide drainage…",
+            "price": 0
+          },
+          {
+            "name": "Commercial Carpentry London",
+            "desc": "Available 24/7, with 1-hour response times in emergencies, we provide professional…",
+            "price": 0
+          }
+        ]
+      }
+    ],
+    "features": [
+      "catalog",
+      "delivery",
+      "booking",
+      "offers",
+      "reviews"
+    ],
+    "design": {
+      "bg": "#f2f0ec",
+      "surface": "#e9e7e3",
+      "surface2": "#dfddda",
+      "ink": "#161616",
+      "muted": "#61605f",
+      "radius": 0,
+      "display": "\"sofia-pro\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+      "fontLabel": "sofia-pro",
+      "dark": false,
+      "palette": false,
+      "basis": "sofia-pro"
+    },
+    "structure": {
+      "nav": "drawer",
+      "stickyHeader": false,
+      "navLabels": [
+        "Skip to content",
+        "Skip to footer"
+      ],
+      "hero": "image",
+      "basis": "nav in a drawer · Skip to content, Skip to footer · hero image"
+    }
+  },
+  "found": [
+    "9 catalogue entries in 2 sections, read from 19 pages",
+    "their sitemap listed the product pages the home page did not link to",
+    "name: Pimlico Plumbers",
+    "their logo — taken from the image the site itself declares as its mark",
+    "category: Trades & home services — from the nearest trade, from “plumbing”",
+    "a one-line description",
+    "their look: sofia-pro",
+    "their layout: nav in a drawer · Skip to content, Skip to footer · hero image",
+    "phone +442081080808",
+    "3 social links"
+  ],
+  "missing": [
+    "email",
+    "address",
+    "opening hours",
+    "brand colour — using the trade default for now",
+    "9 product photographs — the site publishes none for those items"
+  ],
+  "notes": [
+    "The crawl is capped at 10 pages to keep the brief quick, so a large shop may still have aisles left — add anything missing in the app editor.",
+    "The site lists items without prices, so they appear as “Ask on request” until you set one.",
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded.",
+    "Cleared 9 prices that looked like a reading error, so the item shows no price until you set one: Emergency Maintenance & Repairs London at 1000, Landlord Maintenance Services in London at 1000, Appliance Services London at 1000, Air Conditioning Services at 1000, Commercial Heating Engineers in London at 1000, Commercial Plumbers in London at 1000, Commercial Electricians in London at 1000, Commercial Drainage Services in London at 1000, Commercial Carpentry London at 1000."
+  ],
+  "pagesRead": [
+    "/",
+    "/commercial/services/",
+    "/services/",
+    "/services/drains/",
+    "/services/heating/",
+    "/services/roofing/",
+    "/services/plumbing/",
+    "/services/building/",
+    "/services/handyman/",
+    "/services/kitchens/",
+    "/services/emergencies/",
+    "/services/landlords/",
+    "/services/appliances/",
+    "/services/air-conditioning/",
+    "/commercial/services/heating/",
+    "/commercial/services/plumbing/",
+    "/commercial/services/electrical/",
+    "/commercial/services/drains/",
+    "/commercial/services/carpentry/"
+  ],
+  "pagesFailed": [],
+  "usedSitemap": true
+}

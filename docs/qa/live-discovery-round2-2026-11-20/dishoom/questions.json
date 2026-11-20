@@ -1,0 +1,10 @@
+{
+  "blockers": [],
+  "confirmations": [
+    {
+      "field": "contact",
+      "why": "No phone or email was published.",
+      "kind": "confirm"
+    }
+  ]
+}

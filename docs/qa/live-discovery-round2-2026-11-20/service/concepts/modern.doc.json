@@ -1,0 +1,171 @@
+{
+  "v": 2,
+  "accent": "#a8741a",
+  "design": {
+    "direction": "modern"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_trades_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "trades-hero",
+          "title": "Pimlico Plumbers",
+          "text": "Pimlico Plumbers is London’s trusted property maintenance service company, handling your…",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_trades_jobs",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "trades-jobs",
+          "title": "What we fix"
+        },
+        {
+          "id": "sec_fx_trades_proof",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "trades-proof",
+          "title": "The promise",
+          "text": "Fixed price agreed before work starts, twelve-month workmanship guarantee, and a clean floor when we leave."
+        },
+        {
+          "id": "sec_fx_trades_quote",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "trades-quote",
+          "title": "Send a photo, get a price",
+          "text": "Tell us what has gone wrong. We reply with a fixed price, usually within one working day.",
+          "cta": {
+            "label": "Request a quote",
+            "screen": "scr_catalog"
+          }
+        },
+        {
+          "id": "sec_fx_trades_area",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "trades-area",
+          "title": "Where we work",
+          "text": "Covering the whole city",
+          "follows": {
+            "text": "address"
+          }
+        },
+        {
+          "id": "sec_fx_trades_book",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "trades-book",
+          "title": "Book a call-out",
+          "text": "Morning and afternoon visits, Monday to Saturday.",
+          "cta": {
+            "label": "Book a call-out",
+            "screen": "scr_book"
+          }
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Call-out",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Contact",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

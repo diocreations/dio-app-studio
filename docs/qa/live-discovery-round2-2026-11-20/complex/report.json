@@ -1,0 +1,195 @@
+{
+  "source": "https://www.rhs.org.uk/",
+  "host": "rhs.org.uk",
+  "images": {
+    "products": 9,
+    "withImage": 0,
+    "withoutImage": 9,
+    "methods": {},
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 9,
+    "kept": 9,
+    "dropped": [],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "Services"
+    ]
+  },
+  "pages": 19,
+  "site": {
+    "name": "RHS",
+    "tagline": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days…",
+    "story": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days out at stunning gardens, exclusive access to flower shows & expert advice.",
+    "vertical": "shop",
+    "verticalConfidence": "detected",
+    "category": "Bookshop",
+    "categoryBasis": "the words on the page",
+    "accent": "#005a4e",
+    "logo": "",
+    "phone": "",
+    "email": "",
+    "address": "",
+    "hours": "",
+    "website": "https://www.rhs.org.uk",
+    "currency": "",
+    "socials": [
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/The_RHS/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@The_RHS"
+      },
+      {
+        "label": "TikTok",
+        "url": "https://www.tiktok.com/@the_rhs"
+      },
+      {
+        "label": "Facebook",
+        "url": "https://www.facebook.com/rhshome"
+      },
+      {
+        "label": "Pinterest",
+        "url": "https://www.pinterest.co.uk/rhshome/"
+      }
+    ],
+    "menu": [
+      {
+        "name": "Bookshop",
+        "items": [
+          {
+            "name": "RHS Licensed products / RHS Gardening",
+            "desc": "Discover more about RHS Licensed products, from the partners we work with to the…",
+            "price": 0
+          },
+          {
+            "name": "Special Offers / RHS Gardening",
+            "desc": "Whether you’re looking for a summerhouse, garden goodies or great escapes, there’s…",
+            "price": 0
+          },
+          {
+            "name": "RHS Gift Cards / RHS Gardening",
+            "desc": "Give the gift of choice with RHS Gift Cards. Redeemable for RHS Shows tickets, plants,…",
+            "price": 0
+          },
+          {
+            "name": "Find out about our RHS Library Collections / RHS Gardening",
+            "desc": "Find out how you can access our RHS Library Collections in London, Wisley, Rosemoor, Hyde…",
+            "price": 0
+          },
+          {
+            "name": "Become a member of the RHS / RHS",
+            "desc": "Learn about the great benefits in return for supporting the world's largest gardening…",
+            "price": 0
+          },
+          {
+            "name": "Beautiful open gardens to visit in the UK",
+            "desc": "Visit the beautiful RHS gardens throughout the UK for fun days out for all the family.…",
+            "price": 0
+          },
+          {
+            "name": "RHS Shows and events",
+            "desc": "Be inspired and grow your knowledge with all-year-round gardening and flower shows from…",
+            "price": 0
+          },
+          {
+            "name": "Study & learn / RHS Gardening",
+            "desc": "Find the right learning experience for you. We offer formal, accredited qualifications,…",
+            "price": 0
+          },
+          {
+            "name": "RHS Science & Collections / RHS Gardening",
+            "desc": "RHS Science is leading the way in research into tackling global issues through gardening,…",
+            "price": 0
+          }
+        ]
+      }
+    ],
+    "features": [
+      "catalog",
+      "ordering",
+      "booking",
+      "loyalty",
+      "offers",
+      "events"
+    ],
+    "design": {
+      "bg": "#faf9f5",
+      "surface": "#f1f0ed",
+      "surface2": "#e6e6e3",
+      "ink": "#111a24",
+      "muted": "#60666b",
+      "radius": 17,
+      "display": "\"freight-sans-pro\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+      "fontLabel": "freight-sans-pro",
+      "dark": false,
+      "palette": false,
+      "basis": "freight-sans-pro · 17px corners"
+    },
+    "structure": {
+      "nav": "drawer",
+      "stickyHeader": false,
+      "navLabels": [],
+      "hero": "image",
+      "basis": "nav in a drawer · hero image"
+    }
+  },
+  "found": [
+    "9 catalogue entries in 1 section, read from 19 pages",
+    "their sitemap listed the product pages the home page did not link to",
+    "name: RHS",
+    "category: Bookshop — from the words on the page",
+    "a one-line description",
+    "brand colour #005a4e",
+    "their look: freight-sans-pro · 17px corners",
+    "their layout: nav in a drawer · hero image",
+    "5 social links"
+  ],
+  "missing": [
+    "logo — using initials until you upload one",
+    "phone number",
+    "email",
+    "address",
+    "opening hours",
+    "9 product photographs — the site publishes none for those items"
+  ],
+  "notes": [
+    "The crawl is capped at 10 pages to keep the brief quick, so a large shop may still have aisles left — add anything missing in the app editor.",
+    "The site lists items without prices, so they appear as “Ask on request” until you set one.",
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded."
+  ],
+  "pagesRead": [
+    "/",
+    "/advice/in-month",
+    "/about-us/contact-us",
+    "/advice/advice-search",
+    "/advice/grow-your-own",
+    "/science/meet-the-team",
+    "/advice/beginners-guide",
+    "/advice/wildlife-garden",
+    "/advice/health-and-wellbeing",
+    "/shop",
+    "/shop/licensed-products",
+    "/shop/special-offers",
+    "/shop/vouchers",
+    "/education-learning/libraries-at-rhs/collections",
+    "/join",
+    "/gardens",
+    "/shows-events",
+    "/education-learning",
+    "/science"
+  ],
+  "pagesFailed": [
+    {
+      "url": "/shop/mothers-day",
+      "reason": "www.rhs.org.uk answered 404. If the site blocks bots, paste the details in by hand."
+    }
+  ],
+  "usedSitemap": true
+}

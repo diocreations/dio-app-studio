@@ -1,0 +1,193 @@
+{
+  "url": "https://www.pimlicoplumbers.com/",
+  "host": "www.pimlicoplumbers.com",
+  "pages": {
+    "read": [
+      "/",
+      "/commercial/services/",
+      "/services/",
+      "/services/drains/",
+      "/services/heating/",
+      "/services/roofing/",
+      "/services/plumbing/",
+      "/services/building/",
+      "/services/handyman/",
+      "/services/kitchens/",
+      "/services/emergencies/",
+      "/services/landlords/",
+      "/services/appliances/",
+      "/services/air-conditioning/",
+      "/commercial/services/heating/",
+      "/commercial/services/plumbing/",
+      "/commercial/services/electrical/",
+      "/commercial/services/drains/",
+      "/commercial/services/carpentry/"
+    ],
+    "failed": [],
+    "usedSitemap": true
+  },
+  "business": {
+    "name": {
+      "value": "Pimlico Plumbers",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "structured-data",
+      "confidence": "verified"
+    },
+    "category": {
+      "value": "Trades & home services",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "tagline": {
+      "value": "Pimlico Plumbers is London’s trusted property maintenance service company, handling your…",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "story": {
+      "value": "Pimlico Plumbers is London’s trusted property maintenance service company, handling your plumbing, heating, electrical, building, renovation and HVAC needs.",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "trade": {
+      "value": "trades",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "inferred",
+      "confidence": "verified"
+    },
+    "accent": {
+      "value": "#a8741a",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "inferred",
+      "confidence": "likely"
+    },
+    "logo": {
+      "value": {
+        "url": "https://www.pimlicoplumbers.com/wp-content/themes/pimlico/images/meta-icon.png",
+        "alt": "Pimlico Plumbers logo"
+      },
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "hours": {
+      "value": "",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "phone": {
+      "value": "+442081080808",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "email": {
+      "value": "",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    }
+  },
+  "commerce": {
+    "currency": {
+      "value": "GBP",
+      "source": "https://www.pimlicoplumbers.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "sections": [
+      {
+        "name": "Trades & home services",
+        "source": "https://www.pimlicoplumbers.com/",
+        "items": [
+          {
+            "name": "Emergency Maintenance & Repairs London",
+            "desc": "We’re available 24/7 for any emergency plumbing, heating, electric, drainage and more.…",
+            "price": 0
+          },
+          {
+            "name": "Landlord Maintenance Services in London",
+            "desc": "We provide landlord maintenance services across London. Available 365 days a year, call…",
+            "price": 0
+          },
+          {
+            "name": "Appliance Services London",
+            "desc": "Looking for appliance services? We offer white goods repairs, installs, and services…",
+            "price": 0
+          },
+          {
+            "name": "Air Conditioning Services",
+            "desc": "Specialising in air con installation, maintenance and repairs, call for 1 hour response…",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Trades & home services",
+        "source": "https://www.pimlicoplumbers.com/",
+        "items": [
+          {
+            "name": "Commercial Heating Engineers in London",
+            "desc": "Available 24/7, with 1-hour response times in emergencies, we provide premium heating…",
+            "price": 0
+          },
+          {
+            "name": "Commercial Plumbers in London",
+            "desc": "With 24/7 availability and 1-hour response times in emergencies, we provide premium…",
+            "price": 0
+          },
+          {
+            "name": "Commercial Electricians in London",
+            "desc": "With 24/7 availability and 1-hour response times in emergencies, we provide electrical…",
+            "price": 0
+          },
+          {
+            "name": "Commercial Drainage Services in London",
+            "desc": "Available 24/7, with 1-hour response times in emergencies, we provide drainage…",
+            "price": 0
+          },
+          {
+            "name": "Commercial Carpentry London",
+            "desc": "Available 24/7, with 1-hour response times in emergencies, we provide professional…",
+            "price": 0
+          }
+        ]
+      }
+    ],
+    "products": 9,
+    "priced": 0,
+    "withImage": 0
+  },
+  "conflicts": [],
+  "missing": [
+    "address"
+  ],
+  "questions": [],
+  "tradeCandidates": [
+    {
+      "id": "trades",
+      "score": 0.9,
+      "evidence": [
+        "the nearest trade, from “plumbing”",
+        "Trades & home services"
+      ]
+    },
+    {
+      "id": "property",
+      "score": 0.45,
+      "evidence": [
+        "property"
+      ]
+    }
+  ],
+  "clientRendered": false
+}

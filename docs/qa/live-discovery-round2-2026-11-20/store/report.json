@@ -1,0 +1,852 @@
+{
+  "source": "https://www.presentandcorrect.com/",
+  "host": "presentandcorrect.com",
+  "images": {
+    "products": 136,
+    "withImage": 0,
+    "withoutImage": 136,
+    "methods": {},
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 136,
+    "kept": 136,
+    "dropped": [],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "Collection: 2027",
+      "Collection: Mail",
+      "Collection: Give.",
+      "Collection: Read",
+      "Collection: Play",
+      "Collection: Home",
+      "Collection: Notes",
+      "Collection: Pen Cases"
+    ]
+  },
+  "pages": 10,
+  "site": {
+    "name": "Present & Correct",
+    "tagline": "Office sundries for the modern workspace.",
+    "story": "Office sundries for the modern workspace. New & vintage stationery available online & from our London store.",
+    "vertical": "shop",
+    "verticalConfidence": "detected",
+    "category": "Stationery shop",
+    "categoryBasis": "the words on the page",
+    "accent": "#1990c6",
+    "logo": "",
+    "logoImage": {
+      "url": "https://www.presentandcorrect.com/cdn/shop/files/logo.png?v=1652625278&width=873",
+      "alt": "Present & Correct logo"
+    },
+    "phone": "",
+    "email": "info@presentandcorrect.com",
+    "address": "",
+    "hours": "",
+    "website": "https://www.presentandcorrect.com",
+    "currency": "",
+    "socials": [
+      {
+        "label": "Instagram",
+        "url": "https://instagram.com/presentandcorrect/"
+      },
+      {
+        "label": "X",
+        "url": "http://twitter.com/presentcorrect"
+      }
+    ],
+    "menu": [
+      {
+        "name": "Collection: 2027",
+        "items": [
+          {
+            "name": "Icon Diary Weekly 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Black Leather Hobonichi Cover (A5/A6)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "365 Type Planner 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Hobonichi Techo 2027 Planner Book",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Rollbahn Diary 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Italian Calendar 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Hobonichi Pocket Weekly 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Hobonichi Techo Original / Cousin",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Slim Fabric Journal 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Icon Diary Monthly 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Copper Planner 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Pocket Planner Weekly 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Year Agenda 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Slim Gallimard Agenda 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Mega Hobonichi Weeks 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "2027 Wall Planner",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Once Upon Today 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Karel Martens 2027 Calendar",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Gallimard Agenda 2027",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "A5/A6 Hobonichi Case Bordeaux",
+            "desc": "",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Collection: Mail",
+        "items": [
+          {
+            "name": "Vintage Midori Airmail Pad (1992)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Armonie Letter Set (1970s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "A5 Planner Folio",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Neptunia Envelopes (1950s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Telegram Card",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "P&C Letter Set",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Gummed Labels (1950s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Happy Mail",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "6 x Display Envelopes (1970s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Letterpress Border Cards",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Dennison Gummed Labels (1970s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Letter Jotter",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Postage Scales (1970s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Letter Knife Magnifying Glass",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Packing List Envelope",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Letter Knife",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Cotton String",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Airmail String",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "V Mail (1940s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Label Cards",
+            "desc": "",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Collection: Give.",
+        "items": [
+          {
+            "name": "Helter Skelter Birthday Card",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Mushroom Card",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Olivetti Valentine Card",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Birthday Party Dog Card",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Matchbook Birthday Card (Rose)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Apple Envelopes",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Wish Card (Heart)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Wish Card (Dot)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Birthday Mailbox Card",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Splendid Cake Card",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Birthday Spinner Card",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "House Gift Box",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Circles Birthday Card",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Spots & Diamonds Birthday Card",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Thank You Form",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Birthday Telegram",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Shiny Heart Postcard",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Wonderful List Card",
+            "desc": "",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Collection: Read",
+        "items": [
+          {
+            "name": "By The Book Guide to London Bookshops",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Reading Notebook",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Paper Trails: pre-war tourist maps from Japan",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Hotel Retro Sticker Book",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Letraset Revolution",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Brick Bonds Book",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "The Christmas Tree",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Hello Riso",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Abstract Logos",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Meet The Typographer",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "The Apple (1977)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "A Map Is A Picture (1965)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Design London",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Rain & Hail (1963)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Perambulations Box Set (London)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Sophie Smallhorn Works",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Monogram Logos",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Airline Ephemera",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Hotel Tags",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Blank Tapes",
+            "desc": "",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Collection: Play",
+        "items": [
+          {
+            "name": "Abacus (1960s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Crayon Flask",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Fantastic Bell",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Geometry Puzzles (1970s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Hand Abacus (1970s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Pencil Light",
+            "desc": "",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Collection: Home",
+        "items": [
+          {
+            "name": "Clamp Tray",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Oak Paper Tray",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "24 Hour Clock/Calendar",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Portable Tool Frame",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Enzo Mari Flip Calendar",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Carry All Folder",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Chrome Handle Tray",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Porcelain Beaker",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Ring A Date Perpetual Calendar",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Mega Chart Graph Poster (1966)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Metal Storage Set",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "16 Box Organiser",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Fold Shelf Small",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Grid Book Organiser (1983)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Business Card Box",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Simple Wall Clock",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Wood Polyhedra Set",
+            "desc": "",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Collection: Notes",
+        "items": [
+          {
+            "name": "Cuaderno LaPress",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Nifty Handwriting Pad (1980s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Greek Form Book",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Flatlay Steps Notebook",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Typing Paper (1980s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Section Notebook Japanese (1990s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "AM/PM Tablet",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Computisteria Ringbound Pad (1970s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Patterned Label Book",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Compass Graph Pad (1970s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Drawing Pad",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Rollbahn Micro Charm",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Linen Band Notebook",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "A6 Label Notebook (1960s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Neo Hi Starchy Notebook (1970s)",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "1Y 52W 365D Planner",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Memo Task Roller",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "La Grande Idée Notebook",
+            "desc": "",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Collection: Pen Cases",
+        "items": [
+          {
+            "name": "A5 Hobonichi Case Velluto",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "A6 Hobonichi Case Lago",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Brass Pen Box",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Canvas Pencil Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "CDT Zip Pencil Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Leather / Cotton Pen Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Nahe Pen Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "P&C Envelope Pencil Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "P&C Leather Pencil Envelope",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Pen Pocket Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Pencil Roll",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Quitterie Card Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Quitterie Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Quitterie Pencil Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Six Pen Hard Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Twelve Pen Hard Case",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Wood Pencil Tube",
+            "desc": "",
+            "price": 0
+          }
+        ]
+      }
+    ],
+    "features": [
+      "catalog",
+      "ordering",
+      "delivery"
+    ],
+    "design": {
+      "bg": "#faf9f5",
+      "surface": "#f1f0ed",
+      "surface2": "#e6e6e3",
+      "ink": "#111a24",
+      "muted": "#60666b",
+      "radius": 4,
+      "display": "\"Inter\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+      "fontLabel": "Inter",
+      "dark": false,
+      "palette": false,
+      "basis": "Inter · 4px corners"
+    },
+    "structure": {
+      "nav": "tabs",
+      "stickyHeader": false,
+      "navLabels": [
+        "Display",
+        "Desk Calendars",
+        "Play",
+        "Prints",
+        "Storage"
+      ],
+      "hero": "image",
+      "basis": "nav in a row · Display, Desk Calendars, Play · hero image"
+    }
+  },
+  "found": [
+    "136 catalogue entries in 8 sections, read from 10 pages",
+    "name: Present & Correct",
+    "their logo — taken from the image the site itself declares as its mark",
+    "category: Stationery shop — from the words on the page",
+    "a one-line description",
+    "brand colour #1990c6",
+    "their look: Inter · 4px corners",
+    "their layout: nav in a row · Display, Desk Calendars, Play · hero image",
+    "email info@presentandcorrect.com",
+    "2 social links"
+  ],
+  "missing": [
+    "phone number",
+    "address",
+    "opening hours",
+    "136 product photographs — the site publishes none for those items"
+  ],
+  "notes": [
+    "The crawl is capped at 10 pages to keep the brief quick, so a large shop may still have aisles left — add anything missing in the app editor.",
+    "The site lists items without prices, so they appear as “Ask on request” until you set one.",
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded."
+  ],
+  "pagesRead": [
+    "/",
+    "/collections/2027",
+    "/collections/pins",
+    "/collections/mail",
+    "/collections/give",
+    "/collections/read",
+    "/collections/play",
+    "/collections/home",
+    "/collections/notes",
+    "/collections/cases"
+  ],
+  "pagesFailed": [],
+  "usedSitemap": false
+}

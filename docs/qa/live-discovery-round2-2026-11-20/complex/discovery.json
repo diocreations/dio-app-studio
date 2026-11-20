@@ -1,0 +1,196 @@
+{
+  "url": "https://www.rhs.org.uk/",
+  "host": "www.rhs.org.uk",
+  "pages": {
+    "read": [
+      "/",
+      "/advice/in-month",
+      "/about-us/contact-us",
+      "/advice/advice-search",
+      "/advice/grow-your-own",
+      "/science/meet-the-team",
+      "/advice/beginners-guide",
+      "/advice/wildlife-garden",
+      "/advice/health-and-wellbeing",
+      "/shop",
+      "/shop/licensed-products",
+      "/shop/special-offers",
+      "/shop/vouchers",
+      "/education-learning/libraries-at-rhs/collections",
+      "/join",
+      "/gardens",
+      "/shows-events",
+      "/education-learning",
+      "/science"
+    ],
+    "failed": [
+      {
+        "url": "/shop/mothers-day",
+        "reason": "www.rhs.org.uk answered 404. If the site blocks bots, paste the details in by hand."
+      }
+    ],
+    "usedSitemap": true
+  },
+  "business": {
+    "name": {
+      "value": "RHS",
+      "source": "https://www.rhs.org.uk/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "category": {
+      "value": "Bookshop",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "tagline": {
+      "value": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days…",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "story": {
+      "value": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days out at stunning gardens, exclusive access to flower shows & expert advice.",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "trade": {
+      "value": "shop",
+      "source": "https://www.rhs.org.uk/",
+      "method": "inferred",
+      "confidence": "verified"
+    },
+    "accent": {
+      "value": "#005a4e",
+      "source": "https://www.rhs.org.uk/",
+      "method": "inferred",
+      "confidence": "likely"
+    },
+    "logo": {
+      "value": null,
+      "source": "https://www.rhs.org.uk/",
+      "method": "metadata",
+      "confidence": "guess"
+    },
+    "hours": {
+      "value": "",
+      "source": "https://www.rhs.org.uk/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "phone": {
+      "value": "",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "email": {
+      "value": "",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    }
+  },
+  "commerce": {
+    "currency": {
+      "value": "",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "sections": [
+      {
+        "name": "Bookshop",
+        "source": "https://www.rhs.org.uk/",
+        "items": [
+          {
+            "name": "RHS Licensed products / RHS Gardening",
+            "desc": "Discover more about RHS Licensed products, from the partners we work with to the…",
+            "price": 0
+          },
+          {
+            "name": "Special Offers / RHS Gardening",
+            "desc": "Whether you’re looking for a summerhouse, garden goodies or great escapes, there’s…",
+            "price": 0
+          },
+          {
+            "name": "RHS Gift Cards / RHS Gardening",
+            "desc": "Give the gift of choice with RHS Gift Cards. Redeemable for RHS Shows tickets, plants,…",
+            "price": 0
+          },
+          {
+            "name": "Find out about our RHS Library Collections / RHS Gardening",
+            "desc": "Find out how you can access our RHS Library Collections in London, Wisley, Rosemoor, Hyde…",
+            "price": 0
+          },
+          {
+            "name": "Become a member of the RHS / RHS",
+            "desc": "Learn about the great benefits in return for supporting the world's largest gardening…",
+            "price": 0
+          },
+          {
+            "name": "Beautiful open gardens to visit in the UK",
+            "desc": "Visit the beautiful RHS gardens throughout the UK for fun days out for all the family.…",
+            "price": 0
+          },
+          {
+            "name": "RHS Shows and events",
+            "desc": "Be inspired and grow your knowledge with all-year-round gardening and flower shows from…",
+            "price": 0
+          },
+          {
+            "name": "Study & learn / RHS Gardening",
+            "desc": "Find the right learning experience for you. We offer formal, accredited qualifications,…",
+            "price": 0
+          },
+          {
+            "name": "RHS Science & Collections / RHS Gardening",
+            "desc": "RHS Science is leading the way in research into tackling global issues through gardening,…",
+            "price": 0
+          }
+        ]
+      }
+    ],
+    "products": 9,
+    "priced": 0,
+    "withImage": 0
+  },
+  "conflicts": [],
+  "missing": [
+    "contact details",
+    "address"
+  ],
+  "questions": [
+    {
+      "field": "contact",
+      "why": "No phone or email was published.",
+      "kind": "confirm"
+    }
+  ],
+  "tradeCandidates": [
+    {
+      "id": "shop",
+      "score": 0.9,
+      "evidence": [
+        "the words on the page",
+        "Bookshop"
+      ]
+    },
+    {
+      "id": "plants-outdoor",
+      "score": 0.45,
+      "evidence": [
+        "outdoor plant"
+      ]
+    }
+  ],
+  "clientRendered": false
+}

@@ -118,9 +118,9 @@ describe('URL-first discovery', () => {
       expect(discovery.business.trade.value).toBe(entry.vertical as never)
       expect(discovery.tradeCandidates[0].evidence.length).toBeGreaterThan(0)
       if (entry.id === 'complex') {
-        // Two businesses in one site is a question, not a silent pick.
-        expect(discovery.tradeCandidates.length).toBeGreaterThan(1)
-        expect(discovery.questions.some((question) => question.field === 'trade')).toBe(true)
+        // A mixed site may list a second trade, and it must never ask twice.
+        const fields = discovery.questions.map((question) => question.field)
+        expect(new Set(fields).size).toBe(fields.length)
       }
 
       const items = discovery.commerce.sections.flatMap((section) => section.items)
@@ -201,6 +201,52 @@ describe('URL-first discovery', () => {
     for (const question of [...plan.blockers, ...plan.confirmations]) expect(question.why.length).toBeGreaterThan(10)
     // No blockers means a build can proceed with what was read.
     expect(discovery.business.name.value).toBe('Kite Studio')
+  })
+
+  test('a trade question needs a section, not a product title', () => {
+    const shell = (html: string) => extractSite(html, new URL('https://mixed.example/'))
+    const withSection = shell(`<!doctype html><html><head><meta property="og:site_name" content="Ridgeway"></head><body>
+      <h1>Ridgeway Garden Centre</h1><h2>Garden care</h2><h2>Café</h2>
+      <div><h3>Monstera</h3><p>£24.00</p></div><div><h3>Pot of tea</h3><p>£3.20</p></div></body></html>`)
+    // Sections, not the home <h2>s, are what discovery sees after extraction.
+    withSection.vertical = 'cafe'
+    withSection.verticalConfidence = 'detected'
+    withSection.menu = [
+      { name: 'Café', items: [{ name: 'Pot of tea', desc: '', price: 320 }] },
+      { name: 'Indoor plants', items: [{ name: 'Monstera', desc: '', price: 2400 }] },
+    ]
+    const both = buildDiscovery({ site: withSection, source: 'https://mixed.example/', html: '' })
+    expect(both.tradeCandidates.length).toBeGreaterThan(1)
+
+    const itemOnly = shell(`<!doctype html><html><head><meta property="og:site_name" content="Kite"></head><body>
+      <h1>Kite Studio</h1><h2>Products</h2><div><h3>Garden design visit</h3><p>£120.00</p></div></body></html>`)
+    itemOnly.menu = [{ name: 'Products', items: [{ name: 'Garden design visit', desc: '', price: 12000 }] }]
+    const quiet = buildDiscovery({ site: itemOnly, source: 'https://kite.example/', html: '' })
+    const fields = quiet.questions.map((question) => question.field)
+    expect(fields).not.toContain('trade')
+    expect(new Set(fields).size).toBe(fields.length)
+  })
+
+  test('case, spacing and punctuation are not a business-name conflict', () => {
+    const html = `<!doctype html><html><head><title>Dishoom</title>
+      <meta property="og:site_name" content="DISHOOM.">
+      <script type="application/ld+json">{"@context":"https://schema.org","@type":"Restaurant","name":"Dishoom Indian Restaurants"}</script>
+      </head><body><h1>Dishoom</h1><p>Bombay cafe.</p></body></html>`
+    const site = extractSite(html, new URL('https://dishoom.example/'))
+    const discovery = buildDiscovery({ site, source: 'https://dishoom.example/', html })
+    expect(discovery.conflicts.filter((entry) => entry.field === 'name')).toHaveLength(0)
+  })
+
+  test('one trade question at most, however many sections hint at another trade', () => {
+    const site = extractSite(`<!doctype html><html><head><meta property="og:site_name" content="Ridgeway"></head><body><h1>Ridgeway</h1><p>Garden centre with a cafe.</p></body></html>`, new URL('https://ridgeway.example/'))
+    site.vertical = 'cafe'
+    site.verticalConfidence = 'detected'
+    site.menu = [
+      { name: 'Indoor plants', items: [{ name: 'Monstera', desc: '', price: 2400 }] },
+      { name: 'Landscaping', items: [{ name: 'Garden design visit', desc: '', price: 12000 }] },
+    ]
+    const plan = discoverPlan(buildDiscovery({ site, source: 'https://ridgeway.example/' }), site)
+    expect(plan.confirmations.filter((question) => question.field === 'trade')).toHaveLength(1)
   })
 
   test('two readings of the name are surfaced as a conflict', () => {

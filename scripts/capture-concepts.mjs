@@ -9,7 +9,7 @@ import { readdir, writeFile } from 'node:fs/promises'
 import { renderApp } from '../src/worker/app'
 
 const ROOT = process.cwd()
-const BASE = 'docs/qa/live-discovery-2026-11-20'
+const BASE = process.env.BASE || 'docs/qa/live-discovery-2026-11-20'
 const CDP = 'http://127.0.0.1:9223'
 const WIDTH = 390
 const HEIGHT = 844

@@ -1,0 +1,161 @@
+{
+  "name": "RHS",
+  "kind": "Bookshop",
+  "tagline": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days…",
+  "story": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days out at stunning gardens, exclusive access to flower shows & expert advice.",
+  "accent": "#005a4e",
+  "logo": "RH",
+  "hours": "Tue–Sat 10:00–18:00",
+  "phone": "+1 555 0163",
+  "address": "3 Lantern Court, East Side",
+  "vertical": "shop",
+  "features": [
+    "catalog",
+    "ordering",
+    "booking",
+    "loyalty",
+    "offers",
+    "events"
+  ],
+  "menu": [
+    {
+      "name": "Bookshop",
+      "items": [
+        {
+          "id": "itm_0f3d0551",
+          "name": "RHS Licensed products / RHS Gardening",
+          "desc": "Discover more about RHS Licensed products, from the partners we work with to the…",
+          "price": 0
+        },
+        {
+          "id": "itm_400ac507",
+          "name": "Special Offers / RHS Gardening",
+          "desc": "Whether you’re looking for a summerhouse, garden goodies or great escapes, there’s…",
+          "price": 0
+        },
+        {
+          "id": "itm_ba43be19",
+          "name": "RHS Gift Cards / RHS Gardening",
+          "desc": "Give the gift of choice with RHS Gift Cards. Redeemable for RHS Shows tickets, plants,…",
+          "price": 0
+        },
+        {
+          "id": "itm_b51f1a28",
+          "name": "Find out about our RHS Library Collections / RHS Gardening",
+          "desc": "Find out how you can access our RHS Library Collections in London, Wisley, Rosemoor, Hyde…",
+          "price": 0
+        },
+        {
+          "id": "itm_e8a845a3",
+          "name": "Become a member of the RHS / RHS",
+          "desc": "Learn about the great benefits in return for supporting the world's largest gardening…",
+          "price": 0
+        },
+        {
+          "id": "itm_e1e35233",
+          "name": "Beautiful open gardens to visit in the UK",
+          "desc": "Visit the beautiful RHS gardens throughout the UK for fun days out for all the family.…",
+          "price": 0
+        },
+        {
+          "id": "itm_0eefd0d9",
+          "name": "RHS Shows and events",
+          "desc": "Be inspired and grow your knowledge with all-year-round gardening and flower shows from…",
+          "price": 0
+        },
+        {
+          "id": "itm_61c36e68",
+          "name": "Study & learn / RHS Gardening",
+          "desc": "Find the right learning experience for you. We offer formal, accredited qualifications,…",
+          "price": 0
+        },
+        {
+          "id": "itm_e4041657",
+          "name": "RHS Science & Collections / RHS Gardening",
+          "desc": "RHS Science is leading the way in research into tackling global issues through gardening,…",
+          "price": 0
+        }
+      ]
+    }
+  ],
+  "importSummary": {
+    "source": "https://www.rhs.org.uk/",
+    "importedAt": "2026-11-20T11:29:26.414Z",
+    "products": 9,
+    "withImage": 0,
+    "priced": 0,
+    "currency": "",
+    "categories": [
+      "Bookshop"
+    ]
+  },
+  "offers": [
+    {
+      "title": "Local delivery, $2.99",
+      "body": "Within five miles, next day."
+    },
+    {
+      "title": "First look: new ceramics",
+      "body": "Friday evening, in the shop."
+    }
+  ],
+  "loyalty": {
+    "goal": 5,
+    "reward": "10% off your next order"
+  },
+  "sampleContent": {
+    "menu": false,
+    "contact": true,
+    "story": false,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": false
+  },
+  "custom": "",
+  "direction": "lifestyle",
+  "category": "Bookshop",
+  "design": {
+    "bg": "#faf9f5",
+    "ink": "#111a24",
+    "surface": "#f1f0ed",
+    "surface2": "#e6e6e3",
+    "muted": "#60666b",
+    "radius": 17,
+    "display": "\"freight-sans-pro\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+    "fontLabel": "freight-sans-pro",
+    "dark": false,
+    "palette": false,
+    "basis": ""
+  },
+  "structure": {
+    "nav": "drawer",
+    "hero": "image",
+    "navLabels": [],
+    "stickyHeader": false,
+    "basis": "nav in a drawer · hero image"
+  },
+  "website": "https://www.rhs.org.uk/",
+  "socials": [
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/The_RHS/"
+    },
+    {
+      "label": "YouTube",
+      "url": "https://www.youtube.com/@The_RHS"
+    },
+    {
+      "label": "TikTok",
+      "url": "https://www.tiktok.com/@the_rhs"
+    },
+    {
+      "label": "Facebook",
+      "url": "https://www.facebook.com/rhshome"
+    },
+    {
+      "label": "Pinterest",
+      "url": "https://www.pinterest.co.uk/rhshome/"
+    }
+  ]
+}

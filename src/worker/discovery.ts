@@ -108,6 +108,42 @@ function field<T>(value: T, source: string, method: Method, confidence: Confiden
   return { value, source, method, confidence }
 }
 
+/**
+ * Two ways of writing one business name are not a conflict. Case, punctuation,
+ * spacing, a leading "the", an "&" against "and" and a legal suffix all
+ * normalise away; a marketing sentence is not a name at all.
+ */
+function nameKey(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\b(ltd|limited|llp|inc|plc|co|company|the)\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function comparableName(value: string): boolean {
+  const words = value.trim().split(/\s+/)
+  // A sentence is a description, not a competing name: never compare it.
+  return words.length <= 6 && value.trim().length <= 60
+}
+
+function distinctNames(values: string[]): string[] {
+  const kept: string[] = []
+  for (const value of values) {
+    if (!comparableName(value)) continue
+    const key = nameKey(value)
+    if (!key) continue
+    if (kept.some((existing) => {
+      const other = nameKey(existing)
+      return other === key || other.includes(key) || key.includes(other)
+    })) continue
+    kept.push(value.trim())
+  }
+  return kept
+}
+
 function jsonLd(html: string): Record<string, unknown>[] {
   const blocks: Record<string, unknown>[] = []
   const pattern = /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
@@ -186,7 +222,7 @@ export function buildDiscovery(input: {
   const nameConfidence: Confidence = proof.names.length ? 'verified' : site.name ? 'likely' : 'guess'
 
   // A name read three ways that disagrees three ways is a conflict, not a pick.
-  const nameValues = [...new Set([proof.names[0], proof.ogName, proof.h1].filter(Boolean) as string[])]
+  const nameValues = distinctNames([proof.names[0], proof.ogName, proof.h1].filter(Boolean) as string[])
   const conflicts: DiscoveryConflict[] = []
   if (nameValues.length > 1) {
     conflicts.push({ field: 'name', values: nameValues.map((value) => ({ value, source })) })
@@ -266,10 +302,14 @@ export function buildDiscovery(input: {
   const rivals = SECTION_TRADE.filter(
     (entry) => entry.trade !== site.vertical && entry.words.some((word) => haystack.includes(word)),
   ).slice(0, 2)
-  for (const rival of rivals) {
+  // One trade question, only when a second trade is evidenced by a section
+  // name or the site's own category — never by a product title.
+  const sectionText = [site.category, ...site.menu.map((section) => section.name)].join(' ').toLowerCase()
+  const evidenced = rivals.filter((rival) => rival.words.some((word) => sectionText.includes(word)))
+  if (evidenced.length && site.verticalConfidence !== 'guessed') {
     questions.push({
       field: 'trade',
-      why: `The site reads as ${site.vertical} and also as ${rival.trade} (it mentions ${rival.words[0]}). Which one should the app lead with?`,
+      why: `The site reads as ${site.vertical} and also as ${evidenced[0].trade} (it has a ${evidenced[0].words[0]} section). Which one should the app lead with?`,
       kind: 'confirm',
     })
   }
@@ -410,9 +450,20 @@ export function discoverPlan(
   return {
     discovery,
     concepts,
-    blockers: discovery.questions.filter((question) => question.kind === 'blocker'),
-    confirmations: discovery.questions.filter((question) => question.kind === 'confirm'),
+    // Questions are keyed by field: an owner never sees the same question twice.
+
+    blockers: uniqueQuestions(discovery.questions.filter((question) => question.kind === 'blocker')),
+    confirmations: uniqueQuestions(discovery.questions.filter((question) => question.kind === 'confirm')),
   }
+}
+
+function uniqueQuestions(questions: DiscoveryQuestion[]): DiscoveryQuestion[] {
+  const seen = new Set<string>()
+  return questions.filter((question) => {
+    if (seen.has(question.field)) return false
+    seen.add(question.field)
+    return true
+  })
 }
 
 function initialsFor(name: string): string {

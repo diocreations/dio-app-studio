@@ -447,6 +447,20 @@ function briefScript(verticals: string): string {
     refresh()
     // The three concepts must show *their* business, not the demo shop.
     syncElementPreviews()
+    // A read site has already answered the trade, the brand and the feature
+    // questions. Walking the customer through them again is asking them to
+    // retype what Plattr just read: skip to delivery, the only answers a website
+    // cannot know (who to contact, and how they want to buy).
+    if (site.name && site.vertical && readItems > 0) {
+      document.querySelectorAll('[data-step-dot]').forEach((dot) => {
+        const step = Number(dot.dataset.stepDot)
+        if (step === 1 || step === 2) {
+          dot.setAttribute('data-answered', '1')
+          dot.title = 'Read from your site'
+        }
+      })
+      show(3)
+    }
   }
 
   async function runImport(rawUrl) {

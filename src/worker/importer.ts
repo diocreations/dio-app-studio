@@ -143,6 +143,46 @@ const PAGE_TIMEOUT_MS = 6500
  * sitemap-driven crawl read product pages that the home page never links to.
  */
 export const MAX_PAGES = 10
+
+/**
+ * Which paths belong to a trade's primary offering, and which belong to a
+ * secondary shop bolted onto the same site.
+ */
+const TRADE_SOURCE: Record<string, { prefer: RegExp; avoid: RegExp }> = {
+  restaurant: {
+    prefer: /menu|food|dish|drink|breakfast|lunch|dinner|brunch|order|reserve|book|table/i,
+    avoid: /store|shop|gift|merch|clothing|homeware|hamper|book/i,
+  },
+  cafe: {
+    prefer: /menu|coffee|food|pastry|breakfast|brunch|order|reserve|book/i,
+    avoid: /store|shop|gift|merch|clothing|homeware/i,
+  },
+  hotel: {
+    prefer: /room|suite|stay|accommodation|facilit|book|availab|spa|dining/i,
+    avoid: /store|shop|gift|merch/i,
+  },
+  trades: {
+    prefer: /service|repair|emergency|boiler|plumb|heat|electric|quote|book|call/i,
+    avoid: /blog|news|career|store|shop|gift/i,
+  },
+  professional: {
+    prefer: /service|team|advice|consult|enquir|contact|pricing|fee/i,
+    avoid: /blog|news|career|store|shop/i,
+  },
+  shop: { prefer: /product|collection|shop|category|catalog|new|sale/i, avoid: /blog|news|about|career/i },
+  ecommerce: { prefer: /product|collection|shop|category|catalog/i, avoid: /blog|news|about|career/i },
+}
+
+/** Entry points a trade's site almost always has, even when it does not link them. */
+const PRIMARY_PATHS: Record<string, string[]> = {
+  restaurant: ['/menus', '/menu', '/food'],
+  cafe: ['/menu'],
+  hotel: ['/rooms', '/stay'],
+  trades: ['/services'],
+  professional: ['/services'],
+  salon: ['/services'],
+  clinic: ['/services'],
+}
 /** Wall clock for the whole crawl, so the brief never hangs. */
 const CRAWL_BUDGET_MS = 20_000
 /** Sitemaps are cheap metadata, but still bounded and same-origin. */
@@ -567,7 +607,7 @@ const SITEMAP_DETAIL_PATH =
  * Product-like URLs first, then aisles. Reading one product page is worth more
  * than opening a collection index that the crawler has already seen.
  */
-export function rankSitemapUrls(urls: URL[], origin: string): URL[] {
+export function rankSitemapUrls(urls: URL[], origin: string, vertical?: VerticalId): URL[] {
   const seen = new Set<string>()
   const scored: { url: URL; score: number }[] = []
   for (const url of urls) {
@@ -580,6 +620,9 @@ export function rankSitemapUrls(urls: URL[], origin: string): URL[] {
     if (SITEMAP_DETAIL_PATH.test(url.pathname)) score += 4
     if (PRODUCT_PATH.test(url.pathname)) score += 2
     if (AISLE_PATH.test(url.pathname)) score += 2
+    const source = vertical ? TRADE_SOURCE[vertical] : undefined
+    if (source?.prefer.test(url.pathname)) score += 3
+    if (source?.avoid.test(url.pathname)) score -= 4
     // A dated or paginated URL is usually a blog, not a product.
     if (/\/\d{4}\/\d{2}\//.test(url.pathname) || /\/page\/\d+/.test(url.pathname)) score -= 2
     if (score > 0) scored.push({ url, score })
@@ -2242,7 +2285,28 @@ async function expandCatalogue(options: {
   }
 
   const aisles = aisleLinks(entry, 40)
-  const queue = aisles.slice(0, Math.max(remainingPages(), 0)).map((aisle) => aisle.url)
+  // A trade's own pages first. A restaurant's gift shop is not its menu, and a
+  // hotel's shop is not its rooms: the crawl has to prefer the surface that the
+  // business actually sells on, not the one with the most product markup.
+  const source = TRADE_SOURCE[site.vertical]
+  const ranked = aisles
+    .map((aisle) => {
+      let score = 0
+      if (source?.prefer.test(aisle.url.pathname)) score += 3
+      if (source?.avoid.test(aisle.url.pathname)) score -= 4
+      return { url: aisle.url, score }
+    })
+    .sort((a, b) => b.score - a.score)
+    .map((entry) => entry.url)
+  const queue = ranked.slice(0, Math.max(remainingPages(), 0))
+  // A small number of well-known entry points, tried only when the page did not
+  // link them: /menus on a restaurant, /rooms on a hotel, /services on a trade.
+  const linked = new Set(queue.map((url) => url.pathname.replace(/\/$/, '')))
+  for (const path of PRIMARY_PATHS[site.vertical] ?? []) {
+    if (linked.has(path)) continue
+    if (queue.length >= Math.max(remainingPages(), 0)) break
+    queue.push(new URL(path, entry.url.origin))
+  }
   // A shop with more aisles than the budget allows is worth saying out loud.
   if (aisles.length > queue.length) skipped = true
 

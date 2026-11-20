@@ -1,0 +1,684 @@
+{
+  "name": "Dishoom Indian Restaurants",
+  "kind": "Restaurant",
+  "tagline": "Dishoom cafés pay homage to the food of Bombay.",
+  "story": "Dishoom cafés pay homage to the food of Bombay. Open all day, from breakfast to dinner and later. Enjoy Bombay comfort food and first-class drinks. All welcome.",
+  "accent": "#c8452b",
+  "logo": "DI",
+  "logoImage": {
+    "url": "https://cdn.sanity.io/images/daku84np/production/9a797eca7ee2bd6f644710d59ebd52e7fdedef69-161x18.svg",
+    "alt": "Dishoom Indian Restaurants logo"
+  },
+  "hours": "Tue–Sun 17:00–23:00",
+  "phone": "+1 555 0142",
+  "address": "8 Furnace Yard, Old Town",
+  "vertical": "restaurant",
+  "features": [
+    "catalog",
+    "ordering"
+  ],
+  "menu": [
+    {
+      "name": "Breakfast",
+      "items": [
+        {
+          "id": "itm_77e8e338",
+          "name": "Bacon Naan Roll",
+          "desc": "Ramsay of Carluke’s smoked streaky bacon is matured in the traditional Ayrshire way and…",
+          "price": 1170
+        },
+        {
+          "id": "itm_2e985700",
+          "name": "Sausage Naan Roll",
+          "desc": "Shropshire pork sausages, warmly spiced with cracked black pepper. Each sausage is…",
+          "price": 1250
+        },
+        {
+          "id": "itm_77868212",
+          "name": "Egg Naan Roll",
+          "desc": "Two fried Cornish free-range eggs with saffron-orange, runny yolks. Warm and most…",
+          "price": 1070
+        },
+        {
+          "id": "itm_c8ad3067",
+          "name": "Bacon & Egg Naan Roll",
+          "desc": "",
+          "price": 1350
+        },
+        {
+          "id": "itm_b9f089cf",
+          "name": "Sausage & Egg Naan Roll",
+          "desc": "",
+          "price": 1390
+        },
+        {
+          "id": "itm_cd1820fd",
+          "name": "Wrestler’s Naan Roll",
+          "desc": "Named for Koolar & Co.’s wrestler-sized portions. Smoked streaky bacon, peppery pork…",
+          "price": 1520
+        },
+        {
+          "id": "itm_a316db6d",
+          "name": "New Veg. Sausage & Egg Naan Roll*",
+          "desc": "Cleverly fermented crispy-smashed veggie sausage with best umami spicing, developed with…",
+          "price": 1370
+        },
+        {
+          "id": "itm_571e7c91",
+          "name": "Vegan Sausage Naan Roll*",
+          "desc": "A delicious crispy-smashed sausage developed with Chef Neil Rankin. Cleverly fermented…",
+          "price": 1290
+        },
+        {
+          "id": "itm_6d0ee0cf",
+          "name": "Date & Banana Porridge",
+          "desc": "Organic porridge oats cooked with oat milk, banana and sweet Medjool dates. If you wish…",
+          "price": 950
+        },
+        {
+          "id": "itm_847967a2",
+          "name": "Fruit & Yoghurt",
+          "desc": "Fresh seasonal fruits topped with creamy yoghurt infused with fresh vanilla pod. Choose…",
+          "price": 990
+        },
+        {
+          "id": "itm_d93ef23e",
+          "name": "House Granola",
+          "desc": "A Dishoom recipe, handmade with toasted oats, seeds, cashews, almonds, pistachios and…",
+          "price": 1050
+        },
+        {
+          "id": "itm_9fdd78d3",
+          "name": "Breakfast Lassi",
+          "desc": "A concoction of yoghurt, banana, mango and oats. Keep regular.",
+          "price": 720
+        },
+        {
+          "id": "itm_ef8f88ee",
+          "name": "The Vegan Bombay",
+          "desc": "Bountiful vegan repast. Tofu akuri, crispy-smashed vegan sausages, vegan black pudding,…",
+          "price": 1770
+        },
+        {
+          "id": "itm_ce0b02b1",
+          "name": "Vegan Akuri",
+          "desc": "A vegan version of the Irani café special. Spiced scrambled tofu piled up richly…",
+          "price": 1250
+        },
+        {
+          "id": "itm_87a426ed",
+          "name": "Chole Puri*",
+          "desc": "Where to start? Chef’s favourite breakfast: chole (chickpeas), pickles (which are…",
+          "price": 1590
+        },
+        {
+          "id": "itm_a9e386a9",
+          "name": "Fruit & Coconut Yoghurt",
+          "desc": "Fresh seasonal fruits topped with creamy coconut yoghurt infused with fresh vanilla pod,…",
+          "price": 990
+        },
+        {
+          "id": "itm_8a18689d",
+          "name": "Fire Toast, vegan butter and jam",
+          "desc": "",
+          "price": 490
+        },
+        {
+          "id": "itm_b57b2c50",
+          "name": "Vegan Lassis",
+          "desc": "Ask your server for details.",
+          "price": 690
+        },
+        {
+          "id": "itm_76e82262",
+          "name": "Oat Milk Chai",
+          "desc": "Warming comfort and satisfying spice. Made with oat milk.",
+          "price": 490
+        },
+        {
+          "id": "itm_59b16f82",
+          "name": "Porridge",
+          "desc": "With oat milk and bananas.",
+          "price": 660
+        },
+        {
+          "id": "itm_cddb6062",
+          "name": "Granola",
+          "desc": "With cinnamon, nuts and fresh seasonal fruits. Choose from vanilla dairy yoghurt and…",
+          "price": 690
+        },
+        {
+          "id": "itm_914dd733",
+          "name": "Cinnamon Pancakes",
+          "desc": "Two fluffy pancakes topped with vanilla cream, fresh berries and spiced syrup.",
+          "price": 760
+        },
+        {
+          "id": "itm_23f7b455",
+          "name": "Eggs & Beans On Toast",
+          "desc": "Scrambled eggs with toasted bread and baked beans.",
+          "price": 760
+        }
+      ]
+    },
+    {
+      "name": "Biryani",
+      "items": [
+        {
+          "id": "itm_7e788dcd",
+          "name": "Lamb Biryani",
+          "desc": "Fall-apart leg of lamb bedded in a pot with buttery saffron rice, caramelised onions,…",
+          "price": 2150
+        },
+        {
+          "id": "itm_fdb6cb28",
+          "name": "Awadhi Jackfruit Biryani",
+          "desc": "Sturdy, savoury jackfruit and delicately flavoured rice, potted, sealed and cooked the…",
+          "price": 1850
+        },
+        {
+          "id": "itm_942e2d74",
+          "name": "Chicken Berry Britannia",
+          "desc": "Tempting and flavourful pot of chicken, ginger, garlic, mint, coriander and rice cooked…",
+          "price": 1920
+        }
+      ]
+    },
+    {
+      "name": "Ruby Murray and Daal",
+      "items": [
+        {
+          "id": "itm_0704c1d5",
+          "name": "Chicken Ruby",
+          "desc": "Tender chicken in a rich, silky makhani sauce. A good and proper curry redolent with…",
+          "price": 1890
+        },
+        {
+          "id": "itm_0a174131",
+          "name": "Goan Monkfish Curry",
+          "desc": "Choicest monkfish simmered in creamy coconut, tamarind, tomato and kokum. Strewn with…",
+          "price": 2100
+        },
+        {
+          "id": "itm_df8bac65",
+          "name": "Goan Vegetable Curry",
+          "desc": "Cauliflower, potato, fine beans and carrots mingle in velvety coconut, tangy tamarind,…",
+          "price": 1790
+        },
+        {
+          "id": "itm_c413060f",
+          "name": "Homestyle Lamb Curry",
+          "desc": "Resourceful comfort. Deeply spiced lamb lingers over a low, tickling flame. Potatoes…",
+          "price": 2070
+        },
+        {
+          "id": "itm_f062767e",
+          "name": "Mattar Paneer",
+          "desc": "A steadfast, humble and delicious vegetarian curry, beloved of Bombay families.",
+          "price": 1790
+        },
+        {
+          "id": "itm_1c296e4b",
+          "name": "House Black Daal",
+          "desc": "A Dishoom signature dish – dark, rich, deeply flavoured. It is cooked over 24 hours for…",
+          "price": 1150
+        },
+        {
+          "id": "itm_f705ae5c",
+          "name": "Lamb Chettinad",
+          "desc": "Favoured Tamil family classic. Lamb, tender with patient preparation, married well with…",
+          "price": 1950
+        },
+        {
+          "id": "itm_1e685167",
+          "name": "Prawn Moilee",
+          "desc": "Juicy prawns mingle with aromatic curry leaves, mustard seeds and coconut in this…",
+          "price": 1930
+        },
+        {
+          "id": "itm_ece27cbf",
+          "name": "Chole",
+          "desc": "An abiding favourite of Indian families everywhere, originally hailing from the Punjab.…",
+          "price": 1290
+        }
+      ]
+    },
+    {
+      "name": "Salad",
+      "items": [
+        {
+          "id": "itm_4d30aeb7",
+          "name": "Chilli Broccoli Salad",
+          "desc": "Toasted pistachios and shredded mint leaves with finest, greenest broccoli, fresh red…",
+          "price": 870
+        }
+      ]
+    },
+    {
+      "name": "Rolls",
+      "items": [
+        {
+          "id": "itm_6afe710a",
+          "name": "Chicken Kathi Roll",
+          "desc": "Flaky paratha with a fine omelette layer, wrapped all-about an abundance of chicken…",
+          "price": 1290
+        },
+        {
+          "id": "itm_388ea998",
+          "name": "Paneer Roomali Roll",
+          "desc": "Delicate handkerchief roll crisped and filled with grilled paneer, onion, peppers and…",
+          "price": 1290
+        }
+      ]
+    },
+    {
+      "name": "Small plates",
+      "items": [
+        {
+          "id": "itm_ef8f4a29",
+          "name": "Papads with Chutneys",
+          "desc": "Poppadoms torn, then fried ’til crisp. Some green-chilli-flecked. Dip-dip in chutneys",
+          "price": 550
+        },
+        {
+          "id": "itm_73400ffa",
+          "name": "Keema Pau",
+          "desc": "Perked-up Irani café classic: earthy, aromatic minced lamb, studded with peas,…",
+          "price": 1150
+        },
+        {
+          "id": "itm_47ea158b",
+          "name": "Pau Bhaji",
+          "desc": "An old-time favourite with lovely qualities, pre-eminently nicer than any you have…",
+          "price": 870
+        },
+        {
+          "id": "itm_dd6c5ea2",
+          "name": "Chote Papad With Mango Chutney",
+          "desc": "Poppadoms torn, then fried ’til crisp. Flecked with green chilli. Best dipped into…",
+          "price": 490
+        },
+        {
+          "id": "itm_9bd6bab6",
+          "name": "Lamb Samosas",
+          "desc": "Gujarati filo (not Punjabi shortcrust) stuffed with minced lamb, onions and spices.…",
+          "price": 820
+        },
+        {
+          "id": "itm_983a6be7",
+          "name": "Vegetable Samosas",
+          "desc": "Crunchy Punjabi-style shortcrust pastry, pea and potato filling warmly spiced with…",
+          "price": 770
+        },
+        {
+          "id": "itm_026b16bd",
+          "name": "Up-To-Date Pau Bhaji",
+          "desc": "An old-time favourite with lovely new qualities. Buttery-spicy, mashed vegetables and…",
+          "price": 840
+        },
+        {
+          "id": "itm_0a30570d",
+          "name": "Chilli Chicken",
+          "desc": "A plate of crispy garlic-ginger-soy-chilli-chicken is now an Irani café staple. For top…",
+          "price": 1090
+        },
+        {
+          "id": "itm_647e9126",
+          "name": "Dahi Bhalla Chaat",
+          "desc": "Spicy and tangy yet also refreshing. Dahi (yoghurt) Bhalla (lentil dumplings) Chaat…",
+          "price": 930
+        },
+        {
+          "id": "itm_fb5b09a2",
+          "name": "Mixed Seafood Fry",
+          "desc": "Karnataka delight! Crispy golden morsels of soft-shell crab, squid, bream and prawns…",
+          "price": 1250
+        },
+        {
+          "id": "itm_25904657",
+          "name": "Okra Fries",
+          "desc": "Fine lady's fingers for the fingers.",
+          "price": 790
+        },
+        {
+          "id": "itm_360967b0",
+          "name": "Chilli Cheese Toast",
+          "desc": "A nostalgia for Bombayites. Green chillies, capsicum and garlic in Cheddar melt on white…",
+          "price": 750
+        },
+        {
+          "id": "itm_801d5a1f",
+          "name": "Dishoom House Chaat",
+          "desc": "Warm-cold, sweet-tangy, moreish. Golden-fried sweet potato covered with cool yoghurt,…",
+          "price": 1090
+        },
+        {
+          "id": "itm_55ec4c38",
+          "name": "Bhel",
+          "desc": "Cold and crunchy, light and lovely. Puffed rice, peanuts and Bombay Mix tossed with fresh…",
+          "price": 850
+        }
+      ]
+    },
+    {
+      "name": "Side Orders",
+      "items": [
+        {
+          "id": "itm_51a228a5",
+          "name": "Kachumber",
+          "desc": "A messy to-do of cucumber, onion and tomato. A little lime lifts the whole affair.",
+          "price": 650
+        },
+        {
+          "id": "itm_12d7a5a4",
+          "name": "Raita",
+          "desc": "Delicate minty yoghurt, cool as a cucumber.",
+          "price": 550
+        },
+        {
+          "id": "itm_f37115db",
+          "name": "Plain Naan",
+          "desc": "Freshly baked in the tandoor.",
+          "price": 490
+        },
+        {
+          "id": "itm_f89a50cb",
+          "name": "Garlic Naan",
+          "desc": "With minced garlic and coriander sprinkle.",
+          "price": 550
+        },
+        {
+          "id": "itm_8e736e16",
+          "name": "Steamed Basmati Rice",
+          "desc": "It means “the fragrant one”.",
+          "price": 520
+        },
+        {
+          "id": "itm_1720d933",
+          "name": "Masala Beans",
+          "desc": "",
+          "price": 520
+        },
+        {
+          "id": "itm_d151c4c1",
+          "name": "Grilled Mushrooms",
+          "desc": "",
+          "price": 520
+        },
+        {
+          "id": "itm_4d91ae4f",
+          "name": "Two Pork Sausages",
+          "desc": "",
+          "price": 520
+        },
+        {
+          "id": "itm_f7afc29c",
+          "name": "Two Crispy-Smashed Vegan Sausages",
+          "desc": "",
+          "price": 520
+        },
+        {
+          "id": "itm_f3b7ab0b",
+          "name": "Four Rashers Of Bacon",
+          "desc": "",
+          "price": 520
+        },
+        {
+          "id": "itm_7380c5bd",
+          "name": "Fire Toast, Butter And Jam",
+          "desc": "",
+          "price": 490
+        }
+      ]
+    },
+    {
+      "name": "Drinks",
+      "items": [
+        {
+          "id": "itm_ce9bbcde",
+          "name": "Mango & Fennel Lassi",
+          "desc": "First-class yoghurt-drink with mango and a sprinkling of fennel seeds.",
+          "price": 690
+        },
+        {
+          "id": "itm_eaed89c5",
+          "name": "Rose & Cardamom Lassi",
+          "desc": "Sweet and subtle as a perfumed love-letter.",
+          "price": 690
+        },
+        {
+          "id": "itm_aa44a627",
+          "name": "Salted Lassi",
+          "desc": "Creamy yoghurt, salted and gently spiced with crushed cumin.",
+          "price": 690
+        },
+        {
+          "id": "itm_d325deef",
+          "name": "House Chai",
+          "desc": "All things nice: warming comfort and satisfying spice. Made the traditional way, or with…",
+          "price": 490
+        },
+        {
+          "id": "itm_b239e75f",
+          "name": "Cappuccino, Caffelatte or Flat White",
+          "desc": "Kindly ask your server for oat milk if desired.",
+          "price": 470
+        },
+        {
+          "id": "itm_3cef4a1a",
+          "name": "Guest Brew",
+          "desc": "Consult your server about our finest grade guest filter coffees – hot or iced.",
+          "price": 430
+        }
+      ]
+    },
+    {
+      "name": "Tipples",
+      "items": [
+        {
+          "id": "itm_0dffb99f",
+          "name": "Dishoom Margarita (Up)",
+          "desc": "Tequila El Jimador and lime juice shaken with clarified tamarind and subtle spice. Magic…",
+          "price": 1270
+        },
+        {
+          "id": "itm_73888095",
+          "name": "India Gimlet (Up)",
+          "desc": "Beefeater Dry Gin shaken with Rose’s Lime and celery bitters, finished with fresh dill.…",
+          "price": 1270
+        },
+        {
+          "id": "itm_23592768",
+          "name": "Blushing Colada (Tall)",
+          "desc": "Classic ice-crush of coconut cream and pineapple juice dances with dragon fruit and…",
+          "price": 1270
+        },
+        {
+          "id": "itm_5777188f",
+          "name": "Premier Padmini Negroni (Peg)",
+          "desc": "Dark, rich, silken Indian cocoa and sweet pears soaked overnight in bitter Campari,…",
+          "price": 1470
+        },
+        {
+          "id": "itm_0cc577e2",
+          "name": "Blood-Orange Lagerita (Tall)",
+          "desc": "Intensely quenchy icy-slushie. Crisp Kingfisher blitzed up with sweet-sweet blood-orange…",
+          "price": 870
+        },
+        {
+          "id": "itm_faa98432",
+          "name": "Permit Room Old-Fashioned (Peg)",
+          "desc": "With coconut-washed Woodford Reserve Bourbon, Pedro Ximénez Sherry and Medjool-date…",
+          "price": 1490
+        },
+        {
+          "id": "itm_0a6f5380",
+          "name": "Bolly Bellini (Flute)",
+          "desc": "A tipple for any time of day or night, such is its allure. Beneath deep foam is sparkling…",
+          "price": 1270
+        },
+        {
+          "id": "itm_eebe959e",
+          "name": "Chai Caffe Martini",
+          "desc": "Sip Baba’s espresso, chai spices and banana-laced La Hechicera Rum through a silky…",
+          "price": 1270
+        },
+        {
+          "id": "itm_cd9489aa",
+          "name": "Sunny's Star-Tini (Up)",
+          "desc": "Sparkling wine atop fresh passion fruit and bay leaf liqueur, lashed with vanilla bitters…",
+          "price": 1270
+        },
+        {
+          "id": "itm_987c5a27",
+          "name": "1948 Sour (Up)",
+          "desc": "Sincerely dry sour of Amrut and Nikka Days whiskies, with Dishoom Plum Liqueur and…",
+          "price": 1320
+        },
+        {
+          "id": "itm_9b5cb8cc",
+          "name": "Pink Shiso Spritz (Tall)",
+          "desc": "Tanqueray’s Rangpur Lime Distilled Gin on ice with sparkling wine, shiso cordial, white…",
+          "price": 1320
+        },
+        {
+          "id": "itm_500feafb",
+          "name": "Kohinoor Mojito (Tall)",
+          "desc": "Be not fooled by innocent appearances! Crystal-clear muddle of Takamaka Seychelles Rum…",
+          "price": 1320
+        },
+        {
+          "id": "itm_834918a7",
+          "name": "Thandai Milk Punch (Peg)",
+          "desc": "Clarified yet creamy, cooling blend of Diplomático Reserva Exclusiva Rum, almond milk,…",
+          "price": 1490
+        },
+        {
+          "id": "itm_c075c97d",
+          "name": "Liberty Punch",
+          "desc": "For a bold new nation, a jubilant libation: H by Hine VSOP Cognac, Earl Grey, lime,…",
+          "price": 960
+        },
+        {
+          "id": "itm_b660f328",
+          "name": "Bella Storia: Spumante, NV, Veneto",
+          "desc": "Extra-dry, refreshing aperitivo akin to Prosecco. Organic Garganega grapes grown by…",
+          "price": 1090
+        },
+        {
+          "id": "itm_a9ba5b70",
+          "name": "Teetotal Espresso Martini (Up)",
+          "desc": "An elegant glass of Baba’s espresso with complex black cardamom, cinnamon syrup and a…",
+          "price": 1050
+        }
+      ]
+    },
+    {
+      "name": "Dessert Cocktails",
+      "items": [
+        {
+          "id": "itm_71f8d811",
+          "name": "Naughty Chocolate Chai",
+          "desc": "The charming couplet goes a little madcap with Slane Irish Whiskey.",
+          "price": 1050
+        },
+        {
+          "id": "itm_a41c1c99",
+          "name": "Pistachio Kulfi Cream (Tall)",
+          "desc": "Delicate green with oat cream, pistachio butter and aromatic gin from Stranger & Sons’…",
+          "price": 1490
+        }
+      ]
+    }
+  ],
+  "importSummary": {
+    "source": "https://www.dishoom.com/",
+    "importedAt": "2026-11-20T11:28:45.029Z",
+    "products": 87,
+    "withImage": 0,
+    "priced": 87,
+    "currency": "GBP",
+    "categories": [
+      "Breakfast",
+      "Biryani",
+      "Ruby Murray and Daal",
+      "Salad",
+      "Rolls",
+      "Small plates",
+      "Side Orders",
+      "Drinks",
+      "Tipples",
+      "Dessert Cocktails"
+    ]
+  },
+  "offers": [
+    {
+      "title": "Two courses, $24",
+      "body": "Midweek lunch, Tuesday to Thursday until 3pm."
+    },
+    {
+      "title": "Counter seats",
+      "body": "Walk-ins only, from 6pm."
+    }
+  ],
+  "loyalty": {
+    "goal": 6,
+    "reward": "A main on the house"
+  },
+  "sampleContent": {
+    "menu": false,
+    "contact": true,
+    "story": false,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": false
+  },
+  "custom": "",
+  "direction": "luxe",
+  "category": "Restaurant",
+  "design": {
+    "bg": "#f7f1e6",
+    "ink": "#191310",
+    "surface": "#eee8dd",
+    "surface2": "#e4ded4",
+    "muted": "#645e59",
+    "radius": 10,
+    "display": "\"gill-sans-nova\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+    "fontLabel": "gill-sans-nova",
+    "dark": false,
+    "palette": false,
+    "basis": ""
+  },
+  "structure": {
+    "nav": "drawer",
+    "hero": "split",
+    "navLabels": [],
+    "stickyHeader": true,
+    "basis": "nav in a drawer · sticky header · hero split"
+  },
+  "website": "https://www.dishoom.com/",
+  "currency": "GBP",
+  "socials": [
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/dishoom/"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://uk.linkedin.com/company/dishoom"
+    },
+    {
+      "label": "TikTok",
+      "url": "https://www.tiktok.com/@dishoom_uk"
+    },
+    {
+      "label": "YouTube",
+      "url": "https://www.youtube.com/user/DishoomLondon"
+    },
+    {
+      "label": "X",
+      "url": "https://x.com/dishoom?lang=en"
+    }
+  ]
+}
