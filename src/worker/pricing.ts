@@ -372,13 +372,26 @@ export function sanitizeLogo(value: unknown, fallback: string): string {
 }
 
 /** Readable ink colour for a brand accent, so previews stay legible. */
+/**
+ * The label that sits on a brand-coloured surface, chosen by measured contrast
+ * rather than a lightness threshold. A mid-tone brand colour can fail AA with
+ * a cream label and pass with a dark one, and a threshold picks the wrong one.
+ */
 export function inkFor(hex: string): string {
   const value = hex.replace('#', '')
   const r = parseInt(value.slice(0, 2), 16)
   const g = parseInt(value.slice(2, 4), 16)
   const b = parseInt(value.slice(4, 6), 16)
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-  return luminance > 0.62 ? '#1a1410' : '#fffaf3'
+  const channel = (entry: number) => {
+    const c = entry / 255
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
+  }
+  const against = (other: [number, number, number]) => {
+    const fill = 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b)
+    const label = 0.2126 * channel(other[0]) + 0.7152 * channel(other[1]) + 0.0722 * channel(other[2])
+    return (Math.max(fill, label) + 0.05) / (Math.min(fill, label) + 0.05)
+  }
+  return against([0, 0, 0]) >= against([255, 250, 243]) ? '#000000' : '#fffaf3'
 }
 
 export function initialsFor(name: string): string {
@@ -430,6 +443,23 @@ function copyMenu(menu: MenuSection[]): MenuSection[] {
   }))
 }
 
+/**
+ * A stable identity for a catalogue item: its section and name, not its
+ * position. Reordering a menu or re-importing the same site keeps the key, so a
+ * document that references this item still finds it.
+ */
+export function itemKey(section: string, name: string): string {
+  const seed = `${section.trim().toLowerCase()}\u0000${name.trim().toLowerCase()}`
+  let hash = 0x811c9dc5
+  for (let index = 0; index < seed.length; index += 1) {
+    hash ^= seed.charCodeAt(index)
+    hash = Math.imul(hash, 0x01000193) >>> 0
+  }
+  return `itm_${hash.toString(16).padStart(8, '0')}`
+}
+
+const ITEM_ID = /^itm_[a-f0-9]{8,24}(_\d{1,2})?$/
+
 /** An item image is a stored media id plus presentation, never a remote URL. */
 function sanitizeItemImage(value: unknown): MenuItem['image'] {
   const input = value && typeof value === 'object' ? (value as Record<string, unknown>) : null
@@ -442,11 +472,18 @@ function sanitizeItemImage(value: unknown): MenuItem['image'] {
     rawSource.length <= 600 && /^https:\/\/[^\s"'<>]+$/i.test(rawSource) ? rawSource : undefined
   const methods = ['structured-data', 'embedded-json', 'og-image', 'public-data'] as const
   const method = methods.find((entry) => entry === input?.method)
+  const position = (entry: unknown) =>
+    typeof entry === 'number' && Number.isFinite(entry)
+      ? Math.max(0, Math.min(100, Math.round(entry)))
+      : undefined
   return {
     url,
     ...(sourceUrl ? { sourceUrl } : {}),
     ...(alt ? { alt } : {}),
     ...(method ? { method } : {}),
+    ...(input?.fit === 'cover' || input?.fit === 'contain' ? { fit: input.fit } : {}),
+    ...(position(input?.positionX) !== undefined ? { positionX: position(input?.positionX) } : {}),
+    ...(position(input?.positionY) !== undefined ? { positionY: position(input?.positionY) } : {}),
     source: 'website',
   }
 }
@@ -483,12 +520,15 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
     .map((section) => {
       const source = section as { name?: unknown; items?: unknown }
       const items = Array.isArray(source.items) ? source.items : []
+      const sectionName = String(source.name ?? '').trim().slice(0, 40) || 'Catalogue'
+      const used = new Map<string, number>()
       return {
-        name: String(source.name ?? '').trim().slice(0, 40) || 'Catalogue',
+        name: sectionName,
         items: items
           .slice(0, 30)
           .map((item) => {
             const entry = item as {
+              id?: unknown
               name?: unknown
               desc?: unknown
               price?: unknown
@@ -502,8 +542,18 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               typeof entry.price === 'number' && Number.isFinite(entry.price)
                 ? Math.max(0, Math.min(1_000_000, Math.round(entry.price)))
                 : 0
+            const itemName = String(entry.name ?? '').trim().slice(0, 60) || 'Item'
+            // A supplied key is kept (it survives an owner reordering their
+            // menu); otherwise it is derived from the section and name. Two
+            // identically named products in one section stay distinguishable.
+            const base =
+              typeof entry.id === 'string' && ITEM_ID.test(entry.id) ? entry.id : itemKey(sectionName, itemName)
+            const seen = (used.get(base) ?? 0) + 1
+            used.set(base, seen)
+            const id = seen === 1 ? base : `${base}_${seen}`
             return {
-              name: String(entry.name ?? '').trim().slice(0, 60) || 'Item',
+              id,
+              name: itemName,
               desc: String(entry.desc ?? '').trim().slice(0, 400),
               price,
               tag: String(entry.tag ?? '').trim().slice(0, 12) || undefined,

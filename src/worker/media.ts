@@ -284,6 +284,18 @@ async function quota(db: D1Database, projectId: string): Promise<{ files: number
   return { files: Number(row?.files ?? 0), bytes: Number(row?.bytes ?? 0) }
 }
 
+/**
+ * Every media id this project owns. Write paths check references against it,
+ * so a document or catalogue can never point at another owner's upload.
+ */
+export async function mediaIdsFor(db: D1Database, projectId: string): Promise<Set<string>> {
+  const { results } = await db
+    .prepare('SELECT id FROM media WHERE project_id = ?')
+    .bind(projectId)
+    .all<{ id: string }>()
+  return new Set((results ?? []).map((row) => row.id))
+}
+
 export async function listMedia(db: D1Database, projectId: string): Promise<MediaRecord[]> {
   const { results } = await db
     .prepare('SELECT * FROM media WHERE project_id = ? ORDER BY created_at DESC')

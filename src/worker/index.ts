@@ -62,6 +62,7 @@ import {
   MediaError,
   deleteMedia,
   listMedia,
+  mediaIdsFor,
   mediaSuggestions,
   mediaView,
   replaceMedia,
@@ -70,6 +71,21 @@ import {
   type MediaBucket,
 } from './media'
 import type { MenuSection, VideoLink } from './types'
+import type { Doc } from './doc'
+
+/**
+ * Media references a document or catalogue carries that this project does not
+ * own. Every write path checks this: ownership is decided on the server, not by
+ * whichever surface sent the id.
+ */
+function foreignMedia(doc: Doc | null, menu: MenuSection[] | null, owned: Set<string>): string[] {
+  const found: string[] = []
+  for (const screen of doc?.screens ?? [])
+    for (const node of screen.sections) if (node.media && !owned.has(node.media.id)) found.push(node.media.id)
+  for (const section of menu ?? [])
+    for (const item of section.items) if (item.media && !owned.has(item.media.id)) found.push(item.media.id)
+  return [...new Set(found)]
+}
 import { cleanLayout, designsFor, readPrompt } from './prompt'
 import { sampleSpec } from './proof'
 import { briefPage } from './views/brief'
@@ -925,6 +941,16 @@ app.patch('/api/projects/:token', async (c) => {
       : {}
 
   const menu = Array.isArray(specInput.menu) ? sanitizeMenu(specInput.menu) : undefined
+  if (menu) {
+    const foreign = foreignMedia(null, menu, await mediaIdsFor(c.env.DB, project.id))
+    if (foreign.length)
+      return fail(
+        c,
+        422,
+        'invalid_media_reference',
+        'That image belongs to another build. Choose one from this build library.',
+      )
+  }
 
   const updated = await saveVersion(c.env.DB, project, {
     name: str(body.name, 60) || undefined,
@@ -980,6 +1006,14 @@ app.put('/api/projects/:token/doc', async (c) => {
   const body = await readJson(c)
   if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
   const doc = normalizeDoc(body.doc, project.spec)
+  const foreign = foreignMedia(doc, null, await mediaIdsFor(c.env.DB, project.id))
+  if (foreign.length)
+    return fail(
+      c,
+      422,
+      'invalid_media_reference',
+      'That image belongs to another build. Choose one from this build library.',
+    )
   await saveDoc(c.env.DB, project, doc)
   c.header('Cache-Control', 'private, no-store')
   return c.json({ ok: true, doc, savedAt: new Date().toISOString() })
@@ -1042,6 +1076,14 @@ app.post('/api/projects/:token/import/apply', async (c) => {
       removed: Array.isArray(approval.removed) ? approval.removed.map(String).slice(0, 200) : [],
       changed: Array.isArray(approval.changed) ? approval.changed.map(String).slice(0, 400) : [],
     })
+    const foreign = foreignMedia(null, menu, await mediaIdsFor(c.env.DB, project.id))
+    if (foreign.length)
+      return fail(
+        c,
+        422,
+        'invalid_media_reference',
+        'The source refers to an image this build does not own.',
+      )
     const updated = await saveVersion(c.env.DB, project, { spec: { menu } })
     await log(c.env.DB, project.id, 'import', 'Catalogue updated', `Re-import applied from ${url.href}`)
     return c.json({ version: updated.version })
@@ -1832,6 +1874,14 @@ async function saveCatalogHandler(c: Context<{ Bindings: Bindings }, '/api/proje
   const body = await readJson(c)
   if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
   const menu = Array.isArray(body.menu) ? sanitizeMenu(body.menu) : project.spec.menu
+  const foreign = foreignMedia(null, menu, await mediaIdsFor(c.env.DB, project.id))
+  if (foreign.length)
+    return fail(
+      c,
+      422,
+      'invalid_media_reference',
+      'That image belongs to another build. Choose one from this build library.',
+    )
   const offers = Array.isArray(body.offers)
     ? body.offers
         .slice(0, 8)

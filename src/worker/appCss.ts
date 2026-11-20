@@ -50,6 +50,9 @@ export function appCss(ctx: CssCtx): string {
   --accent-soft: color-mix(in srgb, var(--accent) 13%, transparent);
   --accent-ring: color-mix(in srgb, var(--accent) 34%, transparent);
   --accent-deep: color-mix(in srgb, var(--accent) 72%, #000 28%);
+  /* The accent as a text colour. On a light page the brand colour itself is
+     readable; on a dark page it is not, so it is lifted towards the ink. */
+  --accent-text: var(--accent);
   --hair: color-mix(in srgb, var(--ink) 10%, transparent);
   --radius: ${radius}px;
   --display: ${ctx.theme.display};
@@ -97,6 +100,7 @@ body[data-theme="dark"] {
   --hair: color-mix(in srgb, var(--ink) 20%, transparent);
   --shadow-1: inset 0 1px 0 color-mix(in srgb, #fff 5%, transparent);
   --shadow-2: 0 24px 50px -30px #000;
+  --accent-text: color-mix(in srgb, var(--accent) 42%, var(--ink));
 }
 
 .app { position: fixed; inset: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
@@ -237,7 +241,7 @@ h3 { font-size: 16px; }
 .tiny { font-size: 11.5px; line-height: 1.55; }
 .tag {
   display: inline-block; font-size: 8.5px; font-weight: 750; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--accent); background: var(--accent-soft); padding: 3px 7px; border-radius: 999px;
+  color: var(--accent-text); background: var(--accent-soft); padding: 3px 7px; border-radius: 999px;
   vertical-align: 2px;
 }
 .price {
@@ -538,7 +542,7 @@ body[data-accent-style="underline"] .sect { border-bottom: 1px solid var(--hair)
 .offer b { display: block; font-size: 13.5px; font-weight: 650; letter-spacing: -0.005em; }
 .offer p { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
 .offer .spark {
-  width: 28px; height: 28px; border-radius: 9px; background: var(--accent-soft); color: var(--accent);
+  width: 28px; height: 28px; border-radius: 9px; background: var(--accent-soft); color: var(--accent-text);
   display: grid; place-items: center; font-size: 13px; flex: 0 0 auto;
 }
 body[data-accent-style="underline"] .offer .spark {
@@ -636,7 +640,7 @@ input:focus, textarea:focus {
   outline: none; border-color: var(--accent-ring); box-shadow: 0 0 0 4px var(--accent-soft);
 }
 .stars { display: flex; gap: 8px; font-size: 23px; color: color-mix(in srgb, var(--muted) 42%, transparent); }
-.stars span.on { color: var(--accent); }
+.stars span.on { color: var(--accent-text); }
 
 /* ---------------------------------------------------------------- detail */
 .detail-band {
@@ -689,6 +693,10 @@ body[data-nav="floating"] .screen.is-detail { bottom: var(--nav-space); }
   padding: 0;
 }
 .detail-line .price { font-size: 22px; color: var(--accent-deep); }
+/* A dark surface cannot carry the deep mix of a dark brand colour: at 1.1:1
+   the price is invisible. Keep the brand tint, at a lightness the surface can
+   actually show. */
+body[data-theme="dark"] .detail-line .price { color: var(--accent-text); }
 
 /* ------------------------------------------------------------------- nav */
 .tabbar {
@@ -755,7 +763,7 @@ body[data-nav="floating"] .tab.on { background: var(--accent-soft); color: var(-
 .done { text-align: center; padding: 10px 6px 12px; }
 .done .tick {
   width: 58px; height: 58px; border-radius: 50%; margin: 0 auto 16px; display: grid; place-items: center;
-  background: var(--accent-soft); color: var(--accent); animation: pop 0.45s var(--ease) both;
+  background: var(--accent-soft); color: var(--accent-text); animation: pop 0.45s var(--ease) both;
 }
 .done .tick svg { width: 24px; height: 24px; }
 .done h2 { font-size: 22px; }
@@ -798,7 +806,7 @@ body[data-nav="floating"] .tab.on { background: var(--accent-soft); color: var(-
   color: var(--muted); border: 1px solid transparent; transition: color 0.18s ease, background 0.18s ease, transform 0.12s var(--ease);
 }
 .save svg { width: 16px; height: 16px; }
-.save.on { color: var(--accent); background: var(--accent-soft); }
+.save.on { color: var(--accent-text); background: var(--accent-soft); }
 .save.on svg path { fill: currentColor; stroke: none; }
 .save:active { transform: scale(0.9); }
 .save.on-art {
@@ -909,7 +917,7 @@ body[data-shell="listing"].is-detail .bar-pill { display: none; }
 .sess-row:first-of-type { margin-top: 10px; }
 .sess-row b { flex: 1; font-weight: 650; }
 .sess-row span { color: var(--muted); font-size: 12px; }
-.sess-row em { font-style: normal; color: var(--accent); font-size: 11px; font-weight: 650; }
+.sess-row em { font-style: normal; color: var(--accent-text); font-size: 11px; font-weight: 650; }
 
 /* care home */
 .care-visit {
@@ -1532,7 +1540,7 @@ body[data-trade="gym"] .sess-today {
   border-left: 4px solid var(--accent); border-bottom: 1px solid var(--hair);
   padding: 12px 0 10px 14px; border-radius: 0; background: none;
 }
-body[data-trade="gym"] .sess-today .eyebrow { color: var(--accent); letter-spacing: 0.24em; }
+body[data-trade="gym"] .sess-today .eyebrow { color: var(--accent-text); letter-spacing: 0.24em; }
 body[data-trade="gym"] .sess-today h2 {
   font-family: var(--display); text-transform: uppercase; font-size: 24px; letter-spacing: 0.01em;
 }
@@ -1574,7 +1582,7 @@ body[data-trade="gym"] .stack-card .name {
 body[data-trade="gym"] .stack-card .price { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 body[data-trade="gym"] .sect .label {
   font-family: var(--display); text-transform: uppercase; font-size: 10px; letter-spacing: 0.18em;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 body[data-trade="gym"] .btn { border-radius: 4px; font-family: var(--display); text-transform: uppercase; letter-spacing: 0.03em; }
 body[data-trade="gym"] .tab.on { background: var(--accent); color: var(--on-accent); border-radius: 4px; }
@@ -2030,7 +2038,7 @@ body[data-trade="courses"] .stack-card {
 }
 body[data-trade="courses"] .stack-card .name { font-size: 15px; }
 body[data-trade="courses"] .stack-card .price { font-family: var(--price-font); font-size: 13px; }
-body[data-trade="courses"] .sect .label { color: var(--accent); letter-spacing: 0.24em; }
+body[data-trade="courses"] .sect .label { color: var(--accent-text); letter-spacing: 0.24em; }
 body[data-trade="courses"] .btn.accent { box-shadow: 0 12px 30px -14px var(--accent); }
 body[data-trade="courses"] .card { background: var(--surface); border-radius: 16px; }
 body[data-trade="courses"] .chip { border-radius: 999px; border: 1px solid var(--line); }
@@ -2101,7 +2109,7 @@ body[data-trade="agency"] .stack-card {
 }
 body[data-trade="agency"] .stack-card .name { text-transform: uppercase; letter-spacing: 0.04em; }
 body[data-trade="agency"] .price { font-family: var(--price-font); font-size: 12.5px; color: var(--muted); }
-body[data-trade="agency"] .sect .label { letter-spacing: 0.3em; color: var(--accent); }
+body[data-trade="agency"] .sect .label { letter-spacing: 0.3em; color: var(--accent-text); }
 body[data-trade="agency"] .cover h1, body[data-trade="agency"] .l-hero h1 { text-transform: uppercase; }
 body[data-trade="agency"] .btn {
   border-radius: 2px; text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px;
@@ -2118,7 +2126,7 @@ body[data-trade="agency"] .appbar { background: var(--bg); border-bottom: 1px so
 body[data-trade="influencer"] .appbar { background: var(--bg); }
 body[data-trade="influencer"] .tile .thumb { aspect-ratio: 4 / 5; }
 body[data-trade="influencer"] .tile .name { font-size: 16px; letter-spacing: -0.02em; }
-body[data-trade="influencer"] .sect .label { color: var(--accent); letter-spacing: 0.18em; }
+body[data-trade="influencer"] .sect .label { color: var(--accent-text); letter-spacing: 0.18em; }
 body[data-trade="influencer"] .card { box-shadow: none; }
 body[data-trade="influencer"] .btn { border-radius: 999px; font-weight: 700; }
 body[data-trade="influencer"] .slot { border-radius: 14px; }
@@ -2144,7 +2152,7 @@ body[data-trade="film"] .appbar { background: var(--bg); border-bottom: 1px soli
 body[data-trade="film"] .stack-card {
   background: none; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; box-shadow: none;
 }
-body[data-trade="film"] .sect .label { letter-spacing: 0.3em; color: var(--accent); }
+body[data-trade="film"] .sect .label { letter-spacing: 0.3em; color: var(--accent-text); }
 body[data-trade="film"] .chip {
   border-radius: 2px; text-transform: uppercase; font-size: 9px; letter-spacing: 0.14em;
 }
@@ -2180,7 +2188,7 @@ body[data-trade="marketplace"] .tile .thumb { aspect-ratio: 16 / 10; border-radi
 body[data-trade="marketplace"] .tile .price {
   font-size: 12px; color: var(--muted); letter-spacing: 0.04em;
 }
-body[data-trade="marketplace"] .sect .label { letter-spacing: 0.2em; color: var(--accent); }
+body[data-trade="marketplace"] .sect .label { letter-spacing: 0.2em; color: var(--accent-text); }
 body[data-trade="marketplace"] .btn { border-radius: 14px; }
 body[data-trade="marketplace"] .chip { border-color: var(--accent-ring); }
 body[data-trade="marketplace"] .store-card { border-radius: 14px; }

@@ -24,6 +24,9 @@ export type FeatureId =
   | 'tablet'
 
 export type MenuItem = {
+  /** Stable identity derived from the section and name, not from position, so
+   *  a document can reference this item across re-imports and reorderings. */
+  id?: string
   name: string
   desc: string
   /** In cents. 0 means "priced on request". */
@@ -46,6 +49,13 @@ export type MenuItem = {
     source: 'website'
     /** How the source tied this photograph to this item. */
     method?: 'structured-data' | 'embedded-json' | 'og-image' | 'public-data'
+    /** How the source photograph sits in its frame. A whole-product fit is the
+     *  default: cropping a tall illustration to a card can show its empty
+     *  background and read as no photograph at all. */
+    fit?: 'cover' | 'contain'
+    /** Crop centre, when the owner has moved it. */
+    positionX?: number
+    positionY?: number
   }
 }
 

@@ -406,8 +406,19 @@ describe('enquiries and dashboard', () => {
     )
     expect(cleared.status).toBe(200)
     const after = await getProject(shop.env.DB, shop.project.token)
-    // The catalogue was saved by the owner, so it is theirs and stays.
-    expect(after?.spec.menu).toEqual(savedMenu)
+    // The catalogue was saved by the owner, so it is theirs and stays. The
+    // server adds a stable item id to every entry; nothing the owner wrote is
+    // changed apart from that.
+    const withoutIds = (menu: typeof savedMenu) =>
+      menu.map((section) => ({
+        name: section.name,
+        items: section.items.map((item) => {
+          const { id: _id, ...rest } = item
+          return rest
+        }),
+      }))
+    expect(withoutIds(after?.spec.menu ?? [])).toEqual(withoutIds(savedMenu))
+    expect(after?.spec.menu.every((section) => section.items.every((item) => item.id))).toBe(true)
     // Groups still flagged as examples are gone, including their copy.
     expect(after?.spec.offers).toEqual([])
     expect(after?.spec.story).toBe('')

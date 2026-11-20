@@ -841,7 +841,14 @@ function renderCatalog() {
         '<div class="field"><label>Crop focus</label><input type="range" min="0" max="100" value="' + (item.media.focalX ?? 50) + '" data-cat-media="' + target + '" data-field="focalX" aria-label="Horizontal crop focus" /><input type="range" min="0" max="100" value="' + (item.media.focalY ?? 50) + '" data-cat-media="' + target + '" data-field="focalY" aria-label="Vertical crop focus" /></div>' +
         '<div class="field"><label>Fitting</label><select data-cat-media="' + target + '" data-field="fit"><option value="cover"' + (item.media.fit !== 'contain' ? ' selected' : '') + '>Crop to fill</option><option value="contain"' + (item.media.fit === 'contain' ? ' selected' : '') + '>Fit whole image</option></select></div>' +
         '<button class="cat-remove-photo" data-cat-media-remove="' + target + '">Remove photo</button>' +
-        '<p class="hint">Horizontal and vertical sliders move the crop. The stored photograph is never changed.</p></div>' : '')
+        '<p class="hint">Horizontal and vertical sliders move the crop. The stored photograph is never changed.</p></div>' : '') +
+      // A photograph the source site published has no media record, so it needs
+      // its own fitting control: a tall packshot cropped to a square tile can
+      // show nothing but its background.
+      (item.image && !item.media ? '<div class="cat-media">' +
+        '<div class="field"><label>Site photograph</label><select data-cat-image="' + target + '" data-field="fit"><option value="contain"' + (item.image.fit !== 'cover' ? ' selected' : '') + '>Fit the whole image</option><option value="cover"' + (item.image.fit === 'cover' ? ' selected' : '') + '>Crop to fill</option></select></div>' +
+        '<div class="field"><label>Crop centre</label><input type="range" min="0" max="100" value="' + (item.image.positionX ?? 50) + '" data-cat-image="' + target + '" data-field="positionX" aria-label="Horizontal crop centre" /><input type="range" min="0" max="100" value="' + (item.image.positionY ?? 50) + '" data-cat-image="' + target + '" data-field="positionY" aria-label="Vertical crop centre" /></div>' +
+        '<p class="hint">The image the site published for this item. Upload a photo above to replace it.</p></div>' : '')
     }).join('')
       : '<p class="hint">No items yet. Add the first one.</p>') + '</div>').join('')
     : '<p class="empty">No catalogue categories yet. Add one and fill in your real products or services.</p>') +
@@ -860,6 +867,14 @@ function catalogInput(event) {
     if (!target || !target.media) return;
     if (input.dataset.field === 'focalX' || input.dataset.field === 'focalY') target.media[input.dataset.field] = Math.max(0, Math.min(100, Math.round(Number(input.value || 50))));
     else target.media[input.dataset.field] = input.value;
+    return;
+  }
+  if (input.dataset.catImage) {
+    const [section, item] = input.dataset.catImage.split(':').map(Number);
+    const target = state.catalog[section] && state.catalog[section].items[item];
+    if (!target || !target.image) return;
+    if (input.dataset.field === 'positionX' || input.dataset.field === 'positionY') target.image[input.dataset.field] = Math.max(0, Math.min(100, Math.round(Number(input.value || 50))));
+    else target.image[input.dataset.field] = input.value;
     return;
   }
   if (input.dataset.catField === 'menu') {

@@ -220,6 +220,10 @@ export type DocNode = {
   cta?: { label: string; screen: string }
   /** Presentation inside a flagship composition. Never used by generic kinds. */
   variant?: FlagshipVariant
+  /** The catalogue item this component features, by its stable item id. The
+   *  component resolves the current name, description, price and photograph
+   *  from the catalogue instead of keeping a copy that can go stale. */
+  itemRef?: string
   media?: MediaRef
   style: SectionStyle
   responsive: Responsive
@@ -342,6 +346,7 @@ const SCREEN_ICON: Record<ScreenKind, ScreenIcon> = {
 }
 
 const SECTION_ID = /^sec_[a-z0-9_-]{1,40}$/
+const ITEM_REF = /^itm_[a-f0-9]{8,24}(_\d{1,2})?$/
 const SCREEN_ID = /^scr_[a-z0-9_-]{1,40}$/
 const SCREEN_TARGET = /^[a-z][a-z0-9_-]{0,30}$/
 const CLAMP = (value: unknown, max: number): string =>
@@ -499,9 +504,15 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
   if (spec.vertical === 'restaurant') {
     sections = [
       flagshipSection('dine-title', { title: spec.name, text: spec.tagline }),
+      // Only the dish's own words: placeholder copy written here would be saved
+      // into the owner's document and read as a statement about their food.
+      // The featured dish points at the catalogue item rather than copying its
+      // name, so a re-import or a reorder cannot leave the home naming one dish
+      // and describing another. Its own words are the owner's edit; the name
+      // comes from the catalogue.
       flagshipSection('dine-feature', {
-        title: first?.name || 'The menu',
-        text: first?.desc || 'The kitchen is writing its first menu.',
+        ...(first?.id ? { itemRef: first.id } : { title: first?.name || 'The menu' }),
+        ...(!first?.id && first?.desc ? { text: first.desc } : {}),
       }),
       flagshipSection('dine-actions', {
         title: 'See the menu',
@@ -883,6 +894,7 @@ function sanitizeSection(value: unknown, fallbackId: string): DocNode | null {
     ...(ctaLabel && SCREEN_TARGET.test(screenTarget)
       ? { cta: { label: ctaLabel, screen: screenTarget } }
       : {}),
+    ...(typeof raw.itemRef === 'string' && ITEM_REF.test(raw.itemRef) ? { itemRef: raw.itemRef } : {}),
     style: {
       ...(typeof styleInput.background === 'string'
         ? { background: sanitizeHex(styleInput.background, '') || undefined }
@@ -959,7 +971,10 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
     if (!home) screens.unshift(fallback.screens.find((entry) => entry.kind === 'home')!)
     else home.hidden = false
     const initial = screens.find((entry) => entry.id === raw.initialScreen) ?? screens[0]!
-    return { v: 2, accent, design: sanitizeDesign(raw.design, spec), initialScreen: initial.id, screens }
+    return bindItemRefs(
+      { v: 2, accent, design: sanitizeDesign(raw.design, spec), initialScreen: initial.id, screens },
+      spec,
+    )
   }
 
   // Version 1: one implicit screen holding the saved sections.
@@ -967,13 +982,55 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
   const screens = fallback.screens.map((entry) =>
     entry.kind === 'home' && legacySections.length ? { ...entry, sections: legacySections } : entry,
   )
-  return {
-    v: 2,
-    accent,
-    design: sanitizeDesign(raw.design, spec) ?? fallback.design,
-    initialScreen: fallback.initialScreen,
-    screens,
-  }
+  return bindItemRefs(
+    {
+      v: 2,
+      accent,
+      design: sanitizeDesign(raw.design, spec) ?? fallback.design,
+      initialScreen: fallback.initialScreen,
+      screens,
+    },
+    spec,
+  )
+}
+
+/** Variants whose content is one catalogue record. */
+const ITEM_BOUND: FlagshipVariant[] = ['dine-feature']
+
+/**
+ * Binds feature components to the catalogue. A component keeps the item it
+ * names; a reference to an item that no longer exists is dropped so the block
+ * falls back to its own words rather than silently featuring a different
+ * product. Documents written before references existed are matched once by
+ * name, which is the only evidence they carry.
+ */
+export function bindItemRefs(doc: Doc, spec: AppSpec): Doc {
+  const items = spec.menu.flatMap((section) => section.items).filter((item) => item.id)
+  if (!items.length) return doc
+  const byId = new Map(items.map((item) => [item.id as string, item]))
+  const byName = new Map(items.map((item) => [item.name.trim().toLowerCase(), item]))
+  let changed = false
+  const screens = doc.screens.map((screen) => ({
+    ...screen,
+    sections: screen.sections.map((node) => {
+      if (!node.variant || !ITEM_BOUND.includes(node.variant)) return node
+      if (node.itemRef) {
+        if (byId.has(node.itemRef)) return node
+        changed = true
+        const { itemRef: _dropped, ...rest } = node
+        return rest
+      }
+      const match = node.title ? byName.get(node.title.trim().toLowerCase()) : undefined
+      if (!match?.id) return node
+      changed = true
+      // The title was a copy of the item name, which the reference now
+      // supplies. Dropping it means the block follows the catalogue; leaving
+      // it would keep the stale name it was written with.
+      const { title: _copied, ...rest } = node
+      return { ...rest, itemRef: match.id }
+    }),
+  }))
+  return changed ? { ...doc, screens } : doc
 }
 
 /** A screen id that is not in use yet. */
