@@ -7,6 +7,7 @@ import {
   homeScreen,
   homeSections,
   moveSection,
+  normalizeDoc,
   updateSection,
 } from '../src/worker/doc'
 import { FLAGSHIP_TRADES } from '../src/worker/flagship'
@@ -82,6 +83,26 @@ describe('flagship compositions', () => {
       signatures.add(html.length + '|' + marker)
     }
     expect(signatures.size).toBe(27)
+  })
+
+  test('a concept chosen on the brief becomes the document direction', () => {
+    const spec = buildSpec({
+      name: 'Concept Probe',
+      vertical: 'restaurant',
+      accent: '#2f4a3f',
+      logo: 'CP',
+      features: [],
+      direction: 'luxe',
+    })
+    expect(spec.direction).toBe('luxe')
+    const doc = flagshipDocFromSpec(spec)
+    expect(doc.design?.direction).toBe('luxe')
+    // The document is the source of truth from birth: a save and reload keeps it,
+    // and an unknown direction on a stored spec falls back rather than inventing.
+    expect(normalizeDoc(JSON.parse(JSON.stringify(doc)), spec).design?.direction).toBe('luxe')
+    const unknown = buildSpec({ name: 'Concept Probe', vertical: 'restaurant', accent: '#2f4a3f', logo: 'CP', features: [], direction: 'not-a-direction' })
+    expect(unknown.direction).toBeUndefined()
+    expect(flagshipDocFromSpec(unknown).design?.direction).toBe('editorial')
   })
 
   test('the flagship layer keeps the real customer workflows', () => {
