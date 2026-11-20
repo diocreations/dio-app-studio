@@ -9,10 +9,16 @@
  * so `scripts/restore.mjs` and `scripts/verify-restore.mjs` work on it
  * unchanged. Every file is checked against the run manifest before it is kept.
  */
-import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
-import { readJson, sha256File, verifyMediaBackup } from './backup/lib.mjs'
+import {
+  backupManifest,
+  readJson,
+  sha256File,
+  verifyMediaBackup,
+  writeBackupManifest,
+} from './backup/lib.mjs'
+import { createR2, wranglerMode } from './backup/r2.mjs'
 
 const args = process.argv.slice(2)
 const flag = (name, fallback = '') => {
@@ -28,18 +34,8 @@ if (!run) {
   console.error('usage: bun scripts/offsite-fetch.mjs --run <id> --out <dir> [--remote|--local]')
   process.exit(2)
 }
-const mode = remote ? ['--remote'] : ['--local', '--persist-to', stateDir]
-
-function get(key, file) {
-  fs.mkdirSync(path.dirname(file), { recursive: true })
-  const result = spawnSync(
-    'bunx',
-    ['wrangler', 'r2', 'object', 'get', `${bucket}/${key}`, ...mode, '--file', file],
-    { encoding: 'utf8' },
-  )
-  if (result.status !== 0)
-    throw new Error(`could not read ${key}: ${`${result.stderr || result.stdout}`.trim().split('\n').slice(-2).join(' ')}`)
-}
+const r2 = createR2({ bucket, mode: wranglerMode(remote, stateDir) })
+const get = (key, file) => r2.get(key, file)
 
 fs.rmSync(out, { recursive: true, force: true })
 fs.mkdirSync(out, { recursive: true })
@@ -62,37 +58,19 @@ for (const object of media.objects) {
 const mediaCheck = verifyMediaBackup(path.join(out, 'media'))
 if (!mediaCheck.ok) throw new Error(`media verification failed: ${mediaCheck.problems.join('; ')}`)
 
-// The shape restore.mjs expects.
-fs.writeFileSync(
-  path.join(out, 'manifest.json'),
-  JSON.stringify(
-    {
-      createdAt: summary.createdAt,
-      source: { database: `${bucket}/${prefix}/database.sqlite` },
-      database: {
-        file: 'database.sqlite',
-        bytes: fs.statSync(path.join(out, 'database.sqlite')).size,
-        sha256: summary.database.sha256,
-        integrity: 'ok',
-        counts: summary.database.counts,
-        checksums: summary.database.checksums ?? {},
-        checksum: summary.database.checksum,
-      },
-      media: {
-        file: 'media',
-        checksum: summary.media.checksum,
-        objects: summary.media.objects,
-        referenced: summary.media.objects,
-        unreferenced: 0,
-        bytes: summary.media.bytes,
-      },
-      redaction: summary.redaction,
-      offsite: { run, bucket, mode: remote ? 'remote' : 'local' },
-    },
-    null,
-    2,
-  ) + '\n',
-)
+// The same manifest the local backup writes, so restore and verification do not
+// need to know where a backup came from.
+const manifest = backupManifest({
+  createdAt: summary.createdAt,
+  source: { database: `${bucket}/${prefix}/database.sqlite` },
+  databaseFile: path.join(out, 'database.sqlite'),
+  counts: summary.database.counts,
+  checksums: summary.database.checksums ?? {},
+  media,
+  redaction: summary.redaction,
+  offsite: { run, bucket, mode: remote ? 'remote' : 'local' },
+})
+writeBackupManifest(out, manifest)
 
 console.log(
   JSON.stringify(

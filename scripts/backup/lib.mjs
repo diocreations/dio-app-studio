@@ -297,6 +297,99 @@ function variantsOf(row) {
 }
 
 /**
+ * The media manifest, built from objects that were already read and checked.
+ * One builder for the local backup, the offsite run and anything else that
+ * needs the same shape and checksum.
+ */
+export function mediaManifest({ database, bucket = MEDIA_BUCKET, mediaRows, objects, problems = [], note = '' }) {
+  const manifest = {
+    createdAt: new Date().toISOString(),
+    database,
+    bucket,
+    mediaRows,
+    objects,
+    totals: {
+      objects: objects.length,
+      referenced: objects.filter((entry) => entry.referenced).length,
+      unreferenced: objects.filter((entry) => !entry.referenced).length,
+      bytes: objects.reduce((sum, entry) => sum + entry.bytes, 0),
+    },
+    problems,
+  }
+  if (note) manifest.note = note
+  manifest.checksum = mediaChecksum(objects)
+  return manifest
+}
+
+export function mediaChecksum(objects) {
+  return checksum({ objects: objects.map(({ key, sha256: digest }) => ({ key, sha256: digest })) })
+}
+
+export function writeMediaManifest(dir, manifest) {
+  fs.mkdirSync(dir, { recursive: true })
+  fs.writeFileSync(path.join(dir, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n')
+}
+
+/** What a restore cannot bring back, stated once so both manifests agree. */
+export const RESTORE_NOTES = [
+  'Owner and platform sessions are not in this backup; everybody signs in again.',
+  'Payment provider secrets are blank; reconnect the provider after a restore.',
+  'Invitations are not restored; send new invitations.',
+]
+
+/**
+ * The manifest `restore.mjs` and `verify-restore.mjs` read, for a backup
+ * directory holding `database.sqlite` and `media/`. Built here so the local
+ * backup and an offsite run fetched back produce the same document.
+ */
+export function backupManifest({
+  createdAt = new Date().toISOString(),
+  source = null,
+  databaseFile,
+  counts,
+  checksums,
+  media = null,
+  redaction,
+  offsite = null,
+}) {
+  const manifest = {
+    createdAt,
+    ...(source ? { source } : {}),
+    database: {
+      file: 'database.sqlite',
+      bytes: fs.statSync(databaseFile).size,
+      sha256: sha256File(databaseFile),
+      integrity: 'ok',
+      counts,
+      checksums,
+      checksum: sha256(JSON.stringify(checksums)),
+    },
+    media: media
+      ? {
+          file: 'media',
+          checksum: media.checksum,
+          objects: media.totals.objects,
+          referenced: media.totals.referenced,
+          unreferenced: media.totals.unreferenced,
+          bytes: media.totals.bytes,
+        }
+      : null,
+    redaction,
+    restoreNotes: RESTORE_NOTES,
+  }
+  if (offsite) manifest.offsite = offsite
+  manifest.checksum = sha256(
+    JSON.stringify({ database: manifest.database.checksum, media: manifest.media?.checksum ?? '', counts }),
+  )
+  return manifest
+}
+
+export function writeBackupManifest(dir, manifest) {
+  fs.mkdirSync(dir, { recursive: true })
+  fs.writeFileSync(path.join(dir, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n')
+}
+
+/**
  * A media backup holds every stored variant and the metadata needed to put it
  * back: object key, project, media id, content type, dimensions and checksum.
  * The source is checked as it is read, so a backup that finishes is a backup
@@ -408,22 +501,13 @@ export function backupMedia(databaseFile, bucketState, outDir) {
     })
   }
 
-  const manifest = {
-    createdAt: new Date().toISOString(),
+  const manifest = mediaManifest({
     database: { file: path.resolve(databaseFile), sha256: sha256File(databaseFile) },
-    bucket: MEDIA_BUCKET,
     mediaRows: rows.length,
     objects,
-    totals: {
-      objects: objects.length,
-      referenced: objects.filter((entry) => entry.referenced).length,
-      unreferenced: objects.filter((entry) => !entry.referenced).length,
-      bytes: objects.reduce((sum, entry) => sum + entry.bytes, 0),
-    },
     problems,
-  }
-  manifest.checksum = checksum({ objects: manifest.objects.map(({ key, sha256: digest }) => ({ key, sha256: digest })) })
-  fs.writeFileSync(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n')
+  })
+  writeMediaManifest(outDir, manifest)
   return manifest
 }
 
@@ -462,11 +546,8 @@ export function verifyMediaBackup(outDir, options = {}) {
   }
   if (options.requireReferenced !== false && (manifest.problems ?? []).length)
     problems.push('the backup recorded missing objects at the source')
-  const expected = manifest.checksum
-  const actual = checksum({
-    objects: (manifest.objects ?? []).map(({ key, sha256: digest }) => ({ key, sha256: digest })),
-  })
-  if (expected !== actual) problems.push('object list checksum does not match the manifest')
+  if (manifest.checksum !== mediaChecksum(manifest.objects ?? []))
+    problems.push('object list checksum does not match the manifest')
   return { ok: problems.length === 0, manifest, problems }
 }
 

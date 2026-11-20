@@ -1,5 +1,5 @@
 {
-  "createdAt": "2026-11-20T06:38:14.295Z",
+  "createdAt": "2026-11-20T06:50:02.926Z",
   "environment": {
     "kind": "local Wrangler state (Miniflare D1 and R2)",
     "sourceState": "/Users/jomyjoseph/.config/freebuff-desktop/local-projects/dd12c749-f87a-4f63-8bd7-791c793f775c/.wrangler/state",
@@ -7,7 +7,7 @@
     "production": "not exercised: needs Cloudflare credentials for d1 export and r2 object get"
   },
   "backup": {
-    "directory": ".wrangler/drill/backups/2026-11-20T06-38-08-401Z",
+    "directory": ".wrangler/drill/backups/2026-11-20T06-49-56-354Z",
     "databaseSha256": "c09c7a57189115b8494dc8e8b695744557f64a7267426524f3d8cdf45e3b8d87",
     "databaseBytes": 1470464,
     "mediaChecksum": "149fed9363aebb9d9179f99269123435d52511b56c4683622099fb97a9045374",

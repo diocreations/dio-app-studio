@@ -18,14 +18,14 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import {
+  backupManifest,
   backupMedia,
   databaseChecksums,
   findLocalBucket,
   findLocalDatabase,
-  sha256,
   sha256File,
   tableCounts,
-  writeJson,
+  writeBackupManifest,
   writeScrubbedDatabase,
   openDatabase,
   EXCLUDED_ROWS,
@@ -76,43 +76,19 @@ if (!skipMedia) {
   }
 }
 
-const manifest = {
-  createdAt: new Date().toISOString(),
+const manifest = backupManifest({
   source: { database: source, bytes: fs.statSync(source).size, sha256: sha256File(source) },
-  database: {
-    file: 'database.sqlite',
-    bytes: fs.statSync(databaseFile).size,
-    sha256: sha256File(databaseFile),
-    integrity: 'ok',
-    counts,
-    checksums,
-    checksum: sha256(JSON.stringify(checksums)),
-  },
-  media: media
-    ? {
-        file: 'media',
-        checksum: media.checksum,
-        objects: media.totals.objects,
-        referenced: media.totals.referenced,
-        unreferenced: media.totals.unreferenced,
-        bytes: media.totals.bytes,
-      }
-    : null,
+  databaseFile,
+  counts,
+  checksums,
+  media,
   redaction: {
     rowSetsRemoved: redaction.removed,
     columnsCleared: redaction.cleared,
     policy: { excludedRows: EXCLUDED_ROWS, redactedColumns: REDACTED_COLUMNS },
   },
-  restoreNotes: [
-    'Owner and platform sessions are not in this backup; everybody signs in again.',
-    'Payment provider secrets are blank; reconnect the provider after a restore.',
-    'Invitations are not restored; send new invitations.',
-  ],
-}
-manifest.checksum = sha256(
-  JSON.stringify({ database: manifest.database.checksum, media: manifest.media?.checksum ?? '', counts }),
-)
-writeJson(path.join(outDir, 'manifest.json'), manifest)
+})
+writeBackupManifest(outDir, manifest)
 
 // Keep the newest `retention` backups; only directories this script wrote.
 const backups = fs
