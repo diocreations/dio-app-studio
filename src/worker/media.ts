@@ -296,6 +296,51 @@ export async function mediaIdsFor(db: D1Database, projectId: string): Promise<Se
   return new Set((results ?? []).map((row) => row.id))
 }
 
+/**
+ * Every media id a stored value refers to. Documents carry `media: { id }`,
+ * catalogue items carry the same shape, and a reference is followed wherever it
+ * appears in a saved version, not just in the current document.
+ */
+export function collectMediaIds(value: unknown, into: Set<string> = new Set()): Set<string> {
+  if (Array.isArray(value)) {
+    for (const entry of value) collectMediaIds(entry, into)
+    return into
+  }
+  if (!value || typeof value !== 'object') return into
+  const record = value as Record<string, unknown>
+  const media = record.media
+  if (media && typeof media === 'object') {
+    const id = (media as Record<string, unknown>).id
+    if (typeof id === 'string') into.add(id)
+  }
+  for (const nested of Object.values(record)) collectMediaIds(nested, into)
+  return into
+}
+
+/**
+ * Uploads nothing points at any more. A row is only a candidate when no current
+ * document, no saved version and no other stored record names it, and it is
+ * older than the grace period, so a photo dropped and re-added in one session
+ * is never collected. Callers remove the object before the row.
+ */
+export function orphanMedia(
+  rows: { id: string; created_at?: string }[],
+  stored: unknown[],
+  options: { graceHours?: number; now?: number } = {},
+): string[] {
+  const referenced = collectMediaIds(stored)
+  const grace = (options.graceHours ?? 24) * 3600 * 1000
+  const now = options.now ?? Date.now()
+  return rows
+    .filter((row) => !referenced.has(row.id))
+    .filter((row) => {
+      if (!row.created_at) return false
+      const created = Date.parse(row.created_at)
+      return Number.isFinite(created) && now - created > grace
+    })
+    .map((row) => row.id)
+}
+
 export async function listMedia(db: D1Database, projectId: string): Promise<MediaRecord[]> {
   const { results } = await db
     .prepare('SELECT * FROM media WHERE project_id = ? ORDER BY created_at DESC')

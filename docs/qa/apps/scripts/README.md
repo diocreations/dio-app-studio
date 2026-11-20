@@ -23,6 +23,7 @@ bun docs/qa/apps/scripts/sessions.mjs       # mints local owner sessions
 bun docs/qa/apps/scripts/repair-fixtures.mjs # repairs the fixture documents (idempotent)
 bun docs/qa/apps/scripts/run-regression.mjs  # the five-app regression sweep
 bun docs/qa/apps/scripts/run-editor.mjs      # the editor, driven as an owner drives it
+bun docs/qa/apps/scripts/audit-media.mjs     # unused uploads, reported not deleted
 node docs/qa/apps/scripts/run-apps.cjs      # customer app: screens, workflows, widths
 node docs/qa/apps/scripts/run-dashboard.cjs # owner dashboard: tabs, records, settings
 ```
@@ -44,6 +45,11 @@ measures the colours the browser painted against the ground the text sits on:
 4.5:1 for body text, 3:1 for large text and disabled controls, in both themes.
 `--no-browser` runs only the data and HTML checks. Results land in
 `docs/qa/apps/regression-results.json`.
+
+`audit-media` reports uploads that no current document, saved version or stored
+record refers to and that are older than `GRACE_HOURS` (24 by default). The rule
+lives in `src/worker/media.ts` with tests; deletion stays an owner action in the
+app, because only the worker can remove the stored objects alongside the row.
 
 `run-editor` drives the real editor in Chromium because the undo history lives
 in the page: hide a component and undo it, drag one and undo it, duplicate and
