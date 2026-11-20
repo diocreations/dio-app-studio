@@ -3293,9 +3293,198 @@ body[data-flagship="1"] .detail-art { border-radius: 18px; overflow: hidden; }
    colour; only the fade that made them 3:1 is removed. */
 .fx-cafe-steps, .fx-kicker, .fx-staff, .fx-gym-num, .fx-gym-price span { opacity: 1 !important; }
 .fx-dayrow button.on span { opacity: 1 !important; color: var(--bg) !important; }
+
+/* ---- direction look --------------------------------------------------
+   A direction is a design, not a label. The document renderer already varies
+   its own components, but the flagship compositions carry their own markup, so
+   without this block three certified directions produced the same screen with a
+   different tab capitalisation. Each layout gets its own type system, spacing,
+   card language, hero proportion and navigation treatment. */
+
+body[data-flagship="1"][data-layout="editorial"] .screen h1,
+body[data-flagship="1"][data-layout="editorial"] .cx-title h1,
+body[data-flagship="1"][data-layout="editorial"] .fx-title {
+  font-family: ui-serif, "Iowan Old Style", Palatino, Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.02 !important;
+  text-transform: none !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .screen h2,
+body[data-flagship="1"][data-layout="editorial"] .sect .label,
+body[data-flagship="1"][data-layout="editorial"] .label {
+  font-family: ui-serif, "Iowan Old Style", Palatino, Georgia, serif !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-weight: 500 !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .cx-hero,
+body[data-flagship="1"][data-layout="editorial"] .fx-hero {
+  min-height: 350px !important;
+  border-radius: 0 !important;
+  margin-inline: -18px !important;
+  box-shadow: none !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tiles {
+  grid-template-columns: 1fr !important;
+  gap: 26px !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tile,
+body[data-flagship="1"][data-layout="editorial"] .cx-card,
+body[data-flagship="1"][data-layout="editorial"] .cx-row,
+body[data-flagship="1"][data-layout="editorial"] .fx-card {
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding-inline: 0 !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tile .thumb,
+body[data-flagship="1"][data-layout="editorial"] .cx-thumb {
+  border-radius: 0 !important;
+  aspect-ratio: 3 / 2 !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tabbar {
+  background: transparent !important;
+  border-top: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tab {
+  font-family: ui-serif, Georgia, serif !important;
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+}
+
+body[data-flagship="1"][data-layout="rows"] .screen h1,
+body[data-flagship="1"][data-layout="rows"] .cx-title h1,
+body[data-flagship="1"][data-layout="rows"] .fx-title {
+  font-family: "Helvetica Neue", Inter, Arial, sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 27px !important;
+  letter-spacing: -0.035em !important;
+}
+body[data-flagship="1"][data-layout="rows"] .cx-hero,
+body[data-flagship="1"][data-layout="rows"] .fx-hero {
+  min-height: 208px !important;
+  border-radius: 4px !important;
+  margin-inline: 0 !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tiles {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tile,
+body[data-flagship="1"][data-layout="rows"] .cx-card,
+body[data-flagship="1"][data-layout="rows"] .cx-row {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: 1px solid var(--line) !important;
+  background: transparent !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tile .thumb,
+body[data-flagship="1"][data-layout="rows"] .cx-thumb {
+  border-radius: 0 !important;
+  aspect-ratio: 1 / 1 !important;
+}
+body[data-flagship="1"][data-layout="rows"] .label,
+body[data-flagship="1"][data-layout="rows"] .tab {
+  text-transform: uppercase !important;
+  letter-spacing: 0.16em !important;
+  font-size: 8.5px !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tabbar {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border-top: 1px solid var(--line) !important;
+}
+
+body[data-flagship="1"][data-layout="grid"] .screen h1,
+body[data-flagship="1"][data-layout="grid"] .cx-title h1,
+body[data-flagship="1"][data-layout="grid"] .fx-title {
+  font-family: "Helvetica Neue", Inter, Arial, sans-serif !important;
+  font-weight: 750 !important;
+  font-size: 31px !important;
+  letter-spacing: -0.04em !important;
+}
+body[data-flagship="1"][data-layout="grid"] .cx-hero,
+body[data-flagship="1"][data-layout="grid"] .fx-hero {
+  min-height: 300px !important;
+  border-radius: 26px !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tiles {
+  gap: 16px !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tile,
+body[data-flagship="1"][data-layout="grid"] .cx-card {
+  border-radius: 22px !important;
+  border: 0 !important;
+  box-shadow: 0 14px 30px -20px color-mix(in srgb, var(--ink) 40%, transparent) !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tile .thumb,
+body[data-flagship="1"][data-layout="grid"] .cx-thumb {
+  border-radius: 18px 18px 0 0 !important;
+  aspect-ratio: 4 / 3 !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tabbar {
+  border-radius: 22px 22px 0 0 !important;
+  background: var(--surface) !important;
+  box-shadow: 0 -16px 34px -24px color-mix(in srgb, var(--ink) 46%, transparent) !important;
+}
+
+body[data-flagship="1"][data-layout="stack"] .screen h1,
+body[data-flagship="1"][data-layout="stack"] .cx-title h1,
+body[data-flagship="1"][data-layout="stack"] .fx-title {
+  font-family: "Avenir Next Condensed", "Arial Narrow", Arial, sans-serif !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: -0.01em !important;
+  line-height: 0.94 !important;
+}
+body[data-flagship="1"][data-layout="stack"] .cx-hero,
+body[data-flagship="1"][data-layout="stack"] .fx-hero {
+  min-height: 430px !important;
+  border-radius: 0 !important;
+  margin-inline: -18px !important;
+  align-items: flex-end !important;
+}
+body[data-flagship="1"][data-layout="stack"] .tile,
+body[data-flagship="1"][data-layout="stack"] .cx-card,
+body[data-flagship="1"][data-layout="stack"] .cx-row {
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body[data-flagship="1"][data-layout="stack"] .tabbar {
+  border-radius: 0 !important;
+}
+
+/* The shop product grid is its own composition (.fx-products/.fx-product),
+   so the direction has to reach it too or three concepts share one layout. */
+body[data-flagship="1"][data-layout="editorial"] .fx-products { grid-template-columns: 1fr !important; gap: 30px !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-product { border: 0 !important; border-bottom: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; padding: 0 0 22px !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-art { aspect-ratio: 3 / 2 !important; border-radius: 0 !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-search { display: none !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-shop-title { font-family: ui-serif, Georgia, serif !important; font-weight: 500 !important; }
+
+body[data-flagship="1"][data-layout="rows"] .fx-products { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+body[data-flagship="1"][data-layout="rows"] .fx-product { border: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+body[data-flagship="1"][data-layout="rows"] .fx-art { aspect-ratio: 1 / 1 !important; border-radius: 0 !important; }
+body[data-flagship="1"][data-layout="rows"] .fx-search { display: none !important; }
+
+body[data-flagship="1"][data-layout="grid"] .fx-products { gap: 18px !important; }
+body[data-flagship="1"][data-layout="grid"] .fx-product { border: 0 !important; border-radius: 22px !important; background: var(--surface) !important; box-shadow: 0 16px 32px -22px color-mix(in srgb, var(--ink) 42%, transparent) !important; padding: 8px !important; }
+body[data-flagship="1"][data-layout="grid"] .fx-art { aspect-ratio: 4 / 3 !important; border-radius: 16px !important; }
+
+body[data-flagship="1"][data-layout="stack"] .fx-products { grid-template-columns: 1fr !important; gap: 0 !important; }
+body[data-flagship="1"][data-layout="stack"] .fx-product { border: 0 !important; border-top: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+body[data-flagship="1"][data-layout="stack"] .fx-art { aspect-ratio: 16 / 10 !important; border-radius: 0 !important; }
+body[data-flagship="1"][data-layout="stack"] .fx-search { display: none !important; }
 </style>
 </head>
-<body data-trade="shop" data-layout="editorial" data-shell="standard" data-variant="1" data-density="roomy" data-corners="sharp" data-media="art" data-nav="drawer" data-hero="image" data-order="visit" data-hero-scale="regular" data-accent-style="underline" data-theme="light" data-direction="editorial" data-buttons="soft" data-cards="soft" data-flagship="1">
+<body data-trade="shop" data-layout="editorial" data-shell="standard" data-variant="1" data-density="roomy" data-corners="round" data-media="art" data-nav="drawer" data-hero="image" data-order="catalog" data-hero-scale="tall" data-accent-style="underline" data-theme="light" data-direction="editorial" data-buttons="soft" data-cards="soft" data-flagship="1">
   <div class="app">
     <div class="grain" aria-hidden="true"></div>
     <div class="offline" data-offline hidden>Offline — showing what is already stored</div>
@@ -4236,7 +4425,7 @@ body[data-flagship="1"] .detail-art { border-radius: 18px; overflow: hidden; }
 
   <script>
   (() => {
-    const DATA = {"token":"live-complex-editorial","shell":"standard","initial":"home","logo":"RH","brand":"RHS","phone":"","ordering":true,"booking":true,"quoting":false,"loyalty":true,"goal":5,"reward":"10% off your next order","fulfilment":["Pickup","Delivery"],"deliveryFee":299,"isCourse":false,"addLabel":"Add to order","placeLabel":"Place order","payments":{"enabled":false,"orders":false,"bookings":false,"provider":""},"partyLabel":"People","slots":[],"catalogWord":"shop","listingSpecLabel":"Included","bookTitle":"Visit the shop","quoteTitle":"Ask about a piece","motif":"arches","media":"art","photoWide":[],"photoThumb":[],"menu":[{"name":"Catalogue","items":[{"id":"itm_eeaa6648","name":"More ernst benary &rsaquo;","desc":"","price":1000},{"id":"itm_59aa84aa","name":"More animals &rsaquo;","desc":"","price":1000},{"id":"itm_5c86271d","name":"About us","desc":"","price":1000}]},{"name":"Gifting with RHS Plants","items":[{"id":"itm_2bac09fd","name":"Indoor plant care","desc":"","price":0},{"id":"itm_973b8fc2","name":"Orchid pots & care","desc":"","price":0},{"id":"itm_7c55eb8c","name":"Terrariums & accessories","desc":"","price":0},{"id":"itm_bc25216c","name":"Indoor plant pots","desc":"","price":0},{"id":"itm_787b7db3","name":"Indoor plant gifts","desc":"","price":0},{"id":"itm_3670d4e2","name":"Outdoor pots","desc":"","price":0},{"id":"itm_fd7b2811","name":"Plant pots","desc":"","price":0},{"id":"itm_7039eb95","name":"Hanging baskets","desc":"","price":0},{"id":"itm_c2ea0203","name":"Window boxes & troughs","desc":"","price":0},{"id":"itm_44dc649a","name":"Raised beds","desc":"","price":0},{"id":"itm_d016aa78","name":"Grow pots & trays","desc":"","price":0},{"id":"itm_06dc0dd5","name":"Wall planters","desc":"","price":0},{"id":"itm_b3b5d395","name":"Shop all","desc":"","price":0},{"id":"itm_25490447","name":"Indoor pots","desc":"","price":0},{"id":"itm_3b0174d4","name":"Terrariums","desc":"","price":0},{"id":"itm_e2da7be9","name":"Vases & Jugs","desc":"","price":0},{"id":"itm_2adf4eda","name":"Urns & jars","desc":"","price":0},{"id":"itm_cba23990","name":"Accessories","desc":"","price":0},{"id":"itm_81369689","name":"Terracotta","desc":"","price":0},{"id":"itm_28a205cd","name":"Metal","desc":"","price":0}]},{"name":"Iris","items":[{"id":"itm_fddc879f","name":"'Painted Iris and Summer Snowdrop' Regular price from…","desc":"","price":1000},{"id":"itm_8d3710da","name":"'Iris monspur' Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_888d723c","name":"Iris xiphium Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_05a3068b","name":"Iris germanica Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_0fb59438","name":"Iris Sazanami Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_4fd2138e","name":"Iris Ejo-No-Kagari Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_00d790d6","name":"Plate 58 Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_32a4c260","name":"Iris pale : Iris pallida Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_ab86da1d","name":"Iris Saio-Ga-Uma Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_ec1649b5","name":"Iris Oyoku-Ho-Ren Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_38a3bab7","name":"Iris Kirin Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_2ae62433","name":"Iris Kairakubo Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_30bdc044","name":"Iris Kaku-Jaku-Ro Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_d4303608","name":"Iris frangée : Iris fimbriata Regular price from £10.00…","desc":"","price":1000},{"id":"itm_ca552711","name":"Iris Kokinran Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_0c9c7888","name":"'Iris versicolor' Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_db4853f5","name":"'Iris unigularis' Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_a0bd2e51","name":"Iris sambucina Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_28fd4e44","name":"Iris unguicularis (Iris stylosa) Regular price from £10.00…","desc":"","price":1000},{"id":"itm_9a53b204","name":"Iris Akashi-No-Ue Regular price from £10.00 £10.00","desc":"","price":1000}]},{"name":"Lily","items":[{"id":"itm_1dd44913","name":"'Jacobean Lily' Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_1819d7be","name":"Lilium speciosum Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_1d1f8ddd","name":"Lilium auratum Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_acb37985","name":"Plate.78 Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_165a3462","name":"'Lilium auratum var. rubro-vittatum now var. platyphyllum'…","desc":"","price":1000},{"id":"itm_92f7b638","name":"Lilium Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_20ffc837","name":"Lilium tigrinum Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_abd61931","name":"'Lilium flo: albo' Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_0d290227","name":"Plate 23 Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_7b5f022f","name":"Lilium leichtlinii var. maximowiczii Regular price from…","desc":"","price":1000},{"id":"itm_7ac608bc","name":"Crown Imperial Lily Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_f06386da","name":"Lily Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_ebc7f77c","name":"Plate 37 Regular price from £10.00 £10.00","desc":"","price":1000}]}],"currencySymbol":"£"}
+    const DATA = {"token":"live-complex--editorial","shell":"standard","initial":"home","logo":"RH","brand":"RHS","phone":"","ordering":true,"booking":true,"quoting":false,"loyalty":true,"goal":5,"reward":"10% off your next order","fulfilment":["Pickup","Delivery"],"deliveryFee":299,"isCourse":false,"addLabel":"Add to order","placeLabel":"Place order","payments":{"enabled":false,"orders":false,"bookings":false,"provider":""},"partyLabel":"People","slots":[],"catalogWord":"shop","listingSpecLabel":"Included","bookTitle":"Visit the shop","quoteTitle":"Ask about a piece","motif":"arches","media":"art","photoWide":[],"photoThumb":[],"menu":[{"name":"Catalogue","items":[{"id":"itm_eeaa6648","name":"More ernst benary &rsaquo;","desc":"","price":1000},{"id":"itm_59aa84aa","name":"More animals &rsaquo;","desc":"","price":1000},{"id":"itm_5c86271d","name":"About us","desc":"","price":1000}]},{"name":"Gifting with RHS Plants","items":[{"id":"itm_2bac09fd","name":"Indoor plant care","desc":"","price":0},{"id":"itm_973b8fc2","name":"Orchid pots & care","desc":"","price":0},{"id":"itm_7c55eb8c","name":"Terrariums & accessories","desc":"","price":0},{"id":"itm_bc25216c","name":"Indoor plant pots","desc":"","price":0},{"id":"itm_787b7db3","name":"Indoor plant gifts","desc":"","price":0},{"id":"itm_3670d4e2","name":"Outdoor pots","desc":"","price":0},{"id":"itm_fd7b2811","name":"Plant pots","desc":"","price":0},{"id":"itm_7039eb95","name":"Hanging baskets","desc":"","price":0},{"id":"itm_c2ea0203","name":"Window boxes & troughs","desc":"","price":0},{"id":"itm_44dc649a","name":"Raised beds","desc":"","price":0},{"id":"itm_d016aa78","name":"Grow pots & trays","desc":"","price":0},{"id":"itm_06dc0dd5","name":"Wall planters","desc":"","price":0},{"id":"itm_b3b5d395","name":"Shop all","desc":"","price":0},{"id":"itm_25490447","name":"Indoor pots","desc":"","price":0},{"id":"itm_3b0174d4","name":"Terrariums","desc":"","price":0},{"id":"itm_e2da7be9","name":"Vases & Jugs","desc":"","price":0},{"id":"itm_2adf4eda","name":"Urns & jars","desc":"","price":0},{"id":"itm_cba23990","name":"Accessories","desc":"","price":0},{"id":"itm_81369689","name":"Terracotta","desc":"","price":0},{"id":"itm_28a205cd","name":"Metal","desc":"","price":0}]},{"name":"Iris","items":[{"id":"itm_fddc879f","name":"'Painted Iris and Summer Snowdrop' Regular price from…","desc":"","price":1000},{"id":"itm_8d3710da","name":"'Iris monspur' Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_888d723c","name":"Iris xiphium Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_05a3068b","name":"Iris germanica Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_0fb59438","name":"Iris Sazanami Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_4fd2138e","name":"Iris Ejo-No-Kagari Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_00d790d6","name":"Plate 58 Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_32a4c260","name":"Iris pale : Iris pallida Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_ab86da1d","name":"Iris Saio-Ga-Uma Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_ec1649b5","name":"Iris Oyoku-Ho-Ren Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_38a3bab7","name":"Iris Kirin Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_2ae62433","name":"Iris Kairakubo Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_30bdc044","name":"Iris Kaku-Jaku-Ro Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_d4303608","name":"Iris frangée : Iris fimbriata Regular price from £10.00…","desc":"","price":1000},{"id":"itm_ca552711","name":"Iris Kokinran Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_0c9c7888","name":"'Iris versicolor' Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_db4853f5","name":"'Iris unigularis' Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_a0bd2e51","name":"Iris sambucina Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_28fd4e44","name":"Iris unguicularis (Iris stylosa) Regular price from £10.00…","desc":"","price":1000},{"id":"itm_9a53b204","name":"Iris Akashi-No-Ue Regular price from £10.00 £10.00","desc":"","price":1000}]},{"name":"Lily","items":[{"id":"itm_1dd44913","name":"'Jacobean Lily' Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_1819d7be","name":"Lilium speciosum Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_1d1f8ddd","name":"Lilium auratum Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_acb37985","name":"Plate.78 Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_165a3462","name":"'Lilium auratum var. rubro-vittatum now var. platyphyllum'…","desc":"","price":1000},{"id":"itm_92f7b638","name":"Lilium Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_20ffc837","name":"Lilium tigrinum Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_abd61931","name":"'Lilium flo: albo' Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_0d290227","name":"Plate 23 Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_7b5f022f","name":"Lilium leichtlinii var. maximowiczii Regular price from…","desc":"","price":1000},{"id":"itm_7ac608bc","name":"Crown Imperial Lily Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_f06386da","name":"Lily Regular price from £10.00 £10.00","desc":"","price":1000},{"id":"itm_ebc7f77c","name":"Plate 37 Regular price from £10.00 £10.00","desc":"","price":1000}]}],"currencySymbol":"£"}
     const KEY = 'plattr:v2:' + DATA.token
     const stored = JSON.parse(localStorage.getItem(KEY) || '{}')
     // The catalogue filter used to live in state; drop the leftover so dead data

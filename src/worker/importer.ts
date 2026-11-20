@@ -1060,6 +1060,14 @@ export function cleanName(raw: string): string {
   )
 }
 
+/**
+ * A link that is site chrome, not something to buy. Navigation, footer and
+ * promotional labels reach the card parser as anchors with a name and sometimes
+ * a stray price, and a catalogue must never sell them (RHS “About us”, £10).
+ */
+const NAV_NAME =
+  /^(?:more\s+)?(?:about(?:\s+us)?|contact(?:\s+us)?|home|shop all|shop|store|stores|blog|news|events|careers|jobs|press|faqs?|help|delivery(?:\s*(?:&|and)\s*returns)?|returns|refunds|shipping|basket|cart|checkout|sign\s?in|log\s?in|my\s+account|account|wishlist|saved|search|menu|footer|terms|privacy|cookies|sitemap|membership|subscribe|newsletter|advice|plant\s+care|indoor\s+plant\s+care|visitor\s+information|opening\s+hours)(?:\s*(?:›|»|>|→).*)?$/i
+
 /** The name a site would have if its title were only “Shop”. */
 function nameFromHost(host: string): string {
   const labels = host.replace(/^www\./, '').split('.')
@@ -1251,11 +1259,24 @@ export function cleanMenu(
   // all-caps entry with no price and no description is a label even when its
   // own section holds nothing else.
   const pricedAnywhere = prices.length > 0
+  // Nine unrelated services at exactly £1,000 is not a price list, it is a
+  // number the page happened to repeat. Without a per-item price there is no
+  // price: the item shows "ask" and the owner is told why.
+  const uniform = prices.length >= 3 && new Set(prices).size === 1
 
   const cleaned = sections
     .map((section) => {
       const hasPriced = section.items.some((item) => item.price > 0)
-      const items = section.items.flatMap((item) => {
+      const items = section.items.flatMap((raw) => {
+        // Decode first: “&rsaquo;” is markup, not part of a name.
+        const item = { ...raw, name: decode(raw.name).replace(/[\s›»>→]+$/, '').trim() }
+        if (!item.name) return []
+        // Anything still carrying a chevron or an encoded entity is markup that
+        // leaked into a name, never a product title.
+        if (/[›»→]|&[a-z#0-9]+;/i.test(item.name) || NAV_NAME.test(item.name)) {
+          dropped.push({ name: item.name, section: section.name, reason: 'navigation' })
+          return []
+        }
         // A printed section label is not a dish. Its name is shouted, it carries
         // no price, and the menu around it proves prices exist — the card parser
         // can even have mistaken the next dish for its description.
@@ -1277,7 +1298,10 @@ export function cleanMenu(
           return []
         }
         let price = item.price
-        if (price >= SUSPECT_PRICE && median > 0 && price > median * 20) {
+        if (uniform) {
+          suspectPrices.push({ name: item.name, section: section.name, value: price })
+          price = 0
+        } else if (price >= SUSPECT_PRICE && median > 0 && price > median * 20) {
           suspectPrices.push({ name: item.name, section: section.name, value: price })
           price = 0
         }

@@ -6,6 +6,7 @@
  * 390x844, splash removed, exactly the document the renderer produced.
  */
 import { readdir, writeFile } from 'node:fs/promises'
+import { renderApp } from '../src/worker/app'
 
 const ROOT = process.cwd()
 const BASE = 'docs/qa/live-discovery-2026-11-20'
@@ -28,6 +29,21 @@ for (const site of sites) {
   for (const file of files.filter((name) => name.endsWith('.html')).sort()) {
     pages.push({ site, file: `${BASE}/${site}/concepts/${file}`, name: `${site}--${file.replace('.html', '')}` })
   }
+}
+
+// The rendered documents are generated from the stored spec and document, so a
+// renderer fix can be re-shot without crawling any site again.
+if (process.env.RERENDER === '1') {
+  for (const page of pages) {
+    const stem = page.file.replace(/\.html$/, '')
+    const spec = JSON.parse(await Bun.file(`${stem}.spec.json`).text())
+    const doc = JSON.parse(await Bun.file(`${stem}.doc.json`).text())
+    await writeFile(
+      page.file,
+      renderApp(spec, { token: `live-${page.name}`, live: false, flagship: true, doc }),
+    )
+  }
+  console.log(`re-rendered ${pages.length} documents from stored specs`)
 }
 
 const server = Bun.serve({

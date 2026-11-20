@@ -2373,5 +2373,194 @@ body[data-flagship="1"] .detail-art { border-radius: 18px; overflow: hidden; }
    colour; only the fade that made them 3:1 is removed. */
 .fx-cafe-steps, .fx-kicker, .fx-staff, .fx-gym-num, .fx-gym-price span { opacity: 1 !important; }
 .fx-dayrow button.on span { opacity: 1 !important; color: var(--bg) !important; }
+
+/* ---- direction look --------------------------------------------------
+   A direction is a design, not a label. The document renderer already varies
+   its own components, but the flagship compositions carry their own markup, so
+   without this block three certified directions produced the same screen with a
+   different tab capitalisation. Each layout gets its own type system, spacing,
+   card language, hero proportion and navigation treatment. */
+
+body[data-flagship="1"][data-layout="editorial"] .screen h1,
+body[data-flagship="1"][data-layout="editorial"] .cx-title h1,
+body[data-flagship="1"][data-layout="editorial"] .fx-title {
+  font-family: ui-serif, "Iowan Old Style", Palatino, Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.02 !important;
+  text-transform: none !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .screen h2,
+body[data-flagship="1"][data-layout="editorial"] .sect .label,
+body[data-flagship="1"][data-layout="editorial"] .label {
+  font-family: ui-serif, "Iowan Old Style", Palatino, Georgia, serif !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-weight: 500 !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .cx-hero,
+body[data-flagship="1"][data-layout="editorial"] .fx-hero {
+  min-height: 350px !important;
+  border-radius: 0 !important;
+  margin-inline: -18px !important;
+  box-shadow: none !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tiles {
+  grid-template-columns: 1fr !important;
+  gap: 26px !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tile,
+body[data-flagship="1"][data-layout="editorial"] .cx-card,
+body[data-flagship="1"][data-layout="editorial"] .cx-row,
+body[data-flagship="1"][data-layout="editorial"] .fx-card {
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding-inline: 0 !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tile .thumb,
+body[data-flagship="1"][data-layout="editorial"] .cx-thumb {
+  border-radius: 0 !important;
+  aspect-ratio: 3 / 2 !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tabbar {
+  background: transparent !important;
+  border-top: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tab {
+  font-family: ui-serif, Georgia, serif !important;
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+}
+
+body[data-flagship="1"][data-layout="rows"] .screen h1,
+body[data-flagship="1"][data-layout="rows"] .cx-title h1,
+body[data-flagship="1"][data-layout="rows"] .fx-title {
+  font-family: "Helvetica Neue", Inter, Arial, sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 27px !important;
+  letter-spacing: -0.035em !important;
+}
+body[data-flagship="1"][data-layout="rows"] .cx-hero,
+body[data-flagship="1"][data-layout="rows"] .fx-hero {
+  min-height: 208px !important;
+  border-radius: 4px !important;
+  margin-inline: 0 !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tiles {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tile,
+body[data-flagship="1"][data-layout="rows"] .cx-card,
+body[data-flagship="1"][data-layout="rows"] .cx-row {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: 1px solid var(--line) !important;
+  background: transparent !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tile .thumb,
+body[data-flagship="1"][data-layout="rows"] .cx-thumb {
+  border-radius: 0 !important;
+  aspect-ratio: 1 / 1 !important;
+}
+body[data-flagship="1"][data-layout="rows"] .label,
+body[data-flagship="1"][data-layout="rows"] .tab {
+  text-transform: uppercase !important;
+  letter-spacing: 0.16em !important;
+  font-size: 8.5px !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tabbar {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border-top: 1px solid var(--line) !important;
+}
+
+body[data-flagship="1"][data-layout="grid"] .screen h1,
+body[data-flagship="1"][data-layout="grid"] .cx-title h1,
+body[data-flagship="1"][data-layout="grid"] .fx-title {
+  font-family: "Helvetica Neue", Inter, Arial, sans-serif !important;
+  font-weight: 750 !important;
+  font-size: 31px !important;
+  letter-spacing: -0.04em !important;
+}
+body[data-flagship="1"][data-layout="grid"] .cx-hero,
+body[data-flagship="1"][data-layout="grid"] .fx-hero {
+  min-height: 300px !important;
+  border-radius: 26px !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tiles {
+  gap: 16px !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tile,
+body[data-flagship="1"][data-layout="grid"] .cx-card {
+  border-radius: 22px !important;
+  border: 0 !important;
+  box-shadow: 0 14px 30px -20px color-mix(in srgb, var(--ink) 40%, transparent) !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tile .thumb,
+body[data-flagship="1"][data-layout="grid"] .cx-thumb {
+  border-radius: 18px 18px 0 0 !important;
+  aspect-ratio: 4 / 3 !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tabbar {
+  border-radius: 22px 22px 0 0 !important;
+  background: var(--surface) !important;
+  box-shadow: 0 -16px 34px -24px color-mix(in srgb, var(--ink) 46%, transparent) !important;
+}
+
+body[data-flagship="1"][data-layout="stack"] .screen h1,
+body[data-flagship="1"][data-layout="stack"] .cx-title h1,
+body[data-flagship="1"][data-layout="stack"] .fx-title {
+  font-family: "Avenir Next Condensed", "Arial Narrow", Arial, sans-serif !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: -0.01em !important;
+  line-height: 0.94 !important;
+}
+body[data-flagship="1"][data-layout="stack"] .cx-hero,
+body[data-flagship="1"][data-layout="stack"] .fx-hero {
+  min-height: 430px !important;
+  border-radius: 0 !important;
+  margin-inline: -18px !important;
+  align-items: flex-end !important;
+}
+body[data-flagship="1"][data-layout="stack"] .tile,
+body[data-flagship="1"][data-layout="stack"] .cx-card,
+body[data-flagship="1"][data-layout="stack"] .cx-row {
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body[data-flagship="1"][data-layout="stack"] .tabbar {
+  border-radius: 0 !important;
+}
+
+/* The shop product grid is its own composition (.fx-products/.fx-product),
+   so the direction has to reach it too or three concepts share one layout. */
+body[data-flagship="1"][data-layout="editorial"] .fx-products { grid-template-columns: 1fr !important; gap: 30px !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-product { border: 0 !important; border-bottom: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; padding: 0 0 22px !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-art { aspect-ratio: 3 / 2 !important; border-radius: 0 !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-search { display: none !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-shop-title { font-family: ui-serif, Georgia, serif !important; font-weight: 500 !important; }
+
+body[data-flagship="1"][data-layout="rows"] .fx-products { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+body[data-flagship="1"][data-layout="rows"] .fx-product { border: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+body[data-flagship="1"][data-layout="rows"] .fx-art { aspect-ratio: 1 / 1 !important; border-radius: 0 !important; }
+body[data-flagship="1"][data-layout="rows"] .fx-search { display: none !important; }
+
+body[data-flagship="1"][data-layout="grid"] .fx-products { gap: 18px !important; }
+body[data-flagship="1"][data-layout="grid"] .fx-product { border: 0 !important; border-radius: 22px !important; background: var(--surface) !important; box-shadow: 0 16px 32px -22px color-mix(in srgb, var(--ink) 42%, transparent) !important; padding: 8px !important; }
+body[data-flagship="1"][data-layout="grid"] .fx-art { aspect-ratio: 4 / 3 !important; border-radius: 16px !important; }
+
+body[data-flagship="1"][data-layout="stack"] .fx-products { grid-template-columns: 1fr !important; gap: 0 !important; }
+body[data-flagship="1"][data-layout="stack"] .fx-product { border: 0 !important; border-top: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+body[data-flagship="1"][data-layout="stack"] .fx-art { aspect-ratio: 16 / 10 !important; border-radius: 0 !important; }
+body[data-flagship="1"][data-layout="stack"] .fx-search { display: none !important; }
 `
 }

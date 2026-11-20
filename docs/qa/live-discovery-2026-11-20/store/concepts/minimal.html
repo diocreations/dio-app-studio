@@ -3293,9 +3293,198 @@ body[data-flagship="1"] .detail-art { border-radius: 18px; overflow: hidden; }
    colour; only the fade that made them 3:1 is removed. */
 .fx-cafe-steps, .fx-kicker, .fx-staff, .fx-gym-num, .fx-gym-price span { opacity: 1 !important; }
 .fx-dayrow button.on span { opacity: 1 !important; color: var(--bg) !important; }
+
+/* ---- direction look --------------------------------------------------
+   A direction is a design, not a label. The document renderer already varies
+   its own components, but the flagship compositions carry their own markup, so
+   without this block three certified directions produced the same screen with a
+   different tab capitalisation. Each layout gets its own type system, spacing,
+   card language, hero proportion and navigation treatment. */
+
+body[data-flagship="1"][data-layout="editorial"] .screen h1,
+body[data-flagship="1"][data-layout="editorial"] .cx-title h1,
+body[data-flagship="1"][data-layout="editorial"] .fx-title {
+  font-family: ui-serif, "Iowan Old Style", Palatino, Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.02 !important;
+  text-transform: none !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .screen h2,
+body[data-flagship="1"][data-layout="editorial"] .sect .label,
+body[data-flagship="1"][data-layout="editorial"] .label {
+  font-family: ui-serif, "Iowan Old Style", Palatino, Georgia, serif !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-weight: 500 !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .cx-hero,
+body[data-flagship="1"][data-layout="editorial"] .fx-hero {
+  min-height: 350px !important;
+  border-radius: 0 !important;
+  margin-inline: -18px !important;
+  box-shadow: none !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tiles {
+  grid-template-columns: 1fr !important;
+  gap: 26px !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tile,
+body[data-flagship="1"][data-layout="editorial"] .cx-card,
+body[data-flagship="1"][data-layout="editorial"] .cx-row,
+body[data-flagship="1"][data-layout="editorial"] .fx-card {
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding-inline: 0 !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tile .thumb,
+body[data-flagship="1"][data-layout="editorial"] .cx-thumb {
+  border-radius: 0 !important;
+  aspect-ratio: 3 / 2 !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tabbar {
+  background: transparent !important;
+  border-top: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+body[data-flagship="1"][data-layout="editorial"] .tab {
+  font-family: ui-serif, Georgia, serif !important;
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
+}
+
+body[data-flagship="1"][data-layout="rows"] .screen h1,
+body[data-flagship="1"][data-layout="rows"] .cx-title h1,
+body[data-flagship="1"][data-layout="rows"] .fx-title {
+  font-family: "Helvetica Neue", Inter, Arial, sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 27px !important;
+  letter-spacing: -0.035em !important;
+}
+body[data-flagship="1"][data-layout="rows"] .cx-hero,
+body[data-flagship="1"][data-layout="rows"] .fx-hero {
+  min-height: 208px !important;
+  border-radius: 4px !important;
+  margin-inline: 0 !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tiles {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tile,
+body[data-flagship="1"][data-layout="rows"] .cx-card,
+body[data-flagship="1"][data-layout="rows"] .cx-row {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: 1px solid var(--line) !important;
+  background: transparent !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tile .thumb,
+body[data-flagship="1"][data-layout="rows"] .cx-thumb {
+  border-radius: 0 !important;
+  aspect-ratio: 1 / 1 !important;
+}
+body[data-flagship="1"][data-layout="rows"] .label,
+body[data-flagship="1"][data-layout="rows"] .tab {
+  text-transform: uppercase !important;
+  letter-spacing: 0.16em !important;
+  font-size: 8.5px !important;
+}
+body[data-flagship="1"][data-layout="rows"] .tabbar {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border-top: 1px solid var(--line) !important;
+}
+
+body[data-flagship="1"][data-layout="grid"] .screen h1,
+body[data-flagship="1"][data-layout="grid"] .cx-title h1,
+body[data-flagship="1"][data-layout="grid"] .fx-title {
+  font-family: "Helvetica Neue", Inter, Arial, sans-serif !important;
+  font-weight: 750 !important;
+  font-size: 31px !important;
+  letter-spacing: -0.04em !important;
+}
+body[data-flagship="1"][data-layout="grid"] .cx-hero,
+body[data-flagship="1"][data-layout="grid"] .fx-hero {
+  min-height: 300px !important;
+  border-radius: 26px !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tiles {
+  gap: 16px !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tile,
+body[data-flagship="1"][data-layout="grid"] .cx-card {
+  border-radius: 22px !important;
+  border: 0 !important;
+  box-shadow: 0 14px 30px -20px color-mix(in srgb, var(--ink) 40%, transparent) !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tile .thumb,
+body[data-flagship="1"][data-layout="grid"] .cx-thumb {
+  border-radius: 18px 18px 0 0 !important;
+  aspect-ratio: 4 / 3 !important;
+}
+body[data-flagship="1"][data-layout="grid"] .tabbar {
+  border-radius: 22px 22px 0 0 !important;
+  background: var(--surface) !important;
+  box-shadow: 0 -16px 34px -24px color-mix(in srgb, var(--ink) 46%, transparent) !important;
+}
+
+body[data-flagship="1"][data-layout="stack"] .screen h1,
+body[data-flagship="1"][data-layout="stack"] .cx-title h1,
+body[data-flagship="1"][data-layout="stack"] .fx-title {
+  font-family: "Avenir Next Condensed", "Arial Narrow", Arial, sans-serif !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: -0.01em !important;
+  line-height: 0.94 !important;
+}
+body[data-flagship="1"][data-layout="stack"] .cx-hero,
+body[data-flagship="1"][data-layout="stack"] .fx-hero {
+  min-height: 430px !important;
+  border-radius: 0 !important;
+  margin-inline: -18px !important;
+  align-items: flex-end !important;
+}
+body[data-flagship="1"][data-layout="stack"] .tile,
+body[data-flagship="1"][data-layout="stack"] .cx-card,
+body[data-flagship="1"][data-layout="stack"] .cx-row {
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body[data-flagship="1"][data-layout="stack"] .tabbar {
+  border-radius: 0 !important;
+}
+
+/* The shop product grid is its own composition (.fx-products/.fx-product),
+   so the direction has to reach it too or three concepts share one layout. */
+body[data-flagship="1"][data-layout="editorial"] .fx-products { grid-template-columns: 1fr !important; gap: 30px !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-product { border: 0 !important; border-bottom: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; padding: 0 0 22px !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-art { aspect-ratio: 3 / 2 !important; border-radius: 0 !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-search { display: none !important; }
+body[data-flagship="1"][data-layout="editorial"] .fx-shop-title { font-family: ui-serif, Georgia, serif !important; font-weight: 500 !important; }
+
+body[data-flagship="1"][data-layout="rows"] .fx-products { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+body[data-flagship="1"][data-layout="rows"] .fx-product { border: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+body[data-flagship="1"][data-layout="rows"] .fx-art { aspect-ratio: 1 / 1 !important; border-radius: 0 !important; }
+body[data-flagship="1"][data-layout="rows"] .fx-search { display: none !important; }
+
+body[data-flagship="1"][data-layout="grid"] .fx-products { gap: 18px !important; }
+body[data-flagship="1"][data-layout="grid"] .fx-product { border: 0 !important; border-radius: 22px !important; background: var(--surface) !important; box-shadow: 0 16px 32px -22px color-mix(in srgb, var(--ink) 42%, transparent) !important; padding: 8px !important; }
+body[data-flagship="1"][data-layout="grid"] .fx-art { aspect-ratio: 4 / 3 !important; border-radius: 16px !important; }
+
+body[data-flagship="1"][data-layout="stack"] .fx-products { grid-template-columns: 1fr !important; gap: 0 !important; }
+body[data-flagship="1"][data-layout="stack"] .fx-product { border: 0 !important; border-top: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+body[data-flagship="1"][data-layout="stack"] .fx-art { aspect-ratio: 16 / 10 !important; border-radius: 0 !important; }
+body[data-flagship="1"][data-layout="stack"] .fx-search { display: none !important; }
 </style>
 </head>
-<body data-trade="shop" data-layout="rows" data-shell="standard" data-variant="2" data-density="standard" data-corners="round" data-media="art" data-nav="bar" data-hero="image" data-order="catalog" data-hero-scale="compact" data-accent-style="solid" data-theme="light" data-direction="minimal" data-buttons="soft" data-cards="square" data-flagship="1">
+<body data-trade="shop" data-layout="rows" data-shell="standard" data-variant="2" data-density="standard" data-corners="soft" data-media="art" data-nav="bar" data-hero="image" data-order="offers" data-hero-scale="compact" data-accent-style="solid" data-theme="light" data-direction="minimal" data-buttons="soft" data-cards="square" data-flagship="1">
   <div class="app">
     <div class="grain" aria-hidden="true"></div>
     <div class="offline" data-offline hidden>Offline — showing what is already stored</div>
@@ -5124,7 +5313,7 @@ body[data-flagship="1"] .detail-art { border-radius: 18px; overflow: hidden; }
 
   <script>
   (() => {
-    const DATA = {"token":"live-store-minimal","shell":"standard","initial":"home","logo":"P&","brand":"Present & Correct","phone":"","ordering":true,"booking":false,"quoting":false,"loyalty":false,"goal":5,"reward":"10% off your next order","fulfilment":["Pickup","Delivery"],"deliveryFee":299,"isCourse":false,"addLabel":"Add to order","placeLabel":"Place order","payments":{"enabled":false,"orders":false,"bookings":false,"provider":""},"partyLabel":"People","slots":[],"catalogWord":"shop","listingSpecLabel":"Included","bookTitle":"Visit the shop","quoteTitle":"Ask about a piece","motif":"grid","media":"art","photoWide":[],"photoThumb":[],"menu":[{"name":"Collection: 2027","items":[{"id":"itm_6638b5c4","name":"Icon Diary Weekly 2027","desc":"","price":0},{"id":"itm_c9123eb7","name":"Black Leather Hobonichi Cover (A5/A6)","desc":"","price":0},{"id":"itm_e365a85b","name":"365 Type Planner 2027","desc":"","price":0},{"id":"itm_45de00de","name":"Hobonichi Techo 2027 Planner Book","desc":"","price":0},{"id":"itm_ec1ddbf2","name":"Rollbahn Diary 2027","desc":"","price":0},{"id":"itm_76510f91","name":"Italian Calendar 2027","desc":"","price":0},{"id":"itm_c5f3bda1","name":"Hobonichi Pocket Weekly 2027","desc":"","price":0},{"id":"itm_5a1448fb","name":"Hobonichi Techo Original / Cousin","desc":"","price":0},{"id":"itm_33001b2c","name":"Slim Fabric Journal 2027","desc":"","price":0},{"id":"itm_c917142e","name":"Icon Diary Monthly 2027","desc":"","price":0},{"id":"itm_f0a0900c","name":"Copper Planner 2027","desc":"","price":0},{"id":"itm_da9cf23c","name":"Pocket Planner Weekly 2027","desc":"","price":0},{"id":"itm_010aecf2","name":"Year Agenda 2027","desc":"","price":0},{"id":"itm_634b8ac5","name":"Slim Gallimard Agenda 2027","desc":"","price":0},{"id":"itm_823d9223","name":"Mega Hobonichi Weeks 2027","desc":"","price":0},{"id":"itm_977a832d","name":"2027 Wall Planner","desc":"","price":0},{"id":"itm_ce84e06d","name":"Once Upon Today 2027","desc":"","price":0},{"id":"itm_48872520","name":"Karel Martens 2027 Calendar","desc":"","price":0},{"id":"itm_682ef778","name":"Gallimard Agenda 2027","desc":"","price":0},{"id":"itm_be764d93","name":"A5/A6 Hobonichi Case Bordeaux","desc":"","price":0}]},{"name":"Collection: Mail","items":[{"id":"itm_a9129136","name":"Vintage Midori Airmail Pad (1992)","desc":"","price":0},{"id":"itm_fb2dfa9a","name":"Armonie Letter Set (1970s)","desc":"","price":0},{"id":"itm_c37593df","name":"A5 Planner Folio","desc":"","price":0},{"id":"itm_5e92f596","name":"Neptunia Envelopes (1950s)","desc":"","price":0},{"id":"itm_644df36f","name":"Telegram Card","desc":"","price":0},{"id":"itm_5da4c1ad","name":"P&C Letter Set","desc":"","price":0},{"id":"itm_7fe4d48d","name":"Gummed Labels (1950s)","desc":"","price":0},{"id":"itm_def7c23d","name":"Happy Mail","desc":"","price":0},{"id":"itm_b0f22910","name":"6 x Display Envelopes (1970s)","desc":"","price":0},{"id":"itm_d409d988","name":"Letterpress Border Cards","desc":"","price":0},{"id":"itm_ad07f681","name":"Dennison Gummed Labels (1970s)","desc":"","price":0},{"id":"itm_bf2b4e04","name":"Letter Jotter","desc":"","price":0},{"id":"itm_c5cdab3d","name":"Postage Scales (1970s)","desc":"","price":0},{"id":"itm_0de389de","name":"Letter Knife Magnifying Glass","desc":"","price":0},{"id":"itm_d1eb028b","name":"Packing List Envelope","desc":"","price":0},{"id":"itm_4f9042e5","name":"Letter Knife","desc":"","price":0},{"id":"itm_48862848","name":"Cotton String","desc":"","price":0},{"id":"itm_8e1d5bc8","name":"Airmail String","desc":"","price":0},{"id":"itm_6bc9881f","name":"V Mail (1940s)","desc":"","price":0},{"id":"itm_339cb445","name":"Label Cards","desc":"","price":0}]},{"name":"Collection: Give.","items":[{"id":"itm_70a0b887","name":"Helter Skelter Birthday Card","desc":"","price":0},{"id":"itm_08782aa8","name":"Mushroom Card","desc":"","price":0},{"id":"itm_d152e1ea","name":"Olivetti Valentine Card","desc":"","price":0},{"id":"itm_70ee1cd3","name":"Birthday Party Dog Card","desc":"","price":0},{"id":"itm_dc612e3d","name":"Matchbook Birthday Card (Rose)","desc":"","price":0},{"id":"itm_8f1fa4b1","name":"Apple Envelopes","desc":"","price":0},{"id":"itm_680ff990","name":"Wish Card (Heart)","desc":"","price":0},{"id":"itm_6dac668d","name":"Wish Card (Dot)","desc":"","price":0},{"id":"itm_28081b35","name":"Birthday Mailbox Card","desc":"","price":0},{"id":"itm_816f7369","name":"Splendid Cake Card","desc":"","price":0},{"id":"itm_b37dccba","name":"Birthday Spinner Card","desc":"","price":0},{"id":"itm_9f5c9637","name":"House Gift Box","desc":"","price":0},{"id":"itm_0ae030d4","name":"Circles Birthday Card","desc":"","price":0},{"id":"itm_1f1167bd","name":"Spots & Diamonds Birthday Card","desc":"","price":0},{"id":"itm_601dfe87","name":"Thank You Form","desc":"","price":0},{"id":"itm_ab84b130","name":"Birthday Telegram","desc":"","price":0},{"id":"itm_83aab7a5","name":"Shiny Heart Postcard","desc":"","price":0},{"id":"itm_3bb4ee5c","name":"Wonderful List Card","desc":"","price":0}]},{"name":"Collection: Read","items":[{"id":"itm_bc8a0457","name":"By The Book Guide to London Bookshops","desc":"","price":0},{"id":"itm_22ab95cc","name":"Reading Notebook","desc":"","price":0},{"id":"itm_6f4ddbe5","name":"Paper Trails: pre-war tourist maps from Japan","desc":"","price":0},{"id":"itm_f0f8181f","name":"Hotel Retro Sticker Book","desc":"","price":0},{"id":"itm_94b70838","name":"Letraset Revolution","desc":"","price":0},{"id":"itm_a023c9fd","name":"Brick Bonds Book","desc":"","price":0},{"id":"itm_fb676820","name":"The Christmas Tree","desc":"","price":0},{"id":"itm_5430ad12","name":"Hello Riso","desc":"","price":0},{"id":"itm_40a831f7","name":"Abstract Logos","desc":"","price":0},{"id":"itm_ed80ab28","name":"Meet The Typographer","desc":"","price":0},{"id":"itm_074c1fb3","name":"The Apple (1977)","desc":"","price":0},{"id":"itm_17c1488b","name":"A Map Is A Picture (1965)","desc":"","price":0},{"id":"itm_05a17937","name":"Design London","desc":"","price":0},{"id":"itm_079fce0f","name":"Rain & Hail (1963)","desc":"","price":0},{"id":"itm_dc587317","name":"Perambulations Box Set (London)","desc":"","price":0},{"id":"itm_826762ed","name":"Sophie Smallhorn Works","desc":"","price":0},{"id":"itm_12b62129","name":"Monogram Logos","desc":"","price":0},{"id":"itm_fb6e021e","name":"Airline Ephemera","desc":"","price":0},{"id":"itm_da8a470a","name":"Hotel Tags","desc":"","price":0},{"id":"itm_b9368640","name":"Blank Tapes","desc":"","price":0}]},{"name":"Collection: Play","items":[{"id":"itm_34d3e370","name":"Abacus (1960s)","desc":"","price":0},{"id":"itm_fbf22f12","name":"Crayon Flask","desc":"","price":0},{"id":"itm_295fa1fd","name":"Fantastic Bell","desc":"","price":0},{"id":"itm_44fbda63","name":"Geometry Puzzles (1970s)","desc":"","price":0},{"id":"itm_79eba94c","name":"Hand Abacus (1970s)","desc":"","price":0},{"id":"itm_ca265a72","name":"Pencil Light","desc":"","price":0}]},{"name":"Collection: Home","items":[{"id":"itm_07cfad25","name":"Clamp Tray","desc":"","price":0},{"id":"itm_b934d309","name":"Oak Paper Tray","desc":"","price":0},{"id":"itm_cf927089","name":"24 Hour Clock/Calendar","desc":"","price":0},{"id":"itm_ca5bfa36","name":"Portable Tool Frame","desc":"","price":0},{"id":"itm_0b2d0d24","name":"Enzo Mari Flip Calendar","desc":"","price":0},{"id":"itm_bf512578","name":"Carry All Folder","desc":"","price":0},{"id":"itm_74f441d0","name":"Chrome Handle Tray","desc":"","price":0},{"id":"itm_446cb9a9","name":"Porcelain Beaker","desc":"","price":0},{"id":"itm_4cb2ff79","name":"Ring A Date Perpetual Calendar","desc":"","price":0},{"id":"itm_1f4bc0e0","name":"Mega Chart Graph Poster (1966)","desc":"","price":0},{"id":"itm_49ca6e66","name":"Metal Storage Set","desc":"","price":0},{"id":"itm_7d3c5774","name":"16 Box Organiser","desc":"","price":0},{"id":"itm_9b5d91b8","name":"Fold Shelf Small","desc":"","price":0},{"id":"itm_4f766743","name":"Grid Book Organiser (1983)","desc":"","price":0},{"id":"itm_e3b99a9d","name":"Business Card Box","desc":"","price":0},{"id":"itm_c209c654","name":"Simple Wall Clock","desc":"","price":0},{"id":"itm_bd6fe523","name":"Wood Polyhedra Set","desc":"","price":0}]},{"name":"Collection: Notes","items":[{"id":"itm_512ff903","name":"Cuaderno LaPress","desc":"","price":0},{"id":"itm_40e0d942","name":"Nifty Handwriting Pad (1980s)","desc":"","price":0},{"id":"itm_530f281b","name":"Greek Form Book","desc":"","price":0},{"id":"itm_35fd45b1","name":"Flatlay Steps Notebook","desc":"","price":0},{"id":"itm_6a87e53f","name":"Typing Paper (1980s)","desc":"","price":0},{"id":"itm_7dd3a530","name":"Section Notebook Japanese (1990s)","desc":"","price":0},{"id":"itm_cba59440","name":"AM/PM Tablet","desc":"","price":0},{"id":"itm_98b50151","name":"Computisteria Ringbound Pad (1970s)","desc":"","price":0},{"id":"itm_523516b6","name":"Patterned Label Book","desc":"","price":0},{"id":"itm_23c8f95c","name":"Compass Graph Pad (1970s)","desc":"","price":0},{"id":"itm_f02ecd7b","name":"Drawing Pad","desc":"","price":0},{"id":"itm_25cc5fd3","name":"Rollbahn Micro Charm","desc":"","price":0},{"id":"itm_bd8b0d94","name":"Linen Band Notebook","desc":"","price":0},{"id":"itm_075fb8b2","name":"A6 Label Notebook (1960s)","desc":"","price":0},{"id":"itm_d34ef4a1","name":"Neo Hi Starchy Notebook (1970s)","desc":"","price":0},{"id":"itm_831bfe96","name":"1Y 52W 365D Planner","desc":"","price":0},{"id":"itm_cdc6780d","name":"Memo Task Roller","desc":"","price":0},{"id":"itm_c80408ec","name":"La Grande Idée Notebook","desc":"","price":0}]},{"name":"Collection: Pen Cases","items":[{"id":"itm_42eafff9","name":"A5 Hobonichi Case Velluto","desc":"","price":0},{"id":"itm_654e3258","name":"A6 Hobonichi Case Lago","desc":"","price":0},{"id":"itm_559c1ef4","name":"Brass Pen Box","desc":"","price":0},{"id":"itm_df05fa12","name":"Canvas Pencil Case","desc":"","price":0},{"id":"itm_04ab0056","name":"CDT Zip Pencil Case","desc":"","price":0},{"id":"itm_3ae5e3d7","name":"Leather / Cotton Pen Case","desc":"","price":0},{"id":"itm_56344144","name":"Nahe Pen Case","desc":"","price":0},{"id":"itm_0492cd7f","name":"P&C Envelope Pencil Case","desc":"","price":0},{"id":"itm_fe44f17a","name":"P&C Leather Pencil Envelope","desc":"","price":0},{"id":"itm_9f2e8752","name":"Pen Pocket Case","desc":"","price":0},{"id":"itm_abb8da97","name":"Pencil Roll","desc":"","price":0},{"id":"itm_00bd9eb1","name":"Quitterie Card Case","desc":"","price":0},{"id":"itm_ff6af6f9","name":"Quitterie Case","desc":"","price":0},{"id":"itm_1f6be8e8","name":"Quitterie Pencil Case","desc":"","price":0},{"id":"itm_0432dcb7","name":"Six Pen Hard Case","desc":"","price":0},{"id":"itm_a08bfb50","name":"Twelve Pen Hard Case","desc":"","price":0},{"id":"itm_f4048dad","name":"Wood Pencil Tube","desc":"","price":0}]}],"currencySymbol":"$"}
+    const DATA = {"token":"live-store--minimal","shell":"standard","initial":"home","logo":"P&","brand":"Present & Correct","phone":"","ordering":true,"booking":false,"quoting":false,"loyalty":false,"goal":5,"reward":"10% off your next order","fulfilment":["Pickup","Delivery"],"deliveryFee":299,"isCourse":false,"addLabel":"Add to order","placeLabel":"Place order","payments":{"enabled":false,"orders":false,"bookings":false,"provider":""},"partyLabel":"People","slots":[],"catalogWord":"shop","listingSpecLabel":"Included","bookTitle":"Visit the shop","quoteTitle":"Ask about a piece","motif":"grid","media":"art","photoWide":[],"photoThumb":[],"menu":[{"name":"Collection: 2027","items":[{"id":"itm_6638b5c4","name":"Icon Diary Weekly 2027","desc":"","price":0},{"id":"itm_c9123eb7","name":"Black Leather Hobonichi Cover (A5/A6)","desc":"","price":0},{"id":"itm_e365a85b","name":"365 Type Planner 2027","desc":"","price":0},{"id":"itm_45de00de","name":"Hobonichi Techo 2027 Planner Book","desc":"","price":0},{"id":"itm_ec1ddbf2","name":"Rollbahn Diary 2027","desc":"","price":0},{"id":"itm_76510f91","name":"Italian Calendar 2027","desc":"","price":0},{"id":"itm_c5f3bda1","name":"Hobonichi Pocket Weekly 2027","desc":"","price":0},{"id":"itm_5a1448fb","name":"Hobonichi Techo Original / Cousin","desc":"","price":0},{"id":"itm_33001b2c","name":"Slim Fabric Journal 2027","desc":"","price":0},{"id":"itm_c917142e","name":"Icon Diary Monthly 2027","desc":"","price":0},{"id":"itm_f0a0900c","name":"Copper Planner 2027","desc":"","price":0},{"id":"itm_da9cf23c","name":"Pocket Planner Weekly 2027","desc":"","price":0},{"id":"itm_010aecf2","name":"Year Agenda 2027","desc":"","price":0},{"id":"itm_634b8ac5","name":"Slim Gallimard Agenda 2027","desc":"","price":0},{"id":"itm_823d9223","name":"Mega Hobonichi Weeks 2027","desc":"","price":0},{"id":"itm_977a832d","name":"2027 Wall Planner","desc":"","price":0},{"id":"itm_ce84e06d","name":"Once Upon Today 2027","desc":"","price":0},{"id":"itm_48872520","name":"Karel Martens 2027 Calendar","desc":"","price":0},{"id":"itm_682ef778","name":"Gallimard Agenda 2027","desc":"","price":0},{"id":"itm_be764d93","name":"A5/A6 Hobonichi Case Bordeaux","desc":"","price":0}]},{"name":"Collection: Mail","items":[{"id":"itm_a9129136","name":"Vintage Midori Airmail Pad (1992)","desc":"","price":0},{"id":"itm_fb2dfa9a","name":"Armonie Letter Set (1970s)","desc":"","price":0},{"id":"itm_c37593df","name":"A5 Planner Folio","desc":"","price":0},{"id":"itm_5e92f596","name":"Neptunia Envelopes (1950s)","desc":"","price":0},{"id":"itm_644df36f","name":"Telegram Card","desc":"","price":0},{"id":"itm_5da4c1ad","name":"P&C Letter Set","desc":"","price":0},{"id":"itm_7fe4d48d","name":"Gummed Labels (1950s)","desc":"","price":0},{"id":"itm_def7c23d","name":"Happy Mail","desc":"","price":0},{"id":"itm_b0f22910","name":"6 x Display Envelopes (1970s)","desc":"","price":0},{"id":"itm_d409d988","name":"Letterpress Border Cards","desc":"","price":0},{"id":"itm_ad07f681","name":"Dennison Gummed Labels (1970s)","desc":"","price":0},{"id":"itm_bf2b4e04","name":"Letter Jotter","desc":"","price":0},{"id":"itm_c5cdab3d","name":"Postage Scales (1970s)","desc":"","price":0},{"id":"itm_0de389de","name":"Letter Knife Magnifying Glass","desc":"","price":0},{"id":"itm_d1eb028b","name":"Packing List Envelope","desc":"","price":0},{"id":"itm_4f9042e5","name":"Letter Knife","desc":"","price":0},{"id":"itm_48862848","name":"Cotton String","desc":"","price":0},{"id":"itm_8e1d5bc8","name":"Airmail String","desc":"","price":0},{"id":"itm_6bc9881f","name":"V Mail (1940s)","desc":"","price":0},{"id":"itm_339cb445","name":"Label Cards","desc":"","price":0}]},{"name":"Collection: Give.","items":[{"id":"itm_70a0b887","name":"Helter Skelter Birthday Card","desc":"","price":0},{"id":"itm_08782aa8","name":"Mushroom Card","desc":"","price":0},{"id":"itm_d152e1ea","name":"Olivetti Valentine Card","desc":"","price":0},{"id":"itm_70ee1cd3","name":"Birthday Party Dog Card","desc":"","price":0},{"id":"itm_dc612e3d","name":"Matchbook Birthday Card (Rose)","desc":"","price":0},{"id":"itm_8f1fa4b1","name":"Apple Envelopes","desc":"","price":0},{"id":"itm_680ff990","name":"Wish Card (Heart)","desc":"","price":0},{"id":"itm_6dac668d","name":"Wish Card (Dot)","desc":"","price":0},{"id":"itm_28081b35","name":"Birthday Mailbox Card","desc":"","price":0},{"id":"itm_816f7369","name":"Splendid Cake Card","desc":"","price":0},{"id":"itm_b37dccba","name":"Birthday Spinner Card","desc":"","price":0},{"id":"itm_9f5c9637","name":"House Gift Box","desc":"","price":0},{"id":"itm_0ae030d4","name":"Circles Birthday Card","desc":"","price":0},{"id":"itm_1f1167bd","name":"Spots & Diamonds Birthday Card","desc":"","price":0},{"id":"itm_601dfe87","name":"Thank You Form","desc":"","price":0},{"id":"itm_ab84b130","name":"Birthday Telegram","desc":"","price":0},{"id":"itm_83aab7a5","name":"Shiny Heart Postcard","desc":"","price":0},{"id":"itm_3bb4ee5c","name":"Wonderful List Card","desc":"","price":0}]},{"name":"Collection: Read","items":[{"id":"itm_bc8a0457","name":"By The Book Guide to London Bookshops","desc":"","price":0},{"id":"itm_22ab95cc","name":"Reading Notebook","desc":"","price":0},{"id":"itm_6f4ddbe5","name":"Paper Trails: pre-war tourist maps from Japan","desc":"","price":0},{"id":"itm_f0f8181f","name":"Hotel Retro Sticker Book","desc":"","price":0},{"id":"itm_94b70838","name":"Letraset Revolution","desc":"","price":0},{"id":"itm_a023c9fd","name":"Brick Bonds Book","desc":"","price":0},{"id":"itm_fb676820","name":"The Christmas Tree","desc":"","price":0},{"id":"itm_5430ad12","name":"Hello Riso","desc":"","price":0},{"id":"itm_40a831f7","name":"Abstract Logos","desc":"","price":0},{"id":"itm_ed80ab28","name":"Meet The Typographer","desc":"","price":0},{"id":"itm_074c1fb3","name":"The Apple (1977)","desc":"","price":0},{"id":"itm_17c1488b","name":"A Map Is A Picture (1965)","desc":"","price":0},{"id":"itm_05a17937","name":"Design London","desc":"","price":0},{"id":"itm_079fce0f","name":"Rain & Hail (1963)","desc":"","price":0},{"id":"itm_dc587317","name":"Perambulations Box Set (London)","desc":"","price":0},{"id":"itm_826762ed","name":"Sophie Smallhorn Works","desc":"","price":0},{"id":"itm_12b62129","name":"Monogram Logos","desc":"","price":0},{"id":"itm_fb6e021e","name":"Airline Ephemera","desc":"","price":0},{"id":"itm_da8a470a","name":"Hotel Tags","desc":"","price":0},{"id":"itm_b9368640","name":"Blank Tapes","desc":"","price":0}]},{"name":"Collection: Play","items":[{"id":"itm_34d3e370","name":"Abacus (1960s)","desc":"","price":0},{"id":"itm_fbf22f12","name":"Crayon Flask","desc":"","price":0},{"id":"itm_295fa1fd","name":"Fantastic Bell","desc":"","price":0},{"id":"itm_44fbda63","name":"Geometry Puzzles (1970s)","desc":"","price":0},{"id":"itm_79eba94c","name":"Hand Abacus (1970s)","desc":"","price":0},{"id":"itm_ca265a72","name":"Pencil Light","desc":"","price":0}]},{"name":"Collection: Home","items":[{"id":"itm_07cfad25","name":"Clamp Tray","desc":"","price":0},{"id":"itm_b934d309","name":"Oak Paper Tray","desc":"","price":0},{"id":"itm_cf927089","name":"24 Hour Clock/Calendar","desc":"","price":0},{"id":"itm_ca5bfa36","name":"Portable Tool Frame","desc":"","price":0},{"id":"itm_0b2d0d24","name":"Enzo Mari Flip Calendar","desc":"","price":0},{"id":"itm_bf512578","name":"Carry All Folder","desc":"","price":0},{"id":"itm_74f441d0","name":"Chrome Handle Tray","desc":"","price":0},{"id":"itm_446cb9a9","name":"Porcelain Beaker","desc":"","price":0},{"id":"itm_4cb2ff79","name":"Ring A Date Perpetual Calendar","desc":"","price":0},{"id":"itm_1f4bc0e0","name":"Mega Chart Graph Poster (1966)","desc":"","price":0},{"id":"itm_49ca6e66","name":"Metal Storage Set","desc":"","price":0},{"id":"itm_7d3c5774","name":"16 Box Organiser","desc":"","price":0},{"id":"itm_9b5d91b8","name":"Fold Shelf Small","desc":"","price":0},{"id":"itm_4f766743","name":"Grid Book Organiser (1983)","desc":"","price":0},{"id":"itm_e3b99a9d","name":"Business Card Box","desc":"","price":0},{"id":"itm_c209c654","name":"Simple Wall Clock","desc":"","price":0},{"id":"itm_bd6fe523","name":"Wood Polyhedra Set","desc":"","price":0}]},{"name":"Collection: Notes","items":[{"id":"itm_512ff903","name":"Cuaderno LaPress","desc":"","price":0},{"id":"itm_40e0d942","name":"Nifty Handwriting Pad (1980s)","desc":"","price":0},{"id":"itm_530f281b","name":"Greek Form Book","desc":"","price":0},{"id":"itm_35fd45b1","name":"Flatlay Steps Notebook","desc":"","price":0},{"id":"itm_6a87e53f","name":"Typing Paper (1980s)","desc":"","price":0},{"id":"itm_7dd3a530","name":"Section Notebook Japanese (1990s)","desc":"","price":0},{"id":"itm_cba59440","name":"AM/PM Tablet","desc":"","price":0},{"id":"itm_98b50151","name":"Computisteria Ringbound Pad (1970s)","desc":"","price":0},{"id":"itm_523516b6","name":"Patterned Label Book","desc":"","price":0},{"id":"itm_23c8f95c","name":"Compass Graph Pad (1970s)","desc":"","price":0},{"id":"itm_f02ecd7b","name":"Drawing Pad","desc":"","price":0},{"id":"itm_25cc5fd3","name":"Rollbahn Micro Charm","desc":"","price":0},{"id":"itm_bd8b0d94","name":"Linen Band Notebook","desc":"","price":0},{"id":"itm_075fb8b2","name":"A6 Label Notebook (1960s)","desc":"","price":0},{"id":"itm_d34ef4a1","name":"Neo Hi Starchy Notebook (1970s)","desc":"","price":0},{"id":"itm_831bfe96","name":"1Y 52W 365D Planner","desc":"","price":0},{"id":"itm_cdc6780d","name":"Memo Task Roller","desc":"","price":0},{"id":"itm_c80408ec","name":"La Grande Idée Notebook","desc":"","price":0}]},{"name":"Collection: Pen Cases","items":[{"id":"itm_42eafff9","name":"A5 Hobonichi Case Velluto","desc":"","price":0},{"id":"itm_654e3258","name":"A6 Hobonichi Case Lago","desc":"","price":0},{"id":"itm_559c1ef4","name":"Brass Pen Box","desc":"","price":0},{"id":"itm_df05fa12","name":"Canvas Pencil Case","desc":"","price":0},{"id":"itm_04ab0056","name":"CDT Zip Pencil Case","desc":"","price":0},{"id":"itm_3ae5e3d7","name":"Leather / Cotton Pen Case","desc":"","price":0},{"id":"itm_56344144","name":"Nahe Pen Case","desc":"","price":0},{"id":"itm_0492cd7f","name":"P&C Envelope Pencil Case","desc":"","price":0},{"id":"itm_fe44f17a","name":"P&C Leather Pencil Envelope","desc":"","price":0},{"id":"itm_9f2e8752","name":"Pen Pocket Case","desc":"","price":0},{"id":"itm_abb8da97","name":"Pencil Roll","desc":"","price":0},{"id":"itm_00bd9eb1","name":"Quitterie Card Case","desc":"","price":0},{"id":"itm_ff6af6f9","name":"Quitterie Case","desc":"","price":0},{"id":"itm_1f6be8e8","name":"Quitterie Pencil Case","desc":"","price":0},{"id":"itm_0432dcb7","name":"Six Pen Hard Case","desc":"","price":0},{"id":"itm_a08bfb50","name":"Twelve Pen Hard Case","desc":"","price":0},{"id":"itm_f4048dad","name":"Wood Pencil Tube","desc":"","price":0}]}],"currencySymbol":"$"}
     const KEY = 'plattr:v2:' + DATA.token
     const stored = JSON.parse(localStorage.getItem(KEY) || '{}')
     // The catalogue filter used to live in state; drop the leftover so dead data
