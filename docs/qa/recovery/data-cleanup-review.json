@@ -1,0 +1,722 @@
+{
+  "createdAt": "2026-11-20T06:27:34.730Z",
+  "database": ".wrangler/state/v3/d1/miniflare-D1DatabaseObject/017f96ff90c988f5b934d2789b404a0a0f513de2918297f1afba6b3581b20f80.sqlite",
+  "state": ".wrangler/state",
+  "totals": {
+    "projects": 58,
+    "mediaRows": 7,
+    "storedVersions": 130,
+    "bucketObjects": 36,
+    "referencedObjects": 21,
+    "orphanActivity": 12,
+    "danglingVersionReferences": 38,
+    "unreferencedObjects": 15,
+    "unreferencedBytes": 217160
+  },
+  "orphanActivity": [
+    {
+      "id": "act_8e226657e50cd98f0eab",
+      "projectId": "prj_91233486330f801a00fd",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T08:19:15.166Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_05a24acf741840419c1a",
+      "projectId": "prj_f3bf6faacc7b7c80e05c",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T10:06:39.983Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_9fed4a0d31694c9c59a3",
+      "projectId": "prj_6a7b61bada2db2f80dc5",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T11:04:45.577Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_934f4729eed814277306",
+      "projectId": "prj_1cccadc471ec222750c8",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T11:04:45.591Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_a2d286e6630e1fd6f675",
+      "projectId": "prj_f48cf7dac7ecf6c4ac9b",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T11:04:45.600Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_f7a94362803e609809b1",
+      "projectId": "prj_379cb226f7e6a06c6465",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T11:10:23.819Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_84df0e24a850440b6e25",
+      "projectId": "prj_3cc75f474429fb78064f",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T11:10:23.837Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_10f67b61e1093f7040be",
+      "projectId": "prj_7446621e7f480d7852d1",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T11:10:23.849Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_ca2305b53ff1014786ed",
+      "projectId": "prj_d79f4d703353546999d2",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T11:11:23.097Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_9b956595cfbb0a79b1bf",
+      "projectId": "prj_069e7d9890519d2a483c",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T11:11:23.112Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_b31cf37d2cba1cadbeeb",
+      "projectId": "prj_ace4234e26e6237a8105",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T11:11:23.122Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    },
+    {
+      "id": "act_e33bce5973c467c3eea4",
+      "projectId": "prj_ee363f8aec973c105dc6",
+      "kind": "build",
+      "label": "First build generated",
+      "createdAt": "2026-11-18T11:41:24.241Z",
+      "projectExists": false,
+      "referencedBy": "activity only; notes and doc_versions are scoped by the same project id",
+      "recoverable": "present in every database backup taken before 2026-11-20; the event itself is generic"
+    }
+  ],
+  "danglingReferences": [
+    {
+      "versionId": "dvr_b24e1395f4548b5c4638",
+      "projectId": "prj_625f69bd1fc7da0c9f05",
+      "projectName": "Aster & Rye",
+      "mediaId": "med_6ed8e46486c5417ff64dba36",
+      "createdAt": "2026-11-18T18:09:11.019Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_9c2beeefc354474eca95",
+      "projectId": "prj_625f69bd1fc7da0c9f05",
+      "projectName": "Aster & Rye",
+      "mediaId": "med_6ed8e46486c5417ff64dba36",
+      "createdAt": "2026-11-18T18:12:15.741Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_5405aea3554c256fee65",
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectName": "Butter Tales™",
+      "mediaId": "med_35cbc71ab9019bb2f68e9b81",
+      "createdAt": "2026-11-19T14:57:19.497Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_58af57834ca2d6dcea15",
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectName": "Butter Tales™",
+      "mediaId": "med_35cbc71ab9019bb2f68e9b81",
+      "createdAt": "2026-11-19T15:56:50.241Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_6700c05658a33bb21e13",
+      "projectId": "prj_2e31f516b4700cd932cf",
+      "projectName": "Good Day Cafe",
+      "mediaId": "med_35cbc71ab9019bb2b4e20d70",
+      "createdAt": "2026-11-19T15:57:01.731Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_df46757de44fbfe14015",
+      "projectId": "prj_a53d091ea69e3681ede3",
+      "projectName": "Halo Hair Studio",
+      "mediaId": "med_35cbc71ab9019bb2bdfe33aa",
+      "createdAt": "2026-11-19T15:57:13.149Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_8f1ee4e8102ad2ab579f",
+      "projectId": "prj_dd887df0ebdfdedf0841",
+      "projectName": "Iron Yard",
+      "mediaId": "med_35cbc71ab9019bb25b92ef42",
+      "createdAt": "2026-11-19T15:57:24.586Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_541a5ba02cb274135233",
+      "projectId": "prj_0186beadc06c9a0c55c8",
+      "projectName": "Dishoom Indian Restaurants",
+      "mediaId": "med_35cbc71ab9019bb2bd08dc37",
+      "createdAt": "2026-11-19T15:57:36.037Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_844e85b14d221d2a4b2d",
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectName": "Butter Tales™",
+      "mediaId": "med_c188f0ec1840172c467deae5",
+      "createdAt": "2026-11-19T15:58:14.092Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_de7363e7ca9fa3409817",
+      "projectId": "prj_2e31f516b4700cd932cf",
+      "projectName": "Good Day Cafe",
+      "mediaId": "med_c188f0ec1840172cb4e20d70",
+      "createdAt": "2026-11-19T15:58:29.576Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_4da59fab64fb74962785",
+      "projectId": "prj_a53d091ea69e3681ede3",
+      "projectName": "Halo Hair Studio",
+      "mediaId": "med_c188f0ec1840172cbdfe33aa",
+      "createdAt": "2026-11-19T15:58:40.972Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_d7b208a15c3f327efab3",
+      "projectId": "prj_dd887df0ebdfdedf0841",
+      "projectName": "Iron Yard",
+      "mediaId": "med_c188f0ec1840172c5b92ef42",
+      "createdAt": "2026-11-19T15:58:52.434Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_2de8b5171f7f85dc82cb",
+      "projectId": "prj_0186beadc06c9a0c55c8",
+      "projectName": "Dishoom Indian Restaurants",
+      "mediaId": "med_c188f0ec1840172cbd08dc37",
+      "createdAt": "2026-11-19T15:59:01.452Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_c95f9ce0ef00b475f046",
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectName": "Butter Tales™",
+      "mediaId": "med_c188f0ec1840172c467deae5",
+      "createdAt": "2026-11-19T15:59:14.637Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_06d63b0cdd97442365b8",
+      "projectId": "prj_2e31f516b4700cd932cf",
+      "projectName": "Good Day Cafe",
+      "mediaId": "med_c188f0ec1840172cb4e20d70",
+      "createdAt": "2026-11-19T15:59:30.091Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_f52c57836e89e9ad70b6",
+      "projectId": "prj_a53d091ea69e3681ede3",
+      "projectName": "Halo Hair Studio",
+      "mediaId": "med_c188f0ec1840172cbdfe33aa",
+      "createdAt": "2026-11-19T15:59:42.358Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_9383ed7782ac8aeeaa50",
+      "projectId": "prj_dd887df0ebdfdedf0841",
+      "projectName": "Iron Yard",
+      "mediaId": "med_c188f0ec1840172c5b92ef42",
+      "createdAt": "2026-11-19T15:59:54.541Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_7e471512760bd6c3f0a5",
+      "projectId": "prj_0186beadc06c9a0c55c8",
+      "projectName": "Dishoom Indian Restaurants",
+      "mediaId": "med_c188f0ec1840172cbd08dc37",
+      "createdAt": "2026-11-19T16:00:03.506Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_dd12f6c9cac2ed22d9a2",
+      "projectId": "prj_dd887df0ebdfdedf0841",
+      "projectName": "Iron Yard",
+      "mediaId": "med_c188f0ec1840172c5b92ef42",
+      "createdAt": "2026-11-19T17:08:51.199Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_8c983d4b089cb3b3f5b0",
+      "projectId": "prj_a53d091ea69e3681ede3",
+      "projectName": "Halo Hair Studio",
+      "mediaId": "med_c188f0ec1840172cbdfe33aa",
+      "createdAt": "2026-11-19T17:08:51.213Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_2c975140ac1eb0e1b62d",
+      "projectId": "prj_2e31f516b4700cd932cf",
+      "projectName": "Good Day Cafe",
+      "mediaId": "med_c188f0ec1840172cb4e20d70",
+      "createdAt": "2026-11-19T17:08:51.226Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_ad5172dfc2f1f00193ef",
+      "projectId": "prj_0186beadc06c9a0c55c8",
+      "projectName": "Dishoom Indian Restaurants",
+      "mediaId": "med_c188f0ec1840172cbd08dc37",
+      "createdAt": "2026-11-19T17:08:51.243Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_57e6302e2e591cdf3c2e",
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectName": "Butter Tales™",
+      "mediaId": "med_c188f0ec1840172c467deae5",
+      "createdAt": "2026-11-19T17:28:25.011Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_d66de2b552a29733f03d",
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectName": "Butter Tales™",
+      "mediaId": "med_c188f0ec1840172c467deae5",
+      "createdAt": "2026-11-19T17:29:46.963Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_c322d3c8e2568fd61396",
+      "projectId": "prj_2e31f516b4700cd932cf",
+      "projectName": "Good Day Cafe",
+      "mediaId": "med_c188f0ec1840172cb4e20d70",
+      "createdAt": "2026-11-19T17:29:59.209Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_1159ca2561a492515a61",
+      "projectId": "prj_a53d091ea69e3681ede3",
+      "projectName": "Halo Hair Studio",
+      "mediaId": "med_c188f0ec1840172cbdfe33aa",
+      "createdAt": "2026-11-19T17:30:11.358Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_79f3acdc284d4679ceb2",
+      "projectId": "prj_dd887df0ebdfdedf0841",
+      "projectName": "Iron Yard",
+      "mediaId": "med_c188f0ec1840172c5b92ef42",
+      "createdAt": "2026-11-19T17:30:23.520Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_b68ffdb1a1a963679577",
+      "projectId": "prj_0186beadc06c9a0c55c8",
+      "projectName": "Dishoom Indian Restaurants",
+      "mediaId": "med_c188f0ec1840172cbd08dc37",
+      "createdAt": "2026-11-19T17:30:38.106Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_03ce2ea1703040578a39",
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectName": "Butter Tales™",
+      "mediaId": "med_c188f0ec1840172c467deae5",
+      "createdAt": "2026-11-19T17:30:47.215Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_42b2dc22a9e4b66ff542",
+      "projectId": "prj_2e31f516b4700cd932cf",
+      "projectName": "Good Day Cafe",
+      "mediaId": "med_c188f0ec1840172cb4e20d70",
+      "createdAt": "2026-11-19T17:30:59.380Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_35bb89bd6d9dcf757f5a",
+      "projectId": "prj_a53d091ea69e3681ede3",
+      "projectName": "Halo Hair Studio",
+      "mediaId": "med_c188f0ec1840172cbdfe33aa",
+      "createdAt": "2026-11-19T17:31:11.591Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_afd781d392aa8d6da174",
+      "projectId": "prj_dd887df0ebdfdedf0841",
+      "projectName": "Iron Yard",
+      "mediaId": "med_c188f0ec1840172c5b92ef42",
+      "createdAt": "2026-11-19T17:31:23.731Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_5f8fb6932137545db15e",
+      "projectId": "prj_0186beadc06c9a0c55c8",
+      "projectName": "Dishoom Indian Restaurants",
+      "mediaId": "med_c188f0ec1840172cbd08dc37",
+      "createdAt": "2026-11-19T17:31:39.015Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_f89cd04b643e42979d8c",
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectName": "Butter Tales™",
+      "mediaId": "med_c188f0ec1840172c467deae5",
+      "createdAt": "2026-11-20T03:13:04.528Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_d2a10eaf598cda8ab54e",
+      "projectId": "prj_2e31f516b4700cd932cf",
+      "projectName": "Good Day Cafe",
+      "mediaId": "med_c188f0ec1840172cb4e20d70",
+      "createdAt": "2026-11-20T03:16:53.456Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_03a78bc8ba0d5b7ff681",
+      "projectId": "prj_a53d091ea69e3681ede3",
+      "projectName": "Halo Hair Studio",
+      "mediaId": "med_c188f0ec1840172cbdfe33aa",
+      "createdAt": "2026-11-20T03:16:53.539Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_379ecceb854691dcd417",
+      "projectId": "prj_dd887df0ebdfdedf0841",
+      "projectName": "Iron Yard",
+      "mediaId": "med_c188f0ec1840172c5b92ef42",
+      "createdAt": "2026-11-20T03:16:53.621Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    },
+    {
+      "versionId": "dvr_ae2908c48cf4b2c4674e",
+      "projectId": "prj_0186beadc06c9a0c55c8",
+      "projectName": "Dishoom Indian Restaurants",
+      "mediaId": "med_c188f0ec1840172cbd08dc37",
+      "createdAt": "2026-11-20T03:16:53.727Z",
+      "existsInAnotherProject": false,
+      "blocksDeletion": "no: cleanup only protects ids a version actually owns",
+      "restoreBehaviour": "restoring this version drops the reference and shows an empty photo block"
+    }
+  ],
+  "unreferencedObjects": [
+    {
+      "key": "projects/prj_0186beadc06c9a0c55c8/media/35cbc71ab9019bb2f68e9b81c1868d7ce4fd52098563d378ef7846b548099ba9/295.webp",
+      "bytes": 9874,
+      "blobPresent": true,
+      "projectId": "prj_0186beadc06c9a0c55c8",
+      "projectExists": true,
+      "hash": "35cbc71ab9019bb2f68e9b81c1868d7ce4fd52098563d378ef7846b548099ba9",
+      "width": 295,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_0186beadc06c9a0c55c8/media/c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253/320.webp",
+      "bytes": 14382,
+      "blobPresent": true,
+      "projectId": "prj_0186beadc06c9a0c55c8",
+      "projectExists": true,
+      "hash": "c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253",
+      "width": 320,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_0186beadc06c9a0c55c8/media/c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253/390.webp",
+      "bytes": 19176,
+      "blobPresent": true,
+      "projectId": "prj_0186beadc06c9a0c55c8",
+      "projectExists": true,
+      "hash": "c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253",
+      "width": 390,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_2e31f516b4700cd932cf/media/35cbc71ab9019bb2f68e9b81c1868d7ce4fd52098563d378ef7846b548099ba9/295.webp",
+      "bytes": 9874,
+      "blobPresent": true,
+      "projectId": "prj_2e31f516b4700cd932cf",
+      "projectExists": true,
+      "hash": "35cbc71ab9019bb2f68e9b81c1868d7ce4fd52098563d378ef7846b548099ba9",
+      "width": 295,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_2e31f516b4700cd932cf/media/c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253/320.webp",
+      "bytes": 14382,
+      "blobPresent": true,
+      "projectId": "prj_2e31f516b4700cd932cf",
+      "projectExists": true,
+      "hash": "c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253",
+      "width": 320,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_2e31f516b4700cd932cf/media/c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253/390.webp",
+      "bytes": 19176,
+      "blobPresent": true,
+      "projectId": "prj_2e31f516b4700cd932cf",
+      "projectExists": true,
+      "hash": "c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253",
+      "width": 390,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_a53d091ea69e3681ede3/media/35cbc71ab9019bb2f68e9b81c1868d7ce4fd52098563d378ef7846b548099ba9/295.webp",
+      "bytes": 9874,
+      "blobPresent": true,
+      "projectId": "prj_a53d091ea69e3681ede3",
+      "projectExists": true,
+      "hash": "35cbc71ab9019bb2f68e9b81c1868d7ce4fd52098563d378ef7846b548099ba9",
+      "width": 295,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_a53d091ea69e3681ede3/media/c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253/320.webp",
+      "bytes": 14382,
+      "blobPresent": true,
+      "projectId": "prj_a53d091ea69e3681ede3",
+      "projectExists": true,
+      "hash": "c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253",
+      "width": 320,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_a53d091ea69e3681ede3/media/c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253/390.webp",
+      "bytes": 19176,
+      "blobPresent": true,
+      "projectId": "prj_a53d091ea69e3681ede3",
+      "projectExists": true,
+      "hash": "c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253",
+      "width": 390,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_b8d0b17b39129e5ce8e2/media/35cbc71ab9019bb2f68e9b81c1868d7ce4fd52098563d378ef7846b548099ba9/295.webp",
+      "bytes": 9874,
+      "blobPresent": true,
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectExists": true,
+      "hash": "35cbc71ab9019bb2f68e9b81c1868d7ce4fd52098563d378ef7846b548099ba9",
+      "width": 295,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_b8d0b17b39129e5ce8e2/media/c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253/320.webp",
+      "bytes": 14382,
+      "blobPresent": true,
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectExists": true,
+      "hash": "c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253",
+      "width": 320,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_b8d0b17b39129e5ce8e2/media/c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253/390.webp",
+      "bytes": 19176,
+      "blobPresent": true,
+      "projectId": "prj_b8d0b17b39129e5ce8e2",
+      "projectExists": true,
+      "hash": "c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253",
+      "width": 390,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_dd887df0ebdfdedf0841/media/35cbc71ab9019bb2f68e9b81c1868d7ce4fd52098563d378ef7846b548099ba9/295.webp",
+      "bytes": 9874,
+      "blobPresent": true,
+      "projectId": "prj_dd887df0ebdfdedf0841",
+      "projectExists": true,
+      "hash": "35cbc71ab9019bb2f68e9b81c1868d7ce4fd52098563d378ef7846b548099ba9",
+      "width": 295,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_dd887df0ebdfdedf0841/media/c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253/320.webp",
+      "bytes": 14382,
+      "blobPresent": true,
+      "projectId": "prj_dd887df0ebdfdedf0841",
+      "projectExists": true,
+      "hash": "c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253",
+      "width": 320,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    },
+    {
+      "key": "projects/prj_dd887df0ebdfdedf0841/media/c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253/390.webp",
+      "bytes": 19176,
+      "blobPresent": true,
+      "projectId": "prj_dd887df0ebdfdedf0841",
+      "projectExists": true,
+      "hash": "c188f0ec1840172cd23c3d703693e2213e430c014a1e569c6cf7365b30e9f253",
+      "width": 390,
+      "rowWithSameHash": false,
+      "referencedByAnyDocument": false,
+      "inLatestMediaBackup": true,
+      "recoverable": "yes: every object is copied by scripts/backup.mjs, including unreferenced ones"
+    }
+  ],
+  "recommendation": {
+    "orphanActivity": "Delete after approval. They belong to builds that no longer exist, are not referenced, and carry a generic event. Keeping them only inflates the activity table.",
+    "danglingReferences": "Repair after approval by dropping the missing media reference from those saved versions, which is what a restore already does at read time. Nothing is lost: the image row is already gone and cannot be recovered from the current storage.",
+    "unreferencedObjects": "Do not delete with the current cleanup command: it deletes rows and their variants, and these have no row. Recover them first from a media backup, then decide. They are the only objects covered by neither a row nor a document."
+  }
+}

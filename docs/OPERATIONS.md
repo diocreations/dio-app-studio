@@ -52,8 +52,16 @@ by this action.
   the provider backup policy.
 - Deployment rollback: versions and statuses are recorded on the build page, but
   rolling a Worker deployment back is a provider/dashboard operation.
-- There is no scheduled offsite backup job in this repository; that is a
-  production gap, not a claim.
+- Offsite backup: `scripts/offsite-backup.mjs` exports D1, scrubs it, copies
+  every media variant named by a row and uploads the run to a separate bucket,
+  then reads every file back and compares checksums before marking the run
+  verified. `scripts/offsite-fetch.mjs` fetches a run for restore. Retention and
+  the audit index live in the backup bucket. The full procedure, the RPO/RTO
+  targets, monitoring and the remaining gaps are in
+  `docs/PRODUCTION_DISASTER_RECOVERY.md`.
+- That job is **not running**: this repository has no git remote, no production
+  D1/R2 exists, and `--remote` has never been executed. It is rehearsed against
+  local Wrangler state only.
 
 ## Owner access
 

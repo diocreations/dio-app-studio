@@ -9,10 +9,14 @@ is `docs/qa/recovery/REPORT.md`.
 verification of both, project-level restore, and every failure scenario in the
 table below — all locally, with the real Worker serving the restored copy.
 
-**What is not proven here:** an offsite restore from Cloudflare. That needs
-account credentials and is an operator step (`wrangler d1 export --remote`,
-`wrangler r2 object get --remote`, or bucket replication). Nothing in this
-document should be read as evidence that offsite replication is running.
+**What is not proven here:** an offsite restore from Cloudflare. The production
+path is implemented in `scripts/offsite-backup.mjs` (export, scrub, copy media,
+upload to a separate bucket, read every file back, index, retain) with
+`scripts/offsite-fetch.mjs` to fetch a run. It has been rehearsed end to end
+against local Wrangler state, including fetching a run back and restoring it
+into an empty environment. The `--remote` flag itself has never run, because no
+production D1 or R2 exists. Nothing in this document should be read as evidence
+that offsite replication is running; see `docs/PRODUCTION_DISASTER_RECOVERY.md`.
 
 ## What a backup contains
 

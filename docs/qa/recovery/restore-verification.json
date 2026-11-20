@@ -1,5 +1,5 @@
 {
-  "createdAt": "2026-11-20T06:08:42.613Z",
+  "createdAt": "2026-11-20T06:38:14.295Z",
   "environment": {
     "kind": "local Wrangler state (Miniflare D1 and R2)",
     "sourceState": "/Users/jomyjoseph/.config/freebuff-desktop/local-projects/dd12c749-f87a-4f63-8bd7-791c793f775c/.wrangler/state",
@@ -7,14 +7,14 @@
     "production": "not exercised: needs Cloudflare credentials for d1 export and r2 object get"
   },
   "backup": {
-    "directory": ".wrangler/drill/backups/2026-11-20T06-08-36-719Z",
-    "databaseSha256": "3c491ba0a1e962193d429086cc53c6ad7ed23109d6b70fb9d12c23f42308d257",
-    "databaseBytes": 1454080,
+    "directory": ".wrangler/drill/backups/2026-11-20T06-38-08-401Z",
+    "databaseSha256": "c09c7a57189115b8494dc8e8b695744557f64a7267426524f3d8cdf45e3b8d87",
+    "databaseBytes": 1470464,
     "mediaChecksum": "149fed9363aebb9d9179f99269123435d52511b56c4683622099fb97a9045374",
     "objects": 36,
     "redaction": {
       "rowSetsRemoved": {
-        "owner_sessions": 63,
+        "owner_sessions": 68,
         "user_sessions": 0,
         "auth_tokens": 0,
         "invitations": 0
@@ -42,13 +42,13 @@
     }
   },
   "counts": {
-    "activity": 1057,
+    "activity": 1103,
     "audit_events": 47,
     "auth_tokens": 0,
     "bookings": 43,
     "customers": 42,
     "daily_budget": 49,
-    "doc_versions": 128,
+    "doc_versions": 131,
     "enquiries": 29,
     "import_budget": 1,
     "invitations": 0,
@@ -85,12 +85,12 @@
     {
       "name": "database backup has integrity and no credentials",
       "ok": true,
-      "detail": "1757 rows, sha256 3c491ba0a1e96219…"
+      "detail": "1806 rows, sha256 c09c7a57189115b8…"
     },
     {
       "name": "backup strips owner sessions and payment secrets",
       "ok": true,
-      "detail": "removed 63 sessions, cleared 1 column"
+      "detail": "removed 68 sessions, cleared 1 column"
     },
     {
       "name": "media backup has every object with matching bytes and dimensions",
@@ -215,7 +215,7 @@
     {
       "name": "one project is restored without touching another",
       "ok": true,
-      "detail": "Aster & Rye restored (15 versions, 2 media, 1 customers); Butter Tales™ unchanged; 1 sessions before, 1 after"
+      "detail": "Aster & Rye restored (15 versions, 2 media, 1 customers); Iron Yard unchanged; 1 sessions before, 1 after"
     }
   ],
   "notes": [

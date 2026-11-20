@@ -26,6 +26,15 @@ integration. No mocked response is presented below as a real transaction.
 The workspace contains only `OWNER_SECRET`, `STUDIO_KEY` and
 `PAYMENT_ENCRYPTION_KEY`; no `RAZORPAY_*` or `STRIPE_*` secrets exist.
 
+### Status on 20 November 2026
+
+Re-checked for the production-readiness milestone: `bun test tests/payments.test.ts`
+and `bun run typecheck` pass, and the app still fails closed without a gateway.
+Nothing in this milestone changed payment code. The four blockers above are
+unchanged and none can be closed from this workspace: they need provider test
+accounts and a deployed HTTPS origin, neither of which exists. No live payment
+was attempted and no provider was called.
+
 ## What was run
 
 ```text

@@ -205,16 +205,24 @@ export function findLocalDatabase(stateDir = '.wrangler/state') {
   return found
 }
 
-/** The Miniflare metadata database and blob directory for one local bucket. */
+/**
+ * The Miniflare metadata database and blob directory for one local bucket.
+ *
+ * Every bucket keeps its rows in `miniflare-R2BucketObject/<hash>.sqlite` and
+ * its bytes in `<bucket>/blobs/`, but the file name is not derived from the
+ * bucket name. With more than one bucket in a state directory (a drill bucket,
+ * for example) the right file is the one whose rows point at blobs that exist
+ * in this bucket's directory.
+ */
 export function findLocalBucket(stateDir = '.wrangler/state', bucket = MEDIA_BUCKET) {
   const dir = path.join(stateDir, 'v3/r2/miniflare-R2BucketObject')
   const blobs = path.join(stateDir, 'v3/r2', bucket, 'blobs')
   if (!fs.existsSync(dir)) throw new Error(`no local R2 state under ${dir}`)
-  const found = fs
+  const candidates = fs
     .readdirSync(dir)
     .filter((file) => file.endsWith('.sqlite') && file !== 'metadata.sqlite')
     .map((file) => path.join(dir, file))
-    .find((file) => {
+    .filter((file) => {
       try {
         const db = openDatabase(file)
         try {
@@ -226,8 +234,25 @@ export function findLocalBucket(stateDir = '.wrangler/state', bucket = MEDIA_BUC
         return false
       }
     })
-  if (!found) throw new Error(`no local R2 bucket metadata under ${dir}`)
-  return { metadata: found, blobs }
+  if (!candidates.length) throw new Error(`no local R2 bucket metadata under ${dir}`)
+
+  const scored = candidates.map((file) => {
+    const db = openDatabase(file)
+    try {
+      const rows = db.query('SELECT blob_id FROM _mf_objects').all()
+      const present = rows.filter((row) => row.blob_id && fs.existsSync(path.join(blobs, row.blob_id))).length
+      return { file, rows: rows.length, present }
+    } finally {
+      db.close()
+    }
+  })
+  scored.sort((a, b) => b.present - a.present || b.rows - a.rows)
+  const best = scored[0]
+  if (best.rows > 0 && best.present === 0 && candidates.length > 1)
+    throw new Error(`cannot tell which metadata under ${dir} belongs to bucket ${bucket}`)
+  if (candidates.length > 1 && scored.every((entry) => entry.rows === 0))
+    throw new Error(`bucket ${bucket} is empty and ${dir} holds ${candidates.length} empty buckets; prime it first`)
+  return { metadata: best.file, blobs }
 }
 
 export function readBucketObjects(bucketState) {
