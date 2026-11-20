@@ -188,3 +188,64 @@ describe('documents written before references existed', () => {
     expect(homeSections(doc).length).toBe(homeSections(plain).length)
   })
 })
+
+describe('document visibility integrity', () => {
+  const section = (id: string, hidden = false) => ({
+    id,
+    kind: 'text',
+    text: `words for ${id}`,
+    hidden,
+  })
+  const documentWith = (sections: unknown[]) => ({
+    v: 2,
+    screens: [
+      {
+        id: 'scr_home',
+        kind: 'home',
+        name: 'Home',
+        icon: 'home',
+        nav: true,
+        hidden: false,
+        sections,
+      },
+    ],
+  })
+
+  test('a hidden component stays hidden through repeated saves', () => {
+    const spec = dishSpec()
+    let raw = documentWith([section('sec_fx_shop_products'), section('sec_fx_shop_all', true)])
+    for (let save = 0; save < 3; save += 1) raw = JSON.parse(JSON.stringify(normalizeDoc(raw, spec)))
+    const nodes = homeSections(normalizeDoc(raw, spec))
+    expect(nodes.map((entry) => [entry.id, entry.hidden])).toEqual([
+      ['sec_fx_shop_products', false],
+      ['sec_fx_shop_all', true],
+    ])
+  })
+
+  test('reordering preserves every id together with its own visibility', () => {
+    const spec = dishSpec()
+    const before = normalizeDoc(
+      documentWith([section('sec_one'), section('sec_two', true), section('sec_three')]),
+      spec,
+    )
+    const reordered = normalizeDoc(
+      documentWith([section('sec_three'), section('sec_two', true), section('sec_one')]),
+      spec,
+    )
+    expect(new Set(homeSections(before).map((entry) => entry.id))).toEqual(
+      new Set(homeSections(reordered).map((entry) => entry.id)),
+    )
+    for (const node of homeSections(reordered)) {
+      const original = homeSections(before).find((entry) => entry.id === node.id)
+      expect(node.hidden).toBe(original?.hidden ?? false)
+    }
+  })
+
+  test('a duplicated id is dropped rather than merged into another component', () => {
+    const spec = dishSpec()
+    const doc = normalizeDoc(documentWith([section('sec_one'), section('sec_one', true)]), spec)
+    const nodes = homeSections(doc)
+    expect(nodes.length).toBe(1)
+    expect(nodes[0].hidden).toBe(false)
+  })
+})
