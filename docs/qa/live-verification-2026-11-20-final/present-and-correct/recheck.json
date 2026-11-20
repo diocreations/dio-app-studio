@@ -8,18 +8,23 @@
   "labels": [
     {
       "code": "GBP",
-      "raw": "£ in the option name \"£10\""
+      "products": 1,
+      "validatedPairs": 12,
+      "rejectedPairs": 0,
+      "raw": "£10 matched against its option price"
     }
   ],
+  "labelProof": false,
   "currencyAtRun": "INR",
   "currencyAtRunMethod": "shopify-analytics",
-  "currencyUnderPresentmentRule": "GBP",
-  "currencyRule": "The page only offered a presentment code; the shop own labels decide. GBP.",
-  "variants": {
+  "currencyUnderRule": "",
+  "currencyRule": "One product label is a hint only: no currency is published and the brief asks the owner.",
+  "savedReportVariants": {
     "multiOptionItems": 275,
+    "singleOptionItems": 0,
     "variantsShipped": 1190,
     "variantsWithFeedId": 1190,
-    "feedVariantsForThoseProducts": 1193
+    "singleOptionsSelected": 0
   },
   "paging": {
     "catalogueItems": 706,
@@ -41,5 +46,21 @@
     "normalisedOnly": [
       "Braun Calculator"
     ]
+  },
+  "currentReader": {
+    "note": "The saved feed re-read by the current reader with the run page currency. Not a crawl.",
+    "products": 706,
+    "currency": "",
+    "currencyEvidence": "",
+    "currencyCandidates": [
+      "INR:shopify-analytics",
+      "GBP:variant-labels"
+    ],
+    "currencyConflict": false,
+    "multiOptionItems": 275,
+    "singleOptionItems": 431,
+    "variantsShipped": 1624,
+    "variantsWithFeedId": 1624,
+    "singleOptionsSelected": 431
   }
 }
