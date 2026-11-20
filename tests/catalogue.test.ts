@@ -139,6 +139,13 @@ describe('the live catalogue is imported whole', () => {
     expect(items.every((item) => Boolean(item.image?.url))).toBe(true)
   })
 
+  test('a product with more than two dozen options keeps all of them', async () => {
+    const report = await readShop(PRODUCTS)
+    const notebook = report.site.menu.flatMap((section) => section.items).find((item) => item.name === 'Alphabet Notebook')!
+    expect(notebook.variants).toHaveLength(26)
+    expect(notebook.variants?.filter((variant) => variant.selected)).toHaveLength(1)
+  })
+
   test('the shop currency is the one its page declares, with its source', async () => {
     const report = await readShop(PRODUCTS)
     expect(report.site.currency).toBe('GBP')
@@ -146,6 +153,41 @@ describe('the live catalogue is imported whole', () => {
     expect(report.site.currencyConflict).toBeFalsy()
     const variants = report.site.menu.flatMap((section) => section.items).flatMap((item) => item.variants ?? [])
     expect(variants.every((variant) => variant.currency === 'GBP')).toBe(true)
+  })
+})
+
+describe('the live shop, presenting a localised currency', () => {
+  // What the final live read actually saw: the storefront told a reader in
+  // India that its currency was INR, while its own option labels are pounds.
+  const LOCALISED = '<script>ShopifyAnalytics = {"meta":{"currency":"INR"}}</script>'
+
+  test('option labels in the shop own money decide the currency', async () => {
+    const report = await readShop(PRODUCTS, LOCALISED)
+    expect(report.site.currency).toBe('GBP')
+    expect(report.site.currencyEvidence?.method).toBe('variant-labels')
+    expect(report.site.currencyEvidence?.raw).toContain('£10')
+    expect(report.site.currencyConflict).toBeFalsy()
+    const variants = report.site.menu.flatMap((section) => section.items).flatMap((item) => item.variants ?? [])
+    expect(variants.every((variant) => variant.currency === 'GBP')).toBe(true)
+  })
+
+  test('two label currencies are a question, not a guess', async () => {
+    const card = (index: number) => ({
+      title: `Gift Card ${index}`,
+      handle: `gift-card-${index}`,
+      body_html: '<p>Gift card.</p>',
+      product_type: 'Cards',
+      variants: [
+        { id: `v${index}a`, title: '£10', price: '10.00' },
+        { id: `v${index}b`, title: '€20', price: '20.00' },
+      ],
+      images: [{ src: 'https://cdn.shopify.com/s/files/1/0001/products/card.jpg' }],
+    })
+    const mixed = [card(1), card(2), card(3)]
+    const report = await readShop(mixed, LOCALISED)
+    expect(report.site.currency).toBe('')
+    expect(report.site.currencyConflict).toBe(true)
+    expect(report.site.currencyCandidates?.map((entry) => entry.code).sort()).toEqual(['EUR', 'GBP', 'INR'])
   })
 })
 
@@ -171,8 +213,6 @@ describe('a long catalogue is paged, never truncated', () => {
   })
 
   test('adding a page adds the next products with no repeats and no gaps', () => {
-    // The client appends from the same DATA, keyed by the product's absolute
-    // position, so the keys it creates are exactly the ones that follow.
     const shown = 12
     const next = Math.min(shown + data.catalogPage, 60)
     const keys = Array.from({ length: next - shown }, (_, index) => `0-${shown + index}`)
@@ -180,6 +220,27 @@ describe('a long catalogue is paged, never truncated', () => {
     expect(data.menu[0].items.slice(shown, next).map((item) => item.name)).toEqual(
       Array.from({ length: next - shown }, (_, index) => `Item ${shown + index + 1}`),
     )
+    expect(data.catalogPage).toBe(24)
+    // The browser script fetches the next slice instead of rebuilding cards.
+    expect(html).toContain("'/p/' + DATA.token + '/cards/' + sectionIndex")
+  })
+
+  test('a later page is the same renderer, with no second copy in the browser', () => {
+    const cards = renderApp(spec, { token: 'catalogue-probe', live: false, cards: { section: 0, from: 12, count: 24 } })
+    // A fragment, not a page: no shell, no catalogue payload, no scripts.
+    expect(cards).not.toContain('<html')
+    expect(cards).not.toContain('const DATA')
+    expect(cards).not.toContain('function catalogCard(item, key)')
+    const keys = [...cards.matchAll(/data-item="0-(\d+)"/g)].map((match) => Number(match[1]))
+    expect(new Set(keys).size).toBe(24)
+    expect(Math.min(...keys)).toBe(12)
+    expect(Math.max(...keys)).toBe(35)
+    expect(cards).toContain('Item 13')
+    expect(cards).toContain('£3.12')
+    expect(cards).not.toContain('$')
+    // The shipped page has the same cards for the same positions.
+    expect(html).toContain('Item 1')
+    expect(html).toContain('Item 12')
   })
 
   test('the price shown for a listed amount uses the shop currency, never a dollar', () => {
@@ -212,8 +273,18 @@ describe('currency is evidence, not an assumption', () => {
   const fixtures: { name: string; tags: string; code: string; method?: CurrencyMethod; conflict?: boolean }[] = [
     { name: 'pound meta', tags: '<meta property="og:price:currency" content="GBP">', code: 'GBP', method: 'meta' },
     { name: 'rupee JSON-LD', tags: '<script type="application/ld+json">{"@context":"https://schema.org","@type":"Store","currenciesAccepted":"INR"}</script>', code: 'INR', method: 'json-ld' },
-    { name: 'euro Shopify bootstrap', tags: '<script>Shopify.currency = {"active":"EUR"}</script>', code: 'EUR', method: 'shopify-currency' },
-    { name: 'dollar analytics', tags: '<script>ShopifyAnalytics = {"meta":{"currency":"USD"}}</script>', code: 'USD', method: 'shopify-analytics' },
+    // A storefront can localise what a visitor sees; that is a hint, not proof
+    // of what the feed's prices mean, so neither code is published.
+    { name: 'euro presentment only', tags: '<script>Shopify.currency = {"active":"EUR"}</script>', code: '' },
+    { name: 'dollar presentment only', tags: '<script>ShopifyAnalytics = {"meta":{"currency":"USD"}}</script>', code: '' },
+    // Proof beside a localised view: the shop states GBP, so GBP is published.
+    {
+      name: 'pounds beside a localised rupee view',
+      tags:
+        '<meta property="og:price:currency" content="GBP"><script>ShopifyAnalytics = {"meta":{"currency":"INR"}}</script>',
+      code: 'GBP',
+      method: 'meta',
+    },
     { name: 'nothing declared', tags: '', code: '' },
     {
       name: 'two that disagree',

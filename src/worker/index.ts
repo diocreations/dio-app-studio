@@ -597,6 +597,39 @@ app.get('/p/:token/app', async (c) => {
   )
 })
 
+/** The next page of one catalogue shelf. The cards come from the same renderer
+ *  as the app's first page, so a long shelf never needs a second copy of the
+ *  card markup in the browser. Public exactly like the app itself. */
+app.get('/p/:token/cards/:section', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.text('Not found', 404)
+  const section = Number(c.req.param('section'))
+  const from = Number(c.req.query('from') ?? 0)
+  const count = Number(c.req.query('count') ?? 24)
+  if (!Number.isInteger(section) || !Number.isInteger(from) || !Number.isInteger(count))
+    return c.text('', 400)
+  if (section < 0 || section >= project.spec.menu.length) return c.text('', 404)
+  const photos = await photosFor(project.spec.vertical, c.env)
+  c.header('Cache-Control', 'private, no-store')
+  c.header('X-Robots-Tag', 'noindex, nofollow')
+  return c.html(
+    renderApp(project.spec, {
+      token: project.token,
+      version: project.version,
+      slot: project.variationSlot ?? undefined,
+      photos,
+      noindex: true,
+      doc: starterDoc(project),
+      flagship: FLAGSHIP_TRADES.has(project.spec.vertical),
+      cards: {
+        section,
+        from: Math.max(0, Math.min(2000, from)),
+        count: Math.max(1, Math.min(24, count)),
+      },
+    }),
+  )
+})
+
 app.get('/p/:token/media/:mediaId/:file', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.text('Not found', 404)

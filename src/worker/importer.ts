@@ -74,6 +74,7 @@ export type CurrencyMethod =
   | 'meta'
   | 'json-ld'
   | 'money-format'
+  | 'variant-labels'
   | 'owner'
 export type CurrencyEvidence = CurrencyCandidate
 
@@ -2192,8 +2193,19 @@ export function currencySignals(page: Page): CurrencyCandidate[] {
   return signals
 }
 
-/** One code, or none. Never a majority vote: two codes is a question, not a
- *  result. */
+/**
+ * A storefront often shows the visitor a localised currency: Shopify Markets
+ * sets `ShopifyAnalytics.meta.currency` and `Shopify.currency.active` to the
+ * presentment currency for the request's country, while `/products.json`
+ * prices stay in the shop's own base currency. The live shop proved it: its
+ * page said INR to a reader in India while its feed prices are pounds.
+ *
+ * So a presentment code is a hint, never proof of what a price means. A code is
+ * published only from a statement that is not localised by the visitor (meta,
+ * JSON-LD, money format, or the owner's answer); otherwise the brief asks.
+ */
+const PRESENTMENT: CurrencyMethod[] = ['shopify-analytics', 'shopify-currency']
+
 export function resolveCurrency(page: Page): {
   code: string
   evidence?: CurrencyEvidence
@@ -2201,8 +2213,9 @@ export function resolveCurrency(page: Page): {
   conflict: boolean
 } {
   const candidates = currencySignals(page)
-  if (candidates.length === 1) return { code: candidates[0].code, evidence: candidates[0], candidates, conflict: false }
-  return { code: '', candidates, conflict: candidates.length > 1 }
+  const proven = candidates.filter((candidate) => !PRESENTMENT.includes(candidate.method))
+  if (proven.length === 1) return { code: proven[0].code, evidence: proven[0], candidates, conflict: false }
+  return { code: '', candidates, conflict: proven.length > 1 }
 }
 
 function currencyOf(page: Page): string {
@@ -2432,8 +2445,13 @@ async function shopifyProducts(
   robots: RobotsGroup[],
   deadline: number,
   currency: string,
-): Promise<{ sections: MenuSection[]; pages: number; source: string; blocked: boolean }> {
+): Promise<{ sections: MenuSection[]; pages: number; source: string; blocked: boolean; labels: CurrencyCandidate[] }> {
   const groups = new Map<string, Item[]>()
+  // A shop that names its options "£10" or "€25" is printing its own money.
+  // Unlike the storefront's presentment currency, those labels do not change
+  // with the visitor's country, so they are proof of what a price means.
+  const labels = new Map<string, string>()
+  const symbols: Record<string, string> = { '£': 'GBP', '€': 'EUR', '₹': 'INR', '¥': 'JPY' }
   let pages = 0
   let source = ''
   const LIMIT = 250
@@ -2441,7 +2459,8 @@ async function shopifyProducts(
     const url = new URL(`/products.json?limit=${LIMIT}&page=${page}`, origin.origin)
     // The feed is a page like any other: if robots.txt excludes it, we do not
     // fetch it, and the crawl falls back to the visible catalogue.
-    if (!robotsAllows(robots, `${url.pathname}${url.search}`)) return { sections: [], pages, source, blocked: true }
+    if (!robotsAllows(robots, `${url.pathname}${url.search}`))
+      return { sections: [], pages, source, blocked: true, labels: [] }
     if (deadline - Date.now() < 1500) break
     try {
       const response = await fetchImpl(url.toString(), {
@@ -2464,12 +2483,21 @@ async function shopifyProducts(
         const name = collapse(String(product.title ?? ''), 60)
         if (!name) continue
         const rawVariants = Array.isArray(product.variants) ? (product.variants as Record<string, unknown>[]) : []
+        for (const variant of rawVariants) {
+          const label = String(variant.title ?? '')
+          const symbol = /[£€₹¥]\s?\d/.exec(label)?.[0]?.[0] ?? ''
+          if (symbol && symbols[symbol] && !labels.has(symbols[symbol]))
+            labels.set(symbols[symbol], `${symbol} in the option name \"${label.slice(0, 40)}\"`)
+        }
         // Every option keeps its own price and the shop's currency. The first
         // variant is Shopify's default when no selected variant is given; the
         // published price is the cheapest positive one, marked so the rest are
         // never presented as if they did not exist.
+        // A shop can list more than two dozen options on one product (the live
+        // shop has one with 26); the cap is only a guard against a malformed
+        // feed, high enough that no real option list is cut.
         const variants = rawVariants
-          .slice(0, 24)
+          .slice(0, 200)
           .map((variant) => ({
             id: variant.id == null ? '' : String(variant.id).slice(0, 40),
             name: collapse(String(variant.title ?? ''), 40),
@@ -2542,7 +2570,18 @@ async function shopifyProducts(
   const sections = [...groups.entries()]
     .map(([name, items]) => ({ name, items }))
     .filter((section) => section.items.length > 0)
-  return { sections, pages, source, blocked: false }
+  return {
+    sections,
+    pages,
+    source,
+    blocked: false,
+    labels: [...labels.entries()].map(([code, raw]) => ({
+      code,
+      method: 'variant-labels' as const,
+      source: `${origin.origin}/products.json`,
+      raw,
+    })),
+  }
 }
 
 function stripMarkup(html: string): string {
@@ -2585,6 +2624,26 @@ async function expandCatalogue(options: {
     if (feed.blocked) blocked += 1
     if (count >= 3) {
       read.push(feed.source)
+      // The shop's own option labels settle the currency when the page only
+      // offered a localised presentment code. Two label currencies disagree, so
+      // the owner is asked instead.
+      if (feed.labels.length === 1 && !site.currency) {
+        site.currency = feed.labels[0].code
+        site.currencyEvidence = feed.labels[0]
+        site.currencyCandidates = [...(site.currencyCandidates ?? []), feed.labels[0]]
+        delete site.currencyConflict
+        // The feed was read before the labels settled the currency, so stamp it
+        // on the prices it produced rather than leaving them unlabelled.
+        for (const section of feed.sections) {
+          for (const item of section.items) {
+            if (item.priceEvidence) item.priceEvidence.currency = site.currency
+            if (item.variants) item.variants = item.variants.map((variant) => ({ ...variant, currency: site.currency }))
+          }
+        }
+      } else if (feed.labels.length > 1 && !site.currency) {
+        site.currencyCandidates = [...(site.currencyCandidates ?? []), ...feed.labels]
+        site.currencyConflict = true
+      }
       // The entry page may already have named some of these products at their
       // own prices. Those readings stay: the feed fills in what the page did
       // not carry, and a disagreement is reported rather than resolved.
@@ -3032,6 +3091,7 @@ const CURRENCY_METHODS: CurrencyMethod[] = [
   'meta',
   'json-ld',
   'money-format',
+  'variant-labels',
   'owner',
 ]
 

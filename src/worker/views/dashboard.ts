@@ -3,6 +3,7 @@ import type { DashboardData } from '../business'
 import { nextBookingStatuses, nextEnquiryStatuses, nextOrderStatuses } from '../business'
 import type { PaymentConnectionView, PaymentDashboard, PaymentTransactionView } from '../payments/service'
 import { providerLabel, type ProviderId } from '../payments/types'
+import { currencySymbolFor } from '../pricing'
 import { esc } from './shell'
 
 /**
@@ -10,17 +11,6 @@ import { esc } from './shell'
  * visual editor: this page is for orders, bookings, customers and the day's
  * work, and it only shows modules the generated app can actually fulfil.
  */
-
-const CURRENCY: Record<string, string> = {
-  USD: '$',
-  GBP: '£',
-  EUR: '€',
-  INR: '₹',
-  AUD: 'A$',
-  CAD: 'C$',
-  AED: 'AED ',
-  SGD: 'S$',
-}
 
 function money(cents: number, symbol: string): string {
   return symbol + (cents / 100).toFixed(2)
@@ -100,7 +90,9 @@ export function dashboardPage(options: {
 }): string {
   const { project, data, origin, payments } = options
   const token = project.token
-  const symbol = CURRENCY[(project.spec.currency ?? 'USD').toUpperCase()] ?? '$'
+  // The owner's dashboard prints the same currency the app does: the build's
+  // own, and no symbol at all when an imported shop never confirmed one.
+  const symbol = currencySymbolFor(project.spec)
   const modules = data.modules
   const catalogJson = JSON.stringify(project.spec.menu).replace(/</g, '\\u003c')
   const offersJson = JSON.stringify(project.spec.offers).replace(/</g, '\\u003c')

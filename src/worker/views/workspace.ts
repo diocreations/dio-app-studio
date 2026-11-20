@@ -368,7 +368,6 @@ function workspaceScript(project: Project): string {
 (() => {
   const token = ${JSON.stringify(project.token)}
   const toastEl = document.querySelector('[data-toast]')
-  const money = (cents) => '$' + (cents / 100).toFixed(2)
 
   function toast(message) {
     toastEl.textContent = message

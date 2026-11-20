@@ -1,7 +1,10 @@
 /**
  * One authorised live read of Present & Correct, inside the documented budget.
  *
- *   bun scripts/present-and-correct-crawl.mjs
+ *   OUT=docs/qa/<folder>/present-and-correct bun scripts/present-and-correct-crawl.mjs
+ *
+ * OUT defaults to the original folder, so a re-run never overwrites an earlier
+ * report by accident when the variable is set.
  *
  * Runs once. There is no retry, no second pass and no fallback crawl: if the
  * run fails, the failure is written down instead of being re-attempted. The
@@ -9,20 +12,21 @@
  * wall clock, 6 s per request, 900 KB per body) is enforced here as well as in
  * the importer, so a bug in one place cannot spend a second crawl.
  *
- * Writes docs/qa/live-discovery-2026-11-20/present-and-correct/
+ * Writes (under OUT):
  *   report.json    what the importer read, without page HTML
  *   requests.json  every request, its status, size and duration
  *   feed.json      the feed pages and the products they listed
  *   spec.json      the build the report produced
  *   app.html       the customer app rendered from that build
- *   checks.json    the nine verification checks, with their evidence
+ *   page-2.html    the page past the first, from the same card renderer
+ *   checks.json    the verification checks, with their evidence
  */
 import { mkdir, writeFile } from 'node:fs/promises'
 import { importWebsite } from '../src/worker/importer'
 import { buildSpec } from '../src/worker/pricing'
 import { renderApp } from '../src/worker/app'
 
-const OUT = 'docs/qa/live-discovery-2026-11-20/present-and-correct'
+const OUT = process.env.OUT || 'docs/qa/live-discovery-2026-11-20/present-and-correct'
 const ENTRY = 'https://www.presentandcorrect.com/'
 const MAX_PAGE_READS = 10
 const MAX_BODY_BYTES = 900 * 1024
@@ -124,10 +128,21 @@ const spec = buildSpec({
   site,
 })
 await writeFile(`${OUT}/spec.json`, JSON.stringify(spec, null, 2))
-await writeFile(
-  `${OUT}/app.html`,
-  renderApp(spec, { token: 'live-present-and-correct', live: false, flagship: true }),
-)
+const appHtml = renderApp(spec, { token: 'live-present-and-correct', live: false, flagship: true })
+await writeFile(`${OUT}/app.html`, appHtml)
+// The page past the first one, rendered by the same card renderer. No network:
+// this proves the fragment is a real page of the same shop, not a second markup
+// implementation.
+const firstShelf = spec.menu[0]
+const pageTwo = firstShelf
+  ? renderApp(spec, {
+      token: 'live-present-and-correct',
+      live: false,
+      flagship: true,
+      cards: { section: 0, from: 12, count: 24 },
+    })
+  : ''
+await writeFile(`${OUT}/page-2.html`, pageTwo)
 
 /* ------------------------------------------------------------------ checks */
 
@@ -268,6 +283,35 @@ const checks = {
     pagesFailed: report.pagesFailed,
     feedOnlyCount: feedOnly.length,
     pageOnlyCount: pageOnly.length,
+  },
+  '10_paging': {
+    catalogueItems: items.length,
+    firstPaintCards: (appHtml.match(/data-item="\d+-\d+"/g) ?? []).length,
+    firstPaintNote: (appHtml.match(/Showing \d+ of \d+ [a-z]+/) ?? [''])[0],
+    hasMoreControl: /data-more-go="0"/.test(appHtml),
+    pageTwoCards: (pageTwo.match(/data-item="0-\d+"/g) ?? []).length,
+    pageTwoFirstKey: (pageTwo.match(/data-item="0-(\d+)"/) ?? [])[1] ?? '',
+    pageTwoIsFragment: !pageTwo.includes('<html') && !pageTwo.includes('const DATA'),
+    fullCatalogueInPayload: (appHtml.match(/"items":/g) ?? []).length > 0 && items.length > 30,
+  },
+  '11_ids': {
+    itemsWithPrice: items.filter((item) => item.priceEvidence?.method === 'shopify-variant').length,
+    multiOptionItems: variants.length,
+    variantsWithFeedId: variants.reduce(
+      (total, item) => total + (item.variants ?? []).filter((variant) => /^\d+$/.test(variant.id ?? '')).length,
+      0,
+    ),
+    feedVariants: feedProducts.reduce((total, product) => total + product.variants.length, 0),
+    allVariantNamesMatch: variantSample.every((entry) => entry.namesMatch === true),
+    allVariantPricesMatch: variantSample.every((entry) => entry.pricesMatch === true),
+    everySampleSingleSelected: variantSample.every((entry) => entry.selectedCount === 1),
+  },
+  '12_currency_visible': {
+    declared: report.site.currency ?? '',
+    currencySource: report.site.currencyEvidence ?? null,
+    symbolsInApp: [...new Set(appHtml.match(/[£€₹¥]/g) ?? [])],
+    dollarAmountsInApp: (appHtml.match(/\$\s?\d/g) ?? []).length,
+    pricedSample: lowest,
   },
   '9_budget': {
     withinBudget:

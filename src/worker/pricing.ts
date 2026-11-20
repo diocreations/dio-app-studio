@@ -345,9 +345,16 @@ export function money(cents: number): string {
  * source shop and have always used it — fall back to `$`.
  */
 export function moneyForSpec(cents: number, spec: { currency?: string; website?: string }): string {
+  return currencySymbolFor(spec) + amountText(cents)
+}
+
+/** The symbol to print beside an amount in one build. A confirmed currency
+ *  prints its own; an imported shop with none prints nothing; only a generated
+ *  demo build, which has no source shop, falls back to dollars. */
+export function currencySymbolFor(spec: { currency?: string; website?: string }): string {
   const code = (spec.currency ?? '').trim().toUpperCase()
-  if (code && CURRENCY_SYMBOLS[code]) return moneyIn(cents, code)
-  return spec.website ? amountText(cents) : moneyIn(cents, 'USD')
+  if (code && CURRENCY_SYMBOLS[code]) return CURRENCY_SYMBOLS[code]
+  return spec.website ? '' : CURRENCY_SYMBOLS.USD
 }
 
 /** A price shown in whatever currency the customer's own site uses. */
@@ -535,6 +542,31 @@ function sanitizeItemMedia(value: unknown): MenuItem['media'] {
 const MAX_SECTIONS = 40
 const MAX_ITEMS_PER_SECTION = 2000
 
+const MONEY_IN_COPY = /\$\s?\d/
+
+/** Demo offers, minus any that promise a dollar price to a shop that is not a
+ *  dollar shop. A generated demo build keeps the trade's sample copy. */
+function seededOffers(
+  vertical: { offers: { title: string; body: string }[] },
+  currency: string | undefined,
+  imported: boolean,
+) {
+  const dollars = !imported || currency === 'USD'
+  return vertical.offers
+    .filter((offer) => dollars || !MONEY_IN_COPY.test(`${offer.title} ${offer.body}`))
+    .map((offer) => ({ ...offer }))
+}
+
+/** The demo loyalty reward, with its amount left out for other currencies. */
+function seededLoyalty(
+  vertical: { loyalty: { goal: number; reward: string } },
+  currency: string | undefined,
+  imported: boolean,
+): { goal: number; reward: string } {
+  if (!imported || currency === 'USD' || !MONEY_IN_COPY.test(vertical.loyalty.reward)) return { ...vertical.loyalty }
+  return { goal: vertical.loyalty.goal, reward: 'Money off your next visit' }
+}
+
 /** Catalogue edits arrive untyped from the browser or a scraped site and are
  *  clamped here, so a malformed item can never reach a rendered app. */
 export function sanitizeMenu(input: unknown): MenuSection[] {
@@ -606,7 +638,7 @@ function sanitizeVariants(
   input: unknown,
 ): { id?: string; name: string; price: number; currency?: string; selected?: boolean }[] {
   if (!Array.isArray(input)) return []
-  return input.slice(0, 24).flatMap((raw) => {
+  return input.slice(0, 200).flatMap((raw) => {
     const entry = (raw ?? {}) as Record<string, unknown>
     const name = typeof entry.name === 'string' ? entry.name.trim().slice(0, 40) : ''
     const price = Number(entry.price)
@@ -779,8 +811,12 @@ export function buildSpec(input: {
           },
         }
       : {}),
-    offers: vertical.offers.map((offer) => ({ ...offer })),
-    loyalty: { ...vertical.loyalty },
+    // The trade's demo copy prices things in dollars. A shop that charges in
+    // another currency never inherits a dollar figure it did not write, so a
+    // dollar-priced sample offer is left out and a dollar-priced sample reward
+    // becomes a reward without an amount.
+    offers: seededOffers(vertical, currencyCode, Boolean(site.website)),
+    loyalty: seededLoyalty(vertical, currencyCode, Boolean(site.website)),
     sampleContent: {
       menu: importedMenu.length === 0,
       contact: !site.hours?.trim() || !site.phone?.trim() || !site.address?.trim(),

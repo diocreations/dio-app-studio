@@ -1,5 +1,5 @@
 import { stockImageTag } from './flagshipImages'
-import { moneyIn } from './pricing'
+import { moneyForSpec } from './pricing'
 import type { AppSpec, MenuItem } from './types'
 import { verticalFor } from './verticals'
 
@@ -49,8 +49,8 @@ function entries(spec: AppSpec): Entry[] {
   return out
 }
 
-function price(item: MenuItem, currency?: string): string {
-  return item.price > 0 ? moneyIn(item.price, currency) : item.meta || 'On request'
+function price(item: MenuItem, spec: AppSpec): string {
+  return item.price > 0 ? moneyForSpec(item.price, spec) : item.meta || 'On request'
 }
 
 function screen(ctx: CompositionContext, kind: string, fallback: string): string {
@@ -147,7 +147,7 @@ function indexBlock(ctx: CompositionContext, node: { title?: string; text?: stri
     ${rows
       .map(
         ([name, info]) =>
-          `<button type="button" class="cx-row" data-go="${esc(screen(ctx, 'catalog', 'catalog'))}"><span><b>${esc(name)}</b><em>${info.count} ${info.count === 1 ? 'entry' : 'entries'}${info.from ? ` · from ${moneyIn(info.from, spec.currency)}` : ''}</em></span><span aria-hidden="true">→</span></button>`,
+          `<button type="button" class="cx-row" data-go="${esc(screen(ctx, 'catalog', 'catalog'))}"><span><b>${esc(name)}</b><em>${info.count} ${info.count === 1 ? 'entry' : 'entries'}${info.from ? ` · from ${moneyForSpec(info.from, spec)}` : ''}</em></span><span aria-hidden="true">→</span></button>`,
       )
       .join('')}
   </div>`
@@ -164,7 +164,7 @@ function listBlock(ctx: CompositionContext, node: { title?: string; text?: strin
       ${list
         .map(
           (entry) =>
-            `<button type="button" class="cx-card" data-item="${esc(entry.item.id || '')}" data-go="${esc(screen(ctx, 'detail', 'detail'))}"><span class="cx-thumb">${itemVisual(ctx, entry.item, entry.index)}</span><b>${esc(entry.item.name)}</b><em>${esc(price(entry.item, ctx.spec.currency))}</em></button>`,
+            `<button type="button" class="cx-card" data-item="${esc(entry.item.id || '')}" data-go="${esc(screen(ctx, 'detail', 'detail'))}"><span class="cx-thumb">${itemVisual(ctx, entry.item, entry.index)}</span><b>${esc(entry.item.name)}</b><em>${esc(price(entry.item, ctx.spec))}</em></button>`,
         )
         .join('')}
     </div>

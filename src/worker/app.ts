@@ -667,14 +667,38 @@ function moreControl(sectionIndex: number, section: { items: unknown[] }): strin
   </div>`
 }
 
+/** One product's card, in whichever layout this build uses. The catalogue, the
+ *  first page and every later page all come from here, so there is no second
+ *  copy of the markup to keep in step. */
+function catalogCard(ctx: Ctx, sectionIndex: number, itemIndex: number): string {
+  const section = ctx.spec.menu[sectionIndex]
+  const item = section?.items[itemIndex]
+  if (!item) return ''
+  const key = `${sectionIndex}-${itemIndex}`
+  if (ctx.theme.layout === 'grid') {
+    const onlyOne = ctx.spec.menu.reduce((total, one) => total + one.items.length, 0) === 1
+    return itemTile(ctx, item, key, onlyOne)
+  }
+  if (ctx.theme.layout === 'stack') return itemStackCard(ctx, item, key)
+  return (ctx.theme.layout === 'editorial' ? itemRowEditorial : itemRowCompact)(ctx, item, key)
+}
+
+/** A slice of one shelf, used for the shipped first page and for the pages the
+ *  customer asks for later. */
+function catalogCards(ctx: Ctx, sectionIndex: number, from = 0, count = catalogFirst): string {
+  const items = ctx.spec.menu[sectionIndex]?.items ?? []
+  const out: string[] = []
+  for (let index = from; index < Math.min(items.length, from + count); index += 1) {
+    out.push(catalogCard(ctx, sectionIndex, index))
+  }
+  return out.join('')
+}
+
 function catalogBlock(ctx: Ctx): string {
   const { theme, spec } = ctx
   if (!spec.menu.length) return `<div class="empty">The catalogue is being written.</div>`
 
   if (theme.layout === 'grid') {
-    const all = spec.menu.flatMap((section, sectionIndex) =>
-      section.items.map((item, itemIndex) => ({ item, key: `${sectionIndex}-${itemIndex}` })),
-    )
         return `<div class="chips" data-filters>
         <button class="chip on" type="button" data-filter="all" aria-pressed="true">All</button>
         ${spec.menu
@@ -689,12 +713,7 @@ function catalogBlock(ctx: Ctx): string {
           (section, sectionIndex) => `
         <div class="section-block" data-section="${sectionIndex}">
           <div class="sect" id="sec-${sectionIndex}"><span class="label">${esc(section.name)}</span><span class="count">${section.items.length}</span></div>
-          <div class="tiles" data-items="${sectionIndex}">
-            ${section.items
-              .slice(0, catalogFirst)
-              .map((item, itemIndex) => itemTile(ctx, item, `${sectionIndex}-${itemIndex}`, all.length === 1))
-              .join('')}
-          </div>
+          <div class="tiles" data-items="${sectionIndex}">${catalogCards(ctx, sectionIndex)}</div>
           ${moreControl(sectionIndex, section)}
         </div>`,
         )
@@ -717,26 +736,19 @@ function catalogBlock(ctx: Ctx): string {
         (section, sectionIndex) => `
         <div class="section-block" data-section="${sectionIndex}" id="sec-${sectionIndex}">
           <div class="sect"><span class="label">${esc(section.name)}</span><span class="count">${section.items.length}</span></div>
-          <div data-items="${sectionIndex}">${section.items
-            .slice(0, catalogFirst)
-            .map((item, itemIndex) => itemStackCard(ctx, item, `${sectionIndex}-${itemIndex}`))
-            .join('')}</div>
+          <div data-items="${sectionIndex}">${catalogCards(ctx, sectionIndex)}</div>
           ${moreControl(sectionIndex, section)}
         </div>`,
       )
       .join('')}`
   }
 
-  const row = theme.layout === 'editorial' ? itemRowEditorial : itemRowCompact
   return `${filters}${spec.menu
     .map(
       (section, sectionIndex) => `
       <div class="section-block" data-section="${sectionIndex}" id="sec-${sectionIndex}">
         <div class="sect"><span class="label">${esc(section.name)}</span><span class="count">${section.items.length}</span></div>
-        <div data-items="${sectionIndex}">${section.items
-          .slice(0, catalogFirst)
-          .map((item, itemIndex) => row(ctx, item, `${sectionIndex}-${itemIndex}`))
-          .join('')}</div>
+        <div data-items="${sectionIndex}">${catalogCards(ctx, sectionIndex)}</div>
         ${moreControl(sectionIndex, section)}
       </div>`,
     )
@@ -1341,6 +1353,8 @@ export function renderApp(
     flagship?: boolean
     /** Online payment is optional; absent keeps every existing workflow. */
     payments?: { payOrders: boolean; payBookings: boolean; provider?: string }
+    /** Return only one shelf's cards, for a catalogue page past the first. */
+    cards?: { section: number; from: number; count: number }
   },
 ): string {
   const spec: AppSpec = options.editor ? inputSpec : customerSpec(inputSpec)
@@ -1494,6 +1508,10 @@ export function renderApp(
     editor: options.editor === true,
   }
 
+  // A later catalogue page is the same cards as the first, rendered by the same
+  // function; the shell, scripts and catalogue data are not shipped again.
+  if (options.cards) return catalogCards(ctx, options.cards.section, options.cards.from, options.cards.count)
+
   const tabs = doc ? tabsFromDoc(doc) : tabsFor(ctx, shell)
   // The chrome names the screen the way its tab does, so a restored heading
   // reads "Visit" rather than the generic "More".
@@ -1529,7 +1547,6 @@ export function renderApp(
     partyLabel: vocab.partyLabel,
     slots: vocab.slots,
     catalogWord: vocab.catalog.toLowerCase(),
-    itemWord: vocab.item,
     itemWords: pluralWord(vocab.item),
     listingSpecLabel: vocab.listingSpecLabel || 'Included',
     bookTitle: vocab.bookTitle,
@@ -1549,8 +1566,6 @@ export function renderApp(
         : '$',
     currency: (spec.currency ?? '').toUpperCase(),
     imported: Boolean(spec.website),
-    layout: theme.layout,
-    catalogFirst,
     catalogPage,
   }
 
@@ -2164,41 +2179,6 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         '</div></div>'
     }
 
-    // A catalogue card for products added after the first paint. The server
-    // renders the first page of each shelf; these use the same classes, the
-    // product's own photograph and the same price rules, so a loaded page is
-    // indistinguishable from the shipped one.
-    function catalogCard(item, key) {
-      const prices = variantsOf(item).map(function (variant) { return variant.price })
-      const differs = prices.length > 1 && new Set(prices).size > 1
-      const price = differs ? 'From ' + money(Math.min.apply(null, prices)) : item.price > 0 ? money(item.price) : ''
-      const options = differs ? prices.length + ' options' : ''
-      const art = '<span class="thumb m-' + DATA.motif + '">' + pickShot(key, 'photoThumb', item.name, item) +
-        '<span class="mono">' + esc(item.name.slice(0, 1)) + '</span></span>'
-      const save = (extra) => '<button class="save' + (extra ? ' ' + extra : '') + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save ' + esc(item.name) + '" aria-pressed="' + (state.saved[key] ? 'true' : 'false') + '">' + HEART + '</button>'
-      if (DATA.layout === 'grid') {
-        const note = [item.vendor, item.meta, options].filter(Boolean).join(' · ')
-        return '<div class="tile" data-item="' + key + '" role="button" tabindex="0">' + art +
-          save('on-art') +
-          '<div class="body"><div class="name">' + esc(item.name) + '</div>' +
-          (note ? '<div class="tiny dim">' + esc(note) + '</div>' : '') +
-          '<div class="price">' + price + '</div></div>' +
-          '<span class="go" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>'
-      }
-      if (DATA.layout === 'stack') {
-        return '<div class="stack-card" data-item="' + key + '" role="button" tabindex="0">' +
-          '<span class="thumb wide band m-' + DATA.motif + '">' + pickShot(key, 'photoWide', item.name, item) +
-          '<span class="mono">' + esc(DATA.logo || '') + '</span></span>' +
-          '<div class="body"><div class="top"><span class="name">' + esc(item.name) + '</span><span class="price">' + price + '</span></div>' +
-          (item.desc ? '<p>' + esc(item.desc) + '</p>' : '') +
-          '<div class="specs">' + (item.meta ? '<span>' + esc(item.meta) + '</span>' : '') +
-          (item.tag ? '<span>' + esc(item.tag) + '</span>' : '') + '<span>' + esc(DATA.itemWord || 'item') + '</span></div>' +
-          '<div class="foot"><span class="tiny dim">Tap for details</span><span class="foot-tools">' + save('') +
-          '<span class="btn small ghost" style="padding:9px 14px;font-size:12px">View</span></span></div></div></div>'
-      }
-      return itemRow(item, key)
-    }
-
     function updateCatalogCount() {
       const el = $('[data-catalog-count]')
       if (!el) return
@@ -2217,30 +2197,40 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       el.textContent = 'Showing ' + shown + ' of ' + total + ' ' + (DATA.itemWords || 'items')
     }
 
-    function loadMore(button) {
+    // The next page is the same server-rendered cards as the first, fetched as
+    // a fragment: one renderer, no second copy of the markup in this script.
+    async function loadMore(button) {
       const sectionIndex = Number(button.dataset.moreGo)
       const wrap = document.querySelector('[data-more="' + sectionIndex + '"]')
       const host = document.querySelector('[data-items="' + sectionIndex + '"]')
       const menu = DATA.menu[sectionIndex]
-      if (!wrap || !host || !menu) return
-      let shown = Number(wrap.dataset.shown || 0)
+      if (!wrap || !host || !menu || button.disabled) return
+      const shown = Number(wrap.dataset.shown || 0)
       const total = Number(wrap.dataset.total || menu.items.length)
       if (shown >= total) return wrap.remove()
-      const next = Math.min(shown + DATA.catalogPage, total)
-      host.insertAdjacentHTML('beforeend', menu.items.slice(shown, next).map(function (item, offset) {
-        return catalogCard(item, sectionIndex + '-' + (shown + offset))
-      }).join(''))
-      shown = next
-      wrap.dataset.shown = String(shown)
-      if (shown >= total) wrap.remove()
-      else {
-        const label = wrap.querySelector('[data-more-count]')
-        if (label) label.textContent = 'Showing ' + shown + ' of ' + total
-        button.textContent = 'Show ' + Math.min(DATA.catalogPage, total - shown) + ' more'
+      button.disabled = true
+      try {
+        const response = await fetch('/p/' + DATA.token + '/cards/' + sectionIndex + '?from=' + shown + '&count=' + DATA.catalogPage, { headers: { accept: 'text/html' } })
+        if (!response.ok) throw new Error('page')
+        const box = document.createElement('div')
+        box.innerHTML = await response.text()
+        const added = box.children.length
+        while (box.firstElementChild) host.appendChild(box.firstElementChild)
+        wrap.dataset.shown = String(shown + added)
+        if (!added || shown + added >= total) wrap.remove()
+        else {
+          const label = wrap.querySelector('[data-more-count]')
+          if (label) label.textContent = 'Showing ' + (shown + added) + ' of ' + total
+          button.textContent = 'Show ' + Math.min(DATA.catalogPage, total - shown - added) + ' more'
+        }
+        updateCatalogCount()
+        applyHearts()
+        buzz(6)
+      } catch (error) {
+        toast('That page could not be loaded. Try again.')
+      } finally {
+        if (wrap.isConnected) button.disabled = false
       }
-      updateCatalogCount()
-      applyHearts()
-      buzz(6)
     }
 
     function storeKeys(vendor) {

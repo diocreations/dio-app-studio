@@ -1,4 +1,4 @@
-import { BUNDLES, moneyIn, usd, type Quote } from '../pricing'
+import { BUNDLES, moneyForSpec, usd, type Quote } from '../pricing'
 import { SAMPLE_IMPORT, sampleTotals } from '../proof'
 import { VERTICALS, VERTICAL_GROUPS } from '../verticals'
 import { esc, page } from './shell'
@@ -99,7 +99,7 @@ export function marketingPage(): string {
           ${proofPreview
             .map(
               (item) =>
-                `<li>${esc(item.name)} <span class="mono" style="opacity:.7">${moneyIn(item.price, proofSite.currency)}</span></li>`,
+                `<li>${esc(item.name)} <span class="mono" style="opacity:.7">${moneyForSpec(item.price, proofSite)}</span></li>`,
             )
             .join('')}
         </ul>

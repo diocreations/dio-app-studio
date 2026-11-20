@@ -1,5 +1,6 @@
 import type { Project } from '../db'
 import type { PaymentTransactionView } from '../payments/service'
+import { CURRENCY_SYMBOLS } from '../pricing'
 import { esc } from './shell'
 
 /**
@@ -43,8 +44,12 @@ const STATUS_COPY: Record<string, { label: string; heading: string; body: string
 }
 
 function money(amount: number, currency: string): string {
-  const symbol: Record<string, string> = { USD: '$', GBP: '£', EUR: '€', INR: '₹', AUD: 'A$', CAD: 'C$', SGD: 'S$', AED: 'AED ' }
-  return `${symbol[currency] ?? currency + ' '}${(amount / 100).toFixed(2)}`
+  const code = (currency ?? '').toUpperCase()
+  const value = (amount / 100).toFixed(2)
+  const symbol = CURRENCY_SYMBOLS[code]
+  // A currency this app does not know is named in full; an amount with no
+  // currency at all is never dressed up as dollars.
+  return symbol ? `${symbol}${value}` : code ? `${code} ${value}` : value
 }
 
 export function paymentPage(options: {
