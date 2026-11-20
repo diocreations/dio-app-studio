@@ -6,7 +6,10 @@ import type { VerticalId } from './types'
  * garage build are visibly different products, not the same page re-labelled.
  */
 
-export type Layout = 'editorial' | 'grid' | 'rows' | 'stack'
+/** `retail` is a composition, not a skin: a shop's catalogue is one product
+ *  per row on a phone with its own photograph, then columns as the screen
+ *  widens. Only a direction that asks for it uses it. */
+export type Layout = 'editorial' | 'grid' | 'rows' | 'stack' | 'retail'
 export type NavStyle = 'bar' | 'floating' | 'dock'
 /** The shell is the app around the content: which tabs exist, what the header
  *  carries, and how an item opens. Trades that share a shell still differ in

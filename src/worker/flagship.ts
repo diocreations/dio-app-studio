@@ -1632,9 +1632,13 @@ body[data-trade="shop"][data-flagship="1"] .fx-rail { margin-bottom: 25px; }
 body[data-trade="shop"][data-flagship="1"] .fx-shop-head { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 12px; }
 body[data-trade="shop"][data-flagship="1"] .fx-shop-head span { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
 body[data-trade="shop"][data-flagship="1"] .fx-shop-head button { border: 0; background: none; color: inherit; font: inherit; font-size: 10px; opacity: .5; text-decoration: underline; text-underline-offset: 3px; }
-body[data-trade="shop"][data-flagship="1"] .fx-products { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 10px; }
+body[data-trade="shop"][data-flagship="1"] .fx-products { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 14px; align-items: start; }
 body[data-trade="shop"][data-flagship="1"] .fx-product { min-width: 0; cursor: pointer; }
-body[data-trade="shop"][data-flagship="1"] .fx-product .fx-art { width: 100%; aspect-ratio: .78; border-radius: 10px; }
+body[data-trade="shop"][data-flagship="1"] .fx-product .fx-art { width: 100%; aspect-ratio: .78; border-radius: 2px; }
+/* A real product photograph keeps its own shape rather than sitting letterboxed
+   inside a decorative frame. */
+body[data-trade="shop"][data-flagship="1"] .fx-product .fx-art.has-photo { aspect-ratio: auto; background: var(--surface-2); }
+body[data-trade="shop"][data-flagship="1"] .fx-product .fx-art.has-photo > img.fx-photo { position: static; width: 100%; height: auto; object-fit: cover; }
 body[data-trade="shop"][data-flagship="1"] .fx-product:nth-child(2n) .fx-art { background: radial-gradient(115% 95% at 20% 16%, color-mix(in srgb, var(--accent) 40%, transparent), transparent 60%), linear-gradient(165deg, color-mix(in srgb, var(--ink) 14%, var(--bg)), color-mix(in srgb, var(--accent) 22%, var(--bg))); }
 body[data-trade="shop"][data-flagship="1"] .fx-product:nth-child(3n) .fx-art { background: radial-gradient(100% 80% at 84% 78%, color-mix(in srgb, var(--accent) 42%, transparent), transparent 60%), linear-gradient(130deg, color-mix(in srgb, var(--accent) 12%, var(--bg)), color-mix(in srgb, var(--ink) 16%, var(--bg))); }
 body[data-trade="shop"][data-flagship="1"] .fx-product:nth-child(4n) .fx-art { background: linear-gradient(160deg, color-mix(in srgb, var(--ink) 18%, var(--bg)), color-mix(in srgb, var(--accent) 27%, var(--bg)) 58%, color-mix(in srgb, var(--bg) 84%, #fff)); }
@@ -1642,7 +1646,7 @@ body[data-trade="shop"][data-flagship="1"] .fx-product:nth-child(2n) .fx-art i:n
 body[data-trade="shop"][data-flagship="1"] .fx-product:nth-child(3n) .fx-art i:nth-child(2) { width: 64%; height: 64%; right: -18%; bottom: 4%; }
 body[data-trade="shop"][data-flagship="1"] .fx-product:nth-child(4n) .fx-art i:nth-child(3) { width: 38%; height: 38%; right: 18%; top: 28%; transform: rotate(-24deg); border-radius: 50%; }
 body[data-trade="shop"][data-flagship="1"] .fx-product-copy { display: flex; flex-direction: column; gap: 2px; padding: 8px 2px 0; }
-body[data-trade="shop"][data-flagship="1"] .fx-product-copy b { font-size: 11.5px; font-weight: 600; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body[data-trade="shop"][data-flagship="1"] .fx-product-copy b { font-size: 12.5px; font-weight: 600; line-height: 1.3; letter-spacing: -.01em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 body[data-trade="shop"][data-flagship="1"] .fx-product-copy span { font-size: 10.5px; opacity: .5; font-variant-numeric: tabular-nums; }
 body[data-trade="shop"][data-flagship="1"] .fx-wide-link { display: flex; justify-content: space-between; width: 100%; margin-top: 22px; padding: 16px 2px; border: 0; border-top: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); background: none; color: inherit; font: inherit; font-size: 11.5px; font-weight: 600; }
 body[data-trade="shop"][data-flagship="1"] .fx-shop-lead { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; padding: 22px 0 18px; }

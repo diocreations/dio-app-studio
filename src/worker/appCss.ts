@@ -2391,6 +2391,187 @@ body[data-direction="classic"] .app::before { opacity: 0.2; }
 body[data-direction="classic"] .tile { border: 0; border-bottom: 1px solid var(--hair); border-radius: 0; background: transparent; }
 body[data-direction="classic"] .sect .label { font-family: var(--display-serif); font-weight: 500; }
 
+/* ------------------------------------------------------- retail composition */
+/* A shop reads like a shop: a photograph, its name and its price. One piece
+   per row on a phone; columns only when the screen is wide enough to hold
+   two or three properly, never a cramped pair of half-cards. */
+html body[data-layout="retail"] { --retail-pad: clamp(18px, 4vw, 44px); }
+html body[data-layout="retail"] .app::before { display: none; }
+/* The flagship shell is a 520px phone frame for reading on a desk. Retail
+   composes for the whole viewport instead, so the same page is a tablet or a
+   desktop spread rather than a phone floating in space. */
+html body[data-layout="retail"] .app { max-width: none; width: 100%; margin-inline: 0; box-shadow: none; }
+html body[data-layout="retail"] .appbar {
+  padding-inline: max(var(--retail-pad), calc((100vw - 1180px) / 2));
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  border-bottom-color: transparent;
+}
+html body[data-layout="retail"] .appbar .titles { display: none; }
+html body[data-layout="retail"] .appbar .mark,
+html body[data-layout="retail"] .appbar .mark.is-logo { background: transparent; box-shadow: none; border-radius: 0; padding: 0; max-width: 144px; }
+html body[data-layout="retail"] .appbar .mark.is-logo img { height: 22px; max-width: 144px; }
+html body[data-layout="retail"] .appbar .iconbtn { border: 0; background: transparent; box-shadow: none; width: 38px; height: 38px; margin-left: -4px; }
+html body[data-layout="retail"] .appbar .iconbtn svg { width: 19px; height: 19px; }
+html body[data-layout="retail"] .screen { padding-inline: var(--retail-pad); padding-top: 0; }
+html body[data-layout="retail"] .screen > * { max-width: 1180px; }
+html body[data-layout="retail"] .tabbar { justify-content: center; gap: 4px; background: color-mix(in srgb, var(--bg) 88%, transparent); }
+html body[data-layout="retail"] .tab { flex: 0 1 150px; }
+
+/* Shop heading and controls. The heading is the page, not a section label. */
+.shop-head { display: grid; gap: 12px; padding: 24px 0 20px; }
+.shop-head h1 {
+  font-family: var(--display); font-size: clamp(36px, 10vw, 60px); line-height: 0.94;
+  letter-spacing: -0.045em; font-weight: var(--weight); margin: 0;
+}
+.shop-lede { font-size: 14px; line-height: 1.6; color: var(--muted); max-width: 52ch; }
+.shop-tools { display: grid; gap: 4px; padding-bottom: 4px; }
+.shop-search { display: flex; align-items: center; gap: 11px; border-bottom: 1px solid var(--line); }
+.shop-search svg { width: 17px; height: 17px; flex: 0 0 auto; opacity: 0.55; }
+.shop-search input {
+  flex: 1; min-width: 0; border: 0; background: none; padding: 15px 0; font-size: 16px;
+  color: var(--ink); outline: none;
+}
+.shop-search input::placeholder { color: var(--muted); }
+.shop-clear { width: 40px; height: 40px; display: grid; place-items: center; color: var(--muted); margin-right: -8px; }
+.shop-clear svg { width: 13px; height: 13px; opacity: 1; }
+.shop-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 10px 0 2px; }
+.shop-count { font-size: 10.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.shop-sort { position: relative; display: inline-flex; align-items: center; gap: 9px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.shop-sort span { opacity: 0.8; }
+.shop-sort::after {
+  content: ""; position: absolute; right: 3px; top: 50%; margin-top: -2px; pointer-events: none;
+  border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid var(--muted);
+}
+.shop-sort select {
+  appearance: none; -webkit-appearance: none; border: 0; background: none; color: var(--ink);
+  font: inherit; font-size: 12px; letter-spacing: 0.01em; text-transform: none; padding: 8px 18px 8px 0;
+}
+.shop-status { min-height: 18px; font-size: 12px; color: var(--muted); padding-top: 4px; }
+.shop-empty { padding: 54px 0 40px; display: grid; gap: 8px; justify-items: start; max-width: 44ch; }
+.shop-empty b { font-family: var(--display); font-size: 20px; font-weight: var(--weight); letter-spacing: var(--tracking); }
+.shop-empty p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.shop-empty .btn { margin-top: 6px; }
+.shop-more { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 34px 0 6px; }
+.shop-browse {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%;
+  margin: 34px 0 6px; padding: 18px 0; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+}
+.shop-browse svg { width: 15px; height: 15px; }
+
+/* Categories are text and a rule, not a row of pills. */
+html body[data-layout="retail"] .chips { flex-wrap: nowrap; overflow-x: auto; gap: 0; border-bottom: 1px solid var(--hair); padding: 2px 0 0; }
+html body[data-layout="retail"] .chip {
+  border: 0; border-radius: 0 !important; background: none; box-shadow: none; padding: 12px 0 11px;
+  margin-right: 24px; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: -1px; position: relative;
+}
+/* The document's control shape is applied with !important after this sheet,
+   so the composition states its own square edge at the same weight. */
+html body[data-layout="retail"] .chips > .chip { border-radius: 0 !important; }
+/* The selected category is marked by a rule under the word itself. */
+html body[data-layout="retail"] .chip.on { background: none; color: var(--ink); box-shadow: none; }
+html body[data-layout="retail"] .chip.on::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--ink);
+}
+html body[data-layout="retail"] .sect { margin: 56px 0 22px; }
+.shop-list .section-block:first-child .sect { margin-top: 22px; }
+html body[data-layout="retail"] .sect .label { font-size: 10px; letter-spacing: 0.2em; }
+html body[data-layout="retail"] .sect .count { background: none; border: 0; padding: 0; color: var(--muted); font-size: 10.5px; }
+html body[data-layout="retail"] .more { padding: 26px 0 0; }
+
+/* The product itself. */
+.rl-grid { display: grid; grid-template-columns: 1fr; gap: 46px 30px; align-items: start; }
+@media (min-width: 720px) { .rl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 58px 34px; } }
+@media (min-width: 1080px) { .rl-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 66px 42px; } }
+.rl-grid.is-home { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 16px; }
+@media (min-width: 1080px) { .rl-grid.is-home { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 30px 22px; } }
+/* The curated home shelf is a 2-up on a phone; on a wide screen that would
+   make each photograph a poster, so it opens out into a four-panel run. */
+@media (min-width: 1080px) {
+  html body[data-layout="retail"] .fx-products { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 44px 26px !important; }
+}
+
+/* The bar is part of the page on a desktop, not a floating phone dock. */
+html body[data-layout="retail"] .tabbar { background: var(--bg) !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+.rl-card { display: flex; flex-direction: column; min-width: 0; background: none; border: 0; cursor: pointer; }
+.rl-media {
+  position: relative; display: block; margin: 0; overflow: hidden; background: var(--surface-2);
+  border-radius: 0;
+}
+.rl-media .rl-photo, .rd-media .rl-photo {
+  position: relative; z-index: 1; display: block; width: 100%; height: auto; background: var(--surface-2);
+  transition: transform 0.6s var(--ease);
+}
+.rl-card:active .rl-photo { transform: scale(0.996); }
+.rl-media.is-empty { aspect-ratio: 4 / 5; }
+.rd-media.is-empty { aspect-ratio: 4 / 5; }
+/* The fallback sits underneath the photograph. It is shown when there is no
+   photograph at all, and when a source image stops loading mid-session. */
+.rl-absent {
+  display: grid; place-items: center; position: absolute; inset: 0; padding: 18px;
+  color: var(--muted); font-size: 9.5px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  text-align: center;
+}
+.rl-save {
+  position: absolute; top: 10px; right: 10px; z-index: 2; width: 36px; height: 36px;
+  border-radius: 999px; background: color-mix(in srgb, var(--bg) 86%, transparent);
+  color: var(--ink); border: 0; box-shadow: none; backdrop-filter: blur(10px);
+}
+.rl-save svg { width: 16px; height: 16px; }
+.rl-copy { display: grid; gap: 7px; padding: 15px 0 0; }
+/* In the shop the section heading already names the category; a second copy
+   on every card is noise. Home's shelf keeps it. */
+.shop-list .rl-kicker { display: none; }
+.rl-kicker { font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+.rl-title { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.rl-title h3 {
+  font-family: var(--display); font-size: clamp(19px, 4.6vw, 23px); line-height: 1.16;
+  letter-spacing: -0.028em; font-weight: var(--weight); margin: 0;
+}
+.rl-price { font-family: var(--price-font); font-size: 13.5px; font-weight: 650; letter-spacing: -0.01em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rl-desc {
+  font-size: 12.5px; line-height: 1.58; color: var(--muted);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.rl-option { font-size: 9.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+/* Home's collections, as an index rather than another shelf. */
+.rl-cats { display: grid; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .rl-cats { grid-template-columns: 1fr 1fr; column-gap: 40px; } }
+.rl-cat { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding: 15px 0; border-bottom: 1px solid var(--hair); text-align: left; }
+.rl-cat span { font-family: var(--display); font-size: 16px; letter-spacing: -0.015em; }
+.rl-cat em { font-style: normal; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Product detail: photograph first, then the object's own words. */
+html body[data-layout="retail"] .screen.is-detail { padding-inline: 0; }
+.rd-media { position: relative; margin: 0; background: var(--surface-2); }
+.rd-copy { display: flex; flex-direction: column; flex: 1 1 auto; padding: 26px var(--retail-pad) 0; max-width: 760px; margin-inline: auto; width: 100%; }
+.rd-copy h1 { font-family: var(--display); font-size: clamp(28px, 7.4vw, 44px); line-height: 1.06; letter-spacing: -0.035em; margin: 8px 0 12px; }
+.rd-line { display: flex; align-items: baseline; gap: 14px; }
+.rd-price { font-size: 19px; letter-spacing: -0.02em; }
+.rd-copy .lede { font-size: 14px; line-height: 1.7; color: var(--muted); margin-top: 16px; max-width: 58ch; }
+.rd-meta { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 12px; }
+.rd-copy .variants { margin-top: 26px; }
+.rd-copy .detail-cta {
+  position: sticky; bottom: 0; z-index: 4; margin: 26px 0 0; padding: 16px 0 calc(18px + env(safe-area-inset-bottom));
+  background: var(--bg); border-top: 1px solid var(--hair); display: flex; align-items: center; gap: 14px;
+}
+.rd-copy .detail-cta .detail-cta-line { flex: 1; min-width: 0; }
+/* The chooser above already names the selected option; the imported meta
+   label can read as a stray word beside the price. */
+.rd-copy .detail-cta-line .tiny { display: none; }
+.rd-copy .recs { padding-bottom: 8px; }
+.rd-copy .detail-cta .btn { flex: 0 0 auto; }
+html body[data-layout="retail"] .detail-save { top: 14px; right: var(--retail-pad); }
+
+@media (min-width: 900px) {
+  html body[data-layout="retail"] .screen.is-detail > [data-detail-body] { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); align-items: start; }
+  html body[data-layout="retail"] .screen.is-detail > [data-detail-body] .rd-media { position: sticky; top: 0; }
+  .rd-copy { padding-top: 54px; }
+  html body[data-layout="retail"] .screen.is-detail .detail-gap { display: none; }
+}
+
 /* A visible keyboard focus ring, independent of each composition's button skin. */
 button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [tabindex]:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
   outline: 2px solid var(--accent); outline-offset: 2px;

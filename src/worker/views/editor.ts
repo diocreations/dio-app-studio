@@ -9,11 +9,41 @@ import { esc } from './shell'
  * posts the whole shared document; the server normalises it, and both this
  * preview and the published PWA render from it.
  */
+/**
+ * The sample notice belongs to what actually remains an example. An imported
+ * shop's catalogue and photographs are the owner's, so a banner must not call
+ * them examples just because a trade-default offer or phone number is still
+ * there. Nothing is hidden: whatever is still sample is named.
+ */
+export function sampleNotice(sample: Project['spec']['sampleContent']): {
+  groups: string[]
+  menu: boolean
+  text: string
+} | null {
+  if (!sample) return null
+  const groups = [
+    sample.menu ? 'catalogue and prices' : '',
+    sample.offers ? 'offers' : '',
+    sample.story ? 'about text' : '',
+    sample.tagline ? 'tagline' : '',
+    sample.contact ? 'contact details' : '',
+    sample.team ? 'team profiles' : '',
+    sample.staff ? 'staff names' : '',
+  ].filter(Boolean)
+  if (!groups.length) return null
+  return {
+    groups,
+    menu: sample.menu === true,
+    text: sample.menu
+      ? 'The catalogue, prices and photographs below are examples — replace anything that is not yours.'
+      : `Sample ${groups.join(', ')} remain. Your catalogue, prices and photographs are your own.`,
+  }
+}
+
 export function editorPage(options: { project: Project; doc: Doc; origin: string }): string {
   const { project, doc, origin } = options
   const token = project.token
-  const sample = project.spec.sampleContent
-  const hasSample = sample ? Object.values(sample).some(Boolean) : true
+  const notice = sampleNotice(project.spec.sampleContent)
   const json = JSON.stringify(doc).replace(/</g, '\\u003c')
   const directions = directionsFor(project.spec.vertical).map((entry) => ({
     id: entry.id,
@@ -318,7 +348,7 @@ button { cursor: pointer; }
         <button class="btn" id="aiRun">Preview</button>
       </div>
     </div>
-    ${hasSample ? `<div class="sample-note" id="sampleNote"><b>Sample</b><span>Generated menus, prices, photos and details are examples — replace anything that is not yours.</span><button type="button" id="sampleEdit">Items &amp; prices</button><a href="/p/${esc(token)}/dashboard">Details</a></div>` : ''}
+    ${notice ? `<div class="sample-note" id="sampleNote"><b>Sample</b><span>${esc(notice.text)}</span>${notice.menu ? `<button type="button" id="sampleEdit">Items &amp; prices</button>` : ''}<a href="/p/${esc(token)}/dashboard">Details</a></div>` : ''}
     <div class="aibar" id="aiBar">
       <p id="aiSummary"></p>
       <button class="btn" id="aiDiscard">Discard</button>

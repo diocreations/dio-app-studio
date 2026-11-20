@@ -103,6 +103,15 @@ const EDITORIAL: Archetype = {
   options: { variant: 1, density: 'roomy', cards: 'soft', buttons: 'soft', nav: 'floating' },
 }
 
+/** Retail's editorial composition: the same typographic argument as EDITORIAL,
+ *  with its own catalogue structure. It is offered to trades that sell objects
+ *  (a shop, an online store), never forced on a menu or a price list. */
+const RETAIL: Archetype = {
+  ...EDITORIAL,
+  theme: { ...EDITORIAL.theme, layout: 'retail', tracking: '-0.024em' },
+  options: { ...EDITORIAL.options, density: 'roomy' },
+}
+
 const MODERN: Archetype = {
   theme: {
     layout: 'grid',
@@ -345,7 +354,7 @@ export const DIRECTIONS: Record<VerticalId, Direction[]> = {
   ],
   shop: [
     direction('minimal', 'Minimal boutique', 'Hairlines, list rows, quiet type', MINIMAL),
-    direction('editorial', 'Gallery retail', 'Large imagery, editorial pacing', EDITORIAL),
+    direction('editorial', 'Gallery retail', 'One piece per row, large imagery, editorial pacing', RETAIL),
     direction('lifestyle', 'Contemporary lifestyle', 'Soft, photographic, roomy', LIFESTYLE),
   ],
   salon: [
@@ -400,7 +409,7 @@ export const DIRECTIONS: Record<VerticalId, Direction[]> = {
   ],
   ecommerce: [
     direction('minimal', 'Minimal commerce', 'Product grid, no noise', MINIMAL),
-    direction('editorial', 'Boutique commerce', 'Lookbook pacing, large media', EDITORIAL),
+    direction('editorial', 'Boutique commerce', 'Lookbook pacing, large media, one piece per row', RETAIL),
     direction('lifestyle', 'Contemporary lifestyle', 'Soft colour, rounded cards', LIFESTYLE),
   ],
   'plants-indoor': [

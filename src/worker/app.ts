@@ -554,7 +554,9 @@ function itemRowCompact(ctx: Ctx, item: MenuItem, key: string): string {
  *  fails, the generated artwork underneath stays visible. */
 function sitePhoto(image: NonNullable<MenuItem['image']>, kind: 'wide' | 'thumb', alt = ''): string {
   const sizes = kind === 'wide' ? '100vw' : '(max-width: 620px) 38vw, 200px'
-  return `<img class="photo" src="${esc(image.url)}" sizes="${sizes}" alt="${esc(image.alt || alt)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:cover" onerror="this.remove()" />`
+  const fit = image.fit === 'contain' ? 'contain' : 'cover'
+  const position = `${image.positionX ?? 50}% ${image.positionY ?? 50}%`
+  return `<img class="photo" src="${esc(image.url)}" sizes="${sizes}" alt="${esc(image.alt || alt)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:${fit};object-position:${position}" onerror="this.remove()" />`
 }
 
 /** The same thumb, with a photo on top when this build uses photography. An
@@ -610,6 +612,103 @@ function itemStackCard(ctx: Ctx, item: MenuItem, key: string): string {
         <span class="tiny dim">Tap for details</span>
         <span class="foot-tools">${saveButton(key, item.name)}<span class="btn small ghost" style="padding:9px 14px;font-size:12px">View</span></span>
       </div>
+    </div>
+  </div>`
+}
+
+/** The shop's own photograph for a product, shown at the photograph's own
+ *  shape. Nothing stock and nothing borrowed: an item without a photograph
+ *  gets a quiet blank frame, never decorative artwork that could be mistaken
+ *  for the product. */
+function retailShot(ctx: Ctx, item: MenuItem, alt: string): string {
+  if (item.media) return itemPhoto(ctx, item.media, 'wide', alt)
+  if (item.image) {
+    const fit = item.image.fit === 'contain' ? 'contain' : 'cover'
+    const position = `${item.image.positionX ?? 50}% ${item.image.positionY ?? 50}%`
+    return `<img class="rl-photo" src="${esc(item.image.url)}" alt="${esc(item.image.alt || alt)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:${fit};object-position:${position}" onerror="this.parentElement.classList.add('is-empty');this.remove()" />`
+  }
+  return ''
+}
+
+/** One product in the retail composition: the photograph leads, the name and
+ *  price sit underneath without a card border or a boxed price tag. */
+function retailCard(ctx: Ctx, sectionIndex: number, itemIndex: number): string {
+  const section = ctx.spec.menu[sectionIndex]
+  const item = section?.items[itemIndex]
+  if (!item) return ''
+  const key = `${sectionIndex}-${itemIndex}`
+  const shot = retailShot(ctx, item, item.name)
+  const options = optionCount(item)
+  return `<article class="rl-card" data-item="${key}" role="button" tabindex="0" aria-label="${esc(item.name)}">
+    <figure class="rl-media${shot ? '' : ' is-empty'}">${shot}<span class="rl-absent" aria-hidden="true"><span>Photograph to come</span></span>${saveButton(key, item.name, ' rl-save')}</figure>
+    <div class="rl-copy">
+      <span class="rl-kicker">${esc(section.name)}</span>
+      <div class="rl-title"><h3>${esc(item.name)}</h3><span class="rl-price">${priceFrom(item, ctx.spec)}</span></div>
+      ${item.desc ? `<p class="rl-desc">${esc(item.desc)}</p>` : ''}
+      ${options ? `<span class="rl-option">${esc(options)}</span>` : ''}
+    </div>
+  </article>`
+}
+
+/** The Shop destination: its own heading, live search, the trade's categories,
+ *  a count and a sort, then the catalogue. Home keeps the curated shelf; this
+ *  is the place to browse everything. */
+function retailShop(ctx: Ctx): string {
+  const { spec, vocab } = ctx
+  const total = spec.menu.reduce((sum, section) => sum + section.items.length, 0)
+  const sections = spec.menu.filter((section) => section.items.length)
+  if (!sections.length) return `<div class="shop"><div class="empty">The catalogue is being written.</div></div>`
+  const words = pluralWord(vocab.item)
+  return `<div class="shop">
+    <header class="shop-head">
+      <span class="eyebrow">The collection</span>
+      <h1>${esc(vocab.catalog)}</h1>
+      ${spec.tagline ? `<p class="shop-lede">${esc(spec.tagline)}</p>` : ''}
+    </header>
+    <div class="shop-tools">
+      <div class="shop-search">
+        ${icon('search')}
+        <input type="text" inputmode="search" autocomplete="off" data-shop-search placeholder="Search ${total} ${esc(words)}" aria-label="Search the ${esc(vocab.catalog.toLowerCase())}" />
+        <button type="button" class="shop-clear" data-shop-clear aria-label="Clear search" hidden>${icon('close')}</button>
+      </div>
+      <div class="shop-row">
+        <span class="shop-count" data-shop-count>${total} ${esc(words)}</span>
+        <label class="shop-sort"><span>Sort</span>
+          <select data-shop-sort aria-label="Sort the ${esc(vocab.catalog.toLowerCase())}">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price, low to high</option>
+            <option value="price-desc">Price, high to low</option>
+            <option value="name">A–Z</option>
+          </select>
+        </label>
+      </div>
+      <div class="chips" data-filters>
+        <button class="chip on" type="button" data-filter="all" aria-pressed="true">All</button>
+        ${sections
+          .map(
+            (section, index) =>
+              `<button class="chip" type="button" data-filter="${index}" aria-pressed="false">${esc(section.name)}</button>`,
+          )
+          .join('')}
+      </div>
+      <p class="shop-status" data-shop-status aria-live="polite"></p>
+    </div>
+    <div class="shop-list" data-shop-list>
+      ${sections
+        .map(
+          (section, sectionIndex) => `
+        <div class="section-block" data-section="${sectionIndex}" id="sec-${sectionIndex}">
+          <div class="sect"><span class="label">${esc(section.name)}</span><span class="count">${section.items.length}</span></div>
+          <div class="rl-grid" data-items="${sectionIndex}">${catalogCards(ctx, sectionIndex)}</div>
+          ${moreControl(sectionIndex, section)}
+        </div>`,
+        )
+        .join('')}
+    </div>
+    <div class="shop-empty" data-shop-empty hidden>
+      <b>Nothing matches that search.</b>
+      <p>Try another word, or clear the search to see the whole collection.</p>
+      <button class="btn ghost small" type="button" data-shop-clear>Clear search</button>
     </div>
   </div>`
 }
@@ -675,6 +774,7 @@ function catalogCard(ctx: Ctx, sectionIndex: number, itemIndex: number): string 
   const item = section?.items[itemIndex]
   if (!item) return ''
   const key = `${sectionIndex}-${itemIndex}`
+  if (ctx.theme.layout === 'retail') return retailCard(ctx, sectionIndex, itemIndex)
   if (ctx.theme.layout === 'grid') {
     const onlyOne = ctx.spec.menu.reduce((total, one) => total + one.items.length, 0) === 1
     return itemTile(ctx, item, key, onlyOne)
@@ -704,6 +804,16 @@ function catalogCards(ctx: Ctx, sectionIndex: number, from = 0, count = catalogF
 function catalogBlock(ctx: Ctx): string {
   const { theme, spec } = ctx
   if (!spec.menu.length) return `<div class="empty">The catalogue is being written.</div>`
+  // Hitting an editor component called "featured" on a retail build shows the
+  // first pieces, never a second copy of the Shop destination.
+  if (theme.layout === 'retail') {
+    const cards = spec.menu
+      .flatMap((section, sectionIndex) => section.items.map((_, itemIndex) => ({ sectionIndex, itemIndex })))
+      .slice(0, 4)
+      .map((entry) => retailCard(ctx, entry.sectionIndex, entry.itemIndex))
+      .join('')
+    return `<div class="rl-grid is-home">${cards}</div>`
+  }
 
   if (theme.layout === 'grid') {
         return `<div class="chips" data-filters>
@@ -991,6 +1101,35 @@ function homeBlock(ctx: Ctx): string {
     visit: hoursBlock(ctx),
     story: storyBlock(ctx),
   })
+
+  if (theme.layout === 'retail') {
+    const newIn = featured.slice(0, 4)
+    const categories = spec.menu.filter((section) => section.items.length)
+    const shelf = newIn.length
+      ? `<div class="sect"><span class="label">${esc(sectionTitle(ctx, 'featured', 'New in'))}</span><span class="tiny dim">${featured.length} ${esc(pluralWord(ctx.vocab.item))}</span></div>
+         <div class="rl-grid is-home">${newIn
+           .map((entry) => {
+             const [sectionIndex, itemIndex] = entry.key.split('-').map(Number)
+             return retailCard(ctx, sectionIndex, itemIndex)
+           })
+           .join('')}</div>
+         <button class="shop-browse" type="button" data-go="catalog"><span>Browse the whole ${esc(ctx.vocab.catalog.toLowerCase())}</span>${icon('chevron')}</button>`
+      : ''
+    const collections = categories.length > 1
+      ? `<div class="sect"><span class="label">Collections</span><span class="count">${categories.length}</span></div>
+         <div class="rl-cats">${categories
+           .slice(0, 8)
+           .map(
+             (section, index) =>
+               `<button class="rl-cat" type="button" data-jump="${index}"><span>${esc(section.name)}</span><em>${section.items.length}</em></button>`,
+           )
+           .join('')}</div>`
+      : ''
+    return `${heroSection(ctx, cover(ctx, [spec.hours.split('·')[0], spec.address]))}
+      ${actions(ctx)}
+      ${orderedHome(ctx, blocks(shelf + collections))}
+      ${coda}`
+  }
 
   if (theme.layout === 'editorial') {
     const selected = `<div class="sect"><span class="label">${esc(sectionTitle(ctx, 'featured', 'Selected'))}</span><span class="tiny dim">${esc(ctx.vocab.catalog)}</span></div>
@@ -1554,7 +1693,11 @@ export function renderApp(
     partyLabel: vocab.partyLabel,
     slots: vocab.slots,
     catalogWord: vocab.catalog.toLowerCase(),
+    itemWord: vocab.item,
     itemWords: pluralWord(vocab.item),
+    // The retail composition asks the browser for its own search, sort and
+    // paging; every other layout keeps the section controls it was built with.
+    retail: theme.layout === 'retail',
     listingSpecLabel: vocab.listingSpecLabel || 'Included',
     bookTitle: vocab.bookTitle,
     quoteTitle: vocab.quoteTitle,
@@ -1634,21 +1777,27 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
     <main class="screens">
       <section class="screen${initial === 'home' ? ' on' : ''}" data-screen="home" data-title="${esc(spec.name)}">
-        ${flagship
-          ? flagshipHome(ctx)
-          : `<div>
+        ${
+          flagship
+            ? flagshipHome(ctx)
+            : `<div>
                ${shellOpener(ctx, shell)}
                ${homeBlock(ctx)}
-             </div>`}
+             </div>`
+        }
       </section>
 
       <section class="screen${initial === 'catalog' ? ' on' : ''}" data-screen="catalog" data-title="${esc(vocab.catalog)}">
-        ${flagship ? flagshipCatalogLead(spec) : ''}
+        ${
+          theme.layout === 'retail'
+            ? retailShop(ctx)
+            : `${flagship ? flagshipCatalogLead(spec) : ''}
         ${shell === 'menu' ? menuMasthead(ctx) : ''}
         <div class="sect" style="margin-top:4px"><span class="label">${esc(vocab.catalog)}</span><span class="count">${spec.menu.reduce((total, section) => total + section.items.length, 0)}</span></div>
         <div class="tiny dim" data-catalog-count>Showing ${spec.menu.reduce((total, section) => total + Math.min(catalogFirst, section.items.length), 0)} of ${spec.menu.reduce((total, section) => total + section.items.length, 0)} ${esc(pluralWord(vocab.item))}</div>
         ${storesBlock(ctx)}
-        ${catalogBlock(ctx)}
+        ${catalogBlock(ctx)}`
+        }
       </section>
 
       <section class="screen" data-screen="search" data-title="Search">
@@ -2078,6 +2227,28 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       return ''
     }
 
+    // The retail product page: the photograph at its own shape, then the name,
+    // price, words and options. No boxed card, no monogram over the product.
+    function retailDetailHtml(item, key, price, chosen, picker, footer) {
+      const shot = retailShotHtml(item)
+      const section = DATA.menu[Number(String(key).split('-')[0])]
+      const save = '<button class="save rl-save detail-save' + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save">' + HEART + '</button>'
+      const prices = variantsOf(item).map(function (variant) { return variant.price })
+      const options = prices.length > 1 ? prices.length + ' options' : ''
+      return '<figure class="rd-media' + (shot ? '' : ' is-empty') + '">' + shot + '<span class="rl-absent" aria-hidden="true"><span>Photograph to come</span></span>' + save + '</figure>' +
+        '<div class="rd-copy">' +
+        '<span class="eyebrow">' + esc(section ? section.name : DATA.catalogWord) + '</span>' +
+        '<h1>' + esc(item.name) + '</h1>' +
+        '<div class="rd-line"><span class="rd-price price" data-unit-price>' + price + '</span>' + (options ? '<span class="tiny dim">' + esc(options) + '</span>' : '') + '</div>' +
+        (item.desc ? '<p class="lede">' + esc(item.desc) + '</p>' : '') +
+        (item.meta ? '<p class="rd-meta">' + esc(item.meta) + '</p>' : '') +
+        picker +
+        recsHtml(key) +
+        '<div class="detail-gap" aria-hidden="true"></div>' +
+        footer +
+        '</div>'
+    }
+
     function openDetail(key, record) {
       const item = itemFor(key)
       if (!item) return
@@ -2096,8 +2267,10 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           : DATA.quoting
             ? '<div class="detail-cta"><button class="btn accent block" type="button" data-go="quote">' + DATA.quoteTitle + '</button></div>'
             : ''
-      const shellDetail = detailHtml(item, key, price)
-      const withPicker = shellDetail && picker
+      const shellDetail = DATA.retail
+        ? retailDetailHtml(item, key, price, chosen, picker, footer)
+        : detailHtml(item, key, price)
+      const withPicker = shellDetail && picker && !DATA.retail
         ? shellDetail.replace('<div class="detail-gap"', picker + '<div class="detail-gap"')
         : shellDetail
       host.innerHTML = withPicker ||
@@ -2381,8 +2554,149 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         block.hidden = next !== 'all' && block.dataset.section !== next
       })
       updateCatalogCount()
+      // The retail shop keeps one list, so its filter is applied by rebuilding
+      // that list rather than hiding a block the rebuild replaced.
+      if (DATA.retail) renderRetail(true)
       if (!silent) buzz(6)
     }
+
+    /* ------------------------------------------------------------ retail shop */
+    // The Shop destination has its own search, sort and paging over the same
+    // catalogue the server shipped. Everything is read from DATA.menu; nothing
+    // is invented and no product is fetched from somewhere else.
+    const retailHost = $('[data-shop-list]')
+    const retailInitial = retailHost ? retailHost.innerHTML : ''
+    const retailSearch = $('[data-shop-search]')
+    const retailSortSelect = $('[data-shop-sort]')
+    const retailEmpty = $('[data-shop-empty]')
+    const retailStatus = $('[data-shop-status]')
+    const retailCount = $('[data-shop-count]')
+    const RETAIL_PAGE = 24
+    let retailLimit = RETAIL_PAGE
+    const pieces = (count) => count + ' ' + (count === 1 ? DATA.itemWord || 'item' : DATA.itemWords)
+
+    function retailShotHtml(item) {
+      if (item && item.media && item.media.id) {
+        const base = '/p/' + DATA.token + '/media/' + item.media.id
+        return '<img class="rl-photo" src="' + base + '/640.webp" srcset="' + base + '/320.webp 320w, ' + base + '/640.webp 640w, ' + base + '/1280.webp 1280w" sizes="(max-width: 719px) 92vw, (max-width: 1099px) 44vw, 30vw" alt="' + esc((item.media.alt || item.name)) + '" loading="lazy" decoding="async" style="object-fit:' + (item.media.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (item.media.focalX ?? 50) + '% ' + (item.media.focalY ?? 50) + '%" onerror="this.remove()" />'
+      }
+      if (item && item.image && item.image.url) {
+        return '<img class="rl-photo" src="' + esc(item.image.url) + '" alt="' + esc(item.image.alt || item.name) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:' + (item.image.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (item.image.positionX ?? 50) + '% ' + (item.image.positionY ?? 50) + '%" onerror="this.remove()" />'
+      }
+      return ''
+    }
+
+    function retailPrice(item) {
+      const prices = variantsOf(item).map(function (variant) { return variant.price })
+      const differs = prices.length > 1 && new Set(prices).size > 1
+      if (differs) return 'From ' + money(Math.min.apply(null, prices))
+      return item.price > 0 ? money(item.price) : ''
+    }
+
+    // The browser's copy of the server's card. It exists because sorting and
+    // searching have to redraw the list from the whole catalogue; the class
+    // names and data hooks are the same, so every delegated action still works.
+    function retailCardHtml(entry) {
+      const item = entry.item
+      const key = entry.key
+      const section = DATA.menu[Number(key.split('-')[0])]
+      const shot = retailShotHtml(item)
+      const prices = variantsOf(item).map(function (variant) { return variant.price })
+      const options = prices.length > 1 ? prices.length + ' options' : ''
+      return '<article class="rl-card" data-item="' + key + '" role="button" tabindex="0" aria-label="' + esc(item.name) + '">' +
+        '<figure class="rl-media' + (shot ? '' : ' is-empty') + '">' + shot + '<span class="rl-absent" aria-hidden="true"><span>Photograph to come</span></span>' +
+        '<button class="save rl-save' + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save ' + esc(item.name) + '" aria-pressed="' + (state.saved[key] ? 'true' : 'false') + '">' + HEART + '</button></figure>' +
+        '<div class="rl-copy"><span class="rl-kicker">' + esc(section ? section.name : DATA.catalogWord) + '</span>' +
+        '<div class="rl-title"><h3>' + esc(item.name) + '</h3><span class="rl-price">' + retailPrice(item) + '</span></div>' +
+        (item.desc ? '<p class="rl-desc">' + esc(item.desc) + '</p>' : '') +
+        (options ? '<span class="rl-option">' + esc(options) + '</span>' : '') +
+        '</div></article>'
+    }
+
+    function retailEntries() {
+      const query = retailSearch ? retailSearch.value.trim().toLowerCase() : ''
+      const chip = document.querySelector('[data-filters] .chip.on')
+      const filter = chip ? chip.dataset.filter : 'all'
+      const out = []
+      DATA.menu.forEach(function (section, sectionIndex) {
+        if (filter !== 'all' && String(sectionIndex) !== filter) return
+        section.items.forEach(function (item, itemIndex) {
+          if (query) {
+            const hay = [item.name, item.desc, item.tag, item.meta, section.name].join(' ').toLowerCase()
+            if (hay.indexOf(query) < 0) return
+          }
+          out.push({ item: item, key: sectionIndex + '-' + itemIndex })
+        })
+      })
+      return out
+    }
+
+    function renderRetail(reset) {
+      if (!DATA.retail || !retailHost) return
+      if (reset) retailLimit = RETAIL_PAGE
+      const query = retailSearch ? retailSearch.value.trim() : ''
+      const sort = retailSortSelect ? retailSortSelect.value : 'featured'
+      const chip = document.querySelector('[data-filters] .chip.on')
+      const filter = chip ? chip.dataset.filter : 'all'
+      const total = DATA.menu.reduce(function (sum, section) { return sum + section.items.length }, 0)
+      const clearButton = document.querySelector('.shop-clear')
+      if (clearButton) clearButton.hidden = !query
+      if (retailStatus) retailStatus.textContent = ''
+      if (!query && filter === 'all' && sort === 'featured') {
+        retailHost.innerHTML = retailInitial
+        retailHost.hidden = false
+        if (retailEmpty) retailEmpty.hidden = true
+        if (retailCount) retailCount.textContent = pieces(total)
+        applyHearts()
+        return
+      }
+      const entries = retailEntries()
+      if (sort === 'price-asc' || sort === 'price-desc') {
+        entries.sort(function (a, b) {
+          return sort === 'price-asc' ? a.item.price - b.item.price : b.item.price - a.item.price
+        })
+      } else if (sort === 'name') {
+        entries.sort(function (a, b) { return a.item.name.localeCompare(b.item.name) })
+      }
+      const slice = entries.slice(0, retailLimit)
+      retailHost.innerHTML = slice.length
+        ? '<div class="rl-grid">' + slice.map(retailCardHtml).join('') + '</div>' +
+          (entries.length > slice.length
+            ? '<div class="shop-more"><button class="btn ghost small" type="button" data-retail-more>Show ' + Math.min(RETAIL_PAGE, entries.length - slice.length) + ' more</button><span class="tiny dim">' + slice.length + ' of ' + entries.length + '</span></div>'
+            : '')
+        : ''
+      retailHost.hidden = slice.length === 0
+      if (retailEmpty) retailEmpty.hidden = slice.length > 0
+      if (retailCount) retailCount.textContent = pieces(entries.length)
+      if (retailStatus) {
+        if (query) {
+          retailStatus.textContent = entries.length
+            ? entries.length + ' result' + (entries.length === 1 ? '' : 's') + ' for \u201c' + query + '\u201d'
+            : 'No results for \u201c' + query + '\u201d'
+        } else if (filter !== 'all') {
+          const section = DATA.menu[Number(filter)]
+          retailStatus.textContent = section ? section.name + ' \u00b7 ' + pieces(entries.length) : ''
+        }
+      }
+      applyHearts()
+    }
+
+    if (retailSearch) retailSearch.addEventListener('input', function () { renderRetail(true) })
+    if (retailSortSelect) retailSortSelect.addEventListener('change', function () { renderRetail(true) })
+    document.addEventListener('click', function (event) {
+      const clear = event.target.closest('[data-shop-clear]')
+      if (clear) {
+        if (retailSearch) retailSearch.value = ''
+        renderRetail(true)
+        if (retailSearch) retailSearch.focus()
+        return
+      }
+      const more = event.target.closest('[data-retail-more]')
+      if (more) {
+        retailLimit += RETAIL_PAGE
+        renderRetail()
+      }
+    })
 
     function renderStamps() {
       const host = $('[data-stamps]')
