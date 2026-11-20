@@ -39,7 +39,15 @@ import {
 } from './design'
 import { cleanLogoImage, sanitizeMenu } from './pricing'
 import { themeFor } from './themes'
-import type { FeatureId, MenuItem, MenuSection, SocialLink, VerticalId } from './types'
+import type {
+  FeatureId,
+  MenuItem,
+  MenuSection,
+  PriceConflict,
+  PriceDecision,
+  SocialLink,
+  VerticalId,
+} from './types'
 import { VERTICALS } from './verticals'
 
 /* ------------------------------------------------------------------ */
@@ -87,6 +95,8 @@ export type ImportedSite = {
   structure?: SiteStructure
   /** Their installable-web-app metadata, when they have one. */
   pwa?: PwaInfo
+  /** The owner's answers to prices the page and the feed disagreed on. */
+  priceDecisions?: PriceDecision[]
 }
 
 export type ImportQuality = {
@@ -102,7 +112,7 @@ export type ImportQuality = {
   categories: string[]
   /** The page and the product feed disagree about the same product's price.
    *  The page reading is kept and the disagreement is reported, never merged. */
-  priceConflicts?: { name: string; page: number; feed: number }[]
+  priceConflicts?: PriceConflict[]
 }
 
 export type ImportReport = {
@@ -1463,23 +1473,13 @@ function logoFrom(page: Page, business: Record<string, unknown>, name: string): 
 
 /** A candidate photograph still has to pass the evidence gate: a stock URL, a
  *  logo or a banner declared as a product image is not one. */
-function acceptedImage(
-  ...candidates: string[]
-): string {
+/** The first candidate that passes the image gate, or nothing. A product feed
+ *  names the product each file belongs to, so there a name like "cover.jpg" is
+ *  that product's photograph rather than page furniture; stock and placeholder
+ *  libraries, and anything that is not an image, are still refused. */
+function acceptedImage(candidates: string[], allowDecorative = false): string {
   for (const candidate of candidates) {
-    const checked = checkImageCandidate(candidate)
-    if (checked.ok) return checked.url
-  }
-  return ''
-}
-
-/** The same gate for a product feed, which names the product each file belongs
- *  to: a product called "Cover" keeps its own photograph instead of losing it
- *  to a rule about page furniture. Stock and placeholder libraries are still
- *  refused, and so is anything that is not an image. */
-function feedImage(...candidates: string[]): string {
-  for (const candidate of candidates) {
-    const checked = checkImageCandidate(candidate, undefined, { allowDecorative: true })
+    const checked = checkImageCandidate(candidate, undefined, { allowDecorative })
     if (checked.ok) return checked.url
   }
   return ''
@@ -1489,7 +1489,7 @@ function itemFromNode(node: Record<string, unknown>, source = ''): Item | null {
   if (!typeOf(node).some((type) => PRODUCT_TYPES.has(type))) return null
   const name = textOf(node, 'name', 'headline')
   if (!name) return null
-  const image = acceptedImage(imageFrom(node.image), imageFrom(node.thumbnailUrl))
+  const image = acceptedImage([imageFrom(node.image), imageFrom(node.thumbnailUrl)])
   const { price, evidence } = nodePrice(node, source)
   return {
     name: collapse(name, 60),
@@ -2281,7 +2281,7 @@ type Crawl = {
   /** Whether any page showed a cart or checkout control. */
   cartSignal: boolean
   /** Products whose page price and feed price disagree. */
-  priceConflicts?: { name: string; page: number; feed: number }[]
+  priceConflicts?: PriceConflict[]
 }
 
 /** A product page turned into a catalogue section, named the way the shop
@@ -2375,7 +2375,10 @@ async function shopifyProducts(
           null,
         )
         const images = Array.isArray(product.images) ? (product.images as Record<string, unknown>[]) : []
-        const image = feedImage(...images.slice(0, 3).map((entry) => String(entry.src ?? '')))
+        const image = acceptedImage(
+          images.slice(0, 3).map((entry) => String(entry.src ?? '')),
+          true,
+        )
         const sectionName = collapse(String(product.product_type ?? ''), 40) || 'Catalogue'
         const item: Item = {
           name,
@@ -2460,7 +2463,13 @@ async function expandCatalogue(options: {
           const page = onPage.get(item.name.toLowerCase())
           return page !== undefined && page > 0 && item.price > 0 && page !== item.price
         })
-        .map((item) => ({ name: item.name, page: onPage.get(item.name.toLowerCase())!, feed: item.price }))
+        .map((item) => ({
+          name: item.name,
+          page: onPage.get(item.name.toLowerCase())!,
+          feed: item.price,
+          pageSource: entry.url.toString(),
+          feedSource: `${entry.url.origin}${feed.source}`,
+        }))
       return {
         sections: feed.sections,
         pages: feed.pages,
@@ -2688,7 +2697,22 @@ export async function importWebsite(
   // before anything else looks at it.
   const { sections: menu, quality } = cleanMenu(site.menu, site.vertical, { requireEvidence: true })
   site.menu = menu
-  if (crawl.priceConflicts?.length) quality.priceConflicts = crawl.priceConflicts
+  if (crawl.priceConflicts?.length) {
+    // A conflict keeps its page reading on the report so the owner can compare,
+    // but it is not published until they answer: two disagreeing figures are
+    // not one verified price.
+    quality.priceConflicts = crawl.priceConflicts
+    for (const conflict of crawl.priceConflicts) {
+      site.menu = site.menu.map((section) => ({
+        ...section,
+        items: section.items.map((item) =>
+          item.name.toLowerCase() === conflict.name.toLowerCase()
+            ? { ...item, price: 0, priceEvidence: undefined }
+            : item,
+        ),
+      }))
+    }
+  }
   // Photographs last, so only surviving items are looked up, and only against
   // evidence the site itself published for that item.
   const embedded = embeddedJsonImages(entry.html)
@@ -2898,10 +2922,89 @@ export function sanitizeImported(input: unknown): Partial<ImportedSite> | undefi
           .filter((entry) => entry.url)
       : [],
     menu: sanitizeMenu(source.menu),
+    priceDecisions: sanitizeDecisions(source.priceDecisions),
     features: Array.isArray(source.features)
       ? source.features.filter((entry): entry is FeatureId => typeof entry === 'string').slice(0, 20)
       : [],
   }
+}
+
+/** The owner's answers to conflicting prices, as stored on their draft and
+ *  sent back with the build. Strict: an unknown choice or a nonsense amount is
+ *  dropped, and `defer` is the only way to say "not decided yet". */
+function sanitizeDecisions(value: unknown): PriceDecision[] {
+  if (!Array.isArray(value)) return []
+  return value.slice(0, 60).flatMap((entry) => {
+    const record = (entry ?? {}) as Record<string, unknown>
+    const name = typeof record.name === 'string' ? collapse(record.name, 80) : ''
+    const choice = record.choice
+    if (!name) return []
+    if (choice !== 'page' && choice !== 'feed' && choice !== 'custom' && choice !== 'defer') return []
+    const amount = Number(record.value)
+    const usable = choice !== 'defer' && Number.isFinite(amount) && amount > 0 && amount <= 100_000_00
+    const cents = (raw: unknown): number | undefined => {
+      const value = Number(raw)
+      return Number.isFinite(value) && value > 0 && value <= 100_000_00 ? Math.round(value) : undefined
+    }
+    const link = (raw: unknown): string | undefined =>
+      typeof raw === 'string' && HTTP_LINK.test(raw) ? raw.slice(0, 200) : undefined
+    return [
+      {
+        name,
+        choice,
+        value: usable ? Math.round(amount) : 0,
+        decidedAt: typeof record.decidedAt === 'string' ? record.decidedAt.slice(0, 30) : '',
+        ...(cents(record.page) ? { page: cents(record.page) } : {}),
+        ...(cents(record.feed) ? { feed: cents(record.feed) } : {}),
+        ...(link(record.pageSource) ? { pageSource: link(record.pageSource) } : {}),
+        ...(link(record.feedSource) ? { feedSource: link(record.feedSource) } : {}),
+      },
+    ]
+  })
+}
+
+/**
+ * Applies the owner's price answers to the catalogue at build time. A decided
+ * price becomes an owner decision with its own evidence, so it is publishable;
+ * a deferred conflict loses its price entirely, because two readings that
+ * disagree are not one verified figure.
+ */
+export function applyPriceDecisions<T extends { menu?: MenuSection[]; priceDecisions?: PriceDecision[]; currency?: string }>(
+  site: T,
+): T {
+  const decisions = site.priceDecisions ?? []
+  if (!decisions.length || !site.menu) return site
+  const byName = new Map(decisions.map((decision) => [decision.name.toLowerCase(), decision]))
+  const menu = site.menu.map((section) => ({
+    ...section,
+    items: section.items.map((item) => {
+      const decision = byName.get(item.name.toLowerCase())
+      if (!decision) return item
+      if (decision.choice === 'defer' || decision.value <= 0)
+        return { ...item, price: 0, priceEvidence: undefined }
+      // Both readings stay with the price, so the project still explains the
+      // decision after the draft that held the conflict is gone.
+      const readings = [
+        decision.page ? 'page ' + (decision.page / 100).toFixed(2) + (decision.pageSource ? ' from ' + decision.pageSource : '') : '',
+        decision.feed ? 'feed ' + (decision.feed / 100).toFixed(2) + (decision.feedSource ? ' from ' + decision.feedSource : '') : '',
+      ].filter(Boolean)
+      return {
+        ...item,
+        price: decision.value,
+        priceEvidence: {
+          method: 'owner' as const,
+          source:
+            'owner decision' +
+            (readings.length ? ' (' + readings.join('; ') + ')' : '') +
+            (decision.decidedAt ? ' · ' + decision.decidedAt : ''),
+          raw: (decision.value / 100).toFixed(2),
+          currency: site.currency ?? '',
+          validated: true,
+        },
+      }
+    }),
+  }))
+  return { ...site, menu }
 }
 
 /* ------------------------------------------------------------------ */

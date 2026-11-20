@@ -126,6 +126,12 @@ export function briefPage(): string {
           <span class="pill" data-step-dot="2">3 Features</span>
           <span class="pill" data-step-dot="3">4 Delivery</span>
         </div>
+        <div class="notice" data-draft hidden style="margin-bottom:14px">
+          <strong>Unfinished brief restored.</strong>
+          <span class="tiny" data-draft-when></span>
+          <button type="button" class="linkish" data-draft-discard>Discard it and start again</button>
+          <span class="tiny" data-draft-status aria-live="polite"></span>
+        </div>
 
         <section data-step="0">
           <div class="field">
@@ -154,6 +160,7 @@ export function briefPage(): string {
             </div>
             <div class="tiny" data-import-status style="margin-top:8px"></div>
             <div data-import-report hidden style="margin-top:10px"></div>
+            <div data-conflicts hidden style="margin-top:12px"></div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px">
               <button type="button" class="btn small ghost" data-import-sample="${esc(SAMPLE_IMPORT.source)}">Try it on ${esc(SAMPLE_IMPORT.host)}</button>
               <span class="tiny">A real shop: ${sampleTotals().items} items in ${sampleTotals().sections} sections, read from ${SAMPLE_IMPORT.pages} pages.</span>
@@ -444,6 +451,9 @@ function briefScript(verticals: string): string {
       : 'Read ' + data.host + ' — no catalogue was found. Nothing was invented; check what is missing below.'
     importReport.hidden = false
     importReport.innerHTML = report(data)
+    lastImport = data
+    priceDecisions.clear()
+    renderConflicts()
     refresh()
     // The three concepts must show *their* business, not the demo shop.
     syncElementPreviews()
@@ -467,6 +477,7 @@ function briefScript(verticals: string): string {
           (chosen.length ? chosen.slice(0, 3).join(', ') : 'their catalogue and enquiries')
       readWish()
     }
+    queueDraft()
   }
 
   async function runImport(rawUrl) {
@@ -529,6 +540,16 @@ function briefScript(verticals: string): string {
   const elementTouched = new Set()
   let read = null
   let chosenDesign = null
+  // What the last read established, kept so a restored draft can rebuild the
+  // same receipt without reading the site again.
+  let lastImport = null
+  let currentStep = 0
+  /** name -> the owner's answer to a page/feed price conflict. */
+  const priceDecisions = new Map()
+  const draftBanner = document.querySelector('[data-draft]')
+  const draftWhen = document.querySelector('[data-draft-when]')
+  const draftStatus = document.querySelector('[data-draft-status]')
+  const conflictsEl = document.querySelector('[data-conflicts]')
 
   function paintElements(axes) {
     elementRows.forEach((row) => {
@@ -619,7 +640,7 @@ function briefScript(verticals: string): string {
     refresh()
   }
 
-  function useRead(data) {
+  function useRead(data, options) {
     applyReadFeatures(data)
     // Concepts are the trade's own directions, each previewed on the real
     // application document. One list drives both the cards and the picker: the
@@ -627,7 +648,7 @@ function briefScript(verticals: string): string {
     // its older layout presets (editorial, calm, compact), so rendering one and
     // resolving the other left two cards that could never be selected.
     const designs = (data.concepts && data.concepts.length ? data.concepts : data.designs) || []
-    read = { ...data, designs, concepts: designs }
+    read = { ...data, designs }
     const features = (data.suggestions || []).map((entry) =>
       '<li><b>' + esc(entry.label) + '</b> <span class="tiny">— ' + esc(entry.why) + '</span></li>'
     ).join('')
@@ -641,7 +662,12 @@ function briefScript(verticals: string): string {
       '<ul class="ticks" style="margin-top:8px">' + features + '</ul>' +
       '<p class="tiny" style="margin-top:8px">These are ticked for you in the features step; every one can be changed.</p>' +
       '</div>'
-    designTrade.textContent = data.label
+    renderConcepts(designs, data.label, options && options.scroll === false ? false : true)
+    if (chosenDesign) paintChosen(chosenDesign)
+  }
+
+  function renderConcepts(designs, label, scroll) {
+    designTrade.textContent = label || ''
     designGrid.innerHTML = designs.map((design) =>
       '<article class="card flat" data-concept="' + esc(design.id) + '" aria-pressed="false" style="padding:10px;display:flex;flex-direction:column;gap:8px;background:#fffdf9;border:1px solid var(--line)">' +
         '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px">' +
@@ -653,7 +679,7 @@ function briefScript(verticals: string): string {
       '</article>'
     ).join('')
     designsEl.hidden = false
-    designsEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (scroll !== false) designsEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   async function readWish() {
@@ -688,12 +714,7 @@ function briefScript(verticals: string): string {
     }
   })
 
-  designGrid.addEventListener('click', (event) => {
-    const button = event.target.closest('[data-pick]')
-    if (!button || !read) return
-    const id = button.dataset.pick
-    const design = (read.designs || []).find((one) => one.id === id)
-    if (!design) return
+  function paintChosen(design) {
     chosenDesign = design
     designPick.hidden = false
     designPickName.textContent = design.name
@@ -708,11 +729,20 @@ function briefScript(verticals: string): string {
       const pick = card.querySelector('[data-pick]')
       if (pick) pick.textContent = on ? 'Selected ✓' : 'Use this design'
     })
+  }
+
+  designGrid.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-pick]')
+    if (!button || !read) return
+    const design = (read.designs || []).find((one) => one.id === button.dataset.pick)
+    if (!design) return
+    paintChosen(design)
     // The design is the only question this step asks: go straight on to the
     // features. The trade, the brand colour and the name stay in the steps
     // either side of it, reachable from the buttons there.
     show(2)
     designPick.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    queueDraft()
   })
 
   document.querySelectorAll('[data-go-import]').forEach((link) => {
@@ -754,6 +784,224 @@ function briefScript(verticals: string): string {
     refresh()
   }
 
+  /* ------------------------------ prices the two readings disagree on ---- */
+
+  const priceLabel = (cents) =>
+    cents > 0
+      ? (imported && imported.currency ? imported.currency + ' ' : '') + (cents / 100).toFixed(2)
+      : 'not listed'
+
+  function conflicts() {
+    const quality = (lastImport && lastImport.quality) || {}
+    return Array.isArray(quality.priceConflicts) ? quality.priceConflicts : []
+  }
+
+  function renderConflicts() {
+    const list = conflicts()
+    if (!list.length) {
+      conflictsEl.hidden = true
+      conflictsEl.innerHTML = ''
+      return
+    }
+    conflictsEl.hidden = false
+    conflictsEl.innerHTML = '<div class="card flat" style="background:var(--paper-2);padding:14px">' +
+      '<div class="card-head" style="margin-bottom:6px"><span class="label">Prices that need your decision</span><span class="pill">' + list.length + '</span></div>' +
+      '<p class="tiny" style="margin-bottom:10px">Their page and their product feed give different figures for these. Plattr proposes the page price and will not publish either until you choose.</p>' +
+      list.map(function (conflict) {
+        const decision = priceDecisions.get(conflict.name.toLowerCase())
+        const state = decision
+          ? '<span style="color:var(--ink)">Using the ' + (decision.choice === 'custom' ? 'price you set' : decision.choice + ' price') + ', ' + esc(priceLabel(decision.value)) + ' — confirmed ' + esc(new Date(decision.decidedAt).toLocaleString()) + '.</span>'
+          : '<span>Not decided — this item will show “Ask on request” until you choose.</span>'
+        return '<div data-conflict="' + esc(conflict.name) + '" style="border-top:1px solid var(--line);padding:10px 0">' +
+          '<div class="row"><strong>' + esc(conflict.name) + '</strong><span class="tiny">' + state + '</span></div>' +
+          '<div class="rows" style="margin-top:6px">' +
+            '<div class="row"><span>Their page</span><button class="linkish" type="button" data-choice="page">' + esc(priceLabel(conflict.page)) + ' — use this</button></div>' +
+            '<div class="tiny mono" style="word-break:break-all">' + esc(conflict.pageSource || '') + '</div>' +
+            '<div class="row"><span>Product feed</span><button class="linkish" type="button" data-choice="feed">' + esc(priceLabel(conflict.feed)) + ' — use this</button></div>' +
+            '<div class="tiny mono" style="word-break:break-all">' + esc(conflict.feedSource || '') + '</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">' +
+            '<label class="tiny">Or set it: <input data-custom type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00" style="width:90px" /></label>' +
+          '</div>' +
+        '</div>'
+      }).join('') +
+    '</div>'
+  }
+
+  function decidePrice(name, choice, value) {
+    const key = name.toLowerCase()
+    const conflict = conflicts().find(function (entry) { return entry.name.toLowerCase() === key })
+    if (!conflict || !(value > 0)) return
+    priceDecisions.set(key, {
+      name: conflict.name,
+      choice: choice,
+      value: Math.round(value),
+      decidedAt: new Date().toISOString(),
+      page: conflict.page,
+      feed: conflict.feed,
+      pageSource: conflict.pageSource,
+      feedSource: conflict.feedSource,
+    })
+    renderConflicts()
+    queueDraft()
+    toast('Price confirmed for ' + conflict.name)
+  }
+
+  conflictsEl.addEventListener('click', function (event) {
+    const button = event.target.closest('[data-choice]')
+    if (!button) return
+    const row = button.closest('[data-conflict]')
+    const conflict = conflicts().find(function (entry) { return entry.name === row.dataset.conflict })
+    if (!conflict) return
+    decidePrice(conflict.name, button.dataset.choice, button.dataset.choice === 'page' ? conflict.page : conflict.feed)
+  })
+
+  conflictsEl.addEventListener('change', function (event) {
+    const input = event.target.closest('[data-custom]')
+    if (!input) return
+    const row = input.closest('[data-conflict]')
+    decidePrice(row.dataset.conflict, 'custom', Math.round(Number(input.value) * 100))
+  })
+
+  /* ------------------------------ the unfinished brief ------------------- */
+
+  /** The receipt minus the parts only the first render needs (the image list
+   *  and the raw field map), so the draft stays small; the site itself is
+   *  stored once, under the site key. */
+  function draftImport(data) {
+    if (!data) return null
+    const copy = { ...data }
+    delete copy.images
+    delete copy.found
+    delete copy.site
+    return copy
+  }
+
+  function draftData() {
+    return {
+      v: 1,
+      step: currentStep,
+      import: draftImport(lastImport),
+      site: imported,
+      fields: {
+        name: document.getElementById('name').value,
+        tagline: document.getElementById('tagline').value,
+        category: document.getElementById('category').value,
+        custom: document.getElementById('custom').value,
+        accent: accent.value,
+        logo: document.getElementById('logo').value,
+        contact: document.getElementById('contact').value,
+        email: document.getElementById('email').value,
+        vertical: vertical(),
+      },
+      features: features(),
+      concept: chosenDesign,
+      concepts: read ? read.designs : null,
+      label: read ? read.label : '',
+      decisions: Array.from(priceDecisions.values()),
+      savedAt: new Date().toISOString(),
+    }
+  }
+
+  let draftTimer = 0
+  function queueDraft() {
+    if (!imported) return
+    clearTimeout(draftTimer)
+    draftTimer = setTimeout(saveDraft, 700)
+  }
+
+  async function saveDraft() {
+    if (!imported) return
+    try {
+      draftStatus.textContent = 'Saving…'
+      const response = await fetch('/api/brief/draft', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: draftData() }),
+      })
+      draftStatus.textContent = response.ok ? 'Saved' : 'Could not save this draft'
+    } catch (error) {
+      draftStatus.textContent = 'Could not save this draft'
+    }
+  }
+
+  function restoreConcepts(concepts, label) {
+    if (!Array.isArray(concepts) || !concepts.length) return
+    read = { label: label || '', designs: concepts }
+    renderConcepts(concepts, label || '', false)
+  }
+
+  function applyDraft(data, updatedAt) {
+    if (!data || typeof data !== 'object') return false
+    const fields = data.fields || {}
+    if (data.import && data.site) {
+      imported = data.site
+      lastImport = data.import
+      importReport.hidden = false
+      importReport.innerHTML = report({ ...data.import, site: data.site })
+      const readItems = (data.site.menu || []).reduce(function (total, section) { return total + (section.items || []).length }, 0)
+      importStatus.textContent = 'Restored from ' + (data.import.host || 'your draft') + ' — ' + readItems + ' items. Nothing was read again.'
+      renderConflicts()
+      restoreConcepts(data.concepts, data.label)
+    }
+    for (const id of ['name', 'tagline', 'category', 'custom', 'accent', 'logo', 'contact', 'email']) {
+      const field = document.getElementById(id)
+      if (field && typeof fields[id] === 'string') field.value = fields[id]
+    }
+    if (fields.vertical) {
+      const radio = document.querySelector('[name=vertical][value="' + fields.vertical + '"]')
+      if (radio) radio.checked = true
+    }
+    applyVertical()
+    if (Array.isArray(data.features)) {
+      document.querySelectorAll('[data-feature]').forEach(function (input) {
+        input.checked = input.disabled || data.features.indexOf(input.dataset.feature) >= 0
+      })
+    }
+    for (const decision of data.decisions || []) {
+      if (decision && typeof decision.name === 'string') priceDecisions.set(decision.name.toLowerCase(), decision)
+    }
+    renderConflicts()
+    if (data.concept) {
+      const design = data.concept
+      const known = read && read.designs ? read.designs.some(function (one) { return one.id === design.id }) : false
+      if (!known && read) read.designs.push(design)
+      paintChosen(design)
+    }
+    refresh()
+    syncElementPreviews()
+    show(Number(data.step) || 0)
+    draftBanner.hidden = false
+    draftWhen.textContent = '· ' + new Date(updatedAt || data.savedAt || Date.now()).toLocaleString()
+    return true
+  }
+
+  async function loadDraft() {
+    try {
+      const response = await fetch('/api/brief/draft', { headers: { accept: 'application/json' } })
+      const body = await response.json().catch(function () { return {} })
+      if (!response.ok || !body.draft || !body.draft.data) return
+      applyDraft(body.draft.data, body.draft.updatedAt)
+    } catch (error) {
+      // No draft is a normal state: the page works without one.
+    }
+  }
+
+  async function discardDraft() {
+    try {
+      await fetch('/api/brief/draft', { method: 'DELETE' })
+    } catch (error) {}
+    window.location.reload()
+  }
+
+  document.querySelector('[data-draft-discard]').addEventListener('click', function () {
+    if (window.confirm('Discard this unfinished brief? The build you may already have made is not touched.')) discardDraft()
+  })
+
+  const briefForm = document.getElementById('brief')
+  briefForm.addEventListener('input', queueDraft)
+  briefForm.addEventListener('change', queueDraft)
+
   function payload() {
     return {
       name: document.getElementById('name').value,
@@ -772,7 +1020,9 @@ function briefScript(verticals: string): string {
       plan: currentPlan,
       layout: chosenDesign ? { ...chosenDesign.axes, ...chosenElements() } : null,
       direction: chosenDesign ? chosenDesign.id : undefined,
-      site: imported,
+      site: imported
+        ? { ...imported, priceDecisions: Array.from(priceDecisions.values()) }
+        : imported,
     }
   }
 
@@ -844,12 +1094,14 @@ function briefScript(verticals: string): string {
   }
 
   function show(step) {
+    currentStep = Number(step) || 0
     document.querySelectorAll('[data-step]').forEach((panel) => {
       panel.hidden = panel.dataset.step !== String(step)
     })
     document.querySelectorAll('[data-step-dot]').forEach((dot) => {
       dot.className = 'pill' + (Number(dot.dataset.stepDot) === step ? ' dark' : '')
     })
+    queueDraft()
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -952,6 +1204,7 @@ function briefScript(verticals: string): string {
   // Seeds the trade's features, then paints the first quote — bundle included,
   // so a bundle link does not fetch the price twice.
   applyVertical()
+  loadDraft()
   const preset = query.get('url')
   if (preset) {
     importUrl.value = preset

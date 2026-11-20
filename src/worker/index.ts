@@ -7,7 +7,10 @@ import {
   addNote,
   approveProject,
   createProject,
+  deleteBriefDraft,
   deleteProject,
+  readBriefDraft,
+  saveBriefDraft,
   getDocVersion,
   getProject,
   listDocVersions,
@@ -23,6 +26,7 @@ import {
 } from './db'
 import { bundleFilename, bundleFor } from './export'
 import {
+  applyPriceDecisions,
   checkImportUrl,
   ImportError,
   importOnce,
@@ -941,6 +945,60 @@ app.post('/api/import', importRoute('import'))
 // The URL-first entry point. Same guards, same budget, same crawl.
 app.post('/api/discover', importRoute('discover'))
 
+/* A draft is the unfinished brief: what was read, what was chosen, where the
+   visitor stopped. It is keyed only by the unguessable id in its own httpOnly
+   cookie, so one visitor can never address another's draft. */
+const DRAFT_COOKIE = 'plattr_draft'
+const DRAFT_DAYS = 30
+const DRAFT_ID = /^drf_[0-9a-zA-Z]{10,64}$/
+const DRAFT_MAX_BYTES = 200_000
+
+function draftCookieOptions(url: string) {
+  return { path: '/', httpOnly: true, sameSite: 'Lax' as const, secure: isHttps(url), maxAge: DRAFT_DAYS * 86400 }
+}
+
+app.get('/api/brief/draft', async (c) => {
+  const id = getCookie(c, DRAFT_COOKIE) ?? ''
+  c.header('Cache-Control', 'no-store')
+  if (!DRAFT_ID.test(id)) return c.json({ draft: null })
+  const row = await readBriefDraft(c.env.DB, id)
+  if (!row) return c.json({ draft: null })
+  try {
+    return c.json({ draft: { data: JSON.parse(row.data), updatedAt: row.updated_at } })
+  } catch {
+    return c.json({ draft: null })
+  }
+})
+
+app.put('/api/brief/draft', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Drafts are saved from a Plattr page.')
+  const body = await readJson(c)
+  if (!body || !body.data || typeof body.data !== 'object')
+    return fail(c, 400, 'invalid_json', 'Send the draft as a JSON object.')
+  const serialised = JSON.stringify(body.data)
+  if (serialised.length > DRAFT_MAX_BYTES)
+    return fail(c, 413, 'draft_too_large', 'This draft is too large to keep.')
+  const existing = getCookie(c, DRAFT_COOKIE) ?? ''
+  const id = DRAFT_ID.test(existing) ? existing : 'drf_' + crypto.randomUUID().replace(/-/g, '')
+  await saveBriefDraft(c.env.DB, id, serialised)
+  setCookie(c, DRAFT_COOKIE, id, draftCookieOptions(c.req.url))
+  c.header('Cache-Control', 'no-store')
+  return c.json({ ok: true, updatedAt: new Date().toISOString() })
+})
+
+app.delete('/api/brief/draft', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Drafts are discarded from a Plattr page.')
+  const id = getCookie(c, DRAFT_COOKIE) ?? ''
+  if (DRAFT_ID.test(id)) await deleteBriefDraft(c.env.DB, id)
+  deleteCookie(c, DRAFT_COOKIE, { path: '/' })
+  c.header('Cache-Control', 'no-store')
+  return c.json({ ok: true })
+})
+
 app.post('/api/projects', async (c) => {
   const body = await readJson(c)
   if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
@@ -977,7 +1035,10 @@ app.post('/api/projects', async (c) => {
     direction: str(body.direction, 24),
     videos: Array.isArray(body.videos) ? (body.videos as VideoLink[]) : undefined,
     bundle: str(body.bundle, 20),
-    site: sanitizeImported(body.site),
+    site: (() => {
+      const site = sanitizeImported(body.site)
+      return site ? applyPriceDecisions(site) : undefined
+    })(),
   })
   // The person who just created the build holds its first owner session; the
   // customer app link alone can never edit it.

@@ -23,10 +23,37 @@ export type FeatureId =
   | 'multilingual'
   | 'tablet'
 
+/** A product the page and the store's product feed price differently. */
+export type PriceConflict = {
+  name: string
+  /** What the page said, in cents. */
+  page: number
+  /** What the feed said, in cents. */
+  feed: number
+  pageSource: string
+  feedSource: string
+}
+
+/** The owner's answer to one conflict. `defer` means they have not chosen, so
+ *  the price is not published: an unresolved conflict is never guessed. */
+export type PriceDecision = {
+  name: string
+  choice: 'page' | 'feed' | 'custom' | 'defer'
+  /** The chosen price in cents; 0 for `defer`. */
+  value: number
+  decidedAt: string
+  /** The two readings and where each came from, kept so the build can say why
+   *  this price won even after the draft is gone. */
+  page?: number
+  feed?: number
+  pageSource?: string
+  feedSource?: string
+}
+
 /** Where a price came from, so a published price carries its proof. */
 export type PriceEvidence = {
   /** The mechanism that read this exact value. */
-  method: 'json-ld' | 'shopify-variant' | 'microdata' | 'meta' | 'text'
+  method: 'json-ld' | 'shopify-variant' | 'microdata' | 'meta' | 'text' | 'owner'
   /** The page or endpoint the value was read from. */
   source: string
   /** The value exactly as the source wrote it. */

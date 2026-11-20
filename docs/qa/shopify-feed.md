@@ -67,18 +67,46 @@ The feed does not overwrite what the page already said:
 1. Entry-page products are read first and kept.
 2. Feed products are merged **after** them, so a name the page already listed
    keeps the page's entry and the feed only adds what was missing.
-3. When a product exists on both with two different positive prices, the page's
-   price is kept and the disagreement is recorded in
-   `quality.priceConflicts: [{ name, page, feed }]`. It is never averaged,
-   rewritten or silently dropped.
+3. When a product exists on both with two different positive prices, the
+   disagreement is recorded in
+   `quality.priceConflicts: [{ name, page, feed, pageSource, feedSource }]`
+   (in cents, with the page URL and the `/products.json` URL that supplied each
+   reading). It is never averaged, rewritten or silently dropped. The item is
+   kept in the catalogue with **no price** — two disagreeing readings are not
+   one verified figure — until the owner answers in the brief.
 4. Collection-page crawling is skipped once the feed yields three or more
    products, because the feed is the same catalogue in one request and its
    values carry provenance the collection cards do not.
 
-Not yet implemented: surfacing `priceConflicts` in the customer-facing report
-copy (it is recorded in the import report JSON, not yet shown in the brief's
-"Not found — please confirm" list), and any conflict check for variants beyond
-the cheapest.
+Conflicts compare the cheapest positive variant only; other variants are not
+checked against the page.
+
+## Owner confirmation in the brief
+
+Each conflict is listed in the brief under **Prices that need your decision**,
+with the product name, both readings, both source URLs, and which reading
+Plattr proposes (the page price). The owner can take either reading or type a
+correction; a deferred conflict keeps showing "Ask on request".
+
+The decision is stored on the draft as
+`{ name, choice, value, decidedAt, page, feed, pageSource, feedSource }`. At
+build time `applyPriceDecisions` turns the chosen value into the item's price
+with `priceEvidence.method: 'owner'`; the evidence string keeps **both original
+readings and both sources** plus the decision timestamp, so the project still
+explains itself after the draft is discarded. Re-checked server-side:
+`sanitizeImported` drops unknown choices, non-positive or absurd amounts and
+non-http sources.
+
+## Unfinished briefs
+
+`/brief` autosaves to `brief_drafts`, keyed only by a random `drf_…` id in an
+httpOnly, SameSite=Lax cookie (30 days). The row holds the import report, the
+business fields, features, the three concepts and the chosen one, the current
+step and the price decisions. A refresh restores it and nothing is re-read or
+re-built; "Discard it and start again" deletes the row and clears the cookie.
+There is no address-based lookup, so a second visitor on the same network reads
+an empty draft. Writes are same-origin only, capped at 200 KB and one row per
+visitor cookie. Covered by `tests/briefDraft.test.ts`.
 
 ## What a live run still has to prove
 

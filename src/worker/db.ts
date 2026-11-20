@@ -334,6 +334,14 @@ const SCHEMA = [
   `CREATE UNIQUE INDEX IF NOT EXISTS payment_tx_provider_order ON payment_transactions (provider, mode, provider_order_id) WHERE provider_order_id <> ''`,
   `CREATE UNIQUE INDEX IF NOT EXISTS payment_tx_provider_payment ON payment_transactions (provider, mode, provider_payment_id) WHERE provider_payment_id <> ''`,
   `CREATE INDEX IF NOT EXISTS payment_events_by_project ON payment_events (project_id, created_at)`,
+  /// An unfinished brief, keyed by the unguessable id in its own cookie. It is
+  /// never keyed by address, so two visitors on one network cannot meet here.
+  `CREATE TABLE IF NOT EXISTS brief_drafts (
+    id TEXT PRIMARY KEY,
+    data TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  )`,
 ]
 
 /** Columns added after the first deployments. Duplicate-column errors are fine. */
@@ -377,6 +385,34 @@ export function ensureSchema(db: D1Database): Promise<void> {
   })()
   ready.set(db, setup)
   return setup
+}
+
+export type BriefDraft = { id: string; data: string; updated_at: string }
+
+export async function readBriefDraft(db: D1Database, id: string): Promise<BriefDraft | null> {
+  await ensureSchema(db)
+  const row = await db
+    .prepare('SELECT id, data, updated_at FROM brief_drafts WHERE id = ?')
+    .bind(id)
+    .first<BriefDraft>()
+  return row ?? null
+}
+
+export async function saveBriefDraft(db: D1Database, id: string, data: string): Promise<void> {
+  await ensureSchema(db)
+  const now = new Date().toISOString()
+  await db
+    .prepare(
+      `INSERT INTO brief_drafts (id, data, created_at, updated_at) VALUES (?, ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET data = excluded.data, updated_at = excluded.updated_at`,
+    )
+    .bind(id, data, now, now)
+    .run()
+}
+
+export async function deleteBriefDraft(db: D1Database, id: string): Promise<void> {
+  await ensureSchema(db)
+  await db.prepare('DELETE FROM brief_drafts WHERE id = ?').bind(id).run()
 }
 
 function parseJson<T>(value: string, fallback: T): T {
