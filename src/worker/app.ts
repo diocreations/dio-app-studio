@@ -118,6 +118,29 @@ function priceOf(item: MenuItem, currency?: string): string {
   return item.price > 0 ? moneyIn(item.price, currency) : ''
 }
 
+/** The options a product really has: more than one price to choose between. A
+ *  single-variant product keeps the plain price it always had. */
+function pricedVariants(item: MenuItem): { name: string; price: number }[] {
+  return (item.variants ?? []).filter((variant) => variant.price > 0)
+}
+
+function hasChoices(item: MenuItem): boolean {
+  const variants = pricedVariants(item)
+  return variants.length > 1 && new Set(variants.map((variant) => variant.price)).size > 1
+}
+
+/** "From £42" only when the options actually differ in price. */
+function priceFrom(item: MenuItem, currency?: string): string {
+  if (!hasChoices(item)) return priceOf(item, currency)
+  const prices = pricedVariants(item).map((variant) => variant.price)
+  return 'From ' + moneyIn(Math.min(...prices), currency)
+}
+
+function optionCount(item: MenuItem): string {
+  const count = pricedVariants(item).length
+  return count > 1 ? count + ' options' : ''
+}
+
 /**
  * FNV-1a plus an avalanche step, so one seed gives unrelated values for the
  * photo choice and the variation deck.
@@ -497,9 +520,10 @@ function itemRowEditorial(ctx: Ctx, item: MenuItem, key: string): string {
       <div class="name">${esc(item.name)}${item.tag ? ` <span class="tag">${esc(item.tag)}</span>` : ''}</div>
       ${item.desc ? `<div class="desc">${esc(item.desc)}</div>` : ''}
       ${item.meta ? `<div class="meta">${esc(item.meta)}</div>` : ''}
+      ${optionCount(item) ? `<div class="meta">${esc(optionCount(item))}</div>` : ''}
     </div>
     <div class="right">
-      <div class="price">${priceOf(item, ctx.spec.currency)}</div>
+      <div class="price">${priceFrom(item, ctx.spec.currency)}</div>
       <div class="row-tools">
         ${saveButton(key, item.name)}
         ${ctx.ordering && item.price > 0 ? `<button class="add" type="button" data-add="${key}" aria-label="Add ${esc(item.name)}">${icon('plus')}</button>` : ''}
@@ -515,9 +539,10 @@ function itemRowCompact(ctx: Ctx, item: MenuItem, key: string): string {
       <div class="name">${esc(item.name)}${item.tag ? ` <span class="tag">${esc(item.tag)}</span>` : ''}</div>
       ${item.desc ? `<div class="desc">${esc(item.desc)}</div>` : ''}
       ${item.meta ? `<div class="desc">${esc(item.meta)}</div>` : ''}
+      ${optionCount(item) ? `<div class="desc">${esc(optionCount(item))}</div>` : ''}
     </div>
     <div class="tail">
-      <span class="price">${priceOf(item, ctx.spec.currency)}</span>
+      <span class="price">${priceFrom(item, ctx.spec.currency)}</span>
       ${saveButton(key, item.name)}
       ${ctx.ordering && item.price > 0 ? `<button class="add" type="button" data-add="${key}" aria-label="Add ${esc(item.name)}">${icon('plus')}</button>` : icon('chevron')}
     </div>
@@ -560,8 +585,8 @@ function itemTile(ctx: Ctx, item: MenuItem, key: string, wide = false): string {
     ${saveButton(key, item.name, ' on-art')}
     <div class="body">
       <div class="name">${esc(item.name)}</div>
-      ${item.vendor || item.meta ? `<div class="tiny dim">${esc([item.vendor, item.meta].filter(Boolean).join(' · '))}</div>` : ''}
-      <div class="price">${priceOf(item, ctx.spec.currency)}</div>
+      ${item.vendor || item.meta || optionCount(item) ? `<div class="tiny dim">${esc([item.vendor, item.meta, optionCount(item)].filter(Boolean).join(' · '))}</div>` : ''}
+      <div class="price">${priceFrom(item, ctx.spec.currency)}</div>
     </div>
     <span class="go" aria-hidden="true">${icon('chevron')}</span>
   </div>`
@@ -573,7 +598,7 @@ function itemStackCard(ctx: Ctx, item: MenuItem, key: string): string {
     <div class="body">
       <div class="top">
         <span class="name">${esc(item.name)}</span>
-        <span class="price">${priceOf(item, ctx.spec.currency)}</span>
+        <span class="price">${priceFrom(item, ctx.spec.currency)}</span>
       </div>
       ${item.desc ? `<p>${esc(item.desc)}</p>` : ''}
       <div class="specs">
@@ -1696,10 +1721,11 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     const hadDeadFilter = !!stored && typeof stored === 'object' && 'filter' in stored
     if (hadDeadFilter) delete stored.filter
     const state = Object.assign(
-      { cart: {}, stamps: 0, orderType: DATA.fulfilment[0], party: 2, day: 0, slot: null, stars: 0, saved: {}, recent: [], orders: [], bookings: [], customerName: '', customerContact: '' },
+      { cart: {}, stamps: 0, orderType: DATA.fulfilment[0], party: 2, day: 0, slot: null, stars: 0, saved: {}, pick: {}, recent: [], orders: [], bookings: [], customerName: '', customerContact: '' },
       stored,
     )
     if (!state.saved || typeof state.saved !== 'object') state.saved = {}
+    if (!state.pick || typeof state.pick !== 'object') state.pick = {}
     if (!Array.isArray(state.recent)) state.recent = []
     if (!Array.isArray(state.orders)) state.orders = []
     if (!Array.isArray(state.bookings)) state.bookings = []
@@ -1730,9 +1756,49 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     const backBtn = document.querySelector('[data-back]')
 
     const itemFor = (key) => {
-      const parts = key.split('-').map(Number)
+      const base = String(key).split('::')[0]
+      const parts = base.split('-').map(Number)
       const section = DATA.menu[parts[0]]
       return section && section.items[parts[1]] ? section.items[parts[1]] : null
+    }
+
+    // Options are only real when a product has more than one priced variant.
+    // The chosen one is remembered per item, and its price is what the cart and
+    // the order use.
+    function variantsOf(item) {
+      return item && Array.isArray(item.variants) ? item.variants.filter((variant) => variant.price > 0) : []
+    }
+    function variantRef(variant) {
+      return variant.id || variant.name
+    }
+    function chosenVariant(item, key) {
+      const list = variantsOf(item)
+      if (list.length < 2) return null
+      const wanted = state.pick[key]
+      return list.find((variant) => variantRef(variant) === wanted) || list.find((variant) => variant.selected) || list[0]
+    }
+    function cartParts(cartKey) {
+      const raw = String(cartKey)
+      const cut = raw.indexOf('::')
+      const key = cut < 0 ? raw : raw.slice(0, cut)
+      const ref = cut < 0 ? '' : decodeURIComponent(raw.slice(cut + 2))
+      const item = itemFor(key)
+      const variant = ref ? variantsOf(item).find((entry) => variantRef(entry) === ref) || null : null
+      return { key: key, item: item, variant: variant }
+    }
+    function cartPrice(cartKey) {
+      const parts = cartParts(cartKey)
+      return parts.variant ? parts.variant.price : parts.item ? parts.item.price : 0
+    }
+    function variantHtml(item, key, chosen) {
+      const list = variantsOf(item)
+      if (list.length < 2) return ''
+      return '<div class="variants" data-variants><span class="label">Choose an option · ' + list.length + '</span><div class="variant-row">' +
+        list.map(function (variant) {
+          const on = chosen && variantRef(chosen) === variantRef(variant)
+          return '<button class="variant' + (on ? ' on' : '') + '" type="button" data-variant="' + esc(variantRef(variant)) + '" data-variant-key="' + key + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
+            '<span>' + esc(variant.name) + '</span><b>' + money(variant.price) + '</b></button>'
+        }).join('') + '</div></div>'
     }
 
     function toast(message) {
@@ -1905,10 +1971,13 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       if (!item) return
       const host = document.querySelector('[data-detail-body]')
       const screen = document.querySelector('[data-screen="detail"]')
-      const price = item.price > 0 ? money(item.price) : ''
-      const footer = DATA.ordering && item.price > 0
-        ? '<div class="detail-cta"><div class="detail-cta-line"><span class="tiny dim">' + esc(item.meta || DATA.catalogWord) + '</span>' +
-          '<b class="price">' + price + '</b></div>' +
+      const chosen = chosenVariant(item, key)
+      const unitPrice = chosen ? chosen.price : item.price
+      const price = unitPrice > 0 ? money(unitPrice) : ''
+      const picker = variantHtml(item, key, chosen)
+      const footer = DATA.ordering && unitPrice > 0
+        ? '<div class="detail-cta"><div class="detail-cta-line"><span class="tiny dim">' + esc(chosen ? chosen.name : item.meta || DATA.catalogWord) + '</span>' +
+          '<b class="price" data-unit-price>' + price + '</b></div>' +
           '<button class="btn accent" type="button" data-add="' + key + '">' + DATA.addLabel + '</button></div>'
         : DATA.booking
           ? '<div class="detail-cta"><button class="btn accent block" type="button" data-go="book">' + DATA.bookTitle + '</button></div>'
@@ -1916,7 +1985,10 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
             ? '<div class="detail-cta"><button class="btn accent block" type="button" data-go="quote">' + DATA.quoteTitle + '</button></div>'
             : ''
       const shellDetail = detailHtml(item, key, price)
-      host.innerHTML = shellDetail ||
+      const withPicker = shellDetail && picker
+        ? shellDetail.replace('<div class="detail-gap"', picker + '<div class="detail-gap"')
+        : shellDetail
+      host.innerHTML = withPicker ||
         '<div class="thumb m-' + DATA.motif + ' detail-band">' +
         pickShot(key, 'photoWide', item.name, item) +
         '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' +
@@ -1928,6 +2000,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         (item.desc ? '<p class="lede">' + esc(item.desc) + '</p>' : '') +
         '<div class="detail-line"><span class="tiny dim">' + esc(item.meta || DATA.catalogWord) + '</span><span class="price">' + price + '</span></div>' +
         '<p class="tiny dim" style="margin-top:16px">Prices include tax. Ask the team about allergies or access needs — they would rather know.</p>' +
+        picker +
         '<div class="detail-gap" aria-hidden="true"></div>' +
         footer +
         '</div>'
@@ -1998,12 +2071,15 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     }
 
     function itemRow(item, key) {
-      const price = item.price > 0 ? money(item.price) : ''
+      const prices = variantsOf(item).map(function (variant) { return variant.price })
+      const differs = prices.length > 1 && new Set(prices).size > 1
+      const price = differs ? 'From ' + money(Math.min.apply(null, prices)) : item.price > 0 ? money(item.price) : ''
+      const note = [item.meta || item.desc || DATA.catalogWord, differs ? prices.length + ' options' : ''].filter(Boolean).join(' · ')
       return '<div class="r-row" data-item="' + key + '" role="button" tabindex="0">' +
         '<span class="thumb r-art m-' + DATA.motif + '">' + pickShot(key, 'photoThumb', item.name, item) +
         '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span></span>' +
         '<div class="lead"><div class="name">' + esc(item.name) + '</div>' +
-        '<div class="desc">' + esc(item.meta || item.desc || DATA.catalogWord) + '</div></div>' +
+        '<div class="desc">' + esc(note) + '</div></div>' +
         '<div class="tail"><span class="price">' + price + '</span>' +
         '<button class="save' + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save">' + HEART + '</button>' +
         (DATA.ordering && item.price > 0 ? '<button class="add" type="button" data-add="' + key + '" aria-label="Add">' + PLUS + '</button>' : '') +
@@ -2155,7 +2231,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
     function cartTotals() {
       const lines = Object.entries(state.cart).filter((entry) => entry[1] > 0)
-      const subtotal = lines.reduce((total, entry) => total + (itemFor(entry[0])?.price || 0) * entry[1], 0)
+      const subtotal = lines.reduce((total, entry) => total + cartPrice(entry[0]) * entry[1], 0)
       const fee = state.orderType === 'Delivery' && subtotal > 0 ? DATA.deliveryFee : 0
       return { lines, subtotal, fee, total: subtotal + fee }
     }
@@ -2182,9 +2258,10 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       if (foot) foot.hidden = false
       host.innerHTML = totals.lines
         .map((entry) => {
-          const item = itemFor(entry[0])
+          const parts = cartParts(entry[0])
+          const item = parts.item
           if (!item) return ''
-          return '<div class="cart-line"><div><div class="name">' + esc(item.name) + '</div><div class="price">' + money(item.price * entry[1]) + '</div></div>' +
+          return '<div class="cart-line"><div><div class="name">' + esc(item.name) + (parts.variant ? ' — ' + esc(parts.variant.name) : '') + '</div><div class="price">' + money(cartPrice(entry[0]) * entry[1]) + '</div></div>' +
             '<div class="qty"><button type="button" data-inc="' + entry[0] + '" data-delta="-1" aria-label="Remove one">−</button><b>' + entry[1] + '</b>' +
             '<button type="button" data-inc="' + entry[0] + '" data-delta="1" aria-label="Add one">+</button></div></div>'
         })
@@ -2199,12 +2276,16 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     }
 
     function addItem(key) {
-      state.cart[key] = (state.cart[key] || 0) + 1
+      const item = itemFor(key)
+      const chosen = item ? chosenVariant(item, key) : null
+      // The option is part of the line's identity, so two sizes of one shirt are
+      // two cart lines and each is ordered at its own price.
+      const cartKey = chosen ? key + '::' + encodeURIComponent(variantRef(chosen)) : key
+      state.cart[cartKey] = (state.cart[cartKey] || 0) + 1
       save()
       renderCart()
-      const item = itemFor(key)
       buzz(12)
-      toast((item ? item.name : 'Added') + ' added')
+      toast((item ? item.name : 'Added') + (chosen ? ' — ' + chosen.name : '') + ' added')
     }
 
     async function placeOrder() {
@@ -2220,7 +2301,10 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         const payload = await postJson('/p/' + DATA.token + '/orders', {
           customer: Object.assign({ name }, contactFields(contact)),
           fulfilment: state.orderType,
-          items: totals.lines.map(([key, qty]) => ({ key, qty })),
+          items: totals.lines.map(([cartKey, qty]) => {
+            const parts = cartParts(cartKey)
+            return Object.assign({ key: parts.key, qty: qty }, parts.variant ? { variant: variantRef(parts.variant) } : {})
+          }),
         })
         const order = payload.order
         state.orders = [{ id: order.id, number: order.number, status: order.status, total: order.total, createdAt: order.createdAt }, ...state.orders].slice(0, 12)
@@ -2382,7 +2466,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
     document.addEventListener('click', (event) => {
       const target = event.target.closest(
-        '[data-add],[data-inc],[data-pay],[data-go],[data-jump],[data-place],[data-type],[data-party],[data-book],[data-reserve],[data-quote-send],[data-send-review],[data-cart-open],[data-nav-open],[data-save],[data-search-open],[data-saved-open],[data-search-clear],[data-filter],[data-property-filter],[data-recent],[data-install],[data-close-sheet],[data-back],[data-store],.stars span,[data-item]',
+        '[data-add],[data-inc],[data-pay],[data-go],[data-jump],[data-place],[data-type],[data-party],[data-book],[data-reserve],[data-quote-send],[data-send-review],[data-cart-open],[data-nav-open],[data-save],[data-search-open],[data-saved-open],[data-search-clear],[data-filter],[data-property-filter],[data-recent],[data-install],[data-close-sheet],[data-back],[data-store],[data-variant],.stars span,[data-item]',
       )
       if (!target) return
 
@@ -2416,6 +2500,11 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           renderSearch()
         }
         return
+      }
+      if (target.dataset.variant) {
+        state.pick[target.dataset.variantKey] = target.dataset.variant
+        save()
+        return openDetail(target.dataset.variantKey, false)
       }
       if (target.dataset.add) return addItem(target.dataset.add)
       if (target.dataset.inc) {

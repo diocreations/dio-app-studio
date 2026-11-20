@@ -2376,16 +2376,20 @@ async function shopifyProducts(
         const variants = rawVariants
           .slice(0, 24)
           .map((variant) => ({
+            id: variant.id == null ? '' : String(variant.id).slice(0, 40),
             name: collapse(String(variant.title ?? ''), 40),
             price: toCents(String(variant.price ?? '')),
             currency,
             raw: String(variant.price ?? ''),
           }))
           .filter((variant) => variant.price > 0 && variant.name)
-        const cheapest = variants.reduce<(typeof variants)[number] | null>(
-          (best, variant) => (!best || variant.price < best.price ? variant : best),
-          null,
-        )
+        // The first cheapest option wins a tie: exactly one variant is the one
+        // the published price came from, even when two share that price.
+        let cheapestIndex = -1
+        variants.forEach((variant, index) => {
+          if (cheapestIndex < 0 || variant.price < variants[cheapestIndex].price) cheapestIndex = index
+        })
+        const cheapest = cheapestIndex >= 0 ? variants[cheapestIndex] : null
         const images = Array.isArray(product.images) ? (product.images as Record<string, unknown>[]) : []
         const image = acceptedImage(
           images.slice(0, 3).map((entry) => String(entry.src ?? '')),
@@ -2412,11 +2416,12 @@ async function shopifyProducts(
             : {}),
           ...(variants.length > 1
             ? {
-                variants: variants.map((variant) => ({
+                variants: variants.map((variant, index) => ({
+                  ...(variant.id ? { id: variant.id } : {}),
                   name: variant.name,
                   price: variant.price,
                   currency: variant.currency,
-                  ...(variant.price === cheapest?.price ? { selected: true } : {}),
+                  ...(index === cheapestIndex ? { selected: true } : {}),
                 })),
               }
             : {}),

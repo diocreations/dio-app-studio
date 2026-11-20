@@ -34,17 +34,35 @@ Every variant is parsed with the same money parser as the rest of the importer.
 The published price is the **cheapest positive variant price**, chosen
 deliberately so a "from" figure is never above what a customer can pay. Nothing
 is lost to that choice: the item records every variant up to 24 as
-`variants: [{ name, price, currency, selected? }]`, each with its own price and
-the shop's currency, and exactly one marked `selected: true` — the variant the
-published figure came from. The evidence's `raw` value is that variant's price
-exactly as the feed wrote it, its `variant` is the variant's name, and
-`currency` comes from the entry page's declared currency.
+`variants: [{ id?, name, price, currency, selected? }]`, each with its own price
+and the shop's currency, and exactly one marked `selected: true` — the variant
+the published figure came from. Selection is decided by the **index of the first
+cheapest variant**, never by comparing prices, so two options at the same lowest
+price still produce exactly one `selected` (the earlier one, as the feed listed
+it). The feed's own variant `id` is kept when it is a trimmed string of 1–40
+letters, digits, `_` or `-`; an unusable id is dropped without dropping the
+option. The evidence's `raw` value is that variant's price exactly as the feed
+wrote it, its `variant` is the variant's name, and `currency` comes from the
+entry page's declared currency.
 
 Products are never flattened to one anonymous number: a two-size or twelve-pack
 product keeps its whole option list on the build (`sanitizeMenu` re-validates
-names, positive prices, three-letter currencies and the single `selected` flag,
-and drops anything else). The app renders the lowest price; the options remain
-with the item for the owner and editor.
+ids, names, positive prices, three-letter currencies and the single `selected`
+flag, and drops anything else).
+
+In the customer app a product whose priced options differ leads with `From £42`
+and an option count (`3 options`), shows each option with its own price on the
+item page, and remembers the chosen one per item. The footer price follows the
+selection. A product with one price (or with options that all cost the same)
+keeps the plain single price. Nothing about stock or availability is invented:
+the feed carries none.
+
+The chosen option is authoritative for the transaction. The cart keys a line by
+item plus option, the order payload sends only the item key and the option's
+id-or-name, and the server looks that option up on its own stored catalogue and
+charges its price. An option the item does not have is refused with
+`variant_unknown` (422); a `price` in the request body is ignored. Order lines
+store both `variant` (the name shown to the kitchen) and `variant_id`.
 
 ## Product image association
 
@@ -127,10 +145,19 @@ project (`spec.review`) and a later restore cannot rebuild or overwrite it.
 Discarding deletes the row and the cookie; a refresh after that is an empty
 brief.
 
+## Automated evidence
+
+- `tests/shopifyVariants.test.ts`: variant prices and currency, the marked
+  option, the tie case (two cheapest options → exactly one `selected`), id
+  retention and validation, a 12-option list kept whole, image association, the
+  public build's sanitised variants.
+- `tests/variants.test.ts`: the shelf's `From £42` and option count, the
+  single-price product left simple, the order charged at the selected option,
+  two options as two lines, a browser price ignored, and unknown/foreign/absent
+  options refused.
+
 ## What a live run still has to prove
 
-- That `presentandcorrect.com/products.json` is readable under robots.txt and
-  returns the catalogue (it may be blocked or disabled).
-- That all 136 live product images pass the gate and belong to the right product.
-- That live variant prices match the storefront's displayed prices in GBP.
-- That a real product named with a decorative word keeps its photo.
+The checks are listed, with pass criteria and evidence to capture, in
+[`present-and-correct-crawl-plan.md`](./present-and-correct-crawl-plan.md). That
+run has not been authorised; this document claims no live result.

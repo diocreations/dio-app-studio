@@ -54,6 +54,18 @@ function price(item: MenuItem, currency?: string): string {
   return item.price > 0 ? moneyIn(item.price, currency) : ''
 }
 
+/** A product whose options are priced differently leads with its cheapest and
+ *  says how many options there are; a single price is still just that price. */
+function shelfPrice(item: MenuItem, currency?: string): string {
+  const priced = (item.variants ?? []).filter((variant) => variant.price > 0)
+  if (priced.length < 2) return price(item, currency)
+  const prices = priced.map((variant) => variant.price)
+  const lowest = Math.min(...prices)
+  return prices.some((value) => value !== lowest)
+    ? `From ${moneyIn(lowest, currency)} · ${priced.length} options`
+    : price(item, currency)
+}
+
 /** A job with no fixed price shows its own "from" line, never a blank quote. */
 function rate(item: MenuItem, currency?: string): string {
   if (item.price > 0) return moneyIn(item.price, currency)
@@ -186,7 +198,7 @@ function shopHome(spec: AppSpec): string {
              .map(
                (entry, index) => `<div class="fx-product" data-item="${entry.key}" role="button" tabindex="0">
                  ${still(spec, index)}
-                 <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${price(entry.item, spec.currency)}</span></div>
+                                   <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec.currency)}</span></div>
                </div>`,
              )
              .join('')}</div>`
@@ -491,7 +503,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               .map(
                 (entry, index) => `<div class="fx-product" data-item="${entry.key}" role="button" tabindex="0">
                   ${visual(ctx, node, index, 'card', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, false, entry.item.image)}
-                  <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${price(entry.item, spec.currency)}</span></div>
+                  <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec.currency)}</span></div>
                 </div>`,
               )
               .join('')}</div>`
@@ -1089,7 +1101,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               .map(
                 (entry, index) => `<article class="fx-ecom-pick" data-item="${entry.key}" role="button" tabindex="0">
                   <figure>${visual(ctx, node, index, 'card', index === 0, index, entry.item.media)}</figure>
-                  <b>${esc(entry.item.name)}</b><span>${price(entry.item, spec.currency)}</span>
+                  <b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec.currency)}</span>
                 </article>`,
               )
               .join('')}</div>`
@@ -1103,7 +1115,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               .map(
                 (entry, index) => `<article class="fx-ecom-card">
                   <button class="fx-ecom-shot" type="button" data-item="${entry.key}" aria-label="Open ${esc(entry.item.name)}">${visual(ctx, node, index, 'card', index < 2, index, entry.item.media)}</button>
-                  <div class="fx-ecom-copy"><b>${esc(entry.item.name)}</b><span>${price(entry.item, spec.currency)}</span>
+                  <div class="fx-ecom-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec.currency)}</span>
                   ${spec.features.includes('ordering') && entry.item.price > 0 ? `<button type="button" data-add="${entry.key}" aria-label="Add ${esc(entry.item.name)}">+</button>` : ''}</div>
                 </article>`,
               )

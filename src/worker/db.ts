@@ -197,7 +197,9 @@ const SCHEMA = [
     menu_key TEXT NOT NULL DEFAULT '',
     name TEXT NOT NULL,
     price INTEGER NOT NULL DEFAULT 0,
-    qty INTEGER NOT NULL DEFAULT 1
+    qty INTEGER NOT NULL DEFAULT 1,
+    variant TEXT NOT NULL DEFAULT '',
+    variant_id TEXT NOT NULL DEFAULT ''
   )`,
   `CREATE TABLE IF NOT EXISTS bookings (
     id TEXT PRIMARY KEY,
@@ -351,6 +353,8 @@ const MIGRATIONS = [
   `ALTER TABLE projects ADD COLUMN variation_slot INTEGER`,
   `ALTER TABLE projects ADD COLUMN doc TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE owner_sessions ADD COLUMN last_seen_at TEXT NOT NULL DEFAULT ''`,
+  `ALTER TABLE order_items ADD COLUMN variant TEXT NOT NULL DEFAULT ''`,
+  `ALTER TABLE order_items ADD COLUMN variant_id TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE bookings ADD COLUMN payment_status TEXT NOT NULL DEFAULT 'unpaid'`,
   `ALTER TABLE bookings ADD COLUMN paid_amount INTEGER NOT NULL DEFAULT 0`,
   `CREATE UNIQUE INDEX IF NOT EXISTS projects_variation_slot ON projects (variation_slot)`,

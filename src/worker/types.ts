@@ -82,7 +82,14 @@ export type MenuItem = {
   /** Every option the source lists for one product, at its own price and in its
    *  own currency. `selected` marks the one whose price this item publishes, so
    *  a cheapest-variant "from" price is never mistaken for the only option. */
-  variants?: { name: string; price: number; currency?: string; selected?: boolean }[]
+  variants?: {
+    /** The source's own variant id, when the feed gives one. */
+    id?: string
+    name: string
+    price: number
+    currency?: string
+    selected?: boolean
+  }[]
   /** The seller on a marketplace: the store an item is bought from. */
   vendor?: string
   /** A photograph owned by this product, service or room. */

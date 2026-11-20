@@ -30,7 +30,16 @@ export type BookingInput = {
 }
 export type EnquiryInput = { name?: unknown; contact?: unknown; message?: unknown }
 
-export type OrderItem = { id: string; menuKey: string; name: string; price: number; qty: number }
+export type OrderItem = {
+  id: string
+  menuKey: string
+  name: string
+  /** The option bought, when the product has variants. */
+  variant: string
+  variantId: string
+  price: number
+  qty: number
+}
 export type Order = {
   id: string
   number: string
@@ -167,7 +176,16 @@ type OrderRow = {
   customer_phone: string
   customer_email: string
 }
-type ItemRow = { id: string; order_id: string; menu_key: string; name: string; price: number; qty: number }
+type ItemRow = {
+  id: string
+  order_id: string
+  menu_key: string
+  name: string
+  price: number
+  qty: number
+  variant: string
+  variant_id: string
+}
 type BookingRow = {
   id: string
   number: string
@@ -285,6 +303,8 @@ function publicOrder(row: OrderRow, items: ItemRow[]): Order {
       id: item.id,
       menuKey: item.menu_key,
       name: item.name,
+      variant: item.variant ?? '',
+      variantId: item.variant_id ?? '',
       price: Number(item.price),
       qty: Number(item.qty),
     })),
@@ -299,7 +319,14 @@ export async function createOrder(db: D1Database, project: Project, input: Order
   if (!items.length) throw new BusinessError('items_required', 'Add something to the order first.', 422)
   if (items.length > 40) throw new BusinessError('too_many_items', 'That order has too many lines.', 422)
 
-  const parsed: { key: string; item: AppSpec['menu'][number]['items'][number]; qty: number }[] = []
+  const parsed: {
+    key: string
+    item: AppSpec['menu'][number]['items'][number]
+    qty: number
+    variant: string
+    variantId: string
+    price: number
+  }[] = []
   for (const raw of items) {
     const entry = raw as Record<string, unknown>
     const key = text(entry?.key, 20)
@@ -312,7 +339,27 @@ export async function createOrder(db: D1Database, project: Project, input: Order
     const qty = Math.floor(Number(entry?.qty))
     if (!Number.isFinite(qty) || qty < 1 || qty > 20)
       throw new BusinessError('qty_invalid', 'Choose between 1 and 20 of each item.', 422)
-    parsed.push({ key, item, qty })
+    // A variant is priced from the owner's catalogue, never from the request:
+    // the browser may only name which option it wants, and the server decides
+    // what that option costs. An unknown or unavailable option is refused
+    // rather than falling back to the lowest price.
+    const wanted = text(entry?.variant, 60)
+    let variant = ''
+    let variantId = ''
+    let price = item.price
+    if (wanted && Array.isArray(item.variants) && item.variants.length) {
+      const matchVariant = item.variants.find(
+        (option) => (option.id ? option.id === wanted : option.name === wanted),
+      )
+      if (!matchVariant)
+        throw new BusinessError('variant_unknown', 'That option is not available for this item.', 422)
+      variant = matchVariant.name
+      variantId = matchVariant.id ?? ''
+      price = matchVariant.price
+    } else if (wanted && (!item.variants || !item.variants.length)) {
+      throw new BusinessError('variant_unknown', 'That item has no options to choose from.', 422)
+    }
+    parsed.push({ key, item, qty, variant, variantId, price })
   }
 
   const fulfilmentOptions = verticalFor(project.spec.vertical).vocab.fulfilment
@@ -320,7 +367,7 @@ export async function createOrder(db: D1Database, project: Project, input: Order
   if (!fulfilmentOptions.includes(fulfilment))
     throw new BusinessError('fulfilment_invalid', 'Choose how you would like to receive this order.', 422)
   const deliveryFee = fulfilment === 'Delivery' ? 299 : 0
-  const subtotal = parsed.reduce((sum, line) => sum + line.item.price * line.qty, 0)
+  const subtotal = parsed.reduce((sum, line) => sum + line.price * line.qty, 0)
   const total = subtotal + deliveryFee
   const customer = await upsertCustomer(db, project.id, input.customer)
   const now = new Date().toISOString()
@@ -369,12 +416,16 @@ export async function createOrder(db: D1Database, project: Project, input: Order
       order_id: order.id,
       menu_key: line.key,
       name: line.item.name,
-      price: line.item.price,
+      price: line.price,
       qty: line.qty,
+      variant: line.variant,
+      variant_id: line.variantId,
     }
     await db
-      .prepare('INSERT INTO order_items (id, order_id, menu_key, name, price, qty) VALUES (?, ?, ?, ?, ?, ?)')
-      .bind(item.id, item.order_id, item.menu_key, item.name, item.price, item.qty)
+      .prepare(
+        'INSERT INTO order_items (id, order_id, menu_key, name, price, qty, variant, variant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      )
+      .bind(item.id, item.order_id, item.menu_key, item.name, item.price, item.qty, item.variant, item.variant_id)
       .run()
     stored.push(item)
   }

@@ -481,6 +481,22 @@ body[data-accent-style="underline"] .sect { border-bottom: 1px solid var(--hair)
   box-shadow: 0 10px 20px -14px var(--chip-on), 0 0 0 2px color-mix(in srgb, var(--chip-on) 14%, transparent);
 }
 
+/* Product options: each carries its own price, wraps instead of squeezing on a
+   narrow phone, and keeps a 44px tap target. */
+.variants { margin: 18px 0 6px; }
+.variants .label { margin-bottom: 8px; }
+.variant-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.variant {
+  display: inline-flex; align-items: baseline; gap: 8px; min-height: 44px;
+  padding: 10px 14px; border-radius: 999px; border: 1px solid var(--hair);
+  background: var(--surface); color: var(--ink); font: inherit; font-size: 12.5px;
+  font-weight: 600; cursor: pointer; box-shadow: var(--shadow-1);
+}
+.variant b { font-family: var(--price-font); font-size: 12.5px; font-weight: 650; letter-spacing: -0.01em; }
+.variant.on { background: var(--chip-on); color: var(--chip-on-ink); border-color: transparent; }
+.variant.on b { color: inherit; }
+.variant:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
 /* ----------------------------------------------------------- compact rows */
 .status-card {
   display: flex; align-items: center; gap: 12px; padding: 15px 16px; border-radius: var(--radius);

@@ -1533,7 +1533,12 @@ app.get('/p/:token/orders/:orderId', async (c) => {
       status: order.status,
       fulfilment: order.fulfilment,
       total: order.total,
-      items: order.items.map((item) => ({ name: item.name, qty: item.qty })),
+      items: order.items.map((item) => ({
+        name: item.name,
+        variant: item.variant,
+        price: item.price,
+        qty: item.qty,
+      })),
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
     },

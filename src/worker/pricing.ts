@@ -581,7 +581,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
  *  catalogue is not flattened to a single unexplained figure. */
 function sanitizeVariants(
   input: unknown,
-): { name: string; price: number; currency?: string; selected?: boolean }[] {
+): { id?: string; name: string; price: number; currency?: string; selected?: boolean }[] {
   if (!Array.isArray(input)) return []
   return input.slice(0, 24).flatMap((raw) => {
     const entry = (raw ?? {}) as Record<string, unknown>
@@ -590,8 +590,11 @@ function sanitizeVariants(
     if (!name || !Number.isFinite(price) || price <= 0) return []
     const currency =
       typeof entry.currency === 'string' && /^[A-Z]{3}$/.test(entry.currency) ? entry.currency : undefined
+    const rawId = typeof entry.id === 'string' ? entry.id.trim() : ''
+    const id = /^[A-Za-z0-9_-]{1,40}$/.test(rawId) ? rawId : undefined
     return [
       {
+        ...(id ? { id } : {}),
         name,
         price: Math.min(1_000_000, Math.round(price)),
         ...(currency ? { currency } : {}),

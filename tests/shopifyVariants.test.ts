@@ -21,8 +21,8 @@ const HOME = `<!doctype html><html><head>
 <p>Free shipping on orders over £40.</p>
 </body></html>`
 
-function variant(title: string, price: string) {
-  return { title, price, sku: title.toUpperCase() }
+function variant(title: string, price: string, id?: string) {
+  return id ? { id, title, price, sku: title.toUpperCase() } : { title, price, sku: title.toUpperCase() }
 }
 
 const FEED = {
@@ -33,7 +33,7 @@ const FEED = {
       handle: 'linen-shirt',
       body_html: '<p>Washed linen, cut loose.</p>',
       product_type: 'Shirts',
-      variants: [variant('Small', '42.00'), variant('Medium', '58.00'), variant('Large', '49.00')],
+      variants: [variant('Small', '42.00', 'vp-small'), variant('Medium', '58.00', 'vp-medium'), variant('Large', '49.00', 'vp-large')],
       images: [{ src: 'https://cdn.shopify.com/s/files/1/0001/products/linen-shirt.jpg?v=1' }],
     },
     {
@@ -44,6 +44,17 @@ const FEED = {
       product_type: 'Paper',
       variants: Array.from({ length: 12 }, (_, index) => variant(`Pack of ${index + 1}`, (3 + index).toFixed(2))),
       images: [{ src: 'https://cdn.shopify.com/s/files/1/0001/products/pocket-notebook.jpg?v=1' }],
+    },
+    {
+      // Two options at the same lowest price: exactly one may be marked as the
+      // option the published figure came from.
+      id: 4,
+      title: 'Day Pass',
+      handle: 'day-pass',
+      body_html: '<p>One day, any day.</p>',
+      product_type: 'Tickets',
+      variants: [variant('Early entry', '30.00', 'vp-early'), variant('Late entry', '30.00', 'vp-late'), variant('Week pass', '45.00', 'vp-week')],
+      images: [{ src: 'https://cdn.shopify.com/s/files/1/0001/products/day-pass.jpg?v=1' }],
     },
     {
       id: 3,
@@ -109,6 +120,44 @@ describe('a product with several variants', () => {
     expect(itemNamed(report, 'Linen Shirt').image?.url).toContain('/linen-shirt.jpg')
     expect(itemNamed(report, 'Pocket Notebook').image?.url).toContain('/pocket-notebook.jpg')
     expect(itemNamed(report, 'Canvas Tote').image?.url).toContain('/canvas-tote.jpg')
+  })
+
+  test('when two variants share the cheapest price, exactly one is selected', async () => {
+    const report = await readShop()
+    const pass = itemNamed(report, 'Day Pass')
+    const selected = pass.variants?.filter((variant) => variant.selected) ?? []
+    expect(selected).toHaveLength(1)
+    expect(selected[0].name).toBe('Early entry')
+    expect(pass.price).toBe(3000)
+    // The feed's own option IDs survive, so an order can name the exact option.
+    expect(pass.variants?.map((variant) => variant.id)).toEqual(['vp-early', 'vp-late', 'vp-week'])
+  })
+
+  test('a build keeps feed option IDs and drops ones that are not usable', () => {
+    const long = 'x'.repeat(41)
+    const menu = sanitizeMenu([
+      {
+        name: 'Tickets',
+        items: [
+          {
+            name: 'Day Pass',
+            price: 3000,
+            variants: [
+              { id: 'vp-early', name: 'Early entry', price: 3000, selected: true },
+              { id: '  vp-late  ', name: 'Late entry', price: 3000 },
+              { id: long, name: 'Week pass', price: 4500 },
+              { id: 42, name: 'Broken id', price: 4500 },
+            ],
+          },
+        ],
+      },
+    ])
+    expect(menu[0].items[0].variants).toEqual([
+      { id: 'vp-early', name: 'Early entry', price: 3000, selected: true },
+      { id: 'vp-late', name: 'Late entry', price: 3000 },
+      { name: 'Week pass', price: 4500 },
+      { name: 'Broken id', price: 4500 },
+    ])
   })
 
   test('the build stores variants with their selection but not the evidence sources', () => {
