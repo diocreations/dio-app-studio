@@ -31,7 +31,7 @@ remains unproven is production itself, and the scheduler.
 | `--remote` against Cloudflare D1/R2 | Rehearsed on staging, never on production | run `20261120T070220Z-74375d46`, `docs/qa/remote/REPORT.md` |
 | Restore into an isolated remote environment | Rehearsed on staging | `plattr-staging-restore` served pages, images and owner auth over HTTPS |
 | Scheduling and alert delivery | Sender proven, scheduler **not running** | alerts and heartbeat recorded by a local receiver; no git remote, no watchdog account |
-| R2 replication for unreferenced objects | **Not configured** | see *Media coverage* |
+| R2 replication for unreferenced objects | No such rule exists, and none is configured | Cloudflare OpenAPI schema and R2 docs checked 20 Nov 2026; see *Media coverage* |
 
 ## What a production backup is
 
@@ -109,13 +109,27 @@ Two ways to close that, in order of preference:
      (`r2_buckets[].bucket_name`) and redeploy, or copy the objects back with
      `r2 object put`. No application code changes.
 
-   Wrangler 4.151.0 has no replication command (`r2 bucket` offers create,
-   update, list, info, delete, sippy, notification, domain, dev-url,
-   local-uploads, lifecycle, cors and lock), and the R2 documentation reachable
-   from this machine describes in-region durability replication and Sippy
-   migration, not a configurable cross-bucket replication rule. A scheduled copy
-   is therefore the mechanism this repository can configure and verify; confirm
-   with the account before promising anything else.
+   Checked on 20 November 2026 instead of assumed:
+
+   - Wrangler 4.151.0 has no replication command (`r2 bucket` offers create,
+     update, list, info, delete, sippy, notification, domain, dev-url,
+     local-uploads, lifecycle, cors and lock).
+   - Cloudflare's published OpenAPI schema (`cloudflare/api-schemas`,
+     `openapi.yaml`, 20.8 MB) has no path containing `replication`. The R2
+     bucket endpoints it defines are buckets, `cors`, `custom_domains`,
+     `domains`, `jobs`, `lifecycle`, `local-uploads`, `lock`, `objects` and
+     `sippy`, plus account-level `metrics` and `temp-access-credentials`.
+   - The R2 documentation corpus lists S3 `GetBucketReplication` and
+     `PutBucketReplication` as unimplemented, and uses the word only for
+     in-region durability and `local-uploads` write propagation.
+
+   So there is no bucket-to-bucket replication rule to switch on today.
+   `r2/buckets/{bucket}/jobs` is the nearest thing, and it is a one-off
+   migration (Super Slurper, with `prefixDelete` and storage-class jobs), not a
+   continuous rule: the docs warn it can skip objects uploaded after it lists
+   them. A scheduled copy is therefore the mechanism this repository can
+   configure and verify. If Cloudflare ships a replication rule, prefer it and
+   retire the copy job; re-run this check before repeating the claim.
 2. Accept the gap, and keep the media cleanup policy strict so unreferenced
    objects do not accumulate. They are, by definition, not referenced by any
    document or media row, so losing them loses nothing a business can see.
@@ -359,8 +373,8 @@ monthly rehearsal hour.
    and no webhook URL are configured.
 3. No monitor watches the heartbeat. The job pings it; nothing alerts on silence
    (see `docs/MONITORING.md`).
-4. R2 replication is not configured, so unreferenced media objects are not
-   offsite.
+4. There is no replication rule to enable and no copy job is configured, so
+   unreferenced media objects are not offsite.
 5. The sweep exists and has run on staging, but nothing schedules it yet: the
    workflow step is committed and cannot run without a git remote.
 6. Credential rotation for the backup token is manual and undocumented beyond

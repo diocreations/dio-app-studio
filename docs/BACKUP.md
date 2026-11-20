@@ -9,7 +9,7 @@ summary and records what changed.
 | Asset | Production mechanism | Offsite copy | Retention |
 | --- | --- | --- | --- |
 | D1 database | `wrangler d1 export` before every deploy and nightly via the host scheduler | Copy the export to a separate account/bucket with object lock | 7 daily, 4 weekly, 3 monthly |
-| R2 media | Bucket replication to a second bucket/account, plus a nightly object listing | Replica bucket in another account/region | 30 daily, 12 monthly |
+| R2 media | A scheduled object copy to a second bucket/account, plus a nightly object listing (R2 exposes no replication rule) | Replica bucket in another account/region | 30 daily, 12 monthly |
 | Document versions | `doc_versions` (20 per project) | Included in the D1 backup | 20 versions per project |
 | Worker code | Git history plus the provider deployment record | Git remote | Every commit |
 

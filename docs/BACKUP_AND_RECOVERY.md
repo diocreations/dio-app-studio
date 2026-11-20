@@ -139,8 +139,10 @@ Two warnings were reproduced faithfully rather than introduced by the restore:
    fresh database, then run `bun scripts/verify-restore.mjs` on the imported file
    after converting it (the scrub and manifest steps are the same as
    `scripts/backup.mjs`; they only need a SQLite file).
-3. Copy media with bucket replication, or `wrangler r2 object get --remote` for
-   every key in `media/manifest.json`. Verify with
+3. Copy media with `wrangler r2 object get --remote` for every key in
+   `media/manifest.json`, or object by object if the manifest is lost. R2 exposes
+   no replication rule to lean on; see `docs/PRODUCTION_DISASTER_RECOVERY.md`.
+   Verify with
    `verifyMediaObjects` (the drill uses the same function).
 4. Point the `DB` and `MEDIA` bindings at the restored resources and deploy the
    matching Worker version.
@@ -154,7 +156,7 @@ Two warnings were reproduced faithfully rather than introduced by the restore:
 | Asset | Frequency | Retention | RPO |
 | --- | --- | --- | --- |
 | D1 | Before every deploy, and nightly | 7 daily, 4 weekly, 3 monthly | ≤ 24 h (≤ deploy time with a pre-deploy backup) |
-| R2 media | Continuous replication, plus a nightly manifest | 30 daily, 12 monthly | ≤ 24 h |
+| R2 media | A scheduled object copy, plus a nightly manifest (no replication rule exists to enable) | 30 daily, 12 monthly | ≤ 24 h |
 
 RTO: 4 hours for a single-region restore; one business day if the Worker or
 domain must be re-pointed. These targets assume the offsite copies exist; they

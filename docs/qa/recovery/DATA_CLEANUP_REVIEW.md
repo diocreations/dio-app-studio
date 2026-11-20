@@ -86,7 +86,7 @@ This is the same operation the restore path performs at read time, so a future
 | Projects | `prj_0186bead…`, `prj_2e31f516…`, `prj_a53d091e…`, `prj_b8d0b17b…`, `prj_dd887df0…` — all still exist |
 | Same hash as a live row | No (0 of 15) |
 | Referenced by any document | No |
-| Recoverable | Yes, from a local `scripts/backup.mjs` snapshot, which copies unreferenced objects too. **Not** from an offsite run: `scripts/offsite-backup.mjs` copies only the variants a `media` row names, so these 15 are outside every offsite backup until R2 replication exists |
+| Recoverable | Yes, from a local `scripts/backup.mjs` snapshot, which copies unreferenced objects too. **Not** from an offsite run: `scripts/offsite-backup.mjs` copies only the variants a `media` row names, so these 15 are outside every offsite backup until a bucket-wide copy job exists |
 
 These are the three stored widths of five photos whose `media` row is gone: an
 upload that was replaced or deleted, leaving its bytes behind. They are the
@@ -99,8 +99,9 @@ which `wrangler r2 object` does not provide (only get/put/delete), so it must be
 done from the Cloudflare dashboard or with an R2 API/SDK listing.
 
 **Recommendation: do not delete yet.** First confirm a media backup that contains
-them verifies (it does today), and prefer enabling R2 bucket replication so the
-bytes exist in two places before one copy is removed. Then delete from a listing
+them verifies (it does today), and prefer a scheduled bucket copy so the bytes
+have a second home before one copy is removed. R2 exposes no replication rule to
+enable; see `docs/PRODUCTION_DISASTER_RECOVERY.md`. Then delete from a listing
 that proves each key has no row and no document reference, and record the keys in
 `media_cleanup_log` if the deletion goes through application code.
 
@@ -110,7 +111,7 @@ that proves each key has no row and no document reference, and record the keys i
 | --- | --- | --- | --- | --- |
 | Activity with no project | 12 | None | Yes (backups) | Delete after approval, on a verified backup |
 | Versions naming deleted media | 38 | Project | Version yes, image no | Leave; restore already tolerates them |
-| Objects with no media row | 15 (217 KB) | Project prefix, no row | Yes (media backups) | Keep until replication exists |
+| Objects with no media row | 15 (217 KB) | Project prefix, no row | Yes (media backups) | Keep until a bucket copy job exists |
 
 None of the three is a correctness bug in the current app: no owner sees a broken
 page, and the store and editor work. They matter because they make counts and

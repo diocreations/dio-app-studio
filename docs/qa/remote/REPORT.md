@@ -256,8 +256,9 @@ would be 10.5 GB and leave the free tier.
 3. **Production is still not deployed.** This proves the path on staging; it does
    not create a production database, bucket, origin or schedule.
 4. **Unreferenced media is still outside the backup** — the run copies the 21
-   variants named by a row. R2 bucket replication is the fix and is not enabled
-   on staging either.
+   variants named by a row. A scheduled bucket copy is the fix, and none is
+   configured on staging either; R2 exposes no replication rule (see
+   `docs/PRODUCTION_DISASTER_RECOVERY.md`).
 5. **The sweep is not scheduled yet.** It is implemented, tested locally and run
    by hand on staging; the workflow step that would run it daily is committed but
    cannot execute until the repository has a remote.

@@ -2,7 +2,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 const APPS = ['trades', 'auto', 'ecommerce', 'courses', 'finance']
-const WIDTHS = [320, 375, 390, 430]
+const WIDTHS = (process.env.WIDTHS || '320,375,390,430').split(',').map(Number)
 const HEIGHT = 844
 const ORIGIN = process.env.PLATTR_ORIGIN || 'http://127.0.0.1:8795'
 

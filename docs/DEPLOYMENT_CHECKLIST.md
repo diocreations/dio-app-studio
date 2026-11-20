@@ -28,8 +28,8 @@ itself; production publishing needs explicit owner approval.
       additive.
 - [ ] Snapshot the production D1 database before the deploy and record the
       backup id.
-- [ ] Snapshot the R2 bucket or rely on the bucket replication policy; record the
-      object count.
+- [ ] Snapshot the R2 bucket by copying it, and record the object count. R2 has
+      no replication policy to rely on; see `docs/PRODUCTION_DISASTER_RECOVERY.md`.
 - [ ] Check no project still has `sampleContent` true unless it is intentionally
       a demo. The dashboard panel and `clear-samples` are the supported path.
 - [ ] Confirm sample/demo credentials are not embedded in a customer app. The

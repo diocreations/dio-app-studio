@@ -8,7 +8,7 @@ const APPS = {
   property: '8ff5f4ac8897bc58694a0dde',
   studio: '61cd93de6e8aa9c7340e66e0',
 }
-const WIDTHS = [320, 375, 390, 430]
+const WIDTHS = (process.env.WIDTHS || '320,375,390,430').split(',').map(Number)
 const HEIGHT = 844
 const ORIGIN = process.env.PLATTR_ORIGIN || 'http://127.0.0.1:8795'
 

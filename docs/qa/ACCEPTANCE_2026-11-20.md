@@ -18,6 +18,7 @@ untouched.
 | Save, reload, versions (batch 2) | `bun scripts/verify-batch2-docs.mjs` | **5/5** apps ok |
 | Save, reload, versions (batch 3) | `bun scripts/verify-batch3-docs.mjs` | **5/5** apps ok |
 | Abandoned-run sweep rules | `bun run backup:sweep:fixture` | **18/18** checks ok |
+| Ten flagship apps, 390px captures | `WIDTHS=390 bun scripts/capture-batch2.mjs`, then `…-batch3.mjs` | **10/10** PNGs at 390×844, in `docs/qa/flagship-390/` |
 
 What the viewport matrix asserts, per app per width: page width equals the
 viewport (no horizontal overflow), no broken images, every image has alt text,
@@ -46,7 +47,32 @@ must delete nothing.
 | Remote restore and restored-app media delivery | Not re-run; same evidence. |
 | Scheduled GitHub Actions run | Blocked: the repository has no git remote, and the `diocreations` GitHub account holds no Plattr repository (200 repositories listed, none matching). |
 | Missed-heartbeat alert | Blocked: no monitoring account exists. |
-| Screenshots | None captured this pass. The matrices are CSS-viewport checks, not visual review; prior captures remain in `docs/qa/`. |
+| Visual review of all ten apps | Three captures were opened and inspected (cafe, ecommerce, finance); the other seven were not looked at. |
+
+## Flagship screenshots at 390px
+
+Ten captures, one per flagship app, each 390×844 from the live local Worker through
+CDP. Regenerate with `WIDTHS=390 bun scripts/capture-batch2.mjs` (or
+`capture-batch3.mjs`); without `WIDTHS` the scripts still capture 320/375/390/430.
+
+| App | Trade | File |
+| --- | --- | --- |
+| cafe | Café and bakery (Ember & Rye) | `docs/qa/flagship-390/cafe-390.png` |
+| gym | Gym and fitness (Ironworks) | `docs/qa/flagship-390/gym-390.png` |
+| clinic | Clinic (Northgate Dental) | `docs/qa/flagship-390/clinic-390.png` |
+| property | Property (Harper & Vale) | `docs/qa/flagship-390/property-390.png` |
+| studio | Studio (Fieldwork) | `docs/qa/flagship-390/studio-390.png` |
+| trades | Trades (job request) | `docs/qa/flagship-390/trades-390.png` |
+| auto | Garage (service booking) | `docs/qa/flagship-390/auto-390.png` |
+| ecommerce | Online store (Fielding Goods) | `docs/qa/flagship-390/ecommerce-390.png` |
+| courses | Courses (enrolment) | `docs/qa/flagship-390/courses-390.png` |
+| finance | Financial services (Marsh & Shah) | `docs/qa/flagship-390/finance-390.png` |
+
+These are home screens at one width, captured after the splash was removed and
+animations frozen. They show layout, photography, type and the bottom navigation;
+they do not exercise a flow. All ten files are 390×844 and 140–255 KB, which rules
+out blank or error captures but is not a substitute for looking: three of the ten
+were inspected by eye and the rest were not.
 
 ## Related evidence
 

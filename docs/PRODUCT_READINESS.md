@@ -233,8 +233,9 @@ Outstanding security limits:
 - No CSP is set because the app currently relies on inline styles and a small
   inline script; adding hashes/nonces is the next hardening step.
 - Backup/restore was rehearsed locally (`docs/BACKUP.md`), including a separate
-  restored database and media copy. Scheduled production exports, offsite
-  buckets and cross-account replication are still operator configuration.
+  restored database and media copy. Scheduled production exports and offsite
+  buckets are still operator work, and R2 exposes no replication rule, so media
+  needs a scheduled bucket copy (`docs/PRODUCTION_DISASTER_RECOVERY.md`).
 - `.dev.vars` is local-only and gitignored. Production must provide
   `OWNER_SECRET` (or `STUDIO_KEY`) as a real secret; without it the owner
   dashboard correctly reports that access is not configured.

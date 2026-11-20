@@ -988,7 +988,7 @@ rewrite of `spec`/`doc`, no media re-upload, no payment re-keying.**
 | Plan limit drift for existing customers | Medium | Medium | Version-pinned entitlements; legacy default = generous; explicit decision record | M5 |
 | Session fixation / cookie scope mistakes | Low | High | New cookie name, `__Host-` prefix where possible, rotate session id on login, revoke on password change | M3 |
 | No CSP on account pages | Medium | Medium | Add nonce-based CSP with the account work, not after | M3 |
-| Backup gap (no scheduled job) | High | High | Provision scheduled D1 export + R2 replication before billing goes live; include new tables and invoice retention | M0/M5 |
+| Backup gap (no scheduled job) | High | High | Provision scheduled D1 export + a scheduled R2 bucket copy before billing goes live (R2 has no replication rule); include new tables and invoice retention | M0/M5 |
 
 ---
 
