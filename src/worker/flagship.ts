@@ -2287,5 +2287,47 @@ body[data-flagship="1"] .detail-art { border-radius: 18px; overflow: hidden; }
   body[data-trade="courses"][data-flagship="1"] .fx-course-card { grid-template-columns: 78px minmax(0, 1fr); gap: 9px; }
   body[data-trade="finance"][data-flagship="1"] .fx-fin-hero h1 { font-size: 36px; }
 }
+
+/* --------------------------------------------------------- secondary text
+   These labels were drawn at 38-70% opacity, which measures between 3.0 and
+   4.4:1 on the café, shop and salon grounds. They now use the measured
+   secondary ink, so the hierarchy comes from size and letter-spacing rather
+   than from washing the text out. The list is the set the contrast sweep
+   flagged; anything added here must keep measuring AA. */
+:is(
+  .fx-search span, .fx-search kbd,
+  .fx-block-note,
+  .fx-shop-head button,
+  .fx-product-copy span,
+  .fx-cafe-meta, .fx-cafe-meta span,
+  .fx-cafe-strip, .fx-cafe-strip span,
+  .fx-cafe-menu-head button,
+  .fx-cafe-cats,
+  .fx-cafe-item div > span,
+  .fx-cafe-item em,
+  .fx-salon-head p,
+  .fx-dates button span,
+  .fx-staff span, .fx-staff b,
+  .fx-salon-title button,
+  .fx-service div > span,
+  .fx-service-tail span,
+  .fx-count,
+  .fx-dayrow button span,
+  .fx-cafe-reserve-head p,
+  .fx-cafe-reserve-foot span,
+  .fx-offer span,
+  .h-row .desc
+) {
+  /* The trade-scoped rules above are deliberately specific, so this readable
+     default states its intent plainly rather than by out-specifying them. */
+  color: var(--ink-soft) !important;
+  opacity: 1 !important;
+}
+.fx-eyebrow { opacity: 0.82 !important; }
+.fx-mini-label { opacity: 0.82 !important; }
+/* These sit on their own dark or accent ground and already have a readable
+   colour; only the fade that made them 3:1 is removed. */
+.fx-cafe-steps, .fx-kicker, .fx-staff, .fx-gym-num, .fx-gym-price span { opacity: 1 !important; }
+.fx-dayrow button.on span { opacity: 1 !important; color: var(--bg) !important; }
 `
 }

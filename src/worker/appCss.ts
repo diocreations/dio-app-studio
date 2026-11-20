@@ -53,6 +53,10 @@ export function appCss(ctx: CssCtx): string {
   /* The accent as a text colour. On a light page the brand colour itself is
      readable; on a dark page it is not, so it is lifted towards the ink. */
   --accent-text: var(--accent);
+  /* Secondary text. A label drawn at 50% opacity can never reach 4.5:1 on any
+     ground, so quiet text gets a colour instead: the ink mixed back towards the
+     page, which reads as secondary in both themes and still measures above AA. */
+  --ink-soft: color-mix(in srgb, var(--ink) 78%, var(--bg));
   --hair: color-mix(in srgb, var(--ink) 10%, transparent);
   --radius: ${radius}px;
   --display: ${ctx.theme.display};
@@ -127,7 +131,7 @@ body[data-theme="dark"] {
 }
 .splash .s-mark {
   position: relative; width: 96px; height: 96px; border-radius: 32px;
-  background: color-mix(in srgb, var(--on-accent) 96%, transparent); color: var(--accent-deep);
+  background: color-mix(in srgb, var(--on-accent) 96%, transparent); color: var(--accent-text);
   display: grid; place-items: center;
   font-family: var(--display); font-weight: 800; font-size: 30px; letter-spacing: 0.01em;
   box-shadow: 0 26px 50px -24px color-mix(in srgb, #000 45%, transparent);
@@ -281,7 +285,7 @@ body[data-accent-style="underline"] .sect { border-bottom: 1px solid var(--hair)
 }
 .sect .label { margin: 0; }
 .sect .count {
-  font-size: 10.5px; font-weight: 750; letter-spacing: 0.02em; color: var(--accent-deep);
+  font-size: 10.5px; font-weight: 750; letter-spacing: 0.02em; color: var(--accent-text);
   border: 1px solid transparent; border-radius: 999px; padding: 4px 10px;
   font-variant-numeric: tabular-nums; background: var(--accent-soft);
 }
@@ -370,7 +374,7 @@ body[data-accent-style="underline"] .sect { border-bottom: 1px solid var(--hair)
   display: flex; align-items: center; gap: 12px; margin-top: 20px; flex-wrap: wrap;
 }
 .l-hero .hero-cta {
-  background: color-mix(in srgb, var(--on-accent) 96%, transparent); color: var(--accent-deep);
+  background: color-mix(in srgb, var(--on-accent) 96%, transparent); color: var(--accent-text);
   padding: 12px 20px; font-size: 13px; box-shadow: 0 16px 30px -20px #000;
 }
 .l-hero .hero-meta {
@@ -692,7 +696,7 @@ body[data-nav="floating"] .screen.is-detail { bottom: var(--nav-space); }
   display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 18px 0 8px;
   padding: 0;
 }
-.detail-line .price { font-size: 22px; color: var(--accent-deep); }
+.detail-line .price { font-size: 22px; color: var(--accent-text); }
 /* A dark surface cannot carry the deep mix of a dark brand colour: at 1.1:1
    the price is invisible. Keep the brand tint, at a lightness the surface can
    actually show. */
@@ -726,7 +730,7 @@ body[data-nav="dock"] .tabbar .tab { flex: 1; }
 .tab.on svg { stroke-width: 1.9; }
 body[data-nav="bar"] .tab.on { background: var(--accent-soft); }
 body[data-nav="dock"] .tab.on { background: var(--surface-2); }
-body[data-nav="floating"] .tab.on { background: var(--accent-soft); color: var(--accent-deep); }
+body[data-nav="floating"] .tab.on { background: var(--accent-soft); color: var(--accent-text); }
 
 /* ---------------------------------------------------------------- sheets */
 .scrim {
@@ -1233,7 +1237,7 @@ body[data-trade="restaurant"] .offer {
   background: none; box-shadow: none;
 }
 body[data-trade="restaurant"] .offer .spark {
-  border-radius: 0; background: none; color: var(--accent-deep);
+  border-radius: 0; background: none; color: var(--accent-text);
   box-shadow: inset 0 -1px 0 0 var(--accent); width: 22px;
 }
 body[data-trade="restaurant"] .info {
@@ -1252,7 +1256,7 @@ body[data-trade="restaurant"] .tab {
   border-radius: 0; font-family: var(--display-serif); font-size: 11px; font-weight: 500;
   letter-spacing: 0.01em; text-transform: none;
 }
-body[data-trade="restaurant"] .tab.on { background: none; color: var(--accent-deep); }
+body[data-trade="restaurant"] .tab.on { background: none; color: var(--accent-text); }
 body[data-trade="restaurant"] .tab.on::after {
   content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); margin-top: 1px;
 }
@@ -1331,7 +1335,7 @@ body[data-trade="clinic"] .app::before {
 }
 body[data-trade="clinic"] .appbar { border-bottom: 1px solid var(--hair); }
 body[data-trade="clinic"] .appbar .mark {
-  border-radius: 9px; background: var(--accent-soft); color: var(--accent-deep); box-shadow: none;
+  border-radius: 9px; background: var(--accent-soft); color: var(--accent-text); box-shadow: none;
   font-family: var(--body); font-weight: 750;
 }
 body[data-trade="clinic"] .appbar .title { font-family: var(--body); font-size: 15px; letter-spacing: -0.01em; }
@@ -1347,7 +1351,7 @@ body[data-trade="clinic"] .cover .mono { display: none; }
    separate visit card would repeat the same block immediately above it. */
 body[data-trade="clinic"] .care-visit { display: none; }
 body[data-trade="clinic"] .cover .cover-in { position: relative; z-index: 1; }
-body[data-trade="clinic"] .cover .eyebrow { color: var(--accent-deep); letter-spacing: 0.16em; }
+body[data-trade="clinic"] .cover .eyebrow { color: var(--accent-text); letter-spacing: 0.16em; }
 body[data-trade="clinic"] .cover .eyebrow::before { background: var(--accent); }
 body[data-trade="clinic"] .cover h1 {
   font-family: var(--body); font-size: clamp(28px, 8.5vw, 34px); font-weight: 650;
@@ -1366,7 +1370,7 @@ body[data-trade="clinic"] .status-card {
 }
 body[data-trade="clinic"] .sect { margin: 24px 0 8px; padding: 0 2px; }
 body[data-trade="clinic"] .sect .label {
-  font-size: 10px; font-weight: 750; letter-spacing: 0.18em; color: var(--accent-deep);
+  font-size: 10px; font-weight: 750; letter-spacing: 0.18em; color: var(--accent-text);
 }
 body[data-trade="clinic"] .sect .count {
   border: 1px solid var(--hair); border-radius: 999px; padding: 3px 8px;
@@ -1394,7 +1398,7 @@ body[data-trade="clinic"] .info { border-radius: 14px; box-shadow: none; }
 body[data-trade="clinic"] .loyalty { border-radius: 14px; box-shadow: none; }
 body[data-trade="clinic"] .tabbar { background: var(--surface); }
 body[data-trade="clinic"] .tab { border-radius: 6px; font-size: 8.5px; letter-spacing: 0.12em; }
-body[data-trade="clinic"] .tab.on { background: var(--accent-soft); color: var(--accent-deep); }
+body[data-trade="clinic"] .tab.on { background: var(--accent-soft); color: var(--accent-text); }
 
 /* Shop: a price-tag catalogue. Flat shelving, boxed prices, label-sized chips
    and a rail of a tab bar — stock on a shelf, not a magazine cover. */
@@ -1931,7 +1935,7 @@ body[data-trade="auto"] .cover h1 {
   line-height: 0.9; letter-spacing: 0.005em; margin-top: 10px;
 }
 body[data-trade="auto"] .cover p { color: var(--muted); font-size: 13px; margin-top: 8px; }
-body[data-trade="auto"] .cover .eyebrow { color: var(--accent-deep); }
+body[data-trade="auto"] .cover .eyebrow { color: var(--accent-text); }
 body[data-trade="auto"] .cover .cover-rule { background: var(--hair); margin: 14px 0 10px; }
 body[data-trade="auto"] .cover .cover-meta {
   color: var(--ink); font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -1950,7 +1954,7 @@ body[data-trade="auto"] .r-row .name {
 body[data-trade="auto"] .r-row .tail .price {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; letter-spacing: -0.02em;
 }
-body[data-trade="auto"] .sect .label { font-size: 9.5px; letter-spacing: 0.22em; color: var(--accent-deep); }
+body[data-trade="auto"] .sect .label { font-size: 9.5px; letter-spacing: 0.22em; color: var(--accent-text); }
 body[data-trade="auto"] .sect .count {
   border-radius: 0; border: 1px solid var(--line); background: none; color: var(--muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 9px;
@@ -1983,7 +1987,7 @@ body[data-trade="hospital"] .status-card {
 body[data-trade="hospital"] .r-row {
   border-radius: 14px; border: 1px solid var(--line); background: var(--surface); padding: 14px; margin-bottom: 8px;
 }
-body[data-trade="hospital"] .sect .label { letter-spacing: 0.24em; color: var(--accent-deep); }
+body[data-trade="hospital"] .sect .label { letter-spacing: 0.24em; color: var(--accent-text); }
 body[data-trade="hospital"] .tab { letter-spacing: 0.06em; }
 body[data-trade="hospital"] .tab.on { background: var(--accent-soft); }
 body[data-trade="hospital"] .tabbar { background: var(--surface); border-top: 1px solid var(--line); }

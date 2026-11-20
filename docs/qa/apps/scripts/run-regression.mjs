@@ -173,7 +173,10 @@ async function browserChecks(app, chromium) {
     }
 
     await page.setViewportSize({ width: 390, height: 844 })
-    const contrast = await page.evaluate(() => {
+    /** WCAG AA: 4.5:1 for body text, 3:1 for large text and disabled controls,
+     *  measured from the colours the browser actually painted. */
+    const measureScreen = () =>
+      page.evaluate(() => {
       /** Any CSS colour form the app uses: rgb(), rgba(), color(srgb … / a). */
       const parseColour = (value) => {
         const numbers = (value.match(/[\d.]+/g) || []).map(Number)
@@ -243,11 +246,32 @@ async function browserChecks(app, chromium) {
         const rect = node.getBoundingClientRect()
         if (rect.width < 2 || rect.height < 2) return
         const value = ratioOf(composited, background)
-        if (value < 3) out.push({ text: text.slice(0, 28), ratio: Number(value.toFixed(2)), size: style.fontSize })
+        const weight = Number.parseInt(style.fontWeight, 10) || 400
+        const pixels = Number.parseFloat(style.fontSize) || 14
+        const large = pixels >= 24 || (pixels >= 18.66 && weight >= 700)
+        const disabled = Boolean(node.closest('[disabled], [aria-disabled="true"]'))
+        const floor = large || disabled ? 3 : 4.5
+        if (value < floor - 0.01)
+          out.push({ text: text.slice(0, 28), ratio: Number(value.toFixed(2)), needs: floor, size: style.fontSize })
       })
       return out.slice(0, 8)
     })
-    check('contrast: no text below 3:1 on the opened screen', contrast.length === 0, contrast)
+
+    const tabBar = await page.$$eval('.tabbar button[data-go]', (buttons) =>
+      buttons.map((button) => ({ id: button.dataset.go, label: button.textContent.trim() })),
+    )
+    const visited = [{ id: null, label: 'the opening screen' }, ...tabBar]
+    for (const destination of visited) {
+      if (destination.id) {
+        // A sheet or scrim can sit over the tab bar, so the tab is activated
+        // the way the app listens for it rather than through a pointer hit.
+        await page.$eval(`.tabbar button[data-go="${destination.id}"]`, (button) => button.click())
+        await page.waitForTimeout(500)
+      }
+      const screenName = await page.$eval('.screen.on', (node) => node.dataset.screen || 'screen')
+      const issues = await measureScreen()
+      check(`contrast: ${screenName} meets AA (${destination.label})`, issues.length === 0, issues)
+    }
     check('runtime: no page errors', errors.length === 0, errors.slice(0, 3))
   } finally {
     await browser.close()

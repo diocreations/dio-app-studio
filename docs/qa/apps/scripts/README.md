@@ -22,6 +22,7 @@ bunx playwright install chromium
 bun docs/qa/apps/scripts/sessions.mjs       # mints local owner sessions
 bun docs/qa/apps/scripts/repair-fixtures.mjs # repairs the fixture documents (idempotent)
 bun docs/qa/apps/scripts/run-regression.mjs  # the five-app regression sweep
+bun docs/qa/apps/scripts/run-editor.mjs      # the editor, driven as an owner drives it
 node docs/qa/apps/scripts/run-apps.cjs      # customer app: screens, workflows, widths
 node docs/qa/apps/scripts/run-dashboard.cjs # owner dashboard: tabs, records, settings
 ```
@@ -38,8 +39,19 @@ clean database produces the corrected fixtures.
 prices, featured items, section visibility, offers, media ownership, stale
 document data, invented copy, parity between the editor preview and the
 published app, horizontal overflow at 320, 360, 375, 390, 430, 768 and 1280, and
-a measured contrast pass. `--no-browser` runs only the data and HTML checks.
-Results land in `docs/qa/apps/regression-results.json`.
+a measured contrast pass. The contrast pass opens every tab of each app and
+measures the colours the browser painted against the ground the text sits on:
+4.5:1 for body text, 3:1 for large text and disabled controls, in both themes.
+`--no-browser` runs only the data and HTML checks. Results land in
+`docs/qa/apps/regression-results.json`.
+
+`run-editor` drives the real editor in Chromium because the undo history lives
+in the page: hide a component and undo it, drag one and undo it, duplicate and
+delete, change a photograph fit, type quickly, break the network, reload inside
+the save debounce. Every check then reads the document back from the server, so
+a page that shows the right thing while the server holds something else fails.
+It writes `docs/qa/apps/editor-results.json` and restores the fixture document
+when it finishes. `ONLY=salon` runs it against another app.
 
 Environment overrides: `BASE`, `APPS_OUT` (screenshot and JSON destination),
 `QA_COOKIES` (session file), `ONLY` (comma-separated app keys for `run-apps`),
@@ -53,10 +65,13 @@ Environment overrides: `BASE`, `APPS_OUT` (screenshot and JSON destination),
   catalogue at 320, 360, 375, 390, 430, 768 and 1280 and asserts there is no
   horizontal overflow. A scroll-width assertion says nothing about how a screen
   looks — review the screenshots for that.
-- `run-regression` is read-only apart from nothing at all: it reads the fixture
-  database, fetches both rendered surfaces and measures the open screen in a
-  browser. Contrast is measured against the composited background the text sits
-  on, and text over photography is skipped rather than guessed at.
+- `run-regression` changes nothing: it reads the fixture database, fetches both
+  rendered surfaces and measures every tab in a browser. Contrast is measured
+  against the composited background the text sits on, text over photography is
+  skipped rather than guessed at, and a badge sitting on a photograph is not
+  counted as a theme defect.
+- `run-editor` writes to the fixture document and restores it at the end; if a
+  run is interrupted, `repair-fixtures` puts the document back.
 - `run-dashboard` signs in as the owner, opens every tab, proves the records the
   customer workflows created are visible, then renames the business, confirms the
   customer app shows the new name, and restores it.

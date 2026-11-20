@@ -1,0 +1,99 @@
+{
+  "at": "2026-11-20T04:10:21.824Z",
+  "base": "http://127.0.0.1:8795",
+  "results": [
+    {
+      "name": "buttertales: editor opens on the saved home",
+      "ok": true,
+      "detail": 4
+    },
+    {
+      "name": "buttertales: hide is stored by id only",
+      "ok": true
+    },
+    {
+      "name": "buttertales: undo restores the hidden component",
+      "ok": true
+    },
+    {
+      "name": "buttertales: redo hides it again",
+      "ok": true
+    },
+    {
+      "name": "buttertales: the undo button matches the keyboard",
+      "ok": true
+    },
+    {
+      "name": "buttertales: dragging reorders the structure",
+      "ok": true,
+      "detail": [
+        "sec_fx_shop_search",
+        "sec_fx_shop_all",
+        "sec_fx_shop_title",
+        "sec_fx_shop_products"
+      ]
+    },
+    {
+      "name": "buttertales: undo restores the original order",
+      "ok": true
+    },
+    {
+      "name": "buttertales: a duplicate takes a new id",
+      "ok": true,
+      "detail": [
+        "sec_fx_shop_title_mwogntmq"
+      ]
+    },
+    {
+      "name": "buttertales: undo removes the duplicate and nothing else",
+      "ok": true
+    },
+    {
+      "name": "buttertales: undo restores a deleted component with its id",
+      "ok": true
+    },
+    {
+      "name": "buttertales: an added component is saved",
+      "ok": true
+    },
+    {
+      "name": "buttertales: undo removes the component that was just added",
+      "ok": true
+    },
+    {
+      "name": "buttertales: the saved fit reaches the published app",
+      "ok": true,
+      "detail": "cover"
+    },
+    {
+      "name": "buttertales: the fixture fit is restored",
+      "ok": true,
+      "detail": "contain"
+    },
+    {
+      "name": "buttertales: three undos step back through three edits",
+      "ok": true
+    },
+    {
+      "name": "buttertales: a failed save is reported as not saved",
+      "ok": true
+    },
+    {
+      "name": "buttertales: a failed save does not reach the server",
+      "ok": true
+    },
+    {
+      "name": "buttertales: the next save succeeds after reconnecting",
+      "ok": true
+    },
+    {
+      "name": "buttertales: a reload during the debounce keeps the edit",
+      "ok": true
+    },
+    {
+      "name": "buttertales: editor raised no page errors",
+      "ok": true,
+      "detail": []
+    }
+  ]
+}

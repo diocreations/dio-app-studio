@@ -440,15 +440,33 @@ function scheduleSave() {
   $('saveStatus').textContent = 'Saving…'; $('saveStatus').classList.add('busy');
   clearTimeout(saveTimer); saveTimer = setTimeout(save, 650);
 }
+/** The keepalive flag lets a save finish after the tab closes or reloads, so a
+ *  change made inside the debounce window is not lost by a refresh. */
 function save() {
-  return fetch('/api/projects/' + TOKEN + '/doc', { method:'PUT', headers:{'content-type':'application/json'}, body: JSON.stringify({ doc: state.doc }) })
-    .then((response) => { if (!response.ok) throw new Error('save'); $('saveStatus').textContent = 'Saved'; $('saveStatus').classList.remove('busy'); })
+  clearTimeout(saveTimer); saveTimer = null;
+  const body = JSON.stringify({ doc: state.doc });
+  $('saveStatus').textContent = 'Saving…'; $('saveStatus').classList.add('busy');
+  return fetch('/api/projects/' + TOKEN + '/doc', { method:'PUT', headers:{'content-type':'application/json'}, body, keepalive: true })
+    .then((response) => {
+      if (!response.ok) throw new Error('save');
+      $('saveStatus').textContent = 'Saved'; $('saveStatus').classList.remove('busy');
+      return true;
+    })
     .catch(() => { $('saveStatus').textContent = 'Not saved'; $('saveStatus').classList.add('busy'); });
 }
+addEventListener('pagehide', () => { if (saveTimer !== null) save(); });
+addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && saveTimer !== null) save(); });
 let reloadTimer = null;
 function reloadFrame() {
   clearTimeout(reloadTimer);
-  reloadTimer = setTimeout(() => { save().then(() => { frame.src = '/p/' + TOKEN + '/app?editor=1&screen=' + encodeURIComponent(appId(current())) + '&v=' + Date.now(); }); }, 240);
+  reloadTimer = setTimeout(() => {
+    // The preview shows the saved document, so it is only reloaded once the
+    // save has actually landed. A failed save leaves the last good preview up.
+    save().then((result) => {
+      if (!result) return;
+      frame.src = '/p/' + TOKEN + '/app?editor=1&screen=' + encodeURIComponent(appId(current())) + '&v=' + Date.now();
+    });
+  }, 240);
 }
 function render() { renderScreens(); renderScreenLibrary(); renderLibrary(); renderStructure(); renderInspector(); renderQuick(); renderToolbar(); }
 let quickShown = null;

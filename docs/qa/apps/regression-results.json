@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-11-20T03:41:50.750Z",
+  "startedAt": "2026-11-20T04:11:29.675Z",
   "base": "http://127.0.0.1:8795",
   "widths": [
     320,
@@ -171,7 +171,22 @@
           }
         },
         {
-          "name": "contrast: no text below 3:1 on the opened screen",
+          "name": "contrast: home meets AA (the opening screen)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: home meets AA (Home)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: catalog meets AA (Shop)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: more meets AA (More)",
           "pass": true,
           "detail": []
         },
@@ -353,7 +368,27 @@
           }
         },
         {
-          "name": "contrast: no text below 3:1 on the opened screen",
+          "name": "contrast: home meets AA (the opening screen)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: home meets AA (Café)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: catalog meets AA (Menu)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: book meets AA (Reserve)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: more meets AA (Visit)",
           "pass": true,
           "detail": []
         },
@@ -540,7 +575,32 @@
           }
         },
         {
-          "name": "contrast: no text below 3:1 on the opened screen",
+          "name": "contrast: home meets AA (the opening screen)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: home meets AA (Home)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: catalog meets AA (Services)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: book meets AA (Book)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: more meets AA (Visit)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: quote meets AA (Enquiry)",
           "pass": true,
           "detail": []
         },
@@ -727,7 +787,32 @@
           }
         },
         {
-          "name": "contrast: no text below 3:1 on the opened screen",
+          "name": "contrast: home meets AA (the opening screen)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: home meets AA (Train)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: catalog meets AA (Plans)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: book meets AA (Classes)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: more meets AA (Visit)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: quote meets AA (Join)",
           "pass": true,
           "detail": []
         },
@@ -909,7 +994,22 @@
           }
         },
         {
-          "name": "contrast: no text below 3:1 on the opened screen",
+          "name": "contrast: home meets AA (the opening screen)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: home meets AA (Dine)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: catalog meets AA (Menu)",
+          "pass": true,
+          "detail": []
+        },
+        {
+          "name": "contrast: more meets AA (Visit)",
           "pass": true,
           "detail": []
         },
