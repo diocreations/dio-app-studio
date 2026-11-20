@@ -8,10 +8,13 @@ procedure in `docs/BACKUP_AND_RECOVERY.md` covers restoring a snapshot on one
 machine. This document covers the production path: where copies live, who runs
 them, how often, how long recovery takes and what is still unproven.
 
-**Nothing here is deployed.** There is no production Plattr D1, no production R2
-bucket and no public origin today, so no offsite run has executed against
-Cloudflare. Read the *Rehearsed* and *Not rehearsed* table before treating any
-of this as evidence.
+**Production is not deployed.** There is no production Plattr D1, R2 bucket or
+public origin. The path itself has now run against real Cloudflare resources in a
+separate staging environment (`docs/STAGING.md`): remote D1 export, scrubbing,
+remote media reads, upload to a separate bucket, read-back verification,
+retention, alerting, and a restore into an isolated environment that served
+pages and images over HTTPS. The evidence is `docs/qa/remote/REPORT.md`. What
+remains unproven is production itself, and the scheduler.
 
 ## Rehearsed and not rehearsed
 
@@ -24,8 +27,9 @@ of this as evidence.
 | Retention pruning | Rehearsed locally | `--keep 1` pruned 2 older runs and their 48 objects |
 | Fetch a run back and restore it | Rehearsed locally | fetched run restored into an empty state; `verify-restore.mjs` passed |
 | The restored app serving pages and media | Rehearsed locally | editor `200`, own image `200 image/webp`, foreign project image `404` |
-| `--remote` against Cloudflare D1/R2 | **Not rehearsed** | no production resources exist; deployment is not authorised |
-| Scheduling and alert delivery | **Not running** | workflow is in the repo but no remote is configured, and no webhook URL exists |
+| `--remote` against Cloudflare D1/R2 | Rehearsed on staging, never on production | run `20261120T070220Z-74375d46`, `docs/qa/remote/REPORT.md` |
+| Restore into an isolated remote environment | Rehearsed on staging | `plattr-staging-restore` served pages, images and owner auth over HTTPS |
+| Scheduling and alert delivery | Sender proven, scheduler **not running** | alerts and heartbeat recorded by a local receiver; no git remote, no watchdog account |
 | R2 replication for unreferenced objects | **Not configured** | see *Media coverage* |
 
 ## What a production backup is
@@ -277,13 +281,18 @@ monthly rehearsal hour.
 
 ## Known gaps
 
-1. `--remote` has never run. The code path is the same as the rehearsed one, but
-   "same code" is not evidence that Cloudflare accepts it.
-2. Nothing is scheduled: no git remote, no cron host, no webhook URL.
-3. No monitoring is wired (see `docs/MONITORING.md`).
+1. `--remote` has run against staging only. Production does not exist yet, and a
+   different account, plan or region can still surprise you.
+2. Nothing is scheduled: no git remote, so the workflow cannot run, no cron host
+   and no webhook URL are configured.
+3. No monitor watches the heartbeat. The job pings it; nothing alerts on silence
+   (see `docs/MONITORING.md`).
 4. R2 replication is not configured, so unreferenced media objects are not
    offsite.
-5. Credential rotation for the backup token is manual and undocumented beyond
+5. A run that fails after uploading leaves its objects in the bucket with no
+   `files` list, so retention cannot remove them. There is no sweep for old
+   `pending` runs; they cost storage only.
+6. Credential rotation for the backup token is manual and undocumented beyond
    this table.
-6. Point-in-time restore for D1 is a provider capability; confirm it is enabled
+7. Point-in-time restore for D1 is a provider capability; confirm it is enabled
    on the production plan before launch.

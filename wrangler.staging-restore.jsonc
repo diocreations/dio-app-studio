@@ -1,0 +1,27 @@
+// The acceptance restore target: a second, isolated Worker whose database and
+// bucket were rebuilt from a remote backup run. Nothing here shares a binding
+// with staging or production.
+//
+//   bun run build && bunx wrangler deploy --config wrangler.staging-restore.jsonc
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "plattr-staging-restore",
+  "main": "dist/plattr_studio/index.js",
+  "no_bundle": true,
+  "compatibility_date": "2026-11-11",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "dist/client",
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "plattr-staging-restore",
+      "database_id": "b30fe103-1ef9-4c7f-abb6-c24a2cfbfd1d"
+    }
+  ],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "plattr-staging-restore-media" }],
+  "observability": { "enabled": true },
+  "upload_source_maps": false
+}

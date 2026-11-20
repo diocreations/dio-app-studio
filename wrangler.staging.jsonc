@@ -1,0 +1,30 @@
+// Staging deploys use this file, not `--env staging`.
+//
+// The Vite plugin writes `dist/plattr_studio/wrangler.json` with the production
+// bindings baked in and only the environment *name* for `env.staging`, so
+// `wrangler deploy --env staging` silently deploys with the production D1 and
+// R2 names. This file points at the same build output with staging resources.
+//
+//   bun run build && bunx wrangler deploy --config wrangler.staging.jsonc
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "plattr-staging",
+  "main": "dist/plattr_studio/index.js",
+  "no_bundle": true,
+  "compatibility_date": "2026-11-11",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "dist/client",
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "plattr-staging",
+      "database_id": "edeca040-e3fd-49ce-99c4-318cac382046"
+    }
+  ],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "plattr-staging-media" }],
+  "observability": { "enabled": true },
+  "upload_source_maps": false
+}

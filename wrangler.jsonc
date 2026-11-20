@@ -20,5 +20,6 @@
       "bucket_name": "plattr-media"
     }
   ],
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  "upload_source_maps": false
 }
