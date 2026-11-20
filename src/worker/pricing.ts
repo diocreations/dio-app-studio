@@ -8,6 +8,8 @@ import type {
   MenuSection,
   Platform,
   Plan,
+  PriceConflict,
+  PriceDecision,
   SocialLink,
   VerticalId,
   VideoLink,
@@ -538,6 +540,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               vendor?: unknown
               media?: unknown
               image?: unknown
+              variants?: unknown
             }
             const price =
               typeof entry.price === 'number' && Number.isFinite(entry.price)
@@ -562,12 +565,40 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               vendor: String(entry.vendor ?? '').trim().slice(0, 40) || undefined,
               ...(sanitizeItemMedia(entry.media) ? { media: sanitizeItemMedia(entry.media) } : {}),
               ...(sanitizeItemImage(entry.image) ? { image: sanitizeItemImage(entry.image) } : {}),
+              ...(sanitizeVariants(entry.variants).length
+                ? { variants: sanitizeVariants(entry.variants) }
+                : {}),
             }
           })
           .filter((item) => item.name !== 'Item' || item.price > 0),
       }
     })
     .filter((section) => section.items.length > 0)
+}
+
+/** The options a source listed for one product. Each keeps its own price and
+ *  currency, and the one the published price came from stays marked, so the
+ *  catalogue is not flattened to a single unexplained figure. */
+function sanitizeVariants(
+  input: unknown,
+): { name: string; price: number; currency?: string; selected?: boolean }[] {
+  if (!Array.isArray(input)) return []
+  return input.slice(0, 24).flatMap((raw) => {
+    const entry = (raw ?? {}) as Record<string, unknown>
+    const name = typeof entry.name === 'string' ? entry.name.trim().slice(0, 40) : ''
+    const price = Number(entry.price)
+    if (!name || !Number.isFinite(price) || price <= 0) return []
+    const currency =
+      typeof entry.currency === 'string' && /^[A-Z]{3}$/.test(entry.currency) ? entry.currency : undefined
+    return [
+      {
+        name,
+        price: Math.min(1_000_000, Math.round(price)),
+        ...(currency ? { currency } : {}),
+        ...(entry.selected === true ? { selected: true } : {}),
+      },
+    ]
+  })
 }
 
 /**
@@ -605,6 +636,10 @@ export type SiteInfo = {
   website?: string
   currency?: string
   socials?: SocialLink[]
+  /** Prices the page and the feed disagreed on, and the owner's answers. Kept
+   *  on the build as a private review record, never rendered in the app. */
+  priceConflicts?: PriceConflict[]
+  priceDecisions?: PriceDecision[]
 }
 
 /** A free-text category, kept short and never markup. */
@@ -733,6 +768,14 @@ export function buildSpec(input: {
     ...(cleanSocials(site.socials).length ? { socials: cleanSocials(site.socials) } : {}),
     ...(videos.length ? { videos } : {}),
     ...(bundle ? { bundle } : {}),
+    ...(site.priceConflicts?.length || site.priceDecisions?.length
+      ? {
+          review: {
+            conflicts: site.priceConflicts ?? [],
+            decisions: site.priceDecisions ?? [],
+          },
+        }
+      : {}),
   }
 }
 

@@ -31,10 +31,20 @@ the first 750 and the report's page-cap note still applies.
 ## Variant price selection
 
 Every variant is parsed with the same money parser as the rest of the importer.
-The published price is the **cheapest positive variant price**; the item records
-`variants: [{ name, price }]` (up to eight) so the owner sees the options. The
-evidence's `raw` value is that chosen variant's price exactly as the feed wrote
-it, and `currency` comes from the entry page's declared currency.
+The published price is the **cheapest positive variant price**, chosen
+deliberately so a "from" figure is never above what a customer can pay. Nothing
+is lost to that choice: the item records every variant up to 24 as
+`variants: [{ name, price, currency, selected? }]`, each with its own price and
+the shop's currency, and exactly one marked `selected: true` — the variant the
+published figure came from. The evidence's `raw` value is that variant's price
+exactly as the feed wrote it, its `variant` is the variant's name, and
+`currency` comes from the entry page's declared currency.
+
+Products are never flattened to one anonymous number: a two-size or twelve-pack
+product keeps its whole option list on the build (`sanitizeMenu` re-validates
+names, positive prices, three-letter currencies and the single `selected` flag,
+and drops anything else). The app renders the lowest price; the options remain
+with the item for the owner and editor.
 
 ## Product image association
 
@@ -107,6 +117,15 @@ re-built; "Discard it and start again" deletes the row and clears the cookie.
 There is no address-based lookup, so a second visitor on the same network reads
 an empty draft. Writes are same-origin only, capped at 200 KB and one row per
 visitor cookie. Covered by `tests/briefDraft.test.ts`.
+
+Lifecycle: a draft older than 30 days (the life of its cookie) is deleted on the
+next save (`pruneBriefDrafts`). A cookie whose row is gone is answered with
+`{ draft: null, unavailable: true }` and the page says the brief is no longer
+available instead of pretending it is new. A successful build deletes the draft
+and clears its cookie server-side, so the build's price decisions live on the
+project (`spec.review`) and a later restore cannot rebuild or overwrite it.
+Discarding deletes the row and the cookie; a refresh after that is an empty
+brief.
 
 ## What a live run still has to prove
 

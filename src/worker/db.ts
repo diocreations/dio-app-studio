@@ -398,8 +398,21 @@ export async function readBriefDraft(db: D1Database, id: string): Promise<BriefD
   return row ?? null
 }
 
+/** A draft older than the cookie that addressed it can never be restored, so
+ *  it is removed instead of kept forever. Bounded to one statement per write. */
+export async function pruneBriefDrafts(
+  db: D1Database,
+  now = Date.now(),
+  maxAgeDays = 30,
+): Promise<void> {
+  await ensureSchema(db)
+  const cutoff = new Date(now - maxAgeDays * 24 * 60 * 60 * 1000).toISOString()
+  await db.prepare('DELETE FROM brief_drafts WHERE updated_at < ?').bind(cutoff).run()
+}
+
 export async function saveBriefDraft(db: D1Database, id: string, data: string): Promise<void> {
   await ensureSchema(db)
+  await pruneBriefDrafts(db)
   const now = new Date().toISOString()
   await db
     .prepare(

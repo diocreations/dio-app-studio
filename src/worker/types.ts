@@ -62,6 +62,8 @@ export type PriceEvidence = {
   /** True only when the number sat inside this item's own record or card. A
    *  figure read from the page as a whole proves nothing about this item. */
   validated: boolean
+  /** The variant this price belongs to, when the source lists several. */
+  variant?: string
 }
 
 export type MenuItem = {
@@ -77,8 +79,10 @@ export type MenuItem = {
   meta?: string
   /** Where this price was read, when the source made it verifiable. */
   priceEvidence?: PriceEvidence
-  /** The options the source lists for one product, at their own prices. */
-  variants?: { name: string; price: number }[]
+  /** Every option the source lists for one product, at its own price and in its
+   *  own currency. `selected` marks the one whose price this item publishes, so
+   *  a cheapest-variant "from" price is never mistaken for the only option. */
+  variants?: { name: string; price: number; currency?: string; selected?: boolean }[]
   /** The seller on a marketplace: the store an item is bought from. */
   vendor?: string
   /** A photograph owned by this product, service or room. */
@@ -233,6 +237,10 @@ export type AppSpec = {
     currency: string
     categories: string[]
   }
+  /** The price review behind this build: both readings, both sources and the
+   *  owner's decision with its timestamp. Private working data; no renderer
+   *  reads it and no public route returns the spec. */
+  review?: { conflicts: PriceConflict[]; decisions: PriceDecision[] }
   /** The design they chose on the brief, so the build matches the preview. */
   layout?: LayoutChoice
   /** The look read from their own site: palette, type, corners, light or dark. */

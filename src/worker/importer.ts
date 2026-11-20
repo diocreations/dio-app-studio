@@ -95,7 +95,9 @@ export type ImportedSite = {
   structure?: SiteStructure
   /** Their installable-web-app metadata, when they have one. */
   pwa?: PwaInfo
-  /** The owner's answers to prices the page and the feed disagreed on. */
+  /** The owner's answers to prices the page and the feed disagreed on, and the
+   *  conflicting readings they answered. */
+  priceConflicts?: PriceConflict[]
   priceDecisions?: PriceDecision[]
 }
 
@@ -2367,9 +2369,19 @@ async function shopifyProducts(
         const name = collapse(String(product.title ?? ''), 60)
         if (!name) continue
         const rawVariants = Array.isArray(product.variants) ? (product.variants as Record<string, unknown>[]) : []
+        // Every option keeps its own price and the shop's currency. The first
+        // variant is Shopify's default when no selected variant is given; the
+        // published price is the cheapest positive one, marked so the rest are
+        // never presented as if they did not exist.
         const variants = rawVariants
-          .map((variant) => ({ name: collapse(String(variant.title ?? ''), 40), price: toCents(String(variant.price ?? '')) }))
-          .filter((variant) => variant.price > 0)
+          .slice(0, 24)
+          .map((variant) => ({
+            name: collapse(String(variant.title ?? ''), 40),
+            price: toCents(String(variant.price ?? '')),
+            currency,
+            raw: String(variant.price ?? ''),
+          }))
+          .filter((variant) => variant.price > 0 && variant.name)
         const cheapest = variants.reduce<(typeof variants)[number] | null>(
           (best, variant) => (!best || variant.price < best.price ? variant : best),
           null,
@@ -2389,13 +2401,25 @@ async function shopifyProducts(
                 priceEvidence: {
                   method: 'shopify-variant' as const,
                   source: `${url.pathname}${url.search}`,
-                  raw: String(rawVariants.find((variant) => toCents(String(variant.price ?? '')) === cheapest.price)?.price ?? ''),
+                  raw: cheapest.raw,
                   currency,
                   validated: true,
+                  ...(cheapest.name && cheapest.name !== 'Default Title'
+                    ? { variant: cheapest.name }
+                    : {}),
                 },
               }
             : {}),
-          ...(variants.length > 1 ? { variants: variants.slice(0, 8) } : {}),
+          ...(variants.length > 1
+            ? {
+                variants: variants.map((variant) => ({
+                  name: variant.name,
+                  price: variant.price,
+                  currency: variant.currency,
+                  ...(variant.price === cheapest?.price ? { selected: true } : {}),
+                })),
+              }
+            : {}),
           ...(image ? { image: toEvidence(image, 'public-data', name) } : {}),
         }
         groups.set(sectionName, [...(groups.get(sectionName) ?? []), item])
@@ -2922,6 +2946,7 @@ export function sanitizeImported(input: unknown): Partial<ImportedSite> | undefi
           .filter((entry) => entry.url)
       : [],
     menu: sanitizeMenu(source.menu),
+    priceConflicts: sanitizeConflicts(source.priceConflicts),
     priceDecisions: sanitizeDecisions(source.priceDecisions),
     features: Array.isArray(source.features)
       ? source.features.filter((entry): entry is FeatureId => typeof entry === 'string').slice(0, 20)
@@ -2960,6 +2985,26 @@ function sanitizeDecisions(value: unknown): PriceDecision[] {
         ...(link(record.feedSource) ? { feedSource: link(record.feedSource) } : {}),
       },
     ]
+  })
+}
+
+/** The two readings behind a conflict, kept on the build so the decision can
+ *  still be explained later. Sourced links only, positive cents only. */
+function sanitizeConflicts(value: unknown): PriceConflict[] {
+  if (!Array.isArray(value)) return []
+  const cents = (raw: unknown): number => {
+    const amount = Number(raw)
+    return Number.isFinite(amount) && amount > 0 && amount <= 100_000_00 ? Math.round(amount) : 0
+  }
+  return value.slice(0, 60).flatMap((entry) => {
+    const record = (entry ?? {}) as Record<string, unknown>
+    const name = typeof record.name === 'string' ? collapse(record.name, 80) : ''
+    const page = cents(record.page)
+    const feed = cents(record.feed)
+    if (!name || !page || !feed) return []
+    const link = (raw: unknown): string =>
+      typeof raw === 'string' && HTTP_LINK.test(raw) ? raw.slice(0, 200) : ''
+    return [{ name, page, feed, pageSource: link(record.pageSource), feedSource: link(record.feedSource) }]
   })
 }
 

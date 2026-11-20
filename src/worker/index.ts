@@ -962,11 +962,13 @@ app.get('/api/brief/draft', async (c) => {
   c.header('Cache-Control', 'no-store')
   if (!DRAFT_ID.test(id)) return c.json({ draft: null })
   const row = await readBriefDraft(c.env.DB, id)
-  if (!row) return c.json({ draft: null })
+  // A cookie whose row is gone (expired and pruned, discarded in another tab)
+  // is reported so the page can say so, rather than looking like a fresh start.
+  if (!row) return c.json({ draft: null, unavailable: true })
   try {
     return c.json({ draft: { data: JSON.parse(row.data), updatedAt: row.updated_at } })
   } catch {
-    return c.json({ draft: null })
+    return c.json({ draft: null, unavailable: true })
   }
 })
 
@@ -1051,6 +1053,15 @@ app.post('/api/projects', async (c) => {
     maxAge: OWNER_SESSION_DAYS * 24 * 60 * 60,
   })
   await log(c.env.DB, project.id, 'session', 'Build created', 'First owner session created.')
+
+  // The build now holds the price decisions and their evidence, so the draft
+  // that produced it is finished. Deleting it means a later restore attempt
+  // cannot quietly rebuild or overwrite a project that already exists.
+  const usedDraft = getCookie(c, DRAFT_COOKIE) ?? ''
+  if (DRAFT_ID.test(usedDraft)) {
+    await deleteBriefDraft(c.env.DB, usedDraft)
+    deleteCookie(c, DRAFT_COOKIE, { path: '/' })
+  }
 
   return c.json(
     {

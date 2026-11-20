@@ -132,6 +132,11 @@ export function briefPage(): string {
           <button type="button" class="linkish" data-draft-discard>Discard it and start again</button>
           <span class="tiny" data-draft-status aria-live="polite"></span>
         </div>
+        <div class="notice" data-draft-gone hidden style="margin-bottom:14px">
+          <strong>That unfinished brief is no longer available.</strong>
+          <span class="tiny">Drafts are kept for 30 days. A build you already made is not affected.</span>
+          <button type="button" class="linkish" data-draft-fresh>Start a new brief</button>
+        </div>
 
         <section data-step="0">
           <div class="field">
@@ -550,6 +555,7 @@ function briefScript(verticals: string): string {
   const draftWhen = document.querySelector('[data-draft-when]')
   const draftStatus = document.querySelector('[data-draft-status]')
   const conflictsEl = document.querySelector('[data-conflicts]')
+  const draftGone = document.querySelector('[data-draft-gone]')
 
   function paintElements(axes) {
     elementRows.forEach((row) => {
@@ -821,7 +827,10 @@ function briefScript(verticals: string): string {
             '<div class="tiny mono" style="word-break:break-all">' + esc(conflict.feedSource || '') + '</div>' +
           '</div>' +
           '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">' +
-            '<label class="tiny">Or set it: <input data-custom type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00" style="width:90px" /></label>' +
+            '<label class="tiny">Or set it: <input data-custom type="number" min="0" max="100000" step="0.01" inputmode="decimal" placeholder="0.00" style="width:90px"' +
+              (decision && decision.choice === 'custom' ? ' value="' + (decision.value / 100).toFixed(2) + '"' : '') +
+            ' /></label>' +
+            '<span class="tiny" data-custom-error role="status" style="color:#b3261e"></span>' +
           '</div>' +
         '</div>'
       }).join('') +
@@ -860,7 +869,20 @@ function briefScript(verticals: string): string {
     const input = event.target.closest('[data-custom]')
     if (!input) return
     const row = input.closest('[data-conflict]')
-    decidePrice(row.dataset.conflict, 'custom', Math.round(Number(input.value) * 100))
+    const error = row.querySelector('[data-custom-error]')
+    const amount = Number(input.value)
+    const problem =
+      input.value.trim() === '' || !Number.isFinite(amount)
+        ? 'Type a price, for example 12.50.'
+        : amount <= 0
+          ? 'A price must be more than zero.'
+          : amount > 100000
+            ? 'That is above 100,000 — check the amount.'
+            : ''
+    input.setAttribute('aria-invalid', String(Boolean(problem)))
+    if (error) error.textContent = problem
+    if (problem) return
+    decidePrice(row.dataset.conflict, 'custom', Math.round(amount * 100))
   })
 
   /* ------------------------------ the unfinished brief ------------------- */
@@ -980,7 +1002,12 @@ function briefScript(verticals: string): string {
     try {
       const response = await fetch('/api/brief/draft', { headers: { accept: 'application/json' } })
       const body = await response.json().catch(function () { return {} })
-      if (!response.ok || !body.draft || !body.draft.data) return
+      if (!response.ok) return
+      if (body.unavailable) {
+        draftGone.hidden = false
+        return
+      }
+      if (!body.draft || !body.draft.data) return
       applyDraft(body.draft.data, body.draft.updatedAt)
     } catch (error) {
       // No draft is a normal state: the page works without one.
@@ -997,6 +1024,8 @@ function briefScript(verticals: string): string {
   document.querySelector('[data-draft-discard]').addEventListener('click', function () {
     if (window.confirm('Discard this unfinished brief? The build you may already have made is not touched.')) discardDraft()
   })
+
+  document.querySelector('[data-draft-fresh]').addEventListener('click', discardDraft)
 
   const briefForm = document.getElementById('brief')
   briefForm.addEventListener('input', queueDraft)
@@ -1021,7 +1050,11 @@ function briefScript(verticals: string): string {
       layout: chosenDesign ? { ...chosenDesign.axes, ...chosenElements() } : null,
       direction: chosenDesign ? chosenDesign.id : undefined,
       site: imported
-        ? { ...imported, priceDecisions: Array.from(priceDecisions.values()) }
+        ? {
+            ...imported,
+            priceConflicts: conflicts(),
+            priceDecisions: Array.from(priceDecisions.values()),
+          }
         : imported,
     }
   }
