@@ -3482,6 +3482,97 @@ body[data-flagship="1"][data-layout="stack"] .fx-products { grid-template-column
 body[data-flagship="1"][data-layout="stack"] .fx-product { border: 0 !important; border-top: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
 body[data-flagship="1"][data-layout="stack"] .fx-art { aspect-ratio: 16 / 10 !important; border-radius: 0 !important; }
 body[data-flagship="1"][data-layout="stack"] .fx-search { display: none !important; }
+
+/* ---------------------------------------------------------------- composing
+   The restaurant, hotel, salon and professional homes are each one composition
+   with three directions. Recolouring that composition is not three concepts:
+   each direction rebuilds the hero, the hierarchy and the list here, while the
+   trade's own workflow screens (menu, rooms, booking, enquiry) stay untouched. */
+
+/* Restaurant: editorial reads as a printed page, modern as a two-column menu,
+   luxury as a cover photograph with the reservation underneath it. */
+body[data-trade="restaurant"][data-direction="editorial"] .fx-dine .fx-rail,
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine .fx-rail { display: none !important; }
+body[data-trade="restaurant"][data-direction="editorial"] .fx-dine .fx-feature { display: block !important; background: transparent !important; padding: 0 !important; }
+body[data-trade="restaurant"][data-direction="editorial"] .fx-dine .fx-feature .fx-art { aspect-ratio: 3 / 2 !important; border-radius: 0 !important; margin-bottom: 14px; }
+body[data-trade="restaurant"][data-direction="editorial"] .fx-dine .fx-feature-copy { padding: 0 !important; }
+body[data-trade="restaurant"][data-direction="editorial"] .fx-dine .fx-actions { display: grid !important; grid-template-columns: 1fr !important; }
+body[data-trade="restaurant"][data-direction="modern"] .fx-dine { display: grid !important; grid-template-columns: 1fr 1fr; column-gap: 12px; }
+body[data-trade="restaurant"][data-direction="modern"] .fx-dine > * { grid-column: 1 / -1; }
+body[data-trade="restaurant"][data-direction="modern"] .fx-dine .fx-feature { display: grid !important; grid-template-columns: 116px 1fr; align-items: stretch; padding: 0 !important; overflow: hidden; }
+body[data-trade="restaurant"][data-direction="modern"] .fx-dine .fx-feature .fx-art { aspect-ratio: auto !important; height: 100%; min-height: 116px; border-radius: 0 !important; }
+body[data-trade="restaurant"][data-direction="modern"] .fx-dine .fx-actions { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px; }
+body[data-trade="restaurant"][data-direction="modern"] .fx-dine .fx-rail { display: flex !important; overflow-x: auto; flex-wrap: nowrap; }
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine { display: grid !important; grid-template-columns: 1fr; }
+/* Each section arrives inside a .fx-block wrapper, so the ordering has to reach
+   the wrapper that holds the piece, not the piece itself. */
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine > .fx-block { order: 5; }
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine > .fx-block:has(.fx-kicker) { order: 0; }
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine > .fx-block:has(.fx-feature) { order: 1 !important; }
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine > .fx-block:has(.fx-title) { order: 2 !important; }
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine > .fx-block:has(.fx-actions) { order: 4 !important; }
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine .fx-feature { margin: 0 -18px 20px; border-radius: 0 !important; background: transparent !important; padding: 0 !important; }
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine .fx-feature .fx-art { aspect-ratio: 4 / 5 !important; border-radius: 0 !important; }
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine .fx-feature-copy { padding: 16px 18px 0 !important; }
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine .fx-title { text-align: center; }
+body[data-trade="restaurant"][data-direction="luxe"] .fx-dine .fx-actions .fx-primary { width: 100%; }
+
+/* Hotel: editorial splits the cover against the text, luxury keeps the cover
+   and runs the rooms sideways, minimal puts the dates first and drops the
+   cover entirely. */
+body[data-trade="hotel"][data-direction="editorial"] .fx-hotel-image { aspect-ratio: 16 / 10 !important; border-radius: 0 !important; margin-inline: -18px !important; }
+body[data-trade="hotel"][data-direction="editorial"] .fx-stay-tag { left: 18px !important; right: 18px !important; }
+body[data-trade="hotel"][data-direction="editorial"] .fx-hotel-title { padding: 20px 0 6px; text-align: center; }
+body[data-trade="hotel"][data-direction="editorial"] .fx-stay-card { border-radius: 0 !important; box-shadow: none !important; border: 1px solid var(--line); }
+body[data-trade="hotel"][data-direction="editorial"] .fx-room-stack { display: grid !important; grid-template-columns: 1fr 1fr; gap: 12px; }
+body[data-trade="hotel"][data-direction="editorial"] .fx-room { display: block !important; }
+body[data-trade="hotel"][data-direction="editorial"] .fx-room .fx-art { aspect-ratio: 1 / 1 !important; margin-bottom: 10px; }
+body[data-trade="hotel"][data-direction="luxe"] .fx-room-stack { display: flex !important; overflow-x: auto; gap: 12px; padding-bottom: 6px; }
+body[data-trade="hotel"][data-direction="luxe"] .fx-room { min-width: 82%; }
+body[data-trade="hotel"][data-direction="luxe"] .fx-stay-card { margin-top: -40px !important; position: relative; z-index: 2; }
+body[data-trade="hotel"][data-direction="minimal"] .fx-hotel-image { display: none !important; }
+body[data-trade="hotel"][data-direction="minimal"] .fx-stay-card { order: -1; }
+body[data-trade="hotel"][data-direction="minimal"] .fx-hotel { display: flex !important; flex-direction: column; }
+body[data-trade="hotel"][data-direction="minimal"] .fx-room-stack { display: block !important; }
+body[data-trade="hotel"][data-direction="minimal"] .fx-room { display: grid !important; grid-template-columns: 92px 1fr; gap: 12px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+body[data-trade="hotel"][data-direction="minimal"] .fx-room .fx-art { aspect-ratio: 1 / 1 !important; }
+body[data-trade="hotel"][data-direction="minimal"] .fx-rooms-head button { display: none !important; }
+
+/* Salon: luxury sets treatments in a two-up tile grid, minimal is a priced
+   list with no pictures and the days kept in one scrolling strip, editorial is
+   one wide treatment per row with the staff named underneath. */
+body[data-trade="salon"][data-direction="luxe"] .fx-services { display: grid !important; grid-template-columns: 1fr 1fr; gap: 12px; }
+body[data-trade="salon"][data-direction="luxe"] .fx-service { display: block !important; }
+body[data-trade="salon"][data-direction="luxe"] .fx-service .fx-art { aspect-ratio: 1 / 1 !important; margin-bottom: 8px; }
+body[data-trade="salon"][data-direction="luxe"] .fx-service-tail { display: flex !important; justify-content: space-between; align-items: baseline; }
+body[data-trade="salon"][data-direction="luxe"] .fx-sticky { position: static !important; }
+body[data-trade="salon"][data-direction="minimal"] .fx-services { display: block !important; }
+body[data-trade="salon"][data-direction="minimal"] .fx-service { display: grid !important; grid-template-columns: 1fr auto; gap: 4px 12px; border-bottom: 1px solid var(--line); padding: 12px 0; }
+body[data-trade="salon"][data-direction="minimal"] .fx-service .fx-art { display: none !important; }
+body[data-trade="salon"][data-direction="minimal"] .fx-service-tail { display: block !important; text-align: right; }
+body[data-trade="salon"][data-direction="minimal"] .fx-dates { overflow-x: auto; }
+body[data-trade="salon"][data-direction="editorial"] .fx-salon > .fx-block:has(.fx-dates) { display: none !important; }
+body[data-trade="salon"][data-direction="editorial"] .fx-services { display: grid !important; grid-template-columns: 1fr; gap: 20px; }
+body[data-trade="salon"][data-direction="editorial"] .fx-service { display: block !important; border: 0 !important; background: transparent !important; padding: 0 !important; }
+body[data-trade="salon"][data-direction="editorial"] .fx-service .fx-art { width: 100% !important; aspect-ratio: 16 / 10 !important; margin-bottom: 10px; }
+body[data-trade="salon"][data-direction="editorial"] .fx-service-tail { display: flex !important; justify-content: space-between; }
+body[data-trade="salon"][data-direction="editorial"] .fx-staff { display: flex !important; gap: 10px; flex-wrap: wrap; }
+
+/* Professional services: classic keeps the numbered index under a wide
+   photograph, minimal drops the photograph and numbers and sets fees in a
+   two-column table, editorial runs a tall portrait with the story beside it
+   and a two-column service grid. */
+body[data-trade="professional"][data-direction="classic"] .fx-pro-photo { aspect-ratio: 16 / 9 !important; }
+body[data-trade="professional"][data-direction="minimal"] .fx-pro-photo { display: none !important; }
+body[data-trade="professional"][data-direction="minimal"] .fx-pro-num { display: none !important; }
+body[data-trade="professional"][data-direction="minimal"] .fx-pro-row { display: grid !important; grid-template-columns: 1fr auto; gap: 2px 12px; border-bottom: 1px solid var(--line); padding: 11px 0; }
+body[data-trade="professional"][data-direction="minimal"] .fx-pro-index { display: grid !important; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+body[data-trade="professional"][data-direction="minimal"] .fx-pro-actions { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px; }
+body[data-trade="professional"][data-direction="editorial"] .fx-pro-photo { aspect-ratio: 4 / 5 !important; margin: 0 -18px 18px !important; border-radius: 0 !important; }
+body[data-trade="professional"][data-direction="editorial"] .fx-pro-intro { display: grid !important; grid-template-columns: 86px 1fr; gap: 12px; align-items: start; }
+body[data-trade="professional"][data-direction="editorial"] .fx-pro-index { display: grid !important; grid-template-columns: 1fr 1fr; gap: 18px 16px; }
+body[data-trade="professional"][data-direction="editorial"] .fx-pro-row { display: block !important; }
+body[data-trade="professional"][data-direction="editorial"] .fx-pro-num { display: block !important; }
 </style>
 </head>
 <body data-trade="shop" data-layout="rows" data-shell="standard" data-variant="2" data-density="standard" data-corners="round" data-media="art" data-nav="bar" data-hero="split" data-order="visit" data-hero-scale="compact" data-accent-style="solid" data-theme="light" data-direction="minimal" data-buttons="soft" data-cards="square" data-flagship="1">

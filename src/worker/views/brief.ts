@@ -382,7 +382,7 @@ function briefScript(verticals: string): string {
           '</ul>' +
           (items > sample.length ? '<p class="tiny" style="margin-top:4px">…and ' + (items - sample.length) + ' more. All of them go into the app and stay editable.</p>' : '') +
         '</div>'
-      : '<p class="tiny" style="margin-top:10px"><strong>No catalogue found.</strong> Nothing was invented — the app starts from the trade\'s sample menu, clearly marked as sample, until you add their items.</p>'
+      : '<p class="tiny" style="margin-top:10px"><strong>No catalogue found.</strong> Nothing was invented — the app starts from the trade’s sample menu, clearly marked as sample, until you add their items.</p>'
 
     const contact = [site.phone, site.email, site.address, site.hours].filter(Boolean).map(esc).join(' · ')
     const pagesRead = (data.pagesRead || []).map(function (path) { return '<li><span class="mono">' + esc(path) + '</span></li>' }).join('')
@@ -449,8 +449,9 @@ function briefScript(verticals: string): string {
     syncElementPreviews()
     // A read site has already answered the trade, the brand and the feature
     // questions. Walking the customer through them again is asking them to
-    // retype what Plattr just read: skip to delivery, the only answers a website
-    // cannot know (who to contact, and how they want to buy).
+    // retype what Plattr just read. The design step is the one question the
+    // site cannot answer, so the three concepts are built for the trade that
+    // was read and shown straight away.
     if (site.name && site.vertical && readItems > 0) {
       document.querySelectorAll('[data-step-dot]').forEach((dot) => {
         const step = Number(dot.dataset.stepDot)
@@ -459,7 +460,12 @@ function briefScript(verticals: string): string {
           dot.title = 'Read from your site'
         }
       })
-      show(3)
+      show(0)
+      if (wishInput.value.trim().length < 3)
+        wishInput.value =
+          'An app for ' + (site.category || site.name) + ' — ' +
+          (chosen.length ? chosen.slice(0, 3).join(', ') : 'their catalogue and enquiries')
+      readWish()
     }
   }
 

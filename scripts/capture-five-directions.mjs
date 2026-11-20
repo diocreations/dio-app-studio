@@ -47,8 +47,15 @@ const server = Bun.serve({
   async fetch(request) {
     const path = new URL(request.url).pathname
     const file = Bun.file(`${OUT}${path}`)
-    if (!(await file.exists())) return new Response('not found', { status: 404 })
-    return new Response(await file.arrayBuffer(), { headers: { 'content-type': 'text/html; charset=utf-8' } })
+    if (await file.exists())
+      return new Response(await file.arrayBuffer(), { headers: { 'content-type': 'text/html; charset=utf-8' } })
+    // The app's own artwork and stock photography live on the running Worker;
+    // without it every image renders as its alt text.
+    try {
+      const upstream = await fetch(`http://127.0.0.1:8795${path}${new URL(request.url).search}`)
+      if (upstream.ok) return upstream
+    } catch {}
+    return new Response('not found', { status: 404 })
   },
 })
 

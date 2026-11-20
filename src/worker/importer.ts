@@ -39,7 +39,7 @@ import {
 } from './design'
 import { cleanLogoImage, sanitizeMenu } from './pricing'
 import { themeFor } from './themes'
-import type { FeatureId, MenuSection, SocialLink, VerticalId } from './types'
+import type { FeatureId, MenuItem, MenuSection, SocialLink, VerticalId } from './types'
 import { VERTICALS } from './verticals'
 
 /* ------------------------------------------------------------------ */
@@ -96,8 +96,8 @@ export type ImportQuality = {
   kept: number
   /** Items that were read but are not sellable entries, with the reason. */
   dropped: { name: string; section: string; reason: string }[]
-  /** Prices that look like a parse accident rather than a price. */
-  suspectPrices: { name: string; section: string; value: number }[]
+  /** Prices that could not be proven, or that look like a parse accident. */
+  suspectPrices: { name: string; section: string; value: number; reason?: 'uniform' | 'unverified' | 'outlier' }[]
   duplicates: number
   categories: string[]
 }
@@ -1244,14 +1244,34 @@ const CURRENCIES: Record<string, string> = {
   '¥': 'JPY',
 }
 
-function centsOf(node: Record<string, unknown>): number {
+type PriceProof = NonNullable<MenuItem['priceEvidence']>
+
+/** A price with the exact value and the record it came from. Item-scoped: the
+ *  offer belongs to this node, so the number proves this item's price. */
+function nodePrice(node: Record<string, unknown>, source: string): { price: number; evidence?: PriceProof } {
   const offers = node.offers ?? node.priceSpecification
   for (const entry of Array.isArray(offers) ? offers : [offers]) {
     if (!entry || typeof entry !== 'object') continue
-    const cents = toCents(textOf(entry as Record<string, unknown>, 'price', 'lowPrice', 'priceValue'))
-    if (cents > 0) return cents
+    const record = entry as Record<string, unknown>
+    const raw = textOf(record, 'price', 'lowPrice', 'priceValue')
+    const price = toCents(raw)
+    if (price > 0)
+      return {
+        price,
+        evidence: {
+          method: 'json-ld',
+          source,
+          raw,
+          currency: textOf(record, 'priceCurrency') || textOf(node, 'priceCurrency'),
+          validated: true,
+        },
+      }
   }
-  return toCents(textOf(node, 'price'))
+  const raw = textOf(node, 'price')
+  const price = toCents(raw)
+  return price > 0
+    ? { price, evidence: { method: 'json-ld', source, raw, currency: textOf(node, 'priceCurrency'), validated: true } }
+    : { price: 0 }
 }
 
 /* ------------------------------------------------------------------ */
@@ -1289,6 +1309,7 @@ const SUSPECT_PRICE = 100_000
 export function cleanMenu(
   sections: MenuSection[],
   vertical: VerticalId,
+  options: { requireEvidence?: boolean } = {},
 ): { sections: MenuSection[]; quality: ImportQuality } {
   const discovered = sections.reduce((total, section) => total + section.items.length, 0)
   const dropped: ImportQuality['dropped'] = []
@@ -1341,11 +1362,19 @@ export function cleanMenu(
           return []
         }
         let price = item.price
-        if (uniform) {
-          suspectPrices.push({ name: item.name, section: section.name, value: price })
+        // Every price the importer now produces carries proof of where it was
+        // read. A price without that proof is a number that happened to parse:
+        // it stays off the customer's screen and the owner is told why.
+        if (options.requireEvidence && price > 0 && !(item.priceEvidence && item.priceEvidence.validated)) {
+          suspectPrices.push({ name: item.name, section: section.name, value: price, reason: 'unverified' })
+          price = 0
+        } else if (!options.requireEvidence && uniform) {
+          // Stored catalogues from before evidence was recorded keep the old
+          // rule: five identical figures from no per-item source are not a tariff.
+          suspectPrices.push({ name: item.name, section: section.name, value: price, reason: 'uniform' })
           price = 0
         } else if (price >= SUSPECT_PRICE && median > 0 && price > median * 20) {
-          suspectPrices.push({ name: item.name, section: section.name, value: price })
+          suspectPrices.push({ name: item.name, section: section.name, value: price, reason: 'outlier' })
           price = 0
         }
         return [{ ...item, price }]
@@ -1439,15 +1468,17 @@ function acceptedImage(...candidates: string[]): string {
   return ''
 }
 
-function itemFromNode(node: Record<string, unknown>): Item | null {
+function itemFromNode(node: Record<string, unknown>, source = ''): Item | null {
   if (!typeOf(node).some((type) => PRODUCT_TYPES.has(type))) return null
   const name = textOf(node, 'name', 'headline')
   if (!name) return null
   const image = acceptedImage(imageFrom(node.image), imageFrom(node.thumbnailUrl))
+  const { price, evidence } = nodePrice(node, source)
   return {
     name: collapse(name, 60),
     desc: collapse(textOf(node, 'description'), 90),
-    price: centsOf(node),
+    price,
+    ...(evidence ? { priceEvidence: evidence } : {}),
     ...(image ? { image: toEvidence(image, 'structured-data', collapse(name, 60)) } : {}),
   }
 }
@@ -1464,7 +1495,7 @@ function dedupe(items: Item[], into: Set<string>): Item[] {
 }
 
 /** Products grouped by the menu, catalogue or list they hang off. */
-function sectionsFromNodes(nodes: Record<string, unknown>[]): MenuSection[] {
+function sectionsFromNodes(nodes: Record<string, unknown>[], source = ''): MenuSection[] {
   const groups = new Map<string, Item[]>()
   const loose: Item[] = []
   const seen = new WeakSet<object>()
@@ -1489,7 +1520,7 @@ function sectionsFromNodes(nodes: Record<string, unknown>[]): MenuSection[] {
     if (node.item && typeof node.item === 'object' && !Array.isArray(node.item))
       visit(node.item as Record<string, unknown>, here)
 
-    const item = itemFromNode(node)
+    const item = itemFromNode(node, source)
     if (!item) return
     if (!here) {
       loose.push(item)
@@ -1525,7 +1556,7 @@ const CARD_SHAPE = /product[-_ ]?(card|pod|item|tile|box)/i
 
 /** Products from plain markup: cards whose class says “product”, with the name
  *  and price read out of the card itself. */
-export function cardProducts(html: string): Item[] {
+export function cardProducts(html: string, source = ''): Item[] {
   const starts: number[] = []
   CARD_OPENER.lastIndex = 0
   let match: RegExpExecArray | null
@@ -1548,7 +1579,24 @@ export function cardProducts(html: string): Item[] {
     const name = collapse(titleAttr || heading || link || '', 60)
     if (name.length < 2) continue
     if (out.some((item) => item.name.toLowerCase() === name.toLowerCase())) continue
-    out.push({ name, desc: '', price: toCents(price) })
+    const cents = toCents(price)
+    out.push({
+      name,
+      desc: '',
+      price: cents,
+      ...(cents > 0
+        ? {
+            priceEvidence: {
+              method: 'text' as const,
+              source,
+              raw: price,
+              currency: CURRENCIES[price.trim().charAt(0)] ?? '',
+              // The figure sat inside this card, beside this name.
+              validated: true,
+            },
+          }
+        : {}),
+    })
     if (out.length >= 20) break
   }
   return out
@@ -1566,6 +1614,7 @@ function usableProductName(name: string): boolean {
 }
 
 export function linkedProducts(html: string, base: URL): Item[] {
+  const source = base.toString()
   const out: Item[] = []
   const seen = new Set<string>()
   // Match the anchor tag only. Real cards hold a screenful of image and
@@ -1609,8 +1658,24 @@ export function linkedProducts(html: string, base: URL): Item[] {
     seen.add(key)
 
     // The price may sit inside the link or beside it, inside this card only.
-    const priced = card.match(PRICE_PATTERN)
-    out.push({ name, desc: '', price: toCents(priced?.[0] ?? '') })
+    const priced = card.match(PRICE_PATTERN)?.[0] ?? ''
+    const cents = toCents(priced)
+    out.push({
+      name,
+      desc: '',
+      price: cents,
+      ...(cents > 0
+        ? {
+            priceEvidence: {
+              method: 'text' as const,
+              source,
+              raw: priced,
+              currency: CURRENCIES[priced.trim().charAt(0)] ?? '',
+              validated: true,
+            },
+          }
+        : {}),
+    })
     if (out.length >= 20) break
   }
   return out
@@ -1622,10 +1687,11 @@ export function linkedProducts(html: string, base: URL): Item[] {
 type Catalogue = { sections: MenuSection[]; synthetic: boolean }
 
 function catalogueOf(page: Page): Catalogue {
-  const fromData = sectionsFromNodes(page.nodes)
+  const source = page.url.toString()
+  const fromData = sectionsFromNodes(page.nodes, source)
   if (fromData.length) return { sections: fromData, synthetic: false }
 
-  const cards = cardProducts(page.html)
+  const cards = cardProducts(page.html, source)
   if (cards.length >= 3) return { sections: [{ name: '', items: cards }], synthetic: true }
 
   const linked = linkedProducts(page.html, page.url)
@@ -2110,23 +2176,36 @@ const LISTING_TITLE =
   /^(?:shop|browse|view|see|explore)\s+(?:all|the|our|every)\b|^(?:all|every)\s+(?:products?|items?|collections?|services?|treatments?|courses?|classes|menu)\b|^(?:products|services|menu|collections?|categories)$/i
 
 function productFromPage(page: Page): Item | null {
+  const source = page.url.toString()
   for (const node of page.nodes) {
-    const item = itemFromNode(node)
+    const item = itemFromNode(node, source)
     if (item) return item
   }
   const name = cleanName(page.meta['og:title'] ?? '') || cleanName(page.title)
   if (!name || LISTING_TITLE.test(name)) return null
-  const price =
-    page.meta['product:price:amount'] ||
-    page.meta['og:price:amount'] ||
-    /itemprop=["']price["'][^>]*content=["']([\d.,]+)/i.exec(page.html)?.[1] ||
-    visibleMarkup(page.html).match(PRICE_PATTERN)?.[0] ||
-    ''
-  const image = ogProductImage(page.html, page.meta, page.url.toString())
+  // A product page's own meta names this product, so its price is this item's.
+  const declared = page.meta['product:price:amount'] || page.meta['og:price:amount'] || ''
+  const itemprop = /itemprop=["']price["'][^>]*content=["']([\d.,]+)/i.exec(page.html)?.[1] || ''
+  // The first price anywhere on the page belongs to no item in particular: it
+  // is kept as unvalidated evidence so the guard can refuse to publish it.
+  const loose = visibleMarkup(page.html).match(PRICE_PATTERN)?.[0] || ''
+  const price = declared || itemprop ? toCents(declared || itemprop) : toCents(loose)
+  const evidence: PriceProof | undefined =
+    price > 0
+      ? {
+          method: declared || itemprop ? 'meta' : 'text',
+          source,
+          raw: declared || itemprop || loose,
+          currency: page.meta['product:price:currency'] || page.meta['og:price:currency'] || CURRENCIES[(declared || itemprop || loose).trim().charAt(0)] || '',
+          validated: Boolean(declared || itemprop),
+        }
+      : undefined
+  const image = ogProductImage(page.html, page.meta, source)
   return {
     name: collapse(name, 60),
     desc: collapse(page.meta.description ?? page.meta['og:description'] ?? '', 90),
-    price: toCents(price),
+    price,
+    ...(evidence ? { priceEvidence: evidence } : {}),
     ...(image ? { image } : {}),
   }
 }
@@ -2224,6 +2303,99 @@ function sectionFromProductPage(page: Page, site: ImportedSite): MenuSection | n
   return { name: collapse(name, 40) || 'Catalogue', items: items.slice(0, 30) }
 }
 
+/** A hosted storefront that publishes its catalogue as JSON. The home page
+ *  carries `cdn.shopify.com` assets even when its links are hashed beyond
+ *  recognition. */
+const SHOPIFY_STORE = /cdn\.shopify\.com|\/cdn\/shop\/|Shopify\.theme|shopify-section/i
+
+/**
+ * The shop's own product feed: every product with its variants, prices and
+ * photographs, in one bounded set of requests instead of ten guesses at its
+ * collection pages. Each value is tied to the product record that carried it,
+ * so the price and the photograph belong to that product and no other.
+ */
+async function shopifyProducts(
+  origin: URL,
+  fetchImpl: typeof fetch,
+  robots: RobotsGroup[],
+  deadline: number,
+  currency: string,
+): Promise<{ sections: MenuSection[]; pages: number; source: string; blocked: boolean }> {
+  const groups = new Map<string, Item[]>()
+  let pages = 0
+  let source = ''
+  const LIMIT = 250
+  for (let page = 1; page <= 3; page += 1) {
+    const url = new URL(`/products.json?limit=${LIMIT}&page=${page}`, origin.origin)
+    // The feed is a page like any other: if robots.txt excludes it, we do not
+    // fetch it, and the crawl falls back to the visible catalogue.
+    if (!robotsAllows(robots, `${url.pathname}${url.search}`)) return { sections: [], pages, source, blocked: true }
+    if (deadline - Date.now() < 1500) break
+    try {
+      const response = await fetchImpl(url.toString(), {
+        cache: 'no-store',
+        headers: { accept: 'application/json', 'user-agent': IMPORTER_UA },
+        signal: AbortSignal.timeout(Math.min(6000, Math.max(1500, deadline - Date.now()))),
+      })
+      if (!response.ok) break
+      pages += 1
+      source = `${url.pathname}${url.search}`
+      const body = (await response.json()) as { products?: Record<string, unknown>[] }
+      const products = Array.isArray(body.products) ? body.products : []
+      if (!products.length) break
+
+      for (const product of products) {
+        const name = collapse(String(product.title ?? ''), 60)
+        if (!name) continue
+        const rawVariants = Array.isArray(product.variants) ? (product.variants as Record<string, unknown>[]) : []
+        const variants = rawVariants
+          .map((variant) => ({ name: collapse(String(variant.title ?? ''), 40), price: toCents(String(variant.price ?? '')) }))
+          .filter((variant) => variant.price > 0)
+        const cheapest = variants.reduce<(typeof variants)[number] | null>(
+          (best, variant) => (!best || variant.price < best.price ? variant : best),
+          null,
+        )
+        const images = Array.isArray(product.images) ? (product.images as Record<string, unknown>[]) : []
+        const image = acceptedImage(...images.slice(0, 3).map((entry) => String(entry.src ?? '')))
+        const sectionName = collapse(String(product.product_type ?? ''), 40) || 'Catalogue'
+        const item: Item = {
+          name,
+          desc: collapse(stripMarkup(String(product.body_html ?? '')), 90),
+          price: cheapest?.price ?? 0,
+          ...(cheapest
+            ? {
+                priceEvidence: {
+                  method: 'shopify-variant' as const,
+                  source: `${url.pathname}${url.search}`,
+                  raw: String(rawVariants.find((variant) => toCents(String(variant.price ?? '')) === cheapest.price)?.price ?? ''),
+                  currency,
+                  validated: true,
+                },
+              }
+            : {}),
+          ...(variants.length > 1 ? { variants: variants.slice(0, 8) } : {}),
+          ...(image ? { image: toEvidence(image, 'public-data', name) } : {}),
+        }
+        groups.set(sectionName, [...(groups.get(sectionName) ?? []), item])
+      }
+      if (products.length < LIMIT) break
+    } catch {
+      break
+    }
+  }
+
+  const sections = [...groups.entries()]
+    .map(([name, items]) => ({ name, items: items.slice(0, 30) }))
+    .filter((section) => section.items.length > 0)
+  return { sections, pages, source, blocked: false }
+}
+
+function stripMarkup(html: string): string {
+  return decode(html.replace(/<[^>]+>/g, ' '))
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 async function expandCatalogue(options: {
   entry: Page
   site: ImportedSite
@@ -2247,6 +2419,31 @@ async function expandCatalogue(options: {
   let clientRendered = looksClientRendered(entry.html, entry.text)
   const read: string[] = [entry.url.pathname]
   const failed: { url: string; reason: string }[] = []
+
+  // A hosted store publishes one complete product feed. Reading it beats
+  // guessing at its collection pages: prices, variants and photographs arrive
+  // tied to the product record that carried them.
+  if (SHOPIFY_STORE.test(entry.html) && site.vertical !== 'restaurant') {
+    const feed = await shopifyProducts(entry.url, fetchImpl, robots, deadline, currency || site.currency)
+    const count = feed.sections.reduce((total, section) => total + section.items.length, 0)
+    if (feed.blocked) blocked += 1
+    if (count >= 3) {
+      read.push(feed.source)
+      return {
+        sections: feed.sections,
+        pages: feed.pages,
+        opened: feed.pages,
+        skipped: false,
+        blocked,
+        clientRendered,
+        read,
+        failed,
+        usedSitemap: false,
+        currency: currency || site.currency,
+        cartSignal: true,
+      }
+    }
+  }
 
   const remainingPages = () => MAX_PAGES - 1 - pages
   const budgetLeft = () => deadline - Date.now() - 900
@@ -2456,7 +2653,7 @@ export async function importWebsite(
   const pages = crawl.opened + 1
   // Section labels, option buttons and unpriced retail cards leave the menu
   // before anything else looks at it.
-  const { sections: menu, quality } = cleanMenu(site.menu, site.vertical)
+  const { sections: menu, quality } = cleanMenu(site.menu, site.vertical, { requireEvidence: true })
   site.menu = menu
   // Photographs last, so only surviving items are looked up, and only against
   // evidence the site itself published for that item.

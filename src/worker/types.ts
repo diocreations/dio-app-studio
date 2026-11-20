@@ -23,6 +23,20 @@ export type FeatureId =
   | 'multilingual'
   | 'tablet'
 
+/** Where a price came from, so a published price carries its proof. */
+export type PriceEvidence = {
+  /** The mechanism that read this exact value. */
+  method: 'json-ld' | 'shopify-variant' | 'microdata' | 'meta' | 'text'
+  /** The page or endpoint the value was read from. */
+  source: string
+  /** The value exactly as the source wrote it. */
+  raw: string
+  currency: string
+  /** True only when the number sat inside this item's own record or card. A
+   *  figure read from the page as a whole proves nothing about this item. */
+  validated: boolean
+}
+
 export type MenuItem = {
   /** Stable identity derived from the section and name, not from position, so
    *  a document can reference this item across re-imports and reorderings. */
@@ -34,6 +48,10 @@ export type MenuItem = {
   tag?: string
   /** Secondary line: duration, bed count, "per night", "from". */
   meta?: string
+  /** Where this price was read, when the source made it verifiable. */
+  priceEvidence?: PriceEvidence
+  /** The options the source lists for one product, at their own prices. */
+  variants?: { name: string; price: number }[]
   /** The seller on a marketplace: the store an item is bought from. */
   vendor?: string
   /** A photograph owned by this product, service or room. */
