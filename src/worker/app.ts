@@ -683,12 +683,19 @@ function catalogCard(ctx: Ctx, sectionIndex: number, itemIndex: number): string 
   return (ctx.theme.layout === 'editorial' ? itemRowEditorial : itemRowCompact)(ctx, item, key)
 }
 
+/** The most cards one fragment may ask for. The app asks for a page; anything
+ *  larger is a client mistake or a probe, and is not worth rendering. */
+export const CATALOG_MAX_CARDS = 60
+
 /** A slice of one shelf, used for the shipped first page and for the pages the
- *  customer asks for later. */
+ *  customer asks for later. The slice is clamped here as well as at the route,
+ *  so no caller can ask for an unbounded render. */
 function catalogCards(ctx: Ctx, sectionIndex: number, from = 0, count = catalogFirst): string {
   const items = ctx.spec.menu[sectionIndex]?.items ?? []
+  const start = Number.isFinite(from) ? Math.max(0, Math.floor(from)) : 0
+  const size = Number.isFinite(count) ? Math.max(1, Math.min(CATALOG_MAX_CARDS, Math.floor(count))) : catalogFirst
   const out: string[] = []
-  for (let index = from; index < Math.min(items.length, from + count); index += 1) {
+  for (let index = start; index < Math.min(items.length, start + size); index += 1) {
     out.push(catalogCard(ctx, sectionIndex, index))
   }
   return out.join('')
@@ -1841,13 +1848,25 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const wanted = state.pick[key]
       return list.find((variant) => variantRef(variant) === wanted) || list.find((variant) => variant.selected) || list[0]
     }
+    /** The only option of a simple product. It is not a choice to show, but it
+     *  is the Shopify identity the order and the shop share, so the bag and the
+     *  order still name it. */
+    function onlyVariant(item) {
+      const list = variantsOf(item)
+      return list.length === 1 ? list[0] : null
+    }
     function cartParts(cartKey) {
       const raw = String(cartKey)
       const cut = raw.indexOf('::')
       const key = cut < 0 ? raw : raw.slice(0, cut)
       const ref = cut < 0 ? '' : decodeURIComponent(raw.slice(cut + 2))
       const item = itemFor(key)
-      const variant = ref ? variantsOf(item).find((entry) => variantRef(entry) === ref) || null : null
+      // A bag saved before single options were kept names the product alone; it
+      // still resolves to that product's only option, so the order keeps the
+      // Shopify variant it was added under.
+      const variant = ref
+        ? variantsOf(item).find((entry) => variantRef(entry) === ref) || null
+        : onlyVariant(item)
       return { key: key, item: item, variant: variant }
     }
     function cartPrice(cartKey) {
@@ -2410,7 +2429,8 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           const parts = cartParts(entry[0])
           const item = parts.item
           if (!item) return ''
-          return '<div class="cart-line"><div><div class="name">' + esc(item.name) + (parts.variant ? ' — ' + esc(parts.variant.name) : '') + '</div><div class="price">' + money(cartPrice(entry[0]) * entry[1]) + '</div></div>' +
+          const named = parts.variant && variantsOf(item).length > 1 ? parts.variant : null
+          return '<div class="cart-line"><div><div class="name">' + esc(item.name) + (named ? ' — ' + esc(named.name) : '') + '</div><div class="price">' + money(cartPrice(entry[0]) * entry[1]) + '</div></div>' +
             '<div class="qty"><button type="button" data-inc="' + entry[0] + '" data-delta="-1" aria-label="Remove one">−</button><b>' + entry[1] + '</b>' +
             '<button type="button" data-inc="' + entry[0] + '" data-delta="1" aria-label="Add one">+</button></div></div>'
         })
@@ -2427,14 +2447,18 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     function addItem(key) {
       const item = itemFor(key)
       const chosen = item ? chosenVariant(item, key) : null
+      const identity = chosen || (item ? onlyVariant(item) : null)
       // The option is part of the line's identity, so two sizes of one shirt are
-      // two cart lines and each is ordered at its own price.
-      const cartKey = chosen ? key + '::' + encodeURIComponent(variantRef(chosen)) : key
+      // two cart lines and each is ordered at its own price. A product with one
+      // option still records that option, so the order names the Shopify
+      // variant rather than guessing later.
+      const cartKey = identity ? key + '::' + encodeURIComponent(variantRef(identity)) : key
       state.cart[cartKey] = (state.cart[cartKey] || 0) + 1
       save()
       renderCart()
       buzz(12)
-      toast((item ? item.name : 'Added') + (chosen ? ' — ' + chosen.name : '') + ' added')
+      const named = chosen && variantsOf(item).length > 1 ? chosen : null
+      toast((item ? item.name : 'Added') + (named ? ' — ' + named.name : '') + ' added')
     }
 
     async function placeOrder() {

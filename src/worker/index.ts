@@ -1,7 +1,7 @@
 import { Hono, type Context } from 'hono'
 import { bodyLimit } from 'hono/body-limit'
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie'
-import { renderApp, renderIcon, renderManifest, renderServiceWorker } from './app'
+import { CATALOG_MAX_CARDS, renderApp, renderIcon, renderManifest, renderServiceWorker } from './app'
 import { photosFor } from './photos'
 import {
   addNote,
@@ -597,6 +597,15 @@ app.get('/p/:token/app', async (c) => {
   )
 })
 
+/** A query number that cannot be fractional, negative or unlimited. A value
+ *  that is not a number at all answers null so the caller can refuse it. */
+function boundedInteger(raw: string | undefined, fallback: number, min: number, max: number): number | null {
+  if (raw === undefined || raw.trim() === '') return fallback
+  const value = Number(raw)
+  if (!Number.isFinite(value)) return null
+  return Math.max(min, Math.min(max, Math.floor(value)))
+}
+
 /** The next page of one catalogue shelf. The cards come from the same renderer
  *  as the app's first page, so a long shelf never needs a second copy of the
  *  card markup in the browser. Public exactly like the app itself. */
@@ -604,10 +613,9 @@ app.get('/p/:token/cards/:section', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.text('Not found', 404)
   const section = Number(c.req.param('section'))
-  const from = Number(c.req.query('from') ?? 0)
-  const count = Number(c.req.query('count') ?? 24)
-  if (!Number.isInteger(section) || !Number.isInteger(from) || !Number.isInteger(count))
-    return c.text('', 400)
+  const from = boundedInteger(c.req.query('from'), 0, 0, 5000)
+  const count = boundedInteger(c.req.query('count'), 24, 1, CATALOG_MAX_CARDS)
+  if (!Number.isInteger(section) || from === null || count === null) return c.text('', 400)
   if (section < 0 || section >= project.spec.menu.length) return c.text('', 404)
   const photos = await photosFor(project.spec.vertical, c.env)
   c.header('Cache-Control', 'private, no-store')
@@ -621,11 +629,7 @@ app.get('/p/:token/cards/:section', async (c) => {
       noindex: true,
       doc: starterDoc(project),
       flagship: FLAGSHIP_TRADES.has(project.spec.vertical),
-      cards: {
-        section,
-        from: Math.max(0, Math.min(2000, from)),
-        count: Math.max(1, Math.min(24, count)),
-      },
+      cards: { section, from, count },
     }),
   )
 })
@@ -1584,6 +1588,9 @@ app.get('/p/:token/orders/:orderId', async (c) => {
       items: order.items.map((item) => ({
         name: item.name,
         variant: item.variant,
+        // The Shopify option identity the order was placed with, so the shop can
+        // match the line even when the option name alone is ambiguous.
+        variantId: item.variantId,
         price: item.price,
         qty: item.qty,
       })),

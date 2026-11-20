@@ -2445,12 +2445,21 @@ async function shopifyProducts(
   robots: RobotsGroup[],
   deadline: number,
   currency: string,
-): Promise<{ sections: MenuSection[]; pages: number; source: string; blocked: boolean; labels: CurrencyCandidate[] }> {
+): Promise<{
+  sections: MenuSection[]
+  pages: number
+  source: string
+  blocked: boolean
+  labels: { candidates: CurrencyCandidate[]; proven: boolean; conflict: boolean }
+}> {
   const groups = new Map<string, Item[]>()
-  // A shop that names its options "£10" or "€25" is printing its own money.
-  // Unlike the storefront's presentment currency, those labels do not change
-  // with the visitor's country, so they are proof of what a price means.
-  const labels = new Map<string, string>()
+  // A shop that names its options "£10" or "€25" is printing its own money, and
+  // unlike the storefront's presentment currency that label does not change with
+  // the visitor's country. It is still only a hint from one product: a single
+  // personalised gift card can be labelled in a currency the rest of the shop
+  // does not use. Two or more products, each label agreeing with that option's
+  // price, is what makes it evidence.
+  const labels = new Map<string, { products: Set<string>; validated: number; rejected: number; raw: string }>()
   const symbols: Record<string, string> = { '£': 'GBP', '€': 'EUR', '₹': 'INR', '¥': 'JPY' }
   let pages = 0
   let source = ''
@@ -2460,7 +2469,7 @@ async function shopifyProducts(
     // The feed is a page like any other: if robots.txt excludes it, we do not
     // fetch it, and the crawl falls back to the visible catalogue.
     if (!robotsAllows(robots, `${url.pathname}${url.search}`))
-      return { sections: [], pages, source, blocked: true, labels: [] }
+      return { sections: [], pages, source, blocked: true, labels: { candidates: [], proven: false, conflict: false } }
     if (deadline - Date.now() < 1500) break
     try {
       const response = await fetchImpl(url.toString(), {
@@ -2485,9 +2494,21 @@ async function shopifyProducts(
         const rawVariants = Array.isArray(product.variants) ? (product.variants as Record<string, unknown>[]) : []
         for (const variant of rawVariants) {
           const label = String(variant.title ?? '')
-          const symbol = /[£€₹¥]\s?\d/.exec(label)?.[0]?.[0] ?? ''
-          if (symbol && symbols[symbol] && !labels.has(symbols[symbol]))
-            labels.set(symbols[symbol], `${symbol} in the option name \"${label.slice(0, 40)}\"`)
+          const hit = /([£€₹¥])\s?(\d+(?:[.,]\d{1,2})?)/.exec(label)
+          const code = hit ? symbols[hit[1]] : ''
+          if (!hit || !code) continue
+          const amount = Math.round(Number(hit[2].replace(',', '.')) * 100)
+          const optionPrice = toCents(String(variant.price ?? ''))
+          const seen = labels.get(code) ?? { products: new Set<string>(), validated: 0, rejected: 0, raw: label.slice(0, 40) }
+          if (optionPrice > 0 && amount > 0 && optionPrice === amount) {
+            seen.products.add(name)
+            seen.validated += 1
+          } else {
+            // A label that does not match its own option price says nothing
+            // reliable about the catalogue, so it is not evidence at all.
+            seen.rejected += 1
+          }
+          labels.set(code, seen)
         }
         // Every option keeps its own price and the shop's currency. The first
         // variant is Shopify's default when no selected variant is given; the
@@ -2543,7 +2564,10 @@ async function shopifyProducts(
                 },
               }
             : {}),
-          ...(variants.length > 1
+          // Every option is kept, including the only option of a simple
+          // product: its Shopify ID is the identity the order and the shop
+          // share, and dropping it loses that for most of the catalogue.
+          ...(variants.length
             ? {
                 variants: variants.map((variant, index) => ({
                   ...(variant.id ? { id: variant.id } : {}),
@@ -2570,17 +2594,26 @@ async function shopifyProducts(
   const sections = [...groups.entries()]
     .map(([name, items]) => ({ name, items }))
     .filter((section) => section.items.length > 0)
+  const grouped = [...labels.entries()].filter(([, seen]) => seen.validated > 0)
   return {
     sections,
     pages,
     source,
     blocked: false,
-    labels: [...labels.entries()].map(([code, raw]) => ({
-      code,
-      method: 'variant-labels' as const,
-      source: `${origin.origin}/products.json`,
-      raw,
-    })),
+    labels: {
+      // One product is a hint; two or more products whose labels each match
+      // their own option price are proof of what the catalogue is priced in.
+      proven: grouped.length === 1 && grouped[0][1].products.size >= 2,
+      conflict: grouped.length > 1,
+      candidates: grouped.map(([code, seen]) => ({
+        code,
+        method: 'variant-labels' as const,
+        source: `${origin.origin}/products.json`,
+        raw: `${seen.raw} on ${seen.products.size} product${seen.products.size === 1 ? '' : 's'}${
+          seen.rejected ? ` (${seen.rejected} label${seen.rejected === 1 ? '' : 's'} disagreed with its option price)` : ''
+        }`,
+      })),
+    },
   }
 }
 
@@ -2624,25 +2657,37 @@ async function expandCatalogue(options: {
     if (feed.blocked) blocked += 1
     if (count >= 3) {
       read.push(feed.source)
-      // The shop's own option labels settle the currency when the page only
-      // offered a localised presentment code. Two label currencies disagree, so
-      // the owner is asked instead.
-      if (feed.labels.length === 1 && !site.currency) {
-        site.currency = feed.labels[0].code
-        site.currencyEvidence = feed.labels[0]
-        site.currencyCandidates = [...(site.currencyCandidates ?? []), feed.labels[0]]
-        delete site.currencyConflict
-        // The feed was read before the labels settled the currency, so stamp it
-        // on the prices it produced rather than leaving them unlabelled.
-        for (const section of feed.sections) {
-          for (const item of section.items) {
-            if (item.priceEvidence) item.priceEvidence.currency = site.currency
-            if (item.variants) item.variants = item.variants.map((variant) => ({ ...variant, currency: site.currency }))
-          }
-        }
-      } else if (feed.labels.length > 1 && !site.currency) {
-        site.currencyCandidates = [...(site.currencyCandidates ?? []), ...feed.labels]
+      // The shop's own option labels can settle the currency when the page only
+      // offered a localised presentment code, but only once two products agree
+      // and each label matches its option price. Anything less is a candidate
+      // for the brief, never a published code.
+      const labelCandidates = feed.labels.candidates.filter(
+        (candidate) => !(site.currencyCandidates ?? []).some((known) => known.code === candidate.code && known.method === candidate.method),
+      )
+      if (site.currency && labelCandidates.some((candidate) => candidate.code !== site.currency)) {
+        // Two reliable statements disagree. Neither is published, and the owner
+        // is asked which one the shop means.
+        site.currencyCandidates = [...(site.currencyCandidates ?? []), ...labelCandidates]
+        site.currency = ''
+        delete site.currencyEvidence
         site.currencyConflict = true
+      } else if (!site.currency && labelCandidates.length) {
+        site.currencyCandidates = [...(site.currencyCandidates ?? []), ...labelCandidates]
+        if (feed.labels.proven && !feed.labels.conflict) {
+          site.currency = labelCandidates[0].code
+          site.currencyEvidence = labelCandidates[0]
+          delete site.currencyConflict
+          // The feed was read before the labels settled the currency, so stamp
+          // it on the prices it produced rather than leaving them unlabelled.
+          for (const section of feed.sections) {
+            for (const item of section.items) {
+              if (item.priceEvidence) item.priceEvidence.currency = site.currency
+              if (item.variants) item.variants = item.variants.map((variant) => ({ ...variant, currency: site.currency }))
+            }
+          }
+        } else if (feed.labels.conflict) {
+          site.currencyConflict = true
+        }
       }
       // The entry page may already have named some of these products at their
       // own prices. Those readings stay: the feed fills in what the page did
