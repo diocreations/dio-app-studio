@@ -1,7 +1,7 @@
 import { compositionBlock, compositionCss, isCompositionVariant } from './compositions'
 import { appScreenId, flagshipDocFromSpec, homeSections, type Doc, type DocNode } from './doc'
 import { stockImageTag } from './flagshipImages'
-import { moneyIn } from './pricing'
+import { moneyForSpec } from './pricing'
 import type { AppSpec, MenuItem, VerticalId } from './types'
 import { verticalFor } from './verticals'
 
@@ -50,25 +50,27 @@ function esc(value: string): string {
     .replace(/"/g, '&quot;')
 }
 
-function price(item: MenuItem, currency?: string): string {
-  return item.price > 0 ? moneyIn(item.price, currency) : ''
+type MoneyCtx = { currency?: string; website?: string }
+
+function price(item: MenuItem, spec: MoneyCtx): string {
+  return item.price > 0 ? moneyForSpec(item.price, spec) : ''
 }
 
 /** A product whose options are priced differently leads with its cheapest and
  *  says how many options there are; a single price is still just that price. */
-function shelfPrice(item: MenuItem, currency?: string): string {
+function shelfPrice(item: MenuItem, spec: MoneyCtx): string {
   const priced = (item.variants ?? []).filter((variant) => variant.price > 0)
-  if (priced.length < 2) return price(item, currency)
+  if (priced.length < 2) return price(item, spec)
   const prices = priced.map((variant) => variant.price)
   const lowest = Math.min(...prices)
   return prices.some((value) => value !== lowest)
-    ? `From ${moneyIn(lowest, currency)} · ${priced.length} options`
-    : price(item, currency)
+    ? `From ${moneyForSpec(lowest, spec)} · ${priced.length} options`
+    : price(item, spec)
 }
 
 /** A job with no fixed price shows its own "from" line, never a blank quote. */
-function rate(item: MenuItem, currency?: string): string {
-  if (item.price > 0) return moneyIn(item.price, currency)
+function rate(item: MenuItem, spec: MoneyCtx): string {
+  if (item.price > 0) return moneyForSpec(item.price, spec)
   const meta = (item.meta || '').trim()
   return /^(from|fee|quoted|free|by referral)/i.test(meta) ? meta : 'On request'
 }
@@ -158,7 +160,7 @@ function restaurantHome(spec: AppSpec): string {
               <span class="fx-eyebrow">From the kitchen</span>
               <b>${esc(feature.item.name)}</b>
               ${feature.item.desc ? `<p>${esc(feature.item.desc)}</p>` : ''}
-              <span class="fx-price">${price(feature.item, spec.currency)}</span>
+              <span class="fx-price">${price(feature.item, spec)}</span>
             </div>
           </div>`
         : `<div class="fx-feature is-empty">${art(0, 'plate')}<div class="fx-feature-copy"><span class="fx-eyebrow">The menu</span><b>Being written</b><p>The kitchen has not published its first dishes yet.</p></div></div>`
@@ -198,7 +200,7 @@ function shopHome(spec: AppSpec): string {
              .map(
                (entry, index) => `<div class="fx-product" data-item="${entry.key}" role="button" tabindex="0">
                  ${still(spec, index)}
-                                   <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec.currency)}</span></div>
+                                   <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec)}</span></div>
                </div>`,
              )
              .join('')}</div>`
@@ -235,7 +237,7 @@ function salonHome(spec: AppSpec): string {
               (entry, index) => `<div class="fx-service" data-item="${entry.key}" role="button" tabindex="0">
                 ${still(spec, index, 'quiet')}
                 <div><b>${esc(entry.item.name)}</b><span>${esc(entry.item.meta || entry.item.desc)}</span></div>
-                <div class="fx-service-tail"><b>${price(entry.item, spec.currency)}</b><span>${esc(entry.section)}</span></div>
+                <div class="fx-service-tail"><b>${price(entry.item, spec)}</b><span>${esc(entry.section)}</span></div>
               </div>`,
             )
             .join('')}</div>`
@@ -249,7 +251,7 @@ function salonHome(spec: AppSpec): string {
 function hotelHome(spec: AppSpec): string {
   const rooms = entries(spec).slice(0, 3)
   return `<div class="fx-home fx-hotel">
-    <div class="fx-hotel-image">${still(spec, 6, 'room')}<span class="fx-eyebrow">${esc(spec.address || verticalFor(spec.vertical).label)}</span>${rooms[0] ? `<div class="fx-stay-tag"><span>${esc(rooms[0].section)}</span><b>${esc(rooms[0].item.name)}</b><em>${price(rooms[0].item, spec.currency)}${rooms[0].item.meta ? ` · ${esc(rooms[0].item.meta)}` : ''}</em></div>` : ''}</div>
+    <div class="fx-hotel-image">${still(spec, 6, 'room')}<span class="fx-eyebrow">${esc(spec.address || verticalFor(spec.vertical).label)}</span>${rooms[0] ? `<div class="fx-stay-tag"><span>${esc(rooms[0].section)}</span><b>${esc(rooms[0].item.name)}</b><em>${price(rooms[0].item, spec)}${rooms[0].item.meta ? ` · ${esc(rooms[0].item.meta)}` : ''}</em></div>` : ''}</div>
     <div class="fx-hotel-title"><span class="fx-eyebrow">Stay</span><h1>${esc(spec.name)}</h1><p>${esc(spec.tagline)}</p></div>
     <div class="fx-stay-card">
       <div class="fx-stay-dates"><label>Arrive<input type="date" aria-label="Arrival date" /></label><span></span><label>Leave<input type="date" aria-label="Departure date" /></label></div>
@@ -262,7 +264,7 @@ function hotelHome(spec: AppSpec): string {
             .map(
               (entry, index) => `<div class="fx-room" data-item="${entry.key}" role="button" tabindex="0">
                 ${still(spec, index, 'room')}
-                <div class="fx-room-copy"><span class="fx-eyebrow">${esc(entry.section)}</span><b>${esc(entry.item.name)}</b><p>${esc(entry.item.desc)}</p><span class="fx-price">${price(entry.item, spec.currency)}${entry.item.meta ? ` · ${esc(entry.item.meta)}` : ''}</span></div>
+                <div class="fx-room-copy"><span class="fx-eyebrow">${esc(entry.section)}</span><b>${esc(entry.item.name)}</b><p>${esc(entry.item.desc)}</p><span class="fx-price">${price(entry.item, spec)}${entry.item.meta ? ` · ${esc(entry.item.meta)}` : ''}</span></div>
               </div>`,
             )
             .join('')}</div>`
@@ -291,7 +293,7 @@ function professionalHome(spec: AppSpec): string {
               (entry, index) => `<div class="fx-pro-row" data-item="${entry.key}" role="button" tabindex="0">
                 <span class="fx-pro-num">${String(index + 1).padStart(2, '0')}</span>
                 <div><b>${esc(entry.item.name)}</b><span>${esc(entry.item.desc)}</span></div>
-                <span class="fx-pro-price">${price(entry.item, spec.currency)}</span>
+                <span class="fx-pro-price">${price(entry.item, spec)}</span>
               </div>`,
             )
             .join('')}</div>`
@@ -467,7 +469,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           <span class="fx-eyebrow">From the kitchen</span>
           <b>${esc(label)}</b>
           ${description ? `<p>${esc(description)}</p>` : ''}
-          ${feature ? `<span class="fx-price">${price(feature.item, spec.currency)}</span>` : ''}
+          ${feature ? `<span class="fx-price">${price(feature.item, spec)}</span>` : ''}
         </div>
       </div>`
     }
@@ -503,7 +505,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               .map(
                 (entry, index) => `<div class="fx-product" data-item="${entry.key}" role="button" tabindex="0">
                   ${visual(ctx, node, index, 'card', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, false, entry.item.image)}
-                  <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec.currency)}</span></div>
+                  <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec)}</span></div>
                 </div>`,
               )
               .join('')}</div>`
@@ -541,7 +543,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
                 (entry, index) => `<div class="fx-service" data-item="${entry.key}" role="button" tabindex="0">
                   ${visual(ctx, node, index, 'quiet', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, false, entry.item.image)}
                   <div><b>${esc(entry.item.name)}</b><span>${esc(entry.item.meta || entry.item.desc)}</span></div>
-                  <div class="fx-service-tail"><b>${price(entry.item, spec.currency)}</b><span>${esc(entry.section)}</span></div>
+                  <div class="fx-service-tail"><b>${price(entry.item, spec)}</b><span>${esc(entry.section)}</span></div>
                 </div>`,
               )
               .join('')}</div>`
@@ -558,7 +560,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
       return `<div class="fx-hotel-image">
         ${visual(ctx, node, 6, 'room', true, 6, room?.item.media, true)}
         <span class="fx-eyebrow">${esc(spec.address || verticalFor(spec.vertical).label)}</span>
-        ${room ? `<div class="fx-stay-tag"><span>${esc(room.section)}</span><b>${esc(room.item.name)}</b><em>${price(room.item, spec.currency)}${room.item.meta ? ` · ${esc(room.item.meta)}` : ''}</em></div>` : ''}
+        ${room ? `<div class="fx-stay-tag"><span>${esc(room.section)}</span><b>${esc(room.item.name)}</b><em>${price(room.item, spec)}${room.item.meta ? ` · ${esc(room.item.meta)}` : ''}</em></div>` : ''}
       </div>
       <div class="fx-hotel-title"><span class="fx-eyebrow">Stay</span><h1>${esc(heading || spec.name)}</h1><p>${esc(words || spec.tagline)}</p></div>`
     }
@@ -576,7 +578,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               .map(
                 (entry, index) => `<div class="fx-room" data-item="${entry.key}" role="button" tabindex="0">
                   ${visual(ctx, node, index, 'room', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, index === 0)}
-                  <div class="fx-room-copy"><span class="fx-eyebrow">${esc(entry.section)}</span><b>${esc(entry.item.name)}</b><p>${esc(entry.item.desc)}</p><span class="fx-price">${price(entry.item, spec.currency)}${entry.item.meta ? ` · ${esc(entry.item.meta)}` : ''}</span></div>
+                  <div class="fx-room-copy"><span class="fx-eyebrow">${esc(entry.section)}</span><b>${esc(entry.item.name)}</b><p>${esc(entry.item.desc)}</p><span class="fx-price">${price(entry.item, spec)}${entry.item.meta ? ` · ${esc(entry.item.meta)}` : ''}</span></div>
                 </div>`,
               )
               .join('')}</div>`
@@ -613,7 +615,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
                 (entry, index) => `<div class="fx-pro-row${entry.item.media ? ' has-photo' : ''}" data-item="${entry.key}" role="button" tabindex="0">
                   ${entry.item.media ? `<span class="fx-pro-thumb">${photoFor(ctx, entry.item.media, entry.item.name)}</span>` : `<span class="fx-pro-num">${String(index + 1).padStart(2, '0')}</span>`}
                   <div><b>${esc(entry.item.name)}</b><span>${esc(entry.item.desc)}</span></div>
-                  <span class="fx-pro-price">${price(entry.item, spec.currency)}</span>
+                  <span class="fx-pro-price">${price(entry.item, spec)}</span>
                 </div>`,
               )
               .join('')}</div>`
@@ -656,7 +658,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               .map(
                 (entry, index) => `<div class="fx-cafe-item" data-item="${entry.key}" role="button" tabindex="0">
                   ${visual(ctx, node, index, 'card', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media)}
-                  <div><span>${esc(entry.section)}</span><b>${esc(entry.item.name)}</b><em>${price(entry.item, spec.currency)}</em></div>
+                  <div><span>${esc(entry.section)}</span><b>${esc(entry.item.name)}</b><em>${price(entry.item, spec)}</em></div>
                 </div>`,
               )
               .join('')}</div>`
@@ -702,7 +704,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
                 (entry, index) => `<div class="fx-gym-plan${index === 0 ? ' is-feature' : ''}" data-item="${entry.key}" role="button" tabindex="0">
                   <span class="fx-gym-num">0${index + 1}</span>
                   <div><b>${esc(entry.item.name)}</b><span>${esc(entry.item.desc)}</span></div>
-                  <div class="fx-gym-price"><b>${price(entry.item, spec.currency)}</b><span>${esc(entry.item.meta || 'one off')}</span></div>
+                  <div class="fx-gym-price"><b>${price(entry.item, spec)}</b><span>${esc(entry.item.meta || 'one off')}</span></div>
                 </div>`,
               )
               .join('')}</div>`
@@ -821,7 +823,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16.2 16.2 20.5 20.5"/></svg>
           <span>Search by area, price or bedrooms</span><kbd>${all.length}</kbd>
         </button>
-        <figure class="fx-prop-cover">${visual(ctx, node, 0, 'room', true, 0, first?.item.media, true)}<figcaption><span>Just listed</span><b>${esc(first?.item.name || 'New homes')}</b><em>${first ? price(first.item, spec.currency) : ''}</em></figcaption></figure>
+        <figure class="fx-prop-cover">${visual(ctx, node, 0, 'room', true, 0, first?.item.media, true)}<figcaption><span>Just listed</span><b>${esc(first?.item.name || 'New homes')}</b><em>${first ? price(first.item, spec) : ''}</em></figcaption></figure>
       </div>`
     case 'property-search':
       return `<div class="fx-prop-filters">
@@ -840,7 +842,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               .map(
                 (entry, index) => `<article class="fx-prop-card" data-item="${entry.key}" role="button" tabindex="0">
                   ${visual(ctx, node, index + 1, 'room', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media)}
-                  <div class="fx-prop-card-copy"><span>${esc(entry.section)}${entry.item.tag ? ` · ${esc(entry.item.tag)}` : ''}</span><b>${esc(entry.item.name)}</b><em>${esc(entry.item.meta || '')}</em><strong>${price(entry.item, spec.currency)}</strong></div>
+                  <div class="fx-prop-card-copy"><span>${esc(entry.section)}${entry.item.tag ? ` · ${esc(entry.item.tag)}` : ''}</span><b>${esc(entry.item.name)}</b><em>${esc(entry.item.meta || '')}</em><strong>${price(entry.item, spec)}</strong></div>
                 </article>`,
               )
               .join('')}</div>`
@@ -894,7 +896,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
             (entry, index) => `<div class="fx-studio-service" data-item="${entry.key}" role="button" tabindex="0">
               <span>${String(index + 1).padStart(2, '0')}</span>
               <div><b>${esc(entry.item.name)}</b><em>${esc(entry.item.desc)}</em></div>
-              <strong>${price(entry.item, spec.currency)}</strong>
+              <strong>${price(entry.item, spec)}</strong>
             </div>`,
           )
           .join('')}</div>`
@@ -947,7 +949,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
                 (entry, index) => `<div class="fx-trade-job" data-item="${entry.key}" role="button" tabindex="0">
                   <span class="fx-trade-num">${String(index + 1).padStart(2, '0')}</span>
                   <div><b>${esc(entry.item.name)}</b><span>${esc(entry.item.desc)}</span></div>
-                  <em>${esc(rate(entry.item, spec.currency))}</em>
+                  <em>${esc(rate(entry.item, spec))}</em>
                 </div>`,
               )
               .join('')}</div>`
@@ -1039,7 +1041,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
                 (entry) => `<div class="fx-auto-job" data-item="${entry.key}" role="button" tabindex="0">
                   <div><b>${esc(entry.item.name)}</b><span>${esc(entry.item.desc)}</span></div>
                   <em>${esc(entry.item.price > 0 ? entry.item.meta || '' : '')}</em>
-                  <strong>${esc(rate(entry.item, spec.currency))}</strong>
+                  <strong>${esc(rate(entry.item, spec))}</strong>
                 </div>`,
               )
               .join('')}</div>`
@@ -1101,7 +1103,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               .map(
                 (entry, index) => `<article class="fx-ecom-pick" data-item="${entry.key}" role="button" tabindex="0">
                   <figure>${visual(ctx, node, index, 'card', index === 0, index, entry.item.media)}</figure>
-                  <b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec.currency)}</span>
+                  <b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec)}</span>
                 </article>`,
               )
               .join('')}</div>`
@@ -1115,7 +1117,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               .map(
                 (entry, index) => `<article class="fx-ecom-card">
                   <button class="fx-ecom-shot" type="button" data-item="${entry.key}" aria-label="Open ${esc(entry.item.name)}">${visual(ctx, node, index, 'card', index < 2, index, entry.item.media)}</button>
-                  <div class="fx-ecom-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec.currency)}</span>
+                  <div class="fx-ecom-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec)}</span>
                   ${spec.features.includes('ordering') && entry.item.price > 0 ? `<button type="button" data-add="${entry.key}" aria-label="Add ${esc(entry.item.name)}">+</button>` : ''}</div>
                 </article>`,
               )
@@ -1174,7 +1176,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
                 (entry, index) => `<article class="fx-course-card">
                   <figure>${visual(ctx, node, index + 1, 'card', index === 0, index + 1, entry.item.media)}</figure>
                   <div class="fx-course-copy"><span>${esc(entry.section)}</span><b>${esc(entry.item.name)}</b><p>${esc(entry.item.desc)}</p>
-                  <div class="fx-course-foot"><strong>${price(entry.item, spec.currency)}</strong><button type="button" data-item="${entry.key}">View course</button></div></div>
+                  <div class="fx-course-foot"><strong>${price(entry.item, spec)}</strong><button type="button" data-item="${entry.key}">View course</button></div></div>
                 </article>`,
               )
               .join('')}</div>`
@@ -1229,7 +1231,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
                   <span class="fx-fin-thumb">${visual(ctx, node, index, 'quiet', index === 0, index, entry.item.media)}</span>
                   <div><b>${esc(entry.item.name)}</b><span>${esc(entry.item.desc)}</span></div>
                   <em>${esc(entry.item.price > 0 ? entry.item.meta || '' : '')}</em>
-                  <strong>${esc(rate(entry.item, spec.currency))}</strong>
+                  <strong>${esc(rate(entry.item, spec))}</strong>
                 </div>`,
               )
               .join('')}</div>`

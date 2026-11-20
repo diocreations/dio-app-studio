@@ -323,15 +323,31 @@ export function usd(cents: number): string {
 }
 
 /** Grouped thousands, and whole amounts without a trailing ".00": $1,850. */
-function amount(cents: number): string {
+export function amountText(cents: number): string {
   const abs = Math.abs(Math.round(cents))
   const whole = String(Math.floor(abs / 100)).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   const pence = abs % 100
   return `${cents < 0 ? '−' : ''}${whole}${pence ? `.${String(pence).padStart(2, '0')}` : ''}`
 }
 
+function amount(cents: number): string {
+  return amountText(cents)
+}
+
 export function money(cents: number): string {
   return `$${amount(cents)}`
+}
+
+/**
+ * Money for one build. An imported shop is charged in the currency its own site
+ * declared; when that is unconfirmed, the amount is shown with no symbol at all
+ * rather than dressed up as dollars. Only generated demo builds — which have no
+ * source shop and have always used it — fall back to `$`.
+ */
+export function moneyForSpec(cents: number, spec: { currency?: string; website?: string }): string {
+  const code = (spec.currency ?? '').trim().toUpperCase()
+  if (code && CURRENCY_SYMBOLS[code]) return moneyIn(cents, code)
+  return spec.website ? amountText(cents) : moneyIn(cents, 'USD')
 }
 
 /** A price shown in whatever currency the customer's own site uses. */
@@ -514,12 +530,17 @@ function sanitizeItemMedia(value: unknown): MenuItem['media'] {
   }
 }
 
+/** Upper bounds on a catalogue, high enough that no real shop is truncated:
+ *  the live shop this was built against had 706 products on one shelf. */
+const MAX_SECTIONS = 40
+const MAX_ITEMS_PER_SECTION = 2000
+
 /** Catalogue edits arrive untyped from the browser or a scraped site and are
  *  clamped here, so a malformed item can never reach a rendered app. */
 export function sanitizeMenu(input: unknown): MenuSection[] {
   const sections = Array.isArray(input) ? input : []
   return sections
-    .slice(0, 12)
+    .slice(0, MAX_SECTIONS)
     .map((section) => {
       const source = section as { name?: unknown; items?: unknown }
       const items = Array.isArray(source.items) ? source.items : []
@@ -527,8 +548,10 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
       const used = new Map<string, number>()
       return {
         name: sectionName,
+        // A shelf is not a display window: every product the source lists is
+        // kept. The customer app pages what it renders instead.
         items: items
-          .slice(0, 30)
+          .slice(0, MAX_ITEMS_PER_SECTION)
           .map((item) => {
             const entry = item as {
               id?: unknown
@@ -638,6 +661,12 @@ export type SiteInfo = {
   email?: string
   website?: string
   currency?: string
+  /** The public statement the currency came from. */
+  currencyEvidence?: { code: string; method: string; source: string; raw: string }
+  /** Every distinct code the source declared; more than one is a conflict. */
+  currencyCandidates?: { code: string; method: string; source: string; raw: string }[]
+  /** The source declared more than one currency, so none was published. */
+  currencyConflict?: boolean
   socials?: SocialLink[]
   /** Prices the page and the feed disagreed on, and the owner's answers. Kept
    *  on the build as a private review record, never rendered in the app. */
@@ -702,6 +731,12 @@ export function buildSpec(input: {
   const name = input.name.trim().slice(0, 60) || 'Your business'
   const requested = input.features.length ? input.features : vertical.features
   const site = input.site ?? {}
+  // Only a currency this build can actually format is published; anything else
+  // is treated as no currency at all rather than printed beside an amount.
+  const askedCurrency = String(site.currency ?? '').toUpperCase()
+  const currencyCode = /^[A-Z]{3}$/.test(askedCurrency) && CURRENCY_SYMBOLS[askedCurrency]
+    ? askedCurrency
+    : undefined
   const logoImage = cleanLogoImage(site.logoImage)
   const importedMenu = sanitizeMenu(site.menu)
   const category = cleanCategory(input.category ?? site.category)
@@ -767,7 +802,30 @@ export function buildSpec(input: {
       ? { website: site.website.slice(0, 120) }
       : {}),
     ...(site.email?.trim() ? { email: site.email.trim().slice(0, 80) } : {}),
-    ...(site.currency && /^[A-Z]{3}$/.test(site.currency) ? { currency: site.currency } : {}),
+    ...(currencyCode ? { currency: currencyCode } : {}),
+    ...(currencyCode && site.currencyEvidence && site.currencyEvidence.code === currencyCode
+      ? {
+          currencySource: {
+            code: site.currencyEvidence.code,
+            method: String(site.currencyEvidence.method ?? '').slice(0, 24),
+            source: String(site.currencyEvidence.source ?? '').slice(0, 160),
+            raw: String(site.currencyEvidence.raw ?? '').slice(0, 120),
+          },
+        }
+      : {}),
+    ...(Array.isArray(site.currencyCandidates) && site.currencyCandidates.length
+      ? {
+          currencyCandidates: site.currencyCandidates
+            .filter((entry) => /^[A-Z]{3}$/.test(String(entry.code ?? '')))
+            .slice(0, 6)
+            .map((entry) => ({
+              code: entry.code,
+              method: String(entry.method ?? '').slice(0, 24),
+              source: String(entry.source ?? '').slice(0, 160),
+              raw: String(entry.raw ?? '').slice(0, 120),
+            })),
+        }
+      : {}),
     ...(cleanSocials(site.socials).length ? { socials: cleanSocials(site.socials) } : {}),
     ...(videos.length ? { videos } : {}),
     ...(bundle ? { bundle } : {}),

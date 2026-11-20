@@ -176,6 +176,15 @@ Under `docs/qa/live-discovery-<date>/present-and-correct/`:
 - Any conflict the owner has not decided: the affected products stay unpriced,
   which is a correct outcome, not a failure to fix mid-run.
 
+## The run after the fixes (awaiting authorisation)
+
+The 20 November run is complete, and both of its failures are fixed and
+fixture-tested ([comparison](./live-discovery-2026-11-20/present-and-correct/comparison.md)).
+One further run of this same plan — same site, same budget, same evidence rules —
+would verify the two live-only claims: that all 706 products now reach the build,
+and that GBP is detected from the live page. It has **not** been run and needs
+explicit approval. No new sites, no larger budget, no production change.
+
 ## After the run
 
 Turn the nine results into the status line of

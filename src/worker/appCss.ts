@@ -156,8 +156,10 @@ body[data-theme="dark"] {
   background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--on-accent) 82%, transparent), transparent);
   animation: sweep 1.4s var(--ease) infinite;
 }
-.splash.gone { opacity: 0; visibility: hidden; }
-.splash { animation: splashOut 0.5s ease 1.2s forwards; }
+.splash.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+/* The fade only runs while the splash is still up: a finished build must not
+   keep an invisible sheet over the first screen swallowing taps. */
+.splash:not(.gone) { animation: splashOut 0.5s ease 1.2s forwards; }
 @keyframes splashOut { to { opacity: 0; visibility: hidden; } }
 @keyframes pop { from { opacity: 0; transform: scale(0.86); } to { opacity: 1; transform: none; } }
 @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -480,6 +482,13 @@ body[data-accent-style="underline"] .sect { border-bottom: 1px solid var(--hair)
   background: var(--chip-on); color: var(--chip-on-ink); border-color: transparent;
   box-shadow: 0 10px 20px -14px var(--chip-on), 0 0 0 2px color-mix(in srgb, var(--chip-on) 14%, transparent);
 }
+
+/* A long shelf adds a page at a time, and says how much of it is on screen. */
+.more {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 16px 2px 4px; flex-wrap: wrap;
+}
+.more .btn { min-height: 44px; }
 
 /* Product options: each carries its own price, wraps instead of squeezing on a
    narrow phone, and keeps a 44px tap target. */

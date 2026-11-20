@@ -1,12 +1,15 @@
 # Hosted storefront feed: how it is read, and what is not yet live-verified
 
-Status: **live-verified with exceptions, 20 November 2026.** One authorised read
-of `presentandcorrect.com` was run (see
-[the run notes](./live-discovery-2026-11-20/present-and-correct/notes.md)). The
-feed, pagination, images, variant fidelity, missing-product handling and crawl
-budget passed; two checks failed — only 33 of the 706 feed products reached the
-build (a 30-per-section cap), and no currency was declared so the app formatted
-dollars. Both are open and need their own authorised re-run to verify a fix.
+Status: **live-verified with exceptions, 20 November 2026; both failures fixed
+and fixture-verified, not yet re-read live.** One authorised read of
+`presentandcorrect.com` was run (see
+[the run notes](./live-discovery-2026-11-20/present-and-correct/notes.md) and
+[the comparison](./live-discovery-2026-11-20/present-and-correct/comparison.md)).
+The feed, pagination, images, variant fidelity, missing-product handling and
+crawl budget passed. Two checks failed: only 33 of the 706 feed products reached
+the build (a 30-per-section cap), and no currency was declared so the app
+formatted dollars. Both are fixed and tested against the saved feed; confirming
+them against the live pages needs one further authorised run.
 
 ## Endpoint
 
@@ -178,15 +181,53 @@ Evidence: `docs/qa/live-discovery-2026-11-20/present-and-correct/`
   the chosen option ("Bon Bons", 2 × 300 = 600) and an unknown option was
   refused with `422`; budget respected.
 - **Failed — product coverage:** the reader groups feed products by
-  `product_type` and keeps at most 30 per group (`items.slice(0, 30)` in
-  `shopifyProducts`). This shop is almost one group, so 33 of 706 products were
-  kept. Not fixed; a fix needs its own authorised run to verify.
+  `product_type` and kept at most 30 per group. This shop is almost one group,
+  so 33 of 706 products were kept. **Fixed:** the per-type cap was removed at
+  every layer (`shopifyProducts`, `mergeSections`, `sanitizeMenu`,
+  `sanitizeImported`), and a long shelf is paged in the app instead. Verified
+  against the saved feed: `tests/catalogue.test.ts` keeps all 706 products
+  (703 + 2 + 1) with their options and photographs.
 - **Failed — currency:** the entry page declared no currency the reader
-  recognised, so `site.currency` is empty and the app shows `$7.50` where the
-  shop charges £7.50. Not fixed, not re-crawled.
+  recognised, so `site.currency` was empty and the app showed `$7.50` where the
+  shop charges £7.50. **Fixed:** the reader now collects every public currency
+  statement (Shopify analytics, `Shopify.currency`, price/currency meta,
+  JSON-LD, unambiguous money symbols), publishes a code only when the evidence
+  agrees, keeps the source on the build as `currencySource`, and asks the owner
+  when nothing or two things are declared. An imported shop with no confirmed
+  currency shows bare amounts, never dollars. Verified with fixtures and in the
+  browser on a build made from the saved feed; the live page itself has not been
+  re-read.
 - Not live-exercised: "From" pricing (no product with differently-priced
   options was published), a conflict decision (no conflicts), and the 673
-  products the cap dropped.
+  products the cap dropped. All three now have fixture coverage; whether the
+  live pages produce the same result still needs an authorised re-run
+  ([`live-discovery-2026-11-20/present-and-correct/comparison.md`](./live-discovery-2026-11-20/present-and-correct/comparison.md)).
+
+## A long catalogue on screen
+
+Every product the feed lists is kept and shipped in the app's catalogue, so
+search, detail pages, the bag and offline use all see the whole shop. Only the
+first paint is bounded: the server renders the first 12 products of each shelf
+and a `Show 24 more` control appends the next page from the same data. A line
+above the catalogue reads `Showing N of M pieces`, where M is everything
+imported and N is what is currently on screen; it updates as pages load and
+when a shelf filter hides the others. Product keys, prices and order lines are
+unchanged by paging: a key is still the product's position in the full
+catalogue, rendered or not.
+
+## Currency
+
+A currency is published only when the shop's own pages prove one. Signals read,
+in order of authority: `ShopifyAnalytics.meta.currency`, `Shopify.currency.active`,
+`product:price:currency` / `og:price:currency` / `currency` meta, JSON-LD
+`priceCurrency` or `currenciesAccepted`, and an unambiguous `£`/`€`/`₹`/`¥` in the
+shop's money format. One distinct code is published and stored with its method
+and source (`currencySource`); two become a conflict that publishes no code and
+asks the owner; none becomes a request for confirmation. The owner's answer is
+stored with method `owner`. An imported build with no confirmed currency shows
+amounts without a symbol — only generated demo builds, which have no source
+shop, keep `$`. Order responses carry the build's currency beside the
+minor-unit amounts.
 
 ## Re-running
 

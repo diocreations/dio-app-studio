@@ -396,6 +396,26 @@ function briefScript(verticals: string): string {
         '</div>'
       : '<p class="tiny" style="margin-top:10px"><strong>No catalogue found.</strong> Nothing was invented — the app starts from the trade’s sample menu, clearly marked as sample, until you add their items.</p>'
 
+    // The shop's currency is only published when the page proved one. No proof,
+    // or two proofs that disagree, becomes a question the owner answers here.
+    const candidates = Array.isArray(site.currencyCandidates) ? site.currencyCandidates : []
+    const codes = Array.from(new Set(['GBP', 'EUR', 'USD', 'INR'].concat(candidates.map((entry) => entry.code)).filter((code) => /^[A-Z]{3}$/.test(code))))
+    const needsCurrency = !site.currency || site.currencyConflict === true
+    const currencyControl = needsCurrency
+      ? '<div class="notice" data-currency-ask style="margin-top:8px">' +
+        '<strong>' + (site.currencyConflict ? 'Two currencies were declared — which is right?' : 'Confirm the shop’s currency') + '</strong>' +
+        '<p class="tiny" style="margin-top:4px">' +
+        (site.currencyConflict
+          ? 'The page declares ' + esc(candidates.map((entry) => entry.code + ' (' + entry.method + ')').join(', ')) + '. Prices are kept exactly as read; the currency only labels them.'
+          : 'No currency was declared in a form Plattr can trust. Prices are kept exactly as read; choosing a currency labels them in the app and on orders.') +
+        '</p>' +
+        '<label class="tiny" for="currency-choice">Currency</label> ' +
+        '<select id="currency-choice" data-currency-choice>' +
+        '<option value=""' + (site.currency ? '' : ' selected') + '>Not confirmed — show amounts without a symbol</option>' +
+        codes.map((code) => '<option value="' + code + '"' + (site.currency === code ? ' selected' : '') + '>' + code + '</option>').join('') +
+        '</select></div>'
+      : ''
+
     const contact = [site.phone, site.email, site.address, site.hours].filter(Boolean).map(esc).join(' · ')
     const pagesRead = (data.pagesRead || []).map(function (path) { return '<li><span class="mono">' + esc(path) + '</span></li>' }).join('')
     const pagesFailed = (data.pagesFailed || []).map(function (entry) { return '<li><span class="mono">' + esc(entry.url) + '</span> — ' + esc(entry.reason) + '</li>' }).join('')
@@ -409,8 +429,9 @@ function briefScript(verticals: string): string {
         rows('Category', site.category ? esc(site.category) : '') +
         rows('Brand colour', site.accent ? '<span style="display:inline-block;width:11px;height:11px;border-radius:3px;border:1px solid #0002;vertical-align:-1px;background:' + esc(site.accent) + '"></span> ' + esc(site.accent) : '') +
         rows('Contact', contact) +
-        rows('Currency', site.currency ? esc(site.currency) : '') +
+        rows('Currency', site.currency ? esc(site.currency) + (site.currencyEvidence && site.currencyEvidence.method === 'owner' ? ' (confirmed by you)' : site.currencyEvidence ? ' — ' + esc(site.currencyEvidence.method) : '') : '') +
       '</div>' +
+      currencyControl +
       catalogue +
       (pagesRead ? '<details style="margin-top:10px"><summary class="tiny" style="cursor:pointer">Pages inspected (' + (data.pagesRead || []).length + ')</summary><ul class="ticks" style="margin-top:6px">' + pagesRead + '</ul></details>' : '') +
       (pagesFailed ? '<details style="margin-top:6px"><summary class="tiny" style="cursor:pointer">Could not be read (' + (data.pagesFailed || []).length + ')</summary><ul class="ticks" style="margin-top:6px">' + pagesFailed + '</ul></details>' : '') +
@@ -1058,6 +1079,26 @@ function briefScript(verticals: string): string {
         : imported,
     }
   }
+
+  // The owner's answer replaces an unproven or conflicting reading. The prices
+  // themselves never move: only the label the amounts are shown in.
+  document.addEventListener('change', function (event) {
+    const select = event.target && event.target.closest ? event.target.closest('[data-currency-choice]') : null
+    if (!select || !imported) return
+    const code = String(select.value || '').toUpperCase()
+    delete imported.currencyConflict
+    if (!/^[A-Z]{3}$/.test(code)) {
+      delete imported.currency
+      delete imported.currencyEvidence
+    } else {
+      imported.currency = code
+      imported.currencyEvidence = { code: code, method: 'owner', source: 'confirmed by the owner in the brief', raw: code }
+    }
+    // Redraw the receipt so the question is replaced by the answer, rather than
+    // staying on screen after it has been settled.
+    if (lastImport && importReport) importReport.innerHTML = report({ ...lastImport, site: { ...imported } })
+    queueDraft()
+  })
 
   function selectedBundle() {
     return document.querySelector('[data-bundle]:checked')

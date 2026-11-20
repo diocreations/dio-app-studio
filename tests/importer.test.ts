@@ -920,7 +920,7 @@ describe('trade detection picks the closest fit', () => {
 })
 
 describe('what the browser sends back is not trusted', () => {
-  test('drops unsafe links and clamps the catalogue', () => {
+  test('drops unsafe links and keeps the whole catalogue, only clamping absurd sizes', () => {
     const clean = sanitizeImported({
       name: '  Acme  ',
       website: 'javascript:alert(1)',
@@ -936,7 +936,13 @@ describe('what the browser sends back is not trusted', () => {
     expect(clean?.name).toBe('Acme')
     expect(clean?.website).toBe('')
     expect(clean?.socials).toEqual([{ label: 'Instagram', url: 'https://instagram.com/acme' }])
-    expect(clean?.menu?.[0].items.length).toBe(30)
+    // A 40-item shelf is a shelf, not something to cut in half: only a size no
+    // real shop reaches is bounded.
+    expect(clean?.menu?.[0].items.length).toBe(40)
+    const huge = sanitizeImported({
+      menu: [{ name: 'S', items: Array.from({ length: 2500 }, (_, index) => ({ name: `Item ${index}`, price: 500 })) }],
+    })
+    expect(huge?.menu?.[0].items.length).toBe(2000)
   })
 
   test('ignores anything that is not an object', () => {

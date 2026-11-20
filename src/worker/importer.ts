@@ -66,6 +66,17 @@ export class ImportError extends Error {
   }
 }
 
+/** One public statement of a shop's currency, with the exact text it came from. */
+export type CurrencyCandidate = { code: string; method: CurrencyMethod; source: string; raw: string }
+export type CurrencyMethod =
+  | 'shopify-analytics'
+  | 'shopify-currency'
+  | 'meta'
+  | 'json-ld'
+  | 'money-format'
+  | 'owner'
+export type CurrencyEvidence = CurrencyCandidate
+
 export type ImportedSite = {
   name: string
   tagline: string
@@ -85,7 +96,17 @@ export type ImportedSite = {
   address: string
   hours: string
   website: string
+  /** The shop's currency, when one code is backed by the source. Empty when no
+   *  signal was found, or when the signals disagree and the owner must choose. */
   currency: string
+  /** The signal the published currency came from, kept so the build can say why
+   *  it charges in that currency rather than guessing. */
+  currencyEvidence?: CurrencyEvidence
+  /** Every distinct currency code the source declared, with where each came
+   *  from. More than one code is a conflict, not a preference. */
+  currencyCandidates?: CurrencyCandidate[]
+  /** True when the source declared more than one currency code. */
+  currencyConflict?: boolean
   socials: SocialLink[]
   menu: MenuSection[]
   features: FeatureId[]
@@ -1748,7 +1769,9 @@ function mergeSections(base: MenuSection[], extra: MenuSection[]): MenuSection[]
     if (existing) existing.items.push(...items)
     else out.push({ name: section.name, items })
   }
-  return out.slice(0, 12).map((section) => ({ ...section, items: section.items.slice(0, 30) }))
+  // Every product is kept: a product type is a shelf, not a quota. The app
+  // pages a long shelf rather than the import dropping what does not fit.
+  return out.slice(0, 40).map((section) => ({ ...section, items: section.items.slice(0, 2000) }))
 }
 
 /* ------------------------------------------------------------------ */
@@ -2047,6 +2070,7 @@ function extractFromPage(page: Page): ImportedSite {
   const declaredAccent = brandColour(
     meta['theme-color'] || meta['msapplication-tilecolor'] || textOf(business, 'color'),
   )
+  const resolved = resolveCurrency(page)
 
   const addressNode = (business.address ?? {}) as Record<string, unknown>
   const address =
@@ -2102,22 +2126,87 @@ function extractFromPage(page: Page): ImportedSite {
     address,
     hours: hoursOf(business),
     website: page.url.origin,
-    currency: currencyOf(page),
+    currency: resolved.code,
+    ...(resolved.evidence ? { currencyEvidence: resolved.evidence } : {}),
+    ...(resolved.candidates.length ? { currencyCandidates: resolved.candidates } : {}),
+    ...(resolved.conflict ? { currencyConflict: true } : {}),
     socials: socialLinks(anchors, page.url, declaredSocials),
     menu: sections,
     features: inferFeatures(page, vertical, productCount),
   }
 }
 
-function currencyOf(page: Page): string {
-  for (const node of page.nodes) {
-    const code =
-      textOf((node.offers ?? {}) as Record<string, unknown>, 'priceCurrency') ||
-      textOf(node, 'priceCurrency')
-    if (/^[A-Z]{3}$/.test(code)) return code
+/**
+ * The shop's currency, from the most authoritative public statement it makes.
+ *
+ * A Shopify storefront states its currency in the analytics bootstrap
+ * (`ShopifyAnalytics.meta.currency`), in `Shopify.currency.active`, in
+ * `og:price:currency`, in JSON-LD offers or `currenciesAccepted`, and in its
+ * money format. Any one of those is proof; several that agree are still one
+ * answer. Several that disagree are a conflict, and a conflict is never
+ * resolved by picking a favourite — the owner is asked.
+ */
+export function currencySignals(page: Page): CurrencyCandidate[] {
+  const signals: CurrencyCandidate[] = []
+  const add = (code: string, method: CurrencyMethod, raw: string) => {
+    if (!/^[A-Z]{3}$/.test(code)) return
+    if (signals.some((entry) => entry.code === code)) return
+    signals.push({ code, method, source: page.url.toString(), raw: raw.slice(0, 120) })
   }
-  const symbol = visibleMarkup(page.html).match(PRICE_PATTERN)?.[0]?.trim().charAt(0) ?? ''
-  return CURRENCIES[symbol] ?? ''
+  const html = page.html
+
+  const analytics = /ShopifyAnalytics[\s\S]{0,8000}?"currency"\s*:\s*"([A-Z]{3})"/.exec(html)
+  if (analytics) add(analytics[1], 'shopify-analytics', analytics[0])
+
+  const active = /"currency"\s*:\s*\{\s*"active"\s*:\s*"([A-Z]{3})"/.exec(html)
+  if (active) add(active[1], 'shopify-currency', active[0])
+
+  if (!active) {
+    const assignment = /Shopify\.currency\s*=\s*\{([\s\S]{0,200}?)\}/.exec(html)
+    const code = assignment ? /["']?active["']?\s*:\s*["']([A-Z]{3})["']/.exec(assignment[1])?.[1] : ''
+    if (code) add(code, 'shopify-currency', assignment![0])
+  }
+
+  const meta =
+    page.meta['product:price:currency'] || page.meta['og:price:currency'] || page.meta['currency'] || ''
+  if (/^[A-Z]{3}$/.test(meta)) add(meta, 'meta', `${meta} (${page.meta['product:price:currency'] ? 'product:price:currency' : page.meta['og:price:currency'] ? 'og:price:currency' : 'currency'} meta)`)
+
+  for (const node of page.nodes) {
+    const offers = (node.offers ?? {}) as Record<string, unknown>
+    const code =
+      textOf(offers, 'priceCurrency') ||
+      textOf(node, 'priceCurrency') ||
+      textOf(node, 'currenciesAccepted').split(/[,\s]+/).find((entry) => /^[A-Z]{3}$/.test(entry)) ||
+      ''
+    if (code) add(code, 'json-ld', code)
+  }
+
+  // A money format is the shop printing its own symbol. The dollar sign is not
+  // evidence of USD on its own (A$, C$, US$ and plain $ all exist), so only
+  // unambiguous symbols are read here.
+  const format = /"(?:money_format|moneyFormat)"\s*:\s*"([^"]{1,40})"/.exec(html)?.[1] ?? ''
+  const symbol = (format || visibleMarkup(html)).match(/[£€₹¥]/)?.[0] ?? ''
+  const bySymbol: Record<string, string> = { '£': 'GBP', '€': 'EUR', '₹': 'INR', '¥': 'JPY' }
+  if (symbol && bySymbol[symbol]) add(bySymbol[symbol], 'money-format', format || symbol)
+
+  return signals
+}
+
+/** One code, or none. Never a majority vote: two codes is a question, not a
+ *  result. */
+export function resolveCurrency(page: Page): {
+  code: string
+  evidence?: CurrencyEvidence
+  candidates: CurrencyCandidate[]
+  conflict: boolean
+} {
+  const candidates = currencySignals(page)
+  if (candidates.length === 1) return { code: candidates[0].code, evidence: candidates[0], candidates, conflict: false }
+  return { code: '', candidates, conflict: candidates.length > 1 }
+}
+
+function currencyOf(page: Page): string {
+  return resolveCurrency(page).code
 }
 
 /* ------------------------------------------------------------------ */
@@ -2280,6 +2369,8 @@ type Crawl = {
   usedSitemap: boolean
   /** A currency declared by any page that was read. */
   currency: string
+  /** The statement that currency came from, so a build can show its source. */
+  currencyEvidence?: CurrencyEvidence
   /** Whether any page showed a cart or checkout control. */
   cartSignal: boolean
   /** Products whose page price and feed price disagree. */
@@ -2321,7 +2412,7 @@ function sectionFromProductPage(page: Page, site: ImportedSite): MenuSection | n
   if (!name || /^(?:home|shop|store|products?)$/i.test(name))
     name = site.category || VERTICALS[site.vertical].vocab.catalog
 
-  return { name: collapse(name, 40) || 'Catalogue', items: items.slice(0, 30) }
+  return { name: collapse(name, 40) || 'Catalogue', items: items.slice(0, 2000) }
 }
 
 /** A hosted storefront that publishes its catalogue as JSON. The home page
@@ -2366,6 +2457,10 @@ async function shopifyProducts(
       if (!products.length) break
 
       for (const product of products) {
+        // Deleted products are simply absent from the feed; a feed that does
+        // report an unpublished product is telling us it is not on sale, so it
+        // is not stock either. `undefined` means the field was not sent at all.
+        if (product.published_at === null) continue
         const name = collapse(String(product.title ?? ''), 60)
         if (!name) continue
         const rawVariants = Array.isArray(product.variants) ? (product.variants as Record<string, unknown>[]) : []
@@ -2390,12 +2485,18 @@ async function shopifyProducts(
           if (cheapestIndex < 0 || variant.price < variants[cheapestIndex].price) cheapestIndex = index
         })
         const cheapest = cheapestIndex >= 0 ? variants[cheapestIndex] : null
-        const images = Array.isArray(product.images) ? (product.images as Record<string, unknown>[]) : []
+        const images = Array.isArray(product.images) ? product.images : []
+        // `/products.json` sends `{ src }`; a saved feed may keep the URL alone.
         const image = acceptedImage(
-          images.slice(0, 3).map((entry) => String(entry.src ?? '')),
+          images.slice(0, 3).map((entry) =>
+            typeof entry === 'string' ? entry : String((entry as Record<string, unknown>)?.src ?? ''),
+          ),
           true,
         )
-        const sectionName = collapse(String(product.product_type ?? ''), 40) || 'Catalogue'
+        // `/products.json` sends `product_type`; the saved live fixture keeps
+        // the same value under `productType`, so both are read.
+        const sectionName =
+          collapse(String(product.product_type ?? product.productType ?? ''), 40) || 'Catalogue'
         const item: Item = {
           name,
           desc: collapse(stripMarkup(String(product.body_html ?? '')), 90),
@@ -2435,8 +2536,11 @@ async function shopifyProducts(
     }
   }
 
+  // Every eligible product is kept. A product type is a shelf, not a quota:
+  // truncating a shelf silently loses stock, and the live shop had 706 products
+  // in almost one type. The customer app pages the catalogue instead.
   const sections = [...groups.entries()]
-    .map(([name, items]) => ({ name, items: items.slice(0, 30) }))
+    .map(([name, items]) => ({ name, items }))
     .filter((section) => section.items.length > 0)
   return { sections, pages, source, blocked: false }
 }
@@ -2466,6 +2570,7 @@ async function expandCatalogue(options: {
   let blocked = 0
   let usedSitemap = false
   let currency = ''
+  let currencyEvidence: CurrencyEvidence | undefined
   let cartSignal = false
   let clientRendered = looksClientRendered(entry.html, entry.text)
   const read: string[] = [entry.url.pathname]
@@ -2510,6 +2615,7 @@ async function expandCatalogue(options: {
         failed,
         usedSitemap: false,
         currency: currency || site.currency,
+        ...(currencyEvidence ? { currencyEvidence } : {}),
         cartSignal: true,
         priceConflicts,
       }
@@ -2531,7 +2637,11 @@ async function expandCatalogue(options: {
       const page = readPage(loaded.html, loaded.url)
       opened += 1
       if (looksClientRendered(page.html, page.text)) clientRendered = true
-      if (!currency) currency = currencyOf(page)
+      if (!currency) {
+        const resolved = resolveCurrency(page)
+        currency = resolved.code
+        if (resolved.evidence) currencyEvidence = resolved.evidence
+      }
       if (CART_SIGNAL.test(page.html)) cartSignal = true
       read.push(url.pathname)
       return page
@@ -2771,7 +2881,10 @@ export async function importWebsite(
     site.features = inferFeatures(page, site.vertical, items, crawl.cartSignal)
   }
 
-  if (!site.currency && crawl.currency) site.currency = crawl.currency
+  if (!site.currency && crawl.currency) {
+    site.currency = crawl.currency
+    if (crawl.currencyEvidence) site.currencyEvidence = crawl.currencyEvidence
+  }
 
   // A section named after the old trade ("Services") is renamed to the
   // business's own category once it is known.
@@ -2911,6 +3024,42 @@ export async function importWebsite(
 
 const HTTP_LINK = /^https?:\/\//i
 
+/** One currency statement, as the draft and the build carry it: a code, how it
+ *  was read, where, and the exact text it came from. */
+const CURRENCY_METHODS: CurrencyMethod[] = [
+  'shopify-analytics',
+  'shopify-currency',
+  'meta',
+  'json-ld',
+  'money-format',
+  'owner',
+]
+
+function sanitizeCurrencyEvidence(value: unknown): CurrencyEvidence | undefined {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined
+  const record = value as Record<string, unknown>
+  const code = String(record.code ?? '').toUpperCase()
+  const method = String(record.method ?? '') as CurrencyMethod
+  if (!/^[A-Z]{3}$/.test(code) || !CURRENCY_METHODS.includes(method)) return undefined
+  return {
+    code,
+    method,
+    source: collapse(String(record.source ?? ''), 160),
+    raw: collapse(String(record.raw ?? ''), 120),
+  }
+}
+
+function sanitizeCurrencyCandidates(value: unknown): CurrencyCandidate[] {
+  if (!Array.isArray(value)) return []
+  const seen = new Set<string>()
+  return value.slice(0, 6).flatMap((entry) => {
+    const evidence = sanitizeCurrencyEvidence(entry)
+    if (!evidence || seen.has(evidence.code)) return []
+    seen.add(evidence.code)
+    return [evidence]
+  })
+}
+
 /** The brief sends the draft back when the build is created. Nothing from the
  *  browser is trusted: every field is re-checked and re-clamped here. */
 export function sanitizeImported(input: unknown): Partial<ImportedSite> | undefined {
@@ -2938,7 +3087,19 @@ export function sanitizeImported(input: unknown): Partial<ImportedSite> | undefi
       typeof source.website === 'string' && HTTP_LINK.test(source.website)
         ? source.website.slice(0, 120)
         : '',
-    currency: /^[A-Z]{3}$/.test(String(source.currency ?? '')) ? String(source.currency) : '',
+    currency: /^[A-Z]{3}$/.test(String(source.currency ?? '')) ? String(source.currency).toUpperCase() : '',
+    ...(() => {
+      const currency = /^[A-Z]{3}$/.test(String(source.currency ?? ''))
+        ? String(source.currency).toUpperCase()
+        : ''
+      const evidence = sanitizeCurrencyEvidence(source.currencyEvidence)
+      const candidates = sanitizeCurrencyCandidates(source.currencyCandidates)
+      return {
+        ...(currency && evidence && evidence.code === currency ? { currencyEvidence: evidence } : {}),
+        ...(candidates.length ? { currencyCandidates: candidates } : {}),
+        ...(source.currencyConflict === true && !currency ? { currencyConflict: true } : {}),
+      }
+    })(),
     ...(cleanLogoImage(source.logoImage) ? { logoImage: cleanLogoImage(source.logoImage) } : {}),
     socials: Array.isArray(source.socials)
       ? source.socials

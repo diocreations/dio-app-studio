@@ -1513,7 +1513,21 @@ app.post(
     try {
       const order = await createOrder(c.env.DB, project, body)
       c.header('Cache-Control', 'private, no-store')
-      return c.json({ order: { id: order.id, number: order.number, status: order.status, total: order.total, createdAt: order.createdAt } }, 201)
+      // The currency is the build's own, sent beside the minor-unit amounts so a
+      // client never has to guess what the number means.
+      return c.json(
+        {
+          order: {
+            id: order.id,
+            number: order.number,
+            status: order.status,
+            total: order.total,
+            currency: project.spec.currency ?? '',
+            createdAt: order.createdAt,
+          },
+        },
+        201,
+      )
     } catch (error) {
       return businessFailure(c, error)
     }
@@ -1533,6 +1547,7 @@ app.get('/p/:token/orders/:orderId', async (c) => {
       status: order.status,
       fulfilment: order.fulfilment,
       total: order.total,
+      currency: project.spec.currency ?? '',
       items: order.items.map((item) => ({
         name: item.name,
         variant: item.variant,

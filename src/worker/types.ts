@@ -235,6 +235,12 @@ export type AppSpec = {
   team?: { name: string; role: string; credential?: string }[]
   /** What the import produced, kept so the owner can review it before
    *  publishing without re-reading the website. */
+  /** The public statement the shop's currency came from, kept on the build so a
+   *  price can always explain its currency as well as its amount. */
+  currencySource?: { code: string; method: string; source: string; raw: string }
+  /** Every currency code the source declared, with its source. Retained when a
+   *  conflict was resolved by the owner. */
+  currencyCandidates?: { code: string; method: string; source: string; raw: string }[]
   importSummary?: {
     source: string
     importedAt: string

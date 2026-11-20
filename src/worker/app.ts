@@ -15,7 +15,7 @@ import {
 import { directionFor, themeForDirection, typographyTheme } from './directions'
 import { FLAGSHIP_TRADES, flagshipCatalogLead, flagshipCss, flagshipHome, flagshipSection } from './flagship'
 import { presetCss, presetFor } from './presets'
-import { CURRENCY_SYMBOLS, inkFor, moneyIn } from './pricing'
+import { CURRENCY_SYMBOLS, inkFor, moneyForSpec } from './pricing'
 import type { AppSpec, FeatureId, MenuItem, Vocab } from './types'
 import { ctaFor, verticalFor, type Vertical } from './verticals'
 import { themeFor, type ShellId, type Theme } from './themes'
@@ -114,8 +114,8 @@ function legibleAccent(accent: string, dark: boolean): string {
 
 /** No price means no price line. “On request” is only used when the business
  *  itself says so, never as a stand-in for a value the import failed to read. */
-function priceOf(item: MenuItem, currency?: string): string {
-  return item.price > 0 ? moneyIn(item.price, currency) : ''
+function priceOf(item: MenuItem, spec: AppSpec): string {
+  return item.price > 0 ? moneyForSpec(item.price, spec) : ''
 }
 
 /** The options a product really has: more than one price to choose between. A
@@ -130,10 +130,10 @@ function hasChoices(item: MenuItem): boolean {
 }
 
 /** "From £42" only when the options actually differ in price. */
-function priceFrom(item: MenuItem, currency?: string): string {
-  if (!hasChoices(item)) return priceOf(item, currency)
+function priceFrom(item: MenuItem, spec: AppSpec): string {
+  if (!hasChoices(item)) return priceOf(item, spec)
   const prices = pricedVariants(item).map((variant) => variant.price)
-  return 'From ' + moneyIn(Math.min(...prices), currency)
+  return 'From ' + moneyForSpec(Math.min(...prices), spec)
 }
 
 function optionCount(item: MenuItem): string {
@@ -523,7 +523,7 @@ function itemRowEditorial(ctx: Ctx, item: MenuItem, key: string): string {
       ${optionCount(item) ? `<div class="meta">${esc(optionCount(item))}</div>` : ''}
     </div>
     <div class="right">
-      <div class="price">${priceFrom(item, ctx.spec.currency)}</div>
+      <div class="price">${priceFrom(item, ctx.spec)}</div>
       <div class="row-tools">
         ${saveButton(key, item.name)}
         ${ctx.ordering && item.price > 0 ? `<button class="add" type="button" data-add="${key}" aria-label="Add ${esc(item.name)}">${icon('plus')}</button>` : ''}
@@ -542,7 +542,7 @@ function itemRowCompact(ctx: Ctx, item: MenuItem, key: string): string {
       ${optionCount(item) ? `<div class="desc">${esc(optionCount(item))}</div>` : ''}
     </div>
     <div class="tail">
-      <span class="price">${priceFrom(item, ctx.spec.currency)}</span>
+      <span class="price">${priceFrom(item, ctx.spec)}</span>
       ${saveButton(key, item.name)}
       ${ctx.ordering && item.price > 0 ? `<button class="add" type="button" data-add="${key}" aria-label="Add ${esc(item.name)}">${icon('plus')}</button>` : icon('chevron')}
     </div>
@@ -586,7 +586,7 @@ function itemTile(ctx: Ctx, item: MenuItem, key: string, wide = false): string {
     <div class="body">
       <div class="name">${esc(item.name)}</div>
       ${item.vendor || item.meta || optionCount(item) ? `<div class="tiny dim">${esc([item.vendor, item.meta, optionCount(item)].filter(Boolean).join(' · '))}</div>` : ''}
-      <div class="price">${priceFrom(item, ctx.spec.currency)}</div>
+      <div class="price">${priceFrom(item, ctx.spec)}</div>
     </div>
     <span class="go" aria-hidden="true">${icon('chevron')}</span>
   </div>`
@@ -598,7 +598,7 @@ function itemStackCard(ctx: Ctx, item: MenuItem, key: string): string {
     <div class="body">
       <div class="top">
         <span class="name">${esc(item.name)}</span>
-        <span class="price">${priceFrom(item, ctx.spec.currency)}</span>
+        <span class="price">${priceFrom(item, ctx.spec)}</span>
       </div>
       ${item.desc ? `<p>${esc(item.desc)}</p>` : ''}
       <div class="specs">
@@ -642,6 +642,31 @@ function storesBlock(ctx: Ctx): string {
     </div>`
 }
 
+/** How many products a catalogue screen renders up front. The rest stay in the
+ *  shipped catalogue and are added a page at a time as the customer asks, so a
+ *  shop with 706 products does not put 706 cards in the first paint. */
+export const catalogFirst = 12
+
+/** "piece" → "pieces", "dish" → "dishes": the trade's own plural, so a count
+ *  line reads as the business would write it. */
+function pluralWord(word: string): string {
+  if (/(?:s|x|z|ch|sh)$/i.test(word)) return word + 'es'
+  if (/[^aeiou]y$/i.test(word)) return word.slice(0, -1) + 'ies'
+  return word + 's'
+}
+const catalogPage = 24
+
+function moreControl(sectionIndex: number, section: { items: unknown[] }): string {
+  const shown = Math.min(catalogFirst, section.items.length)
+  const total = section.items.length
+  if (total <= shown) return ''
+  const next = Math.min(catalogPage, total - shown)
+  return `<div class="more" data-more="${sectionIndex}" data-shown="${shown}" data-total="${total}">
+    <button class="btn ghost small" type="button" data-more-go="${sectionIndex}">Show ${next} more</button>
+    <span class="tiny dim" data-more-count>Showing ${shown} of ${total}</span>
+  </div>`
+}
+
 function catalogBlock(ctx: Ctx): string {
   const { theme, spec } = ctx
   if (!spec.menu.length) return `<div class="empty">The catalogue is being written.</div>`
@@ -664,11 +689,13 @@ function catalogBlock(ctx: Ctx): string {
           (section, sectionIndex) => `
         <div class="section-block" data-section="${sectionIndex}">
           <div class="sect" id="sec-${sectionIndex}"><span class="label">${esc(section.name)}</span><span class="count">${section.items.length}</span></div>
-          <div class="tiles">
+          <div class="tiles" data-items="${sectionIndex}">
             ${section.items
+              .slice(0, catalogFirst)
               .map((item, itemIndex) => itemTile(ctx, item, `${sectionIndex}-${itemIndex}`, all.length === 1))
               .join('')}
           </div>
+          ${moreControl(sectionIndex, section)}
         </div>`,
         )
         .join('')}`
@@ -690,7 +717,11 @@ function catalogBlock(ctx: Ctx): string {
         (section, sectionIndex) => `
         <div class="section-block" data-section="${sectionIndex}" id="sec-${sectionIndex}">
           <div class="sect"><span class="label">${esc(section.name)}</span><span class="count">${section.items.length}</span></div>
-          ${section.items.map((item, itemIndex) => itemStackCard(ctx, item, `${sectionIndex}-${itemIndex}`)).join('')}
+          <div data-items="${sectionIndex}">${section.items
+            .slice(0, catalogFirst)
+            .map((item, itemIndex) => itemStackCard(ctx, item, `${sectionIndex}-${itemIndex}`))
+            .join('')}</div>
+          ${moreControl(sectionIndex, section)}
         </div>`,
       )
       .join('')}`
@@ -702,7 +733,11 @@ function catalogBlock(ctx: Ctx): string {
       (section, sectionIndex) => `
       <div class="section-block" data-section="${sectionIndex}" id="sec-${sectionIndex}">
         <div class="sect"><span class="label">${esc(section.name)}</span><span class="count">${section.items.length}</span></div>
-        <div>${section.items.map((item, itemIndex) => row(ctx, item, `${sectionIndex}-${itemIndex}`)).join('')}</div>
+        <div data-items="${sectionIndex}">${section.items
+          .slice(0, catalogFirst)
+          .map((item, itemIndex) => row(ctx, item, `${sectionIndex}-${itemIndex}`))
+          .join('')}</div>
+        ${moreControl(sectionIndex, section)}
       </div>`,
     )
     .join('')}`
@@ -972,7 +1007,7 @@ function homeBlock(ctx: Ctx): string {
         ${spec.menu
           .map(
             (section, index) => `<button class="r-row" type="button" data-jump="${index}">
-              <div class="lead"><div class="name">${esc(section.name)}</div><div class="desc">${section.items.length} ${section.items.length === 1 ? 'item' : 'items'} · from ${priceOf(section.items[0], ctx.spec.currency)}</div></div>
+              <div class="lead"><div class="name">${esc(section.name)}</div><div class="desc">${section.items.length} ${section.items.length === 1 ? 'item' : 'items'} · from ${priceOf(section.items[0], ctx.spec)}</div></div>
               <div class="tail">${icon('chevron')}</div>
             </button>`,
           )
@@ -1494,6 +1529,8 @@ export function renderApp(
     partyLabel: vocab.partyLabel,
     slots: vocab.slots,
     catalogWord: vocab.catalog.toLowerCase(),
+    itemWord: vocab.item,
+    itemWords: pluralWord(vocab.item),
     listingSpecLabel: vocab.listingSpecLabel || 'Included',
     bookTitle: vocab.bookTitle,
     quoteTitle: vocab.quoteTitle,
@@ -1503,7 +1540,18 @@ export function renderApp(
     photoWide: media === 'art' ? [] : ctx.photos.wide,
     photoThumb: media === 'photo' ? ctx.photos.thumb : [],
     menu: spec.menu,
-    currencySymbol: CURRENCY_SYMBOLS[(spec.currency ?? '').toUpperCase()] ?? '$',
+    // The shop's own currency, never a guessed dollar: an imported build with
+    // no confirmed currency shows bare amounts until the owner confirms one.
+    currencySymbol: spec.currency
+      ? CURRENCY_SYMBOLS[spec.currency.toUpperCase()] ?? ''
+      : spec.website
+        ? ''
+        : '$',
+    currency: (spec.currency ?? '').toUpperCase(),
+    imported: Boolean(spec.website),
+    layout: theme.layout,
+    catalogFirst,
+    catalogPage,
   }
 
   // A real logo replaces the initials wherever the brand mark appears; the
@@ -1576,6 +1624,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         ${flagship ? flagshipCatalogLead(spec) : ''}
         ${shell === 'menu' ? menuMasthead(ctx) : ''}
         <div class="sect" style="margin-top:4px"><span class="label">${esc(vocab.catalog)}</span><span class="count">${spec.menu.reduce((total, section) => total + section.items.length, 0)}</span></div>
+        <div class="tiny dim" data-catalog-count>Showing ${spec.menu.reduce((total, section) => total + Math.min(catalogFirst, section.items.length), 0)} of ${spec.menu.reduce((total, section) => total + section.items.length, 0)} ${esc(pluralWord(vocab.item))}</div>
         ${storesBlock(ctx)}
         ${catalogBlock(ctx)}
       </section>
@@ -2115,6 +2164,85 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         '</div></div>'
     }
 
+    // A catalogue card for products added after the first paint. The server
+    // renders the first page of each shelf; these use the same classes, the
+    // product's own photograph and the same price rules, so a loaded page is
+    // indistinguishable from the shipped one.
+    function catalogCard(item, key) {
+      const prices = variantsOf(item).map(function (variant) { return variant.price })
+      const differs = prices.length > 1 && new Set(prices).size > 1
+      const price = differs ? 'From ' + money(Math.min.apply(null, prices)) : item.price > 0 ? money(item.price) : ''
+      const options = differs ? prices.length + ' options' : ''
+      const art = '<span class="thumb m-' + DATA.motif + '">' + pickShot(key, 'photoThumb', item.name, item) +
+        '<span class="mono">' + esc(item.name.slice(0, 1)) + '</span></span>'
+      const save = (extra) => '<button class="save' + (extra ? ' ' + extra : '') + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save ' + esc(item.name) + '" aria-pressed="' + (state.saved[key] ? 'true' : 'false') + '">' + HEART + '</button>'
+      if (DATA.layout === 'grid') {
+        const note = [item.vendor, item.meta, options].filter(Boolean).join(' · ')
+        return '<div class="tile" data-item="' + key + '" role="button" tabindex="0">' + art +
+          save('on-art') +
+          '<div class="body"><div class="name">' + esc(item.name) + '</div>' +
+          (note ? '<div class="tiny dim">' + esc(note) + '</div>' : '') +
+          '<div class="price">' + price + '</div></div>' +
+          '<span class="go" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>'
+      }
+      if (DATA.layout === 'stack') {
+        return '<div class="stack-card" data-item="' + key + '" role="button" tabindex="0">' +
+          '<span class="thumb wide band m-' + DATA.motif + '">' + pickShot(key, 'photoWide', item.name, item) +
+          '<span class="mono">' + esc(DATA.logo || '') + '</span></span>' +
+          '<div class="body"><div class="top"><span class="name">' + esc(item.name) + '</span><span class="price">' + price + '</span></div>' +
+          (item.desc ? '<p>' + esc(item.desc) + '</p>' : '') +
+          '<div class="specs">' + (item.meta ? '<span>' + esc(item.meta) + '</span>' : '') +
+          (item.tag ? '<span>' + esc(item.tag) + '</span>' : '') + '<span>' + esc(DATA.itemWord || 'item') + '</span></div>' +
+          '<div class="foot"><span class="tiny dim">Tap for details</span><span class="foot-tools">' + save('') +
+          '<span class="btn small ghost" style="padding:9px 14px;font-size:12px">View</span></span></div></div></div>'
+      }
+      return itemRow(item, key)
+    }
+
+    function updateCatalogCount() {
+      const el = $('[data-catalog-count]')
+      if (!el) return
+      let shown = 0
+      let total = 0
+      // The total is the whole catalogue; what is shown is only what the chosen
+      // shelf is displaying right now, so the two numbers never blur together.
+      all('[data-screen="catalog"] .section-block').forEach(function (block) {
+        const menu = DATA.menu[Number(block.dataset.section)]
+        if (!menu) return
+        total += menu.items.length
+        if (block.hidden) return
+        const host = block.querySelector('[data-items]')
+        shown += host ? host.children.length : 0
+      })
+      el.textContent = 'Showing ' + shown + ' of ' + total + ' ' + (DATA.itemWords || 'items')
+    }
+
+    function loadMore(button) {
+      const sectionIndex = Number(button.dataset.moreGo)
+      const wrap = document.querySelector('[data-more="' + sectionIndex + '"]')
+      const host = document.querySelector('[data-items="' + sectionIndex + '"]')
+      const menu = DATA.menu[sectionIndex]
+      if (!wrap || !host || !menu) return
+      let shown = Number(wrap.dataset.shown || 0)
+      const total = Number(wrap.dataset.total || menu.items.length)
+      if (shown >= total) return wrap.remove()
+      const next = Math.min(shown + DATA.catalogPage, total)
+      host.insertAdjacentHTML('beforeend', menu.items.slice(shown, next).map(function (item, offset) {
+        return catalogCard(item, sectionIndex + '-' + (shown + offset))
+      }).join(''))
+      shown = next
+      wrap.dataset.shown = String(shown)
+      if (shown >= total) wrap.remove()
+      else {
+        const label = wrap.querySelector('[data-more-count]')
+        if (label) label.textContent = 'Showing ' + shown + ' of ' + total
+        button.textContent = 'Show ' + Math.min(DATA.catalogPage, total - shown) + ' more'
+      }
+      updateCatalogCount()
+      applyHearts()
+      buzz(6)
+    }
+
     function storeKeys(vendor) {
       const keys = []
       DATA.menu.forEach((section, sectionIndex) => {
@@ -2243,6 +2371,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       all('[data-screen="catalog"] .section-block').forEach((block) => {
         block.hidden = next !== 'all' && block.dataset.section !== next
       })
+      updateCatalogCount()
       if (!silent) buzz(6)
     }
 
@@ -2496,7 +2625,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
     document.addEventListener('click', (event) => {
       const target = event.target.closest(
-        '[data-add],[data-inc],[data-pay],[data-go],[data-jump],[data-place],[data-type],[data-party],[data-book],[data-reserve],[data-quote-send],[data-send-review],[data-cart-open],[data-nav-open],[data-save],[data-search-open],[data-saved-open],[data-search-clear],[data-filter],[data-property-filter],[data-recent],[data-install],[data-close-sheet],[data-back],[data-store],[data-variant],.stars span,[data-item]',
+        '[data-add],[data-inc],[data-pay],[data-go],[data-jump],[data-place],[data-type],[data-party],[data-book],[data-reserve],[data-quote-send],[data-send-review],[data-cart-open],[data-nav-open],[data-save],[data-search-open],[data-saved-open],[data-search-clear],[data-filter],[data-property-filter],[data-recent],[data-install],[data-close-sheet],[data-back],[data-store],[data-variant],[data-more-go],.stars span,[data-item]',
       )
       if (!target) return
 
@@ -2531,6 +2660,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         }
         return
       }
+      if (target.dataset.moreGo !== undefined) return loadMore(target)
       if (target.dataset.variant) {
         state.pick[target.dataset.variantKey] = target.dataset.variant
         save()
