@@ -1,0 +1,15 @@
+{
+  "blockers": [],
+  "confirmations": [
+    {
+      "field": "contact",
+      "why": "No phone or email was published.",
+      "kind": "confirm"
+    },
+    {
+      "field": "trade",
+      "why": "The site reads as restaurant and also as cafe (it mentions café). Which one should the app lead with?",
+      "kind": "confirm"
+    }
+  ]
+}

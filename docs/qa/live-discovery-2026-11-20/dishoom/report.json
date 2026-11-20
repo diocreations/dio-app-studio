@@ -1,0 +1,281 @@
+{
+  "source": "https://www.dishoom.com/",
+  "host": "dishoom.com",
+  "images": {
+    "products": 9,
+    "withImage": 0,
+    "withoutImage": 9,
+    "methods": {},
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 27,
+    "kept": 9,
+    "dropped": [
+      {
+        "name": "Choose extras",
+        "section": "Shop All",
+        "reason": "option-label"
+      },
+      {
+        "name": "Customise",
+        "section": "Shop All",
+        "reason": "option-label"
+      },
+      {
+        "name": "Choose colour",
+        "section": "Shop All",
+        "reason": "option-label"
+      },
+      {
+        "name": "Dishoom House Chai",
+        "section": "Shop All",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Dishoom Masala Dabba",
+        "section": "Shop All",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Market Bag: Lemon Cooler",
+        "section": "Shop All",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Chai Gift Set",
+        "section": "Dishoom Store",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Dishoom Cookery Book",
+        "section": "Dishoom Store",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Dishoom Chai Hamper",
+        "section": "Dishoom Store",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Dishoom Cookery Book and Masala Dabba Tote",
+        "section": "Dishoom Store",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Dishoom Finest Tea Towel Gift Set",
+        "section": "Dishoom Store",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Dishoom Chutney Gift Set",
+        "section": "Dishoom Store",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Dishoom Gift Coins",
+        "section": "Dishoom Store",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Dishoom Matches",
+        "section": "Dishoom Store",
+        "reason": "no-price-or-description"
+      },
+      {
+        "name": "Choose size",
+        "section": "Food and Drink",
+        "reason": "option-label"
+      },
+      {
+        "name": "Choose grind",
+        "section": "Food and Drink",
+        "reason": "option-label"
+      },
+      {
+        "name": "Choose spice",
+        "section": "Food and Drink",
+        "reason": "option-label"
+      },
+      {
+        "name": "Choose amount",
+        "section": "International Delivery",
+        "reason": "option-label"
+      }
+    ],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "Dishoom Store"
+    ]
+  },
+  "pages": 10,
+  "site": {
+    "name": "Dishoom Indian Restaurants",
+    "tagline": "Dishoom cafés pay homage to the food of Bombay.",
+    "story": "Dishoom cafés pay homage to the food of Bombay. Open all day, from breakfast to dinner and later. Enjoy Bombay comfort food and first-class drinks. All welcome.",
+    "vertical": "restaurant",
+    "verticalConfidence": "detected",
+    "category": "Restaurant",
+    "categoryBasis": "the nearest trade, from “restaurant”",
+    "accent": "#111111",
+    "logo": "",
+    "logoImage": {
+      "url": "https://cdn.sanity.io/images/daku84np/production/9a797eca7ee2bd6f644710d59ebd52e7fdedef69-161x18.svg",
+      "alt": "Dishoom Indian Restaurants logo"
+    },
+    "phone": "",
+    "email": "",
+    "address": "",
+    "hours": "",
+    "website": "https://www.dishoom.com",
+    "currency": "GBP",
+    "socials": [
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/dishoom/"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://uk.linkedin.com/company/dishoom"
+      },
+      {
+        "label": "TikTok",
+        "url": "https://www.tiktok.com/@dishoom_uk"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/user/DishoomLondon"
+      },
+      {
+        "label": "X",
+        "url": "https://x.com/dishoom?lang=en"
+      }
+    ],
+    "menu": [
+      {
+        "name": "Dishoom Store",
+        "items": [
+          {
+            "name": "Chai Gift Set £37.00",
+            "desc": "",
+            "price": 3700
+          },
+          {
+            "name": "Dishoom Masala Dabba £39.00",
+            "desc": "",
+            "price": 3900
+          },
+          {
+            "name": "Dishoom Cookery Book £27.00",
+            "desc": "",
+            "price": 2700
+          },
+          {
+            "name": "Dishoom Chai Hamper £55.00",
+            "desc": "",
+            "price": 5500
+          },
+          {
+            "name": "Dishoom Cookery Book and Masala Dabba Tote £59.50",
+            "desc": "",
+            "price": 5950
+          },
+          {
+            "name": "Dishoom Finest Tea Towel Gift Set £28.50",
+            "desc": "",
+            "price": 2850
+          },
+          {
+            "name": "Dishoom Chutney Gift Set £26.00",
+            "desc": "",
+            "price": 2600
+          },
+          {
+            "name": "Dishoom Gift Coins £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Dishoom Matches £3.00",
+            "desc": "",
+            "price": 300
+          }
+        ]
+      }
+    ],
+    "features": [
+      "catalog",
+      "ordering"
+    ],
+    "pwa": {
+      "manifest": "https://www.dishoom.com/manifest.webmanifest",
+      "name": "Dishoom",
+      "display": "standalone",
+      "themeColor": "#ffffff",
+      "backgroundColor": "#ffffff",
+      "icon": "https://www.dishoom.com/android-chrome-192x192.png",
+      "serviceWorker": false
+    },
+    "design": {
+      "bg": "#ffffff",
+      "surface": "#f5f5f5",
+      "surface2": "#ebebeb",
+      "ink": "#111111",
+      "muted": "#626262",
+      "radius": 10,
+      "display": "\"gill-sans-nova\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+      "fontLabel": "gill-sans-nova",
+      "dark": false,
+      "palette": true,
+      "basis": "splash colour #ffffff with a neutral ink · gill-sans-nova · 10px corners · light"
+    },
+    "structure": {
+      "nav": "drawer",
+      "stickyHeader": false,
+      "navLabels": [],
+      "hero": "split",
+      "basis": "nav in a drawer · hero split"
+    }
+  },
+  "found": [
+    "9 catalogue entries in 1 section, read from 10 pages",
+    "name: Dishoom Indian Restaurants",
+    "their logo — taken from the image the site itself declares as its mark",
+    "category: Restaurant — from the nearest trade, from “restaurant”",
+    "a one-line description",
+    "brand colour #111111",
+    "their look: splash colour #ffffff with a neutral ink · gill-sans-nova · 10px corners · light",
+    "their layout: nav in a drawer · hero split",
+    "PWA manifest — standalone display, theme #ffffff, splash #ffffff",
+    "5 social links"
+  ],
+  "missing": [
+    "phone number",
+    "email",
+    "address",
+    "opening hours",
+    "9 product photographs — the site publishes none for those items"
+  ],
+  "notes": [
+    "The crawl is capped at 10 pages to keep the brief quick, so a large shop may still have aisles left — add anything missing in the app editor.",
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded.",
+    "Left out 18 catalogue entries that are not things to buy: Choose extras (option-label), Customise (option-label), Choose colour (option-label), Dishoom House Chai (no-price-or-description)."
+  ],
+  "pagesRead": [
+    "/",
+    "/store/collections/shop-all/",
+    "/store/",
+    "/store/collections/homeware/",
+    "/store/collections/clothing/",
+    "/store/collections/meal-kits/",
+    "/store/collections/gift-sets/",
+    "/store/collections/food-and-drink/",
+    "/store/collections/books-and-music/",
+    "/store/collections/international-delivery/"
+  ],
+  "pagesFailed": [],
+  "usedSitemap": false
+}

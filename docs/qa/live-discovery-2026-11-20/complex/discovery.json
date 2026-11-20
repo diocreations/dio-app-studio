@@ -1,0 +1,479 @@
+{
+  "url": "https://www.rhs.org.uk/",
+  "host": "www.rhs.org.uk",
+  "pages": {
+    "read": [
+      "/",
+      "/shop",
+      "/shop/garden-centres",
+      "/shop/licensed-products",
+      "/plants/types",
+      "/plants/popular",
+      "/gardens/wisley",
+      "/science/events",
+      "/membership/faqs",
+      "/shop/vouchers",
+      "/shop/rhs-plants",
+      "/shop/rhs-prints",
+      "/shop/rhs-gifting",
+      "/shop/special-offers",
+      "/collections",
+      "/collections/iris",
+      "/collections/lily",
+      "/products/_/the-tool-shed/garden-tools/plcid.778/"
+    ],
+    "failed": [
+      {
+        "url": "/shop/mothers-day",
+        "reason": "www.rhs.org.uk answered 404. If the site blocks bots, paste the details in by hand."
+      }
+    ],
+    "usedSitemap": false
+  },
+  "business": {
+    "name": {
+      "value": "RHS",
+      "source": "https://www.rhs.org.uk/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "category": {
+      "value": "Bookshop",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "tagline": {
+      "value": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days…",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "story": {
+      "value": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days out at stunning gardens, exclusive access to flower shows & expert advice.",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "trade": {
+      "value": "shop",
+      "source": "https://www.rhs.org.uk/",
+      "method": "inferred",
+      "confidence": "verified"
+    },
+    "accent": {
+      "value": "#005a4e",
+      "source": "https://www.rhs.org.uk/",
+      "method": "inferred",
+      "confidence": "likely"
+    },
+    "logo": {
+      "value": null,
+      "source": "https://www.rhs.org.uk/",
+      "method": "metadata",
+      "confidence": "guess"
+    },
+    "hours": {
+      "value": "",
+      "source": "https://www.rhs.org.uk/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "phone": {
+      "value": "",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "email": {
+      "value": "",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    }
+  },
+  "commerce": {
+    "currency": {
+      "value": "GBP",
+      "source": "https://www.rhs.org.uk/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "sections": [
+      {
+        "name": "",
+        "source": "https://www.rhs.org.uk/",
+        "items": [
+          {
+            "name": "More ernst benary &rsaquo;",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "More animals &rsaquo;",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "About us",
+            "desc": "",
+            "price": 1000
+          }
+        ]
+      },
+      {
+        "name": "Gifting with RHS Plants",
+        "source": "https://www.rhs.org.uk/",
+        "items": [
+          {
+            "name": "Indoor plant care",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Orchid pots & care",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Terrariums & accessories",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Indoor plant pots",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Indoor plant gifts",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Outdoor pots",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Plant pots",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Hanging baskets",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Window boxes & troughs",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Raised beds",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Grow pots & trays",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Wall planters",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Shop all",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Indoor pots",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Terrariums",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Vases & Jugs",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Urns & jars",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Accessories",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Terracotta",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Metal",
+            "desc": "",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Iris",
+        "source": "https://www.rhs.org.uk/",
+        "items": [
+          {
+            "name": "'Painted Iris and Summer Snowdrop' Regular price from…",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "'Iris monspur' Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris xiphium Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris germanica Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Sazanami Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Ejo-No-Kagari Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Plate 58 Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris pale : Iris pallida Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Saio-Ga-Uma Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Oyoku-Ho-Ren Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Kirin Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Kairakubo Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Kaku-Jaku-Ro Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris frangée : Iris fimbriata Regular price from £10.00…",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Kokinran Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "'Iris versicolor' Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "'Iris unigularis' Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris sambucina Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris unguicularis (Iris stylosa) Regular price from £10.00…",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Akashi-No-Ue Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          }
+        ]
+      },
+      {
+        "name": "Lily",
+        "source": "https://www.rhs.org.uk/",
+        "items": [
+          {
+            "name": "'Jacobean Lily' Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lilium speciosum Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lilium auratum Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Plate.78 Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "'Lilium auratum var. rubro-vittatum now var. platyphyllum'…",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lilium Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lilium tigrinum Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "'Lilium flo: albo' Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Plate 23 Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lilium leichtlinii var. maximowiczii Regular price from…",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Crown Imperial Lily Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lily Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Plate 37 Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          }
+        ]
+      }
+    ],
+    "products": 56,
+    "priced": 36,
+    "withImage": 0
+  },
+  "conflicts": [
+    {
+      "field": "currency",
+      "values": [
+        {
+          "value": "GBP",
+          "source": "https://www.rhs.org.uk/"
+        },
+        {
+          "value": "USD",
+          "source": "currency symbols beside prices"
+        }
+      ]
+    }
+  ],
+  "missing": [
+    "contact details",
+    "address"
+  ],
+  "questions": [
+    {
+      "field": "contact",
+      "why": "No phone or email was published.",
+      "kind": "confirm"
+    },
+    {
+      "field": "trade",
+      "why": "The site reads as shop and also as plants-indoor (it mentions indoor plant). Which one should the app lead with?",
+      "kind": "confirm"
+    },
+    {
+      "field": "trade",
+      "why": "The site reads as shop and also as plants-outdoor (it mentions outdoor plant). Which one should the app lead with?",
+      "kind": "confirm"
+    }
+  ],
+  "tradeCandidates": [
+    {
+      "id": "shop",
+      "score": 0.9,
+      "evidence": [
+        "the words on the page",
+        "Bookshop"
+      ]
+    },
+    {
+      "id": "plants-indoor",
+      "score": 0.45,
+      "evidence": [
+        "indoor plant"
+      ]
+    },
+    {
+      "id": "plants-outdoor",
+      "score": 0.45,
+      "evidence": [
+        "outdoor plant"
+      ]
+    }
+  ],
+  "clientRendered": false
+}

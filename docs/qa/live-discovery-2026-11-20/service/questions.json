@@ -1,0 +1,10 @@
+{
+  "blockers": [],
+  "confirmations": [
+    {
+      "field": "trade",
+      "why": "The site reads as trades and also as property (it mentions property). Which one should the app lead with?",
+      "kind": "confirm"
+    }
+  ]
+}

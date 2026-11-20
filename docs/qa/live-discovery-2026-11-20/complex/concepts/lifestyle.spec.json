@@ -1,0 +1,462 @@
+{
+  "name": "RHS",
+  "kind": "Bookshop",
+  "tagline": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days…",
+  "story": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days out at stunning gardens, exclusive access to flower shows & expert advice.",
+  "accent": "#005a4e",
+  "logo": "RH",
+  "hours": "Tue–Sat 10:00–18:00",
+  "phone": "+1 555 0163",
+  "address": "3 Lantern Court, East Side",
+  "vertical": "shop",
+  "features": [
+    "catalog",
+    "ordering",
+    "booking",
+    "loyalty",
+    "offers",
+    "events"
+  ],
+  "menu": [
+    {
+      "name": "Catalogue",
+      "items": [
+        {
+          "id": "itm_eeaa6648",
+          "name": "More ernst benary &rsaquo;",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_59aa84aa",
+          "name": "More animals &rsaquo;",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_5c86271d",
+          "name": "About us",
+          "desc": "",
+          "price": 1000
+        }
+      ]
+    },
+    {
+      "name": "Gifting with RHS Plants",
+      "items": [
+        {
+          "id": "itm_2bac09fd",
+          "name": "Indoor plant care",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_973b8fc2",
+          "name": "Orchid pots & care",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_7c55eb8c",
+          "name": "Terrariums & accessories",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_bc25216c",
+          "name": "Indoor plant pots",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_787b7db3",
+          "name": "Indoor plant gifts",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_3670d4e2",
+          "name": "Outdoor pots",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_fd7b2811",
+          "name": "Plant pots",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_7039eb95",
+          "name": "Hanging baskets",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_c2ea0203",
+          "name": "Window boxes & troughs",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_44dc649a",
+          "name": "Raised beds",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_d016aa78",
+          "name": "Grow pots & trays",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_06dc0dd5",
+          "name": "Wall planters",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_b3b5d395",
+          "name": "Shop all",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_25490447",
+          "name": "Indoor pots",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_3b0174d4",
+          "name": "Terrariums",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_e2da7be9",
+          "name": "Vases & Jugs",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_2adf4eda",
+          "name": "Urns & jars",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_cba23990",
+          "name": "Accessories",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_81369689",
+          "name": "Terracotta",
+          "desc": "",
+          "price": 0
+        },
+        {
+          "id": "itm_28a205cd",
+          "name": "Metal",
+          "desc": "",
+          "price": 0
+        }
+      ]
+    },
+    {
+      "name": "Iris",
+      "items": [
+        {
+          "id": "itm_fddc879f",
+          "name": "'Painted Iris and Summer Snowdrop' Regular price from…",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_8d3710da",
+          "name": "'Iris monspur' Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_888d723c",
+          "name": "Iris xiphium Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_05a3068b",
+          "name": "Iris germanica Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_0fb59438",
+          "name": "Iris Sazanami Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_4fd2138e",
+          "name": "Iris Ejo-No-Kagari Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_00d790d6",
+          "name": "Plate 58 Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_32a4c260",
+          "name": "Iris pale : Iris pallida Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_ab86da1d",
+          "name": "Iris Saio-Ga-Uma Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_ec1649b5",
+          "name": "Iris Oyoku-Ho-Ren Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_38a3bab7",
+          "name": "Iris Kirin Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_2ae62433",
+          "name": "Iris Kairakubo Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_30bdc044",
+          "name": "Iris Kaku-Jaku-Ro Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_d4303608",
+          "name": "Iris frangée : Iris fimbriata Regular price from £10.00…",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_ca552711",
+          "name": "Iris Kokinran Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_0c9c7888",
+          "name": "'Iris versicolor' Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_db4853f5",
+          "name": "'Iris unigularis' Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_a0bd2e51",
+          "name": "Iris sambucina Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_28fd4e44",
+          "name": "Iris unguicularis (Iris stylosa) Regular price from £10.00…",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_9a53b204",
+          "name": "Iris Akashi-No-Ue Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        }
+      ]
+    },
+    {
+      "name": "Lily",
+      "items": [
+        {
+          "id": "itm_1dd44913",
+          "name": "'Jacobean Lily' Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_1819d7be",
+          "name": "Lilium speciosum Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_1d1f8ddd",
+          "name": "Lilium auratum Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_acb37985",
+          "name": "Plate.78 Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_165a3462",
+          "name": "'Lilium auratum var. rubro-vittatum now var. platyphyllum'…",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_92f7b638",
+          "name": "Lilium Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_20ffc837",
+          "name": "Lilium tigrinum Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_abd61931",
+          "name": "'Lilium flo: albo' Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_0d290227",
+          "name": "Plate 23 Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_7b5f022f",
+          "name": "Lilium leichtlinii var. maximowiczii Regular price from…",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_7ac608bc",
+          "name": "Crown Imperial Lily Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_f06386da",
+          "name": "Lily Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_ebc7f77c",
+          "name": "Plate 37 Regular price from £10.00 £10.00",
+          "desc": "",
+          "price": 1000
+        }
+      ]
+    }
+  ],
+  "importSummary": {
+    "source": "https://www.rhs.org.uk/",
+    "importedAt": "2026-11-20T11:11:28.130Z",
+    "products": 56,
+    "withImage": 0,
+    "priced": 36,
+    "currency": "GBP",
+    "categories": [
+      "Catalogue",
+      "Gifting with RHS Plants",
+      "Iris",
+      "Lily"
+    ]
+  },
+  "offers": [
+    {
+      "title": "Local delivery, $2.99",
+      "body": "Within five miles, next day."
+    },
+    {
+      "title": "First look: new ceramics",
+      "body": "Friday evening, in the shop."
+    }
+  ],
+  "loyalty": {
+    "goal": 5,
+    "reward": "10% off your next order"
+  },
+  "sampleContent": {
+    "menu": false,
+    "contact": true,
+    "story": false,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": false
+  },
+  "custom": "",
+  "direction": "lifestyle",
+  "category": "Bookshop",
+  "design": {
+    "bg": "#faf9f5",
+    "ink": "#111a24",
+    "surface": "#f1f0ed",
+    "surface2": "#e6e6e3",
+    "muted": "#60666b",
+    "radius": 17,
+    "display": "\"freight-sans-pro\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+    "fontLabel": "freight-sans-pro",
+    "dark": false,
+    "palette": false,
+    "basis": ""
+  },
+  "structure": {
+    "nav": "drawer",
+    "hero": "image",
+    "navLabels": [],
+    "stickyHeader": false,
+    "basis": "nav in a drawer · hero image"
+  },
+  "website": "https://www.rhs.org.uk/",
+  "currency": "GBP",
+  "socials": [
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/The_RHS/"
+    },
+    {
+      "label": "YouTube",
+      "url": "https://www.youtube.com/@The_RHS"
+    },
+    {
+      "label": "TikTok",
+      "url": "https://www.tiktok.com/@the_rhs"
+    },
+    {
+      "label": "Facebook",
+      "url": "https://www.facebook.com/rhshome"
+    },
+    {
+      "label": "Pinterest",
+      "url": "https://www.pinterest.co.uk/rhshome/"
+    }
+  ]
+}

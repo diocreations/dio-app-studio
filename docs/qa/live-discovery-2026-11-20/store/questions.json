@@ -1,0 +1,15 @@
+{
+  "blockers": [],
+  "confirmations": [
+    {
+      "field": "trade",
+      "why": "The site reads as shop and also as plants-outdoor (it mentions outdoor plant). Which one should the app lead with?",
+      "kind": "confirm"
+    },
+    {
+      "field": "trade",
+      "why": "The site reads as shop and also as hotel (it mentions room). Which one should the app lead with?",
+      "kind": "confirm"
+    }
+  ]
+}

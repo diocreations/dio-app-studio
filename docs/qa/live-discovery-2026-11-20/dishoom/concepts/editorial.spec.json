@@ -1,0 +1,162 @@
+{
+  "name": "Dishoom Indian Restaurants",
+  "kind": "Restaurant",
+  "tagline": "Dishoom cafés pay homage to the food of Bombay.",
+  "story": "Dishoom cafés pay homage to the food of Bombay. Open all day, from breakfast to dinner and later. Enjoy Bombay comfort food and first-class drinks. All welcome.",
+  "accent": "#111111",
+  "logo": "DI",
+  "logoImage": {
+    "url": "https://cdn.sanity.io/images/daku84np/production/9a797eca7ee2bd6f644710d59ebd52e7fdedef69-161x18.svg",
+    "alt": "Dishoom Indian Restaurants logo"
+  },
+  "hours": "Tue–Sun 17:00–23:00",
+  "phone": "+1 555 0142",
+  "address": "8 Furnace Yard, Old Town",
+  "vertical": "restaurant",
+  "features": [
+    "catalog",
+    "ordering"
+  ],
+  "menu": [
+    {
+      "name": "Dishoom Store",
+      "items": [
+        {
+          "id": "itm_db2a07b1",
+          "name": "Chai Gift Set £37.00",
+          "desc": "",
+          "price": 3700
+        },
+        {
+          "id": "itm_f4509c9a",
+          "name": "Dishoom Masala Dabba £39.00",
+          "desc": "",
+          "price": 3900
+        },
+        {
+          "id": "itm_eedd424f",
+          "name": "Dishoom Cookery Book £27.00",
+          "desc": "",
+          "price": 2700
+        },
+        {
+          "id": "itm_89bb00c3",
+          "name": "Dishoom Chai Hamper £55.00",
+          "desc": "",
+          "price": 5500
+        },
+        {
+          "id": "itm_8eccd1ef",
+          "name": "Dishoom Cookery Book and Masala Dabba Tote £59.50",
+          "desc": "",
+          "price": 5950
+        },
+        {
+          "id": "itm_f064da88",
+          "name": "Dishoom Finest Tea Towel Gift Set £28.50",
+          "desc": "",
+          "price": 2850
+        },
+        {
+          "id": "itm_c547456f",
+          "name": "Dishoom Chutney Gift Set £26.00",
+          "desc": "",
+          "price": 2600
+        },
+        {
+          "id": "itm_86e2dedc",
+          "name": "Dishoom Gift Coins £10.00",
+          "desc": "",
+          "price": 1000
+        },
+        {
+          "id": "itm_2bad093f",
+          "name": "Dishoom Matches £3.00",
+          "desc": "",
+          "price": 300
+        }
+      ]
+    }
+  ],
+  "importSummary": {
+    "source": "https://www.dishoom.com/",
+    "importedAt": "2026-11-20T11:10:42.461Z",
+    "products": 9,
+    "withImage": 0,
+    "priced": 9,
+    "currency": "GBP",
+    "categories": [
+      "Dishoom Store"
+    ]
+  },
+  "offers": [
+    {
+      "title": "Two courses, $24",
+      "body": "Midweek lunch, Tuesday to Thursday until 3pm."
+    },
+    {
+      "title": "Counter seats",
+      "body": "Walk-ins only, from 6pm."
+    }
+  ],
+  "loyalty": {
+    "goal": 6,
+    "reward": "A main on the house"
+  },
+  "sampleContent": {
+    "menu": false,
+    "contact": true,
+    "story": false,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": false
+  },
+  "custom": "",
+  "direction": "editorial",
+  "category": "Restaurant",
+  "design": {
+    "bg": "#ffffff",
+    "ink": "#111111",
+    "surface": "#f5f5f5",
+    "surface2": "#ebebeb",
+    "muted": "#626262",
+    "radius": 10,
+    "display": "\"gill-sans-nova\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+    "fontLabel": "gill-sans-nova",
+    "dark": false,
+    "palette": true,
+    "basis": ""
+  },
+  "structure": {
+    "nav": "drawer",
+    "hero": "split",
+    "navLabels": [],
+    "stickyHeader": false,
+    "basis": "nav in a drawer · hero split"
+  },
+  "website": "https://www.dishoom.com/",
+  "currency": "GBP",
+  "socials": [
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/dishoom/"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://uk.linkedin.com/company/dishoom"
+    },
+    {
+      "label": "TikTok",
+      "url": "https://www.tiktok.com/@dishoom_uk"
+    },
+    {
+      "label": "YouTube",
+      "url": "https://www.youtube.com/user/DishoomLondon"
+    },
+    {
+      "label": "X",
+      "url": "https://x.com/dishoom?lang=en"
+    }
+  ]
+}

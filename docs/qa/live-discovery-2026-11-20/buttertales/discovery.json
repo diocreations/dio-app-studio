@@ -1,0 +1,157 @@
+{
+  "url": "https://www.buttertales.com/",
+  "host": "www.buttertales.com",
+  "pages": {
+    "read": [
+      "/",
+      "/shop/malayalam-brain-game",
+      "/shop/malayalam-alphabet-book",
+      "/shop/combo-malayalam-alphabet-book-malayalam-brain-game-kids-creative-library",
+      "/shop/kids-creative-library",
+      "/shop"
+    ],
+    "failed": [],
+    "usedSitemap": true
+  },
+  "business": {
+    "name": {
+      "value": "Butter Tales™",
+      "source": "https://www.buttertales.com/",
+      "method": "structured-data",
+      "confidence": "verified"
+    },
+    "category": {
+      "value": "Children's learning",
+      "source": "https://www.buttertales.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "tagline": {
+      "value": "Butter Tales creates warm, imaginative, screen-free learning products for children.",
+      "source": "https://www.buttertales.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "story": {
+      "value": "Butter Tales creates warm, imaginative, screen-free learning products for children. Explore our Malayalam Alphabet Book, Brain Game, and Kids Creative Library.",
+      "source": "https://www.buttertales.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "trade": {
+      "value": "shop",
+      "source": "https://www.buttertales.com/",
+      "method": "inferred",
+      "confidence": "verified"
+    },
+    "accent": {
+      "value": "#5f8a6a",
+      "source": "https://www.buttertales.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "logo": {
+      "value": {
+        "url": "https://www.buttertales.com/apple-touch-icon.png",
+        "alt": "Butter Tales™ logo"
+      },
+      "source": "https://www.buttertales.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "hours": {
+      "value": "",
+      "source": "https://www.buttertales.com/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "phone": {
+      "value": "",
+      "source": "https://www.buttertales.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "email": {
+      "value": "",
+      "source": "https://www.buttertales.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://www.buttertales.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    }
+  },
+  "commerce": {
+    "currency": {
+      "value": "INR",
+      "source": "https://www.buttertales.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "sections": [
+      {
+        "name": "Children's learning",
+        "source": "https://www.buttertales.com/",
+        "items": [
+          {
+            "name": "Letterloo",
+            "desc": "A playful Malayalam letter tile game with a built-in slate that builds vocabulary and…",
+            "price": 52200,
+            "image": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/render/image/public/media-library/2026/1794501148560-y96kks.png?width=720&quality=78",
+            "imageMethod": "public-data"
+          },
+          {
+            "name": "തറ പറ ചങ്ങാതി",
+            "desc": "A set of 10 books that makes Malayalam alphabet learning easy! Learning Malayalam letters…",
+            "price": 99900,
+            "image": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/render/image/public/media-library/2026/1794196208562-i23zdg.jpg?width=720&quality=78",
+            "imageMethod": "public-data"
+          },
+          {
+            "name": "തറ പറ ചങ്ങാതി + Letterloo + ReLeaf",
+            "desc": "തറ പറ ചങ്ങാതി + Letterloo + ReLeaf — 3 items in one curated Butter Tales combo.",
+            "price": 150000,
+            "image": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/render/image/public/media-library/2026/1794727120677-jslv0h.png?width=720&quality=78",
+            "imageMethod": "public-data"
+          },
+          {
+            "name": "ReLeaf",
+            "desc": "A carefully crafted recycled-paper book with a seed pen for a greener tomorrow.",
+            "price": 17000,
+            "image": "https://gwwqmrannsdnmhibbpyw.supabase.co/storage/v1/render/image/public/media-library/2026/1794501003856-270rvw.jpg?width=720&quality=78",
+            "imageMethod": "public-data"
+          }
+        ]
+      }
+    ],
+    "products": 4,
+    "priced": 4,
+    "withImage": 4
+  },
+  "conflicts": [],
+  "missing": [
+    "contact details",
+    "address"
+  ],
+  "questions": [
+    {
+      "field": "contact",
+      "why": "No phone or email was published.",
+      "kind": "confirm"
+    }
+  ],
+  "tradeCandidates": [
+    {
+      "id": "shop",
+      "score": 0.9,
+      "evidence": [
+        "the words on the page",
+        "Children's learning"
+      ]
+    }
+  ],
+  "clientRendered": false
+}

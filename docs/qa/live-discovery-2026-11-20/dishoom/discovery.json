@@ -1,0 +1,204 @@
+{
+  "url": "https://www.dishoom.com/",
+  "host": "www.dishoom.com",
+  "pages": {
+    "read": [
+      "/",
+      "/store/collections/shop-all/",
+      "/store/",
+      "/store/collections/homeware/",
+      "/store/collections/clothing/",
+      "/store/collections/meal-kits/",
+      "/store/collections/gift-sets/",
+      "/store/collections/food-and-drink/",
+      "/store/collections/books-and-music/",
+      "/store/collections/international-delivery/"
+    ],
+    "failed": [],
+    "usedSitemap": false
+  },
+  "business": {
+    "name": {
+      "value": "Dishoom Indian Restaurants",
+      "source": "https://www.dishoom.com/",
+      "method": "structured-data",
+      "confidence": "verified"
+    },
+    "category": {
+      "value": "Restaurant",
+      "source": "https://www.dishoom.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "tagline": {
+      "value": "Dishoom cafés pay homage to the food of Bombay.",
+      "source": "https://www.dishoom.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "story": {
+      "value": "Dishoom cafés pay homage to the food of Bombay. Open all day, from breakfast to dinner and later. Enjoy Bombay comfort food and first-class drinks. All welcome.",
+      "source": "https://www.dishoom.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "trade": {
+      "value": "restaurant",
+      "source": "https://www.dishoom.com/",
+      "method": "inferred",
+      "confidence": "verified"
+    },
+    "accent": {
+      "value": "#111111",
+      "source": "https://www.dishoom.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "logo": {
+      "value": {
+        "url": "https://cdn.sanity.io/images/daku84np/production/9a797eca7ee2bd6f644710d59ebd52e7fdedef69-161x18.svg",
+        "alt": "Dishoom Indian Restaurants logo"
+      },
+      "source": "https://www.dishoom.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "hours": {
+      "value": "",
+      "source": "https://www.dishoom.com/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "phone": {
+      "value": "",
+      "source": "https://www.dishoom.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "email": {
+      "value": "",
+      "source": "https://www.dishoom.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://www.dishoom.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    }
+  },
+  "commerce": {
+    "currency": {
+      "value": "GBP",
+      "source": "https://www.dishoom.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "sections": [
+      {
+        "name": "Dishoom Store",
+        "source": "https://www.dishoom.com/",
+        "items": [
+          {
+            "name": "Chai Gift Set £37.00",
+            "desc": "",
+            "price": 3700
+          },
+          {
+            "name": "Dishoom Masala Dabba £39.00",
+            "desc": "",
+            "price": 3900
+          },
+          {
+            "name": "Dishoom Cookery Book £27.00",
+            "desc": "",
+            "price": 2700
+          },
+          {
+            "name": "Dishoom Chai Hamper £55.00",
+            "desc": "",
+            "price": 5500
+          },
+          {
+            "name": "Dishoom Cookery Book and Masala Dabba Tote £59.50",
+            "desc": "",
+            "price": 5950
+          },
+          {
+            "name": "Dishoom Finest Tea Towel Gift Set £28.50",
+            "desc": "",
+            "price": 2850
+          },
+          {
+            "name": "Dishoom Chutney Gift Set £26.00",
+            "desc": "",
+            "price": 2600
+          },
+          {
+            "name": "Dishoom Gift Coins £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Dishoom Matches £3.00",
+            "desc": "",
+            "price": 300
+          }
+        ]
+      }
+    ],
+    "products": 9,
+    "priced": 9,
+    "withImage": 0
+  },
+  "conflicts": [
+    {
+      "field": "name",
+      "values": [
+        {
+          "value": "Dishoom Indian Restaurants",
+          "source": "https://www.dishoom.com/"
+        },
+        {
+          "value": "“Look across the bay. You’ll be walking and eating your way through the city that lies before you.”",
+          "source": "https://www.dishoom.com/"
+        }
+      ]
+    }
+  ],
+  "missing": [
+    "contact details",
+    "address"
+  ],
+  "questions": [
+    {
+      "field": "contact",
+      "why": "No phone or email was published.",
+      "kind": "confirm"
+    },
+    {
+      "field": "trade",
+      "why": "The site reads as restaurant and also as cafe (it mentions café). Which one should the app lead with?",
+      "kind": "confirm"
+    }
+  ],
+  "tradeCandidates": [
+    {
+      "id": "restaurant",
+      "score": 0.9,
+      "evidence": [
+        "the nearest trade, from “restaurant”",
+        "Restaurant"
+      ]
+    },
+    {
+      "id": "cafe",
+      "score": 0.45,
+      "evidence": [
+        "café"
+      ]
+    }
+  ],
+  "clientRendered": false
+}

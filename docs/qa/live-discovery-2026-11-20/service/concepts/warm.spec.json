@@ -1,0 +1,170 @@
+{
+  "name": "Pimlico Plumbers",
+  "kind": "Trades & home services",
+  "tagline": "Pimlico Plumbers is London’s trusted property maintenance service company, handling your…",
+  "story": "Pimlico Plumbers is London’s trusted property maintenance service company, handling your plumbing, heating, electrical, building, renovation and HVAC needs.",
+  "accent": "#a8741a",
+  "logo": "PP",
+  "logoImage": {
+    "url": "https://www.pimlicoplumbers.com/wp-content/themes/pimlico/images/meta-icon.png",
+    "alt": "Pimlico Plumbers logo"
+  },
+  "hours": "Mon–Sat 7:30–18:00 · Emergency 24h",
+  "phone": "+442081080808",
+  "address": "Covering the whole city",
+  "vertical": "trades",
+  "features": [
+    "catalog",
+    "ordering",
+    "delivery",
+    "booking",
+    "offers",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Trades & home services",
+      "items": [
+        {
+          "id": "itm_7c345e4f",
+          "name": "Emergency Maintenance & Repairs London",
+          "desc": "We’re available 24/7 for any emergency plumbing, heating, electric, drainage and more.…",
+          "price": 100000
+        },
+        {
+          "id": "itm_88108219",
+          "name": "Landlord Maintenance Services in London",
+          "desc": "We provide landlord maintenance services across London. Available 365 days a year, call…",
+          "price": 100000
+        },
+        {
+          "id": "itm_f2afcd08",
+          "name": "Appliance Services London",
+          "desc": "Looking for appliance services? We offer white goods repairs, installs, and services…",
+          "price": 100000
+        },
+        {
+          "id": "itm_44dd3200",
+          "name": "Air Conditioning Services",
+          "desc": "Specialising in air con installation, maintenance and repairs, call for 1 hour response…",
+          "price": 100000
+        }
+      ]
+    },
+    {
+      "name": "Trades & home services",
+      "items": [
+        {
+          "id": "itm_7aafb47e",
+          "name": "Commercial Heating Engineers in London",
+          "desc": "Available 24/7, with 1-hour response times in emergencies, we provide premium heating…",
+          "price": 100000
+        },
+        {
+          "id": "itm_8e627adc",
+          "name": "Commercial Plumbers in London",
+          "desc": "With 24/7 availability and 1-hour response times in emergencies, we provide premium…",
+          "price": 100000
+        },
+        {
+          "id": "itm_d8a484b6",
+          "name": "Commercial Electricians in London",
+          "desc": "With 24/7 availability and 1-hour response times in emergencies, we provide electrical…",
+          "price": 100000
+        },
+        {
+          "id": "itm_cd0c45f5",
+          "name": "Commercial Drainage Services in London",
+          "desc": "Available 24/7, with 1-hour response times in emergencies, we provide drainage…",
+          "price": 100000
+        },
+        {
+          "id": "itm_7e2cae97",
+          "name": "Commercial Carpentry London",
+          "desc": "Available 24/7, with 1-hour response times in emergencies, we provide professional…",
+          "price": 100000
+        }
+      ]
+    }
+  ],
+  "importSummary": {
+    "source": "https://www.pimlicoplumbers.com/",
+    "importedAt": "2026-11-20T11:10:59.667Z",
+    "products": 9,
+    "withImage": 0,
+    "priced": 9,
+    "currency": "GBP",
+    "categories": [
+      "Trades & home services",
+      "Trades & home services"
+    ]
+  },
+  "offers": [
+    {
+      "title": "Free quote in 24 hours",
+      "body": "Send a photo, get a price the next day."
+    },
+    {
+      "title": "Landlord certificates",
+      "body": "Booked this week, certificate by email."
+    }
+  ],
+  "loyalty": {
+    "goal": 3,
+    "reward": "A free annual boiler check"
+  },
+  "sampleContent": {
+    "menu": false,
+    "contact": true,
+    "story": false,
+    "offers": true,
+    "team": true,
+    "staff": true,
+    "tagline": false
+  },
+  "staff": [
+    "Dan Mercer",
+    "Ruth Okafor"
+  ],
+  "team": [
+    {
+      "name": "Dan Mercer",
+      "role": "Heating engineer",
+      "credential": "Gas Safe 552103"
+    },
+    {
+      "name": "Ruth Okafor",
+      "role": "Plumbing lead",
+      "credential": "City & Guilds"
+    }
+  ],
+  "custom": "",
+  "direction": "warm",
+  "category": "Trades & home services",
+  "structure": {
+    "nav": "drawer",
+    "hero": "image",
+    "navLabels": [
+      "Skip to content",
+      "Skip to footer"
+    ],
+    "stickyHeader": false,
+    "basis": "nav in a drawer · Skip to content, Skip to footer · hero image"
+  },
+  "website": "https://www.pimlicoplumbers.com/",
+  "currency": "GBP",
+  "socials": [
+    {
+      "label": "Facebook",
+      "url": "https://www.facebook.com/pimlicoplumbersltd/"
+    },
+    {
+      "label": "X",
+      "url": "https://x.com/pimlicoplumbers"
+    },
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/pimlicoplumbers/"
+    }
+  ]
+}

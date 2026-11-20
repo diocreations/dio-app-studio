@@ -1,0 +1,445 @@
+{
+  "source": "https://www.rhs.org.uk/",
+  "host": "rhs.org.uk",
+  "images": {
+    "products": 56,
+    "withImage": 0,
+    "withoutImage": 56,
+    "methods": {},
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 56,
+    "kept": 56,
+    "dropped": [],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "",
+      "Gifting with RHS Plants",
+      "Iris",
+      "Lily"
+    ]
+  },
+  "pages": 18,
+  "site": {
+    "name": "RHS",
+    "tagline": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days…",
+    "story": "The Royal Horticultural Society is the UK's leading gardening charity, join us for days out at stunning gardens, exclusive access to flower shows & expert advice.",
+    "vertical": "shop",
+    "verticalConfidence": "detected",
+    "category": "Bookshop",
+    "categoryBasis": "the words on the page",
+    "accent": "#005a4e",
+    "logo": "",
+    "phone": "",
+    "email": "",
+    "address": "",
+    "hours": "",
+    "website": "https://www.rhs.org.uk",
+    "currency": "GBP",
+    "socials": [
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/The_RHS/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@The_RHS"
+      },
+      {
+        "label": "TikTok",
+        "url": "https://www.tiktok.com/@the_rhs"
+      },
+      {
+        "label": "Facebook",
+        "url": "https://www.facebook.com/rhshome"
+      },
+      {
+        "label": "Pinterest",
+        "url": "https://www.pinterest.co.uk/rhshome/"
+      }
+    ],
+    "menu": [
+      {
+        "name": "",
+        "items": [
+          {
+            "name": "More ernst benary &rsaquo;",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "More animals &rsaquo;",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "About us",
+            "desc": "",
+            "price": 1000
+          }
+        ]
+      },
+      {
+        "name": "Gifting with RHS Plants",
+        "items": [
+          {
+            "name": "Indoor plant care",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Orchid pots & care",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Terrariums & accessories",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Indoor plant pots",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Indoor plant gifts",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Outdoor pots",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Plant pots",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Hanging baskets",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Window boxes & troughs",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Raised beds",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Grow pots & trays",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Wall planters",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Shop all",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Indoor pots",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Terrariums",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Vases & Jugs",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Urns & jars",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Accessories",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Terracotta",
+            "desc": "",
+            "price": 0
+          },
+          {
+            "name": "Metal",
+            "desc": "",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Iris",
+        "items": [
+          {
+            "name": "'Painted Iris and Summer Snowdrop' Regular price from…",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "'Iris monspur' Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris xiphium Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris germanica Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Sazanami Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Ejo-No-Kagari Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Plate 58 Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris pale : Iris pallida Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Saio-Ga-Uma Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Oyoku-Ho-Ren Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Kirin Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Kairakubo Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Kaku-Jaku-Ro Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris frangée : Iris fimbriata Regular price from £10.00…",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Kokinran Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "'Iris versicolor' Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "'Iris unigularis' Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris sambucina Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris unguicularis (Iris stylosa) Regular price from £10.00…",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Iris Akashi-No-Ue Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          }
+        ]
+      },
+      {
+        "name": "Lily",
+        "items": [
+          {
+            "name": "'Jacobean Lily' Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lilium speciosum Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lilium auratum Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Plate.78 Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "'Lilium auratum var. rubro-vittatum now var. platyphyllum'…",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lilium Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lilium tigrinum Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "'Lilium flo: albo' Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Plate 23 Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lilium leichtlinii var. maximowiczii Regular price from…",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Crown Imperial Lily Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Lily Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          },
+          {
+            "name": "Plate 37 Regular price from £10.00 £10.00",
+            "desc": "",
+            "price": 1000
+          }
+        ]
+      }
+    ],
+    "features": [
+      "catalog",
+      "ordering",
+      "booking",
+      "loyalty",
+      "offers",
+      "events"
+    ],
+    "design": {
+      "bg": "#faf9f5",
+      "surface": "#f1f0ed",
+      "surface2": "#e6e6e3",
+      "ink": "#111a24",
+      "muted": "#60666b",
+      "radius": 17,
+      "display": "\"freight-sans-pro\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+      "fontLabel": "freight-sans-pro",
+      "dark": false,
+      "palette": false,
+      "basis": "freight-sans-pro · 17px corners"
+    },
+    "structure": {
+      "nav": "drawer",
+      "stickyHeader": false,
+      "navLabels": [],
+      "hero": "image",
+      "basis": "nav in a drawer · hero image"
+    }
+  },
+  "found": [
+    "56 catalogue entries in 4 sections, read from 18 pages",
+    "name: RHS",
+    "category: Bookshop — from the words on the page",
+    "a one-line description",
+    "brand colour #005a4e",
+    "their look: freight-sans-pro · 17px corners",
+    "their layout: nav in a drawer · hero image",
+    "5 social links"
+  ],
+  "missing": [
+    "logo — using initials until you upload one",
+    "phone number",
+    "email",
+    "address",
+    "opening hours",
+    "56 product photographs — the site publishes none for those items"
+  ],
+  "notes": [
+    "The crawl is capped at 10 pages to keep the brief quick, so a large shop may still have aisles left — add anything missing in the app editor.",
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded."
+  ],
+  "pagesRead": [
+    "/",
+    "/shop",
+    "/shop/garden-centres",
+    "/shop/licensed-products",
+    "/plants/types",
+    "/plants/popular",
+    "/gardens/wisley",
+    "/science/events",
+    "/membership/faqs",
+    "/shop/vouchers",
+    "/shop/rhs-plants",
+    "/shop/rhs-prints",
+    "/shop/rhs-gifting",
+    "/shop/special-offers",
+    "/collections",
+    "/collections/iris",
+    "/collections/lily",
+    "/products/_/the-tool-shed/garden-tools/plcid.778/"
+  ],
+  "pagesFailed": [
+    {
+      "url": "/shop/mothers-day",
+      "reason": "www.rhs.org.uk answered 404. If the site blocks bots, paste the details in by hand."
+    }
+  ],
+  "usedSitemap": false
+}
