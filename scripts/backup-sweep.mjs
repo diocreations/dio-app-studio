@@ -28,18 +28,16 @@
  *     the audit log
  *   - running it twice is safe: the second run finds nothing to do
  *
- * Where the key list comes from: the run's own index entry and the run document
- * in the bucket both record every key the run intended to upload (`expected`),
- * written before the first byte. A run that recorded neither is swept by the
- * fixed names only. Nothing borrows a layout from another run: a key this run
- * never claimed is left in place, because deleting it would be a guess. The
- * only runs without a record are ones started before `expected` existed, and
- * every bucket that had those has been swept.
+ * Where the key list comes from: the run's own index entry, which records every
+ * key the run intended to upload (`expected`) before the first byte. A run
+ * without that list is swept by the fixed names only: nothing borrows a layout
+ * from another run, and a key this run never claimed is left in place rather
+ * than guessed at. Every bucket that held pre-`expected` runs has been swept.
  */
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { readJson, sha256 } from './backup/lib.mjs'
+import { sha256 } from './backup/lib.mjs'
 import { BACKUP_PREFIX, readBackupIndex, writeBackupIndex } from './backup/index.mjs'
 import { createReadBack, createR2, runWrangler, wranglerMode } from './backup/r2.mjs'
 
@@ -104,8 +102,10 @@ function exists(key) {
 }
 
 /**
- * Every key this run recorded for itself, plus the fixed names every run
- * writes. Nothing is derived from another run's layout.
+ * The keys this run recorded in the index, plus the names every run writes.
+ * `expected` is written before the first upload, so an interrupted run is
+ * sweepable from its own entry alone — the run document holds the same list,
+ * for whoever restores the run, and need not be read to delete anything.
  */
 function candidatesFor(run) {
   const keys = new Set()
@@ -113,19 +113,6 @@ function candidatesFor(run) {
     if (ownedKey(key, run.id)) keys.add(key)
   }
   for (const key of run.expected ?? []) add(key)
-
-  // The run document travels with the run; when it was uploaded it names the
-  // files too, which covers runs whose index entry predates `expected`.
-  const documentKey = `${runPrefix(run.id)}/run.json`
-  try {
-    const document = readJson(r2.get(documentKey, path.join(work, 'probe', `${run.id}-run.json`)))
-    for (const key of document.expected ?? []) add(key)
-    for (const key of document.files ?? []) add(key)
-    add(documentKey)
-  } catch (error) {
-    if (!r2.missing(error)) throw error
-  }
-
   for (const suffix of ['run.json', 'database.sqlite', 'media/manifest.json']) add(`${runPrefix(run.id)}/${suffix}`)
   return [...keys].sort()
 }
@@ -168,18 +155,7 @@ async function main() {
     }
     if (age > 30 * 24 * HOUR) log({ action: 'note', run: run.id, reason: 'pending for more than 30 days' })
 
-    let keys
-    try {
-      keys = candidatesFor(run)
-    } catch (error) {
-      log({
-        action: 'skip',
-        run: run.id,
-        reason: `its prefix could not be inspected: ${error instanceof Error ? error.message : error}`,
-      })
-      continue
-    }
-
+    const keys = candidatesFor(run)
     const present = []
     const absent = []
     let undecided = false

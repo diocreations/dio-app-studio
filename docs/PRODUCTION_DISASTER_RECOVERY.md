@@ -94,15 +94,35 @@ captured by `scripts/backup.mjs` locally but not by the offsite run.
 
 Two ways to close that, in order of preference:
 
-1. **Enable R2 bucket replication** on `plattr-media` to a second bucket or
-   region. It copies every object, including ones with no row, and needs no
-   application change. Do this before launch; the offsite job then covers the
-   database and the index, and replication covers all bytes.
+1. **Copy the media bucket to a second bucket on a schedule.** That is a
+   listing-driven read/write, the same primitives the offsite job already uses,
+   so it includes objects with no `media` row — including the 15 that exist now.
+   - *Requirements:* a destination bucket (another account or region), a token
+     that can read `plattr-media` and write only the copy, and a scheduled run.
+   - *Cost* at R2's published prices: the copy duplicates storage at
+     $0.015/GB-month, and each object costs one Class B read ($0.36/million) and
+     one Class A write ($4.50/million). Egress is free. At this size that is
+     cents a month.
+   - *Verification:* a key-set diff between the two buckets plus a per-object
+     sha256 read-back — the check the backup job already performs.
+   - *Restore if the primary is lost:* repoint the Worker with one line
+     (`r2_buckets[].bucket_name`) and redeploy, or copy the objects back with
+     `r2 object put`. No application code changes.
+
+   Wrangler 4.151.0 has no replication command (`r2 bucket` offers create,
+   update, list, info, delete, sippy, notification, domain, dev-url,
+   local-uploads, lifecycle, cors and lock), and the R2 documentation reachable
+   from this machine describes in-region durability replication and Sippy
+   migration, not a configurable cross-bucket replication rule. A scheduled copy
+   is therefore the mechanism this repository can configure and verify; confirm
+   with the account before promising anything else.
 2. Accept the gap, and keep the media cleanup policy strict so unreferenced
    objects do not accumulate. They are, by definition, not referenced by any
    document or media row, so losing them loses nothing a business can see.
 
-Do not describe option 2 as full media protection.
+Do not describe option 2 as full media protection. Neither option is in place
+today: the 15 objects have one local copy in `scripts/backup.mjs` output, and no
+second bucket holds them.
 
 ## Schedule, retention and storage isolation
 
@@ -275,9 +295,26 @@ bun run backup:sweep:fixture
 
 `BACKUP_ALERT_WEBHOOK` receives a JSON `{text, stage, runId, mode}` on failure —
 a Slack or Discord incoming webhook accepts it as is. `BACKUP_HEARTBEAT_URL` is
-pinged only after a verified run, so a dead-man's-switch service (Healthchecks,
-Better Stack heartbeat) alerts on silence, which is the failure mode that
-actually loses data.
+pinged only after a verified run, so a dead-man's-switch service alerts on
+silence, which is the failure mode that actually loses data.
+
+### Heartbeat watchdog
+
+**Configured: no.** The workflow has the ping; nothing receives it yet.
+
+| Field | Value |
+| --- | --- |
+| Service | Healthchecks.io — Hobbyist plan, $0/month, 20 checks, 100 log entries per check |
+| Check | `plattr-offsite-backup`; period 24 h, grace 2 h |
+| Why that window | The schedule is daily 02:30 UTC and the job times out at 30 min; a 2 h grace covers one retry without hiding a dead schedule |
+| Pinged by | `.github/workflows/offsite-backup.yml`, only after a run verifies |
+| Alert destination | the on-call inbox plus the backup Slack channel that also receives `BACKUP_ALERT_WEBHOOK` |
+| Owner | **unassigned** — a named person must own the check, its alert destination and the response |
+| Retention | 100 log entries per check on the free plan; the service keeps the alert history |
+| Status | account not created, no ping received, **no missed-heartbeat alert demonstrated** |
+
+Until a missed ping has raised a real alert at the destination above, treat the
+watchdog as absent and read the index by hand (weekly row in the cadence table).
 
 ## Verification cadence
 

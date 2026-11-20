@@ -128,10 +128,7 @@ async function verify() {
 }
 
 const check = await verify()
-console.log('')
-// Names and tokens only: a token is in every dashboard URL, a key is the
-// credential for it. Printing keys to a terminal is how they end up in a
-// report, a screenshot or a log.
-for (const project of keys) console.log(`${project.name}\t${project.token}`)
+// Never the keys: printing one is how it ends up in a terminal log, a report or
+// a screenshot. The file is the only copy, and it is gitignored and mode 600.
 console.log(`\n${check}`)
-console.log(`owner keys are in ${out}; read them there, they are not printed`)
+console.log(`owner keys are in ${out}; they are not printed`)
