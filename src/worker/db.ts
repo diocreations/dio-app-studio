@@ -357,6 +357,10 @@ const MIGRATIONS = [
   `ALTER TABLE order_items ADD COLUMN variant_id TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE bookings ADD COLUMN payment_status TEXT NOT NULL DEFAULT 'unpaid'`,
   `ALTER TABLE bookings ADD COLUMN paid_amount INTEGER NOT NULL DEFAULT 0`,
+  // A checkout names the attempt it came from, so a retried send finds the
+  // order it already made instead of charging the customer twice.
+  `ALTER TABLE orders ADD COLUMN client_ref TEXT NOT NULL DEFAULT ''`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS orders_by_client_ref ON orders (project_id, client_ref) WHERE client_ref <> ''`,
   `CREATE UNIQUE INDEX IF NOT EXISTS projects_variation_slot ON projects (variation_slot)`,
   // Legacy rows get a stable slot before the counter is seeded past them.
   `UPDATE projects SET variation_slot = rowid - 1 WHERE variation_slot IS NULL`,

@@ -18,6 +18,9 @@ export type OrderInput = {
   fulfilment?: unknown
   note?: unknown
   items?: unknown
+  /** The checkout attempt this came from; a retry of the same attempt returns
+   *  the order it already made rather than a second one. */
+  requestId?: unknown
 }
 export type BookingInput = {
   customer?: CustomerInput
@@ -362,6 +365,21 @@ export async function createOrder(db: D1Database, project: Project, input: Order
     parsed.push({ key, item, qty, variant, variantId, price })
   }
 
+  // One checkout attempt makes one order. The browser names the attempt, so a
+  // retried send (a double click, a lost response, a reload mid-send) finds the
+  // order it already made instead of ordering again.
+  const attempt = /^[A-Za-z0-9_-]{8,64}$/.test(text(input.requestId, 64)) ? text(input.requestId, 64) : ''
+  if (attempt) {
+    const existing = await db
+      .prepare('SELECT id FROM orders WHERE project_id = ? AND client_ref = ?')
+      .bind(project.id, attempt)
+      .first<{ id: string }>()
+    if (existing) {
+      const order = await getOrder(db, project.id, existing.id)
+      if (order) return order
+    }
+  }
+
   const fulfilmentOptions = verticalFor(project.spec.vertical).vocab.fulfilment
   const fulfilment = text(input.fulfilment, 30) || fulfilmentOptions[0] || 'Pickup'
   if (!fulfilmentOptions.includes(fulfilment))
@@ -388,27 +406,42 @@ export async function createOrder(db: D1Database, project: Project, input: Order
     customer_phone: customer.phone,
     customer_email: customer.email,
   }
-  await db
-    .prepare(
-      `INSERT INTO orders (id, project_id, customer_id, number, status, fulfilment, note, subtotal, delivery_fee, total, payment_status, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    )
-    .bind(
-      order.id,
-      project.id,
-      order.customer_id,
-      order.number,
-      order.status,
-      order.fulfilment,
-      order.note,
-      order.subtotal,
-      order.delivery_fee,
-      order.total,
-      order.payment_status,
-      order.created_at,
-      order.updated_at,
-    )
-    .run()
+  try {
+    await db
+      .prepare(
+        `INSERT INTO orders (id, project_id, customer_id, number, status, fulfilment, note, subtotal, delivery_fee, total, payment_status, created_at, updated_at, client_ref)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .bind(
+        order.id,
+        project.id,
+        order.customer_id,
+        order.number,
+        order.status,
+        order.fulfilment,
+        order.note,
+        order.subtotal,
+        order.delivery_fee,
+        order.total,
+        order.payment_status,
+        order.created_at,
+        order.updated_at,
+        attempt,
+      )
+      .run()
+  } catch (error) {
+    // Two sends of one attempt can pass the read together; the unique index
+    // refuses the second write, and the winner is the order the caller gets.
+    const race = attempt
+      ? await db
+          .prepare('SELECT id FROM orders WHERE project_id = ? AND client_ref = ?')
+          .bind(project.id, attempt)
+          .first<{ id: string }>()
+      : null
+    const found = race ? await getOrder(db, project.id, race.id) : null
+    if (found) return found
+    throw error
+  }
   const stored: ItemRow[] = []
   for (const line of parsed) {
     const item: ItemRow = {

@@ -398,18 +398,54 @@ function briefScript(verticals: string): string {
 
     // The shop's currency is only published when the page proved one. No proof,
     // or two proofs that disagree, becomes a question the owner answers here.
+    // The evidence stays listed after the answer, with what each statement was
+    // and whether it was the shop speaking or only the visitor's view.
     const candidates = Array.isArray(site.currencyCandidates) ? site.currencyCandidates : []
     const codes = Array.from(new Set(['GBP', 'EUR', 'USD', 'INR'].concat(candidates.map((entry) => entry.code)).filter((code) => /^[A-Z]{3}$/.test(code))))
+    const confirmedByOwner = site.currency && site.currencyEvidence && site.currencyEvidence.method === 'owner'
     const needsCurrency = !site.currency || site.currencyConflict === true
-    const currencyControl = needsCurrency
+    const PRESENTMENT = ['shopify-analytics', 'shopify-currency']
+    const METHODS = {
+      meta: 'the page metadata',
+      'json-ld': 'the page structured data',
+      'money-format': 'a money format on the page',
+      'variant-labels': 'the shop own option labels',
+      'shopify-analytics': 'the currency the storefront shows visitors',
+      'shopify-currency': 'the currency the storefront shows visitors',
+      owner: 'your answer',
+    }
+    const methodWord = function (method) { return METHODS[method] || method || 'an unknown source' }
+    const candidateList = candidates.length
+      ? '<ul class="ticks" style="margin-top:6px">' +
+          candidates.map(function (entry) {
+            const presentment = PRESENTMENT.indexOf(entry.method) >= 0
+            return '<li><b>' + esc(entry.code) + '</b> — ' + esc(methodWord(entry.method)) +
+              (presentment ? ' <span class="tiny">(what visitors are shown, not what the shop prices in)</span>' : '') +
+              (entry.raw ? '<span class="tiny"> · ' + esc(entry.raw) + '</span>' : '') +
+              '</li>'
+          }).join('') +
+        '</ul>'
+      : ''
+    const currencyTitle = site.currencyConflict
+      ? 'Two currencies were declared — which is right?'
+      : confirmedByOwner
+        ? 'Currency confirmed by you: ' + esc(site.currency)
+        : candidates.length
+          ? 'The shop currency is not proven — please confirm it'
+          : 'Confirm the shop currency'
+    const currencyWhy = site.currencyConflict
+      ? 'These statements disagree. A shop can show visitors a different currency from the one its prices are in, so neither is taken as the answer. Prices are kept exactly as read; your choice only labels them.'
+      : confirmedByOwner
+        ? 'Your answer is saved with this build and used on its cards, bag, orders and dashboard. Prices did not move.'
+        : candidates.length
+          ? 'The page states a currency, but not in a form that proves what its prices mean. Prices are kept exactly as read; your choice only labels them.'
+          : 'Nothing on the page stated a currency. Prices are kept exactly as read; choosing a currency labels them in the app and on orders.'
+    const currencyControl = needsCurrency || candidates.length
       ? '<div class="notice" data-currency-ask style="margin-top:8px">' +
-        '<strong>' + (site.currencyConflict ? 'Two currencies were declared — which is right?' : 'Confirm the shop’s currency') + '</strong>' +
-        '<p class="tiny" style="margin-top:4px">' +
-        (site.currencyConflict
-          ? 'The page declares ' + esc(candidates.map((entry) => entry.code + ' (' + entry.method + ')').join(', ')) + '. Prices are kept exactly as read; the currency only labels them.'
-          : 'No currency was declared in a form Plattr can trust. Prices are kept exactly as read; choosing a currency labels them in the app and on orders.') +
-        '</p>' +
-        '<label class="tiny" for="currency-choice">Currency</label> ' +
+        '<strong>' + currencyTitle + '</strong>' +
+        '<p class="tiny" style="margin-top:4px">' + currencyWhy + '</p>' +
+        candidateList +
+        '<label class="tiny" for="currency-choice" style="display:block;margin-top:8px">The currency this shop prices in</label> ' +
         '<select id="currency-choice" data-currency-choice>' +
         '<option value=""' + (site.currency ? '' : ' selected') + '>Not confirmed — show amounts without a symbol</option>' +
         codes.map((code) => '<option value="' + code + '"' + (site.currency === code ? ' selected' : '') + '>' + code + '</option>').join('') +

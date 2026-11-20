@@ -2454,6 +2454,9 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       // variant rather than guessing later.
       const cartKey = identity ? key + '::' + encodeURIComponent(variantRef(identity)) : key
       state.cart[cartKey] = (state.cart[cartKey] || 0) + 1
+      // A changed bag is a different order; a retry must not be mistaken for the
+      // attempt that was already sent.
+      delete state.pendingOrder
       save()
       renderCart()
       buzz(12)
@@ -2471,9 +2474,17 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const button = $('[data-place]')
       if (button) button.disabled = true
       try {
+        // One attempt, one order. The reference survives a failed send so that
+        // asking again returns the order already made instead of making two.
+        const attempt = state.pendingOrder && state.pendingOrder.ref
+          ? state.pendingOrder.ref
+          : 'ord-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10)
+        state.pendingOrder = { ref: attempt, at: Date.now() }
+        save()
         const payload = await postJson('/p/' + DATA.token + '/orders', {
           customer: Object.assign({ name }, contactFields(contact)),
           fulfilment: state.orderType,
+          requestId: attempt,
           items: totals.lines.map(([cartKey, qty]) => {
             const parts = cartParts(cartKey)
             return Object.assign({ key: parts.key, qty: qty }, parts.variant ? { variant: variantRef(parts.variant) } : {})
@@ -2485,6 +2496,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         state.customerContact = contact
         if (DATA.loyalty) state.stamps = Math.min(DATA.goal, state.stamps + 1)
         state.cart = {}
+        delete state.pendingOrder
         save()
         renderCart()
         renderStamps()
@@ -2685,6 +2697,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         const key = target.dataset.inc
         state.cart[key] = Math.max(0, (state.cart[key] || 0) + Number(target.dataset.delta))
         if (!state.cart[key]) delete state.cart[key]
+        delete state.pendingOrder
         save()
         return renderCart()
       }
