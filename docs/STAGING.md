@@ -21,6 +21,7 @@ data.
 | D1 | `plattr-staging-restore` | `b30fe103-1ef9-4c7f-abb6-c24a2cfbfd1d` | Rebuilt from a remote backup run |
 | R2 (media) | `plattr-staging-restore-media` | — | Restored media objects |
 | Secrets | `OWNER_SECRET`, `STUDIO_KEY`, `PAYMENT_ENCRYPTION_KEY` | per Worker, generated for staging | Never shared with production, never committed |
+| Owner keys | `.wrangler/owner-keys/plattr-staging.txt`, `…-restore.txt` | derived from each Worker's own `OWNER_SECRET` | gitignored, mode 600; regenerate by rotating |
 
 The two backup buckets are separate from the media buckets by design: the script
 refuses to run if `--backup-bucket` equals `--bucket`.
@@ -57,6 +58,51 @@ bunx wrangler d1 execute plattr-staging --remote -y --command \
 
 The scrub step matters: sessions and gateway ciphertext belong to the source
 environment and cannot be decrypted with a different `PAYMENT_ENCRYPTION_KEY`.
+
+## Owner access
+
+Owner keys are not stored: they are `hmac_sha256(OWNER_SECRET, 'plattr-owner-key-v1:' + project token)`,
+first 32 hex characters (`src/worker/ownerAuth.ts`), so one key per project per
+environment. Cloudflare never returns a secret value, which means the keys are
+only knowable at the moment the secret is written — rotating by hand in the
+dashboard would lock every business out.
+
+`scripts/owner-keys.mjs` therefore rotates and records in one step:
+
+```bash
+bun scripts/owner-keys.mjs --config wrangler.staging.jsonc --database plattr-staging \
+  --host https://plattr-staging.dio-app.workers.dev --out .wrangler/owner-keys/plattr-staging.txt
+bun scripts/owner-keys.mjs --config wrangler.staging-restore.jsonc --database plattr-staging-restore \
+  --host https://plattr-staging-restore.dio-app.workers.dev --out .wrangler/owner-keys/plattr-staging-restore.txt
+```
+
+It reads the projects first (so an unreachable database stops it before the
+secret changes), writes a fresh 32-byte secret through stdin, derives every key,
+writes them to the gitignored file, deletes the existing `owner_sessions` rows,
+and then signs in once against `--host` to prove the Worker picked the new
+secret up: wrong key `401`, derived key `303` with a session, dashboard `200`.
+The secret is never printed, logged or written anywhere.
+
+Each environment has its own secret, so its keys differ by design: a key from
+`plattr-staging` is not valid on `plattr-staging-restore`. Sign in at
+`/p/<project token>/dashboard/login`.
+
+`STUDIO_KEY` is a different credential: it opens `/studio`, the operator board
+that lists every build. Owner keys open one business's dashboard.
+
+## Abandoned backup runs
+
+A run that fails after it starts uploading stays `pending` in
+`plattr/index.json` and its objects stay in `plattr-staging-backups`.
+`scripts/backup-sweep.mjs` removes them:
+
+```bash
+bun scripts/backup-sweep.mjs --remote --backup-bucket plattr-staging-backups            # dry run
+bun scripts/backup-sweep.mjs --remote --backup-bucket plattr-staging-backups --execute
+```
+
+The staging evidence is in `docs/qa/remote/REPORT.md`: 25 objects from the two
+failed acceptance runs, both marked `abandoned`, both verified runs untouched.
 
 ## Isolation rules
 

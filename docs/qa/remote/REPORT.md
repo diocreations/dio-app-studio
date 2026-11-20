@@ -39,9 +39,9 @@ Backup bucket `plattr-staging-backups`, prefix `plattr/`.
 | Run | State | Files | Note |
 | --- | --- | --- | --- |
 | `20261120T065533Z-74375d46` | verified | 24 | first remote run; pruned later by retention |
-| `20261120T065746Z-74375d46` | pending | 0 | killed mid-run on purpose |
+| `20261120T065746Z-74375d46` | abandoned | 0 | killed mid-run on purpose; 1 partial object swept |
 | `20261120T065832Z-74375d46` | verified | 24 | kept |
-| `20261120T070012Z-74375d46` | pending | 0 | real read-back failure (see alerts) |
+| `20261120T070012Z-74375d46` | abandoned | 0 | real read-back failure (see alerts); 24 partial objects swept |
 | `20261120T070220Z-74375d46` | verified | 24 | **the run that was restored** |
 
 Verified run `20261120T070220Z-74375d46`:
@@ -105,8 +105,43 @@ A local receiver (`scripts/qa/webhook-sink.mjs`, port 8788) recorded:
 recorded above), and not pinged when a run fails or never starts. Proving that a
 *missing* heartbeat raises an alert needs an external watchdog account
 (Healthchecks.io, Better Stack, or Cloudflare's own notification rules), which
-does not exist in this workspace. What is proven is the sender side; the receiver
-side is unproven.
+does not exist in this workspace. What is proven is the sender side; the
+receiver side is unproven.
+
+## Abandoned run cleanup
+
+The two failed runs above left their objects in the bucket with no `files` list,
+which retention cannot see. `scripts/backup-sweep.mjs` finds them:
+
+| Step | Result |
+| --- | --- |
+| Dry run, default 360-minute window | **refused to act**: both runs were 48 and 50 minutes old, so both were skipped |
+| Dry run, `--older-than 31` | 24 objects under `20261120T070012Z-74375d46`, 1 under `20261120T065746Z-74375d46` (its `database.sqlite`; the kill came mid-upload, which the earlier report could not see) |
+| `--execute` | deleted 25 objects, marked both runs `abandoned` in the index |
+| Second `--execute` | `no pending runs: nothing to sweep`, 0 deleted |
+| Swept prefixes probed afterwards | `database.sqlite` and `run.json` under both prefixes answer `The specified key does not exist` |
+| Verified runs afterwards | `20261120T070220Z-74375d46` fetched again, database sha256 `74375d46a9aa…` unchanged, 21/21 media objects re-checked; `20261120T065832Z-74375d46` run document still `verified` |
+
+Neither run had an upload list (they predate the change), so the candidate keys
+came from the newest verified run's layout, translated to each abandoned prefix
+and probed one by one. Nothing was deleted that did not exist, and every key was
+under the prefix of the run being swept. New runs record their full upload list
+in both the index and the run document before the first upload, so this probing
+is only for history.
+
+## Owner secret rotation
+
+| Step | Staging | Restore |
+| --- | --- | --- |
+| `OWNER_SECRET` rotated through stdin | yes | yes |
+| Existing owner sessions | purged; 0 left | purged (1 row); 0 left |
+| Owner keys written | 58, mode 600, gitignored | 58, mode 600, gitignored |
+| Sign-in check (`--host`) | wrong key 401, derived key 303, dashboard 200 | same |
+| Sessions left behind by the check | 0 | 0 |
+
+The two environments hold separate secrets, so a key from one is not valid on
+the other. The keys themselves are not in this report; they are in
+`.wrangler/owner-keys/` and are only re-derivable by rotating again.
 
 ## Remote restore
 
@@ -223,7 +258,6 @@ would be 10.5 GB and leave the free tier.
 4. **Unreferenced media is still outside the backup** — the run copies the 21
    variants named by a row. R2 bucket replication is the fix and is not enabled
    on staging either.
-5. **Partial uploads from a failed run are retained.** The 07:00:12 run left its
-   uploaded objects in the bucket with no `files` list, so retention cannot prune
-   them. They cost nothing at this size, but a sweep for `pending` runs older than
-   N days is not implemented.
+5. **The sweep is not scheduled yet.** It is implemented, tested locally and run
+   by hand on staging; the workflow step that would run it daily is committed but
+   cannot execute until the repository has a remote.

@@ -25,6 +25,7 @@ remains unproven is production itself, and the scheduler.
 | Upload to a **separate** bucket, then read back and compare | Rehearsed locally | 24/24 files verified by byte comparison |
 | Backup index (audit log, pending → verified) | Rehearsed locally | run `20261120T062941Z` stayed `pending` after an interrupted attempt; fixed runs read `verified` |
 | Retention pruning | Rehearsed locally | `--keep 1` pruned 2 older runs and their 48 objects |
+| Sweeping abandoned runs | Rehearsed locally and on staging | 6 objects in a disposable prefix; 25 real leftovers under two failed staging runs, both verified runs untouched |
 | Fetch a run back and restore it | Rehearsed locally | fetched run restored into an empty state; `verify-restore.mjs` passed |
 | The restored app serving pages and media | Rehearsed locally | editor `200`, own image `200 image/webp`, foreign project image `404` |
 | `--remote` against Cloudflare D1/R2 | Rehearsed on staging, never on production | run `20261120T070220Z-74375d46`, `docs/qa/remote/REPORT.md` |
@@ -44,6 +45,7 @@ wrangler d1 export plattr-studio --remote      read-only, whole database
   → read every object back, compare sha256
   → mark the run verified in plattr/index.json
   → prune runs beyond the retention count
+  → (daily, after the run) sweep objects left by runs that never verified
 ```
 
 Layout in the backup bucket:
@@ -236,7 +238,32 @@ read `verified` with all 24 files.
 | Upload or read-back mismatch | Job exits at `stage: upload`/`verify`, index keeps `pending` | Run again; if it repeats, the bucket is the problem, not the data |
 | Index would be overwritten | Job refuses | Fetch and inspect `plattr/index.json` by hand first |
 | Pruning fails | Run stays verified, index keeps the extra run | Harmless: extra storage, no data loss |
+| Run fails after uploading | Index keeps it `pending`; its objects stay in the bucket | Nothing to do by hand: the daily sweep removes them once the run is 6 h old |
 | No run for 36 hours | Nothing, unless someone looks | This is what `BACKUP_HEARTBEAT_URL` is for |
+
+### Abandoned runs and the sweep
+
+A run writes its full upload list into `plattr/index.json` and into
+`plattr/runs/<id>/run.json` **before** the first upload, so a failed run never
+leaves an anonymous pile of objects. `scripts/backup-sweep.mjs` reads that list,
+probes each key, and deletes only the ones that exist under that run's own
+prefix:
+
+```bash
+bun scripts/backup-sweep.mjs --remote --backup-bucket plattr-backups            # dry run
+bun scripts/backup-sweep.mjs --remote --backup-bucket plattr-backups --execute
+```
+
+It will not touch a `verified` run, an already `abandoned` run, a run younger
+than `--older-than` minutes (default 360, minimum 31 — the job's own timeout plus
+a minute), or a prefix the index does not name. A run with no readable
+`createdAt` is skipped rather than guessed at, and a probe that cannot decide
+whether an object exists stops that run. The index entry is kept and marked
+`abandoned`, so the attempt stays in the audit log; a second sweep finds nothing.
+Runs from before this record existed are still swept: their candidate keys come
+from the newest verified run's layout, translated to the abandoned prefix and
+probed one at a time. The workflow runs the sweep after every backup, including
+a failed one.
 
 `BACKUP_ALERT_WEBHOOK` receives a JSON `{text, stage, runId, mode}` on failure —
 a Slack or Discord incoming webhook accepts it as is. `BACKUP_HEARTBEAT_URL` is
@@ -289,9 +316,8 @@ monthly rehearsal hour.
    (see `docs/MONITORING.md`).
 4. R2 replication is not configured, so unreferenced media objects are not
    offsite.
-5. A run that fails after uploading leaves its objects in the bucket with no
-   `files` list, so retention cannot remove them. There is no sweep for old
-   `pending` runs; they cost storage only.
+5. The sweep exists and has run on staging, but nothing schedules it yet: the
+   workflow step is committed and cannot run without a git remote.
 6. Credential rotation for the backup token is manual and undocumented beyond
    this table.
 7. Point-in-time restore for D1 is a provider capability; confirm it is enabled

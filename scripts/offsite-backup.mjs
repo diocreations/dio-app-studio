@@ -16,10 +16,13 @@
  *   5. read every uploaded object back and compare its sha256
  *   6. only then mark the run `verified` in the backup index
  *
- * A run is written to the index as `pending` before anything is uploaded, so a
- * crash is visible as an unfinished run rather than a missing one. The index is
- * the audit log and the retention source. A failure posts to
- * `BACKUP_ALERT_WEBHOOK` and exits non-zero.
+ * A run is written to the index as `pending` before anything is uploaded, and
+ * both the index entry and the run document name every key the run will upload.
+ * A crash is therefore visible as an unfinished run rather than a missing one,
+ * and its partial uploads are identifiable: `scripts/backup-sweep.mjs` reads
+ * that list, confirms the run is not still uploading, and deletes only the keys
+ * under that run's own prefix. The index is the audit log and the retention
+ * source. A failure posts to `BACKUP_ALERT_WEBHOOK` and exits non-zero.
  *
  * The `--local` mode uses the same code path against Wrangler's local state, so
  * the orchestration can be rehearsed without production credentials. Only the
@@ -31,17 +34,16 @@ import os from 'node:os'
 import path from 'node:path'
 import {
   databaseChecksums,
-  findLocalBucket,
   mediaManifest,
   openDatabase,
-  readBucketObject,
   sha256,
   sha256File,
   tableCounts,
   writeMediaManifest,
   writeScrubbedDatabase,
 } from './backup/lib.mjs'
-import { createR2, runWrangler, wranglerMode } from './backup/r2.mjs'
+import { BACKUP_PREFIX, readBackupIndex, writeBackupIndex } from './backup/index.mjs'
+import { createReadBack, createR2, runWrangler, wranglerMode } from './backup/r2.mjs'
 import { imageInfo } from '../src/worker/media.ts'
 
 const args = process.argv.slice(2)
@@ -78,56 +80,21 @@ const d1Mode = remote ? ['--remote'] : ['--local']
 const mode = wranglerMode(remote, config.stateDir)
 const r2 = createR2({ bucket: config.backupBucket, mode })
 const sourceR2 = createR2({ bucket: config.bucket, mode })
-const PREFIX = 'plattr'
+const PREFIX = BACKUP_PREFIX
 const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z')
 let stage = 'start'
 let runId = ''
 
-let bucketState = null
-function readBack(key) {
-  if (remote) return fs.readFileSync(r2.get(key, path.join(config.work, 'verify', key)))
-  bucketState ??= findLocalBucket(config.stateDir, config.backupBucket)
-  return readBucketObject(bucketState, key)?.bytes ?? null
-}
-
-/**
- * The index is the only record of which runs exist. Treating an unreadable
- * index as empty would start a fresh history and orphan every existing run, so
- * only a genuinely absent object counts as "first run"; anything else stops
- * the job before it writes.
- */
-function readIndex() {
-  const file = path.join(config.work, 'index.json')
-  try {
-    r2.get(`${PREFIX}/index.json`, file)
-  } catch (error) {
-    if (r2.missing(error)) {
-      console.warn(`no ${PREFIX}/index.json in ${config.backupBucket} yet; this run starts the history`)
-      return { version: 1, runs: [] }
-    }
-    throw new Error(
-      `could not read ${PREFIX}/index.json from ${config.backupBucket}, so this run would replace the backup history; stopping instead. ${error instanceof Error ? error.message : error}`,
-    )
-  }
-  let index
-  try {
-    index = JSON.parse(fs.readFileSync(file, 'utf8'))
-  } catch {
-    throw new Error('the backup index exists but is not readable JSON; refusing to overwrite it')
-  }
-  if (!index || !Array.isArray(index.runs))
-    throw new Error('the backup index has no runs array; refusing to overwrite it')
-  return index
-}
-
-function writeIndex(index) {
-  if (!Array.isArray(index.runs)) throw new Error('refusing to write a backup index without a runs array')
-  const file = path.join(config.work, 'index.json')
-  fs.writeFileSync(file, JSON.stringify(index, null, 2) + '\n')
-  r2.put(`${PREFIX}/index.json`, file)
-  const back = readBack(`${PREFIX}/index.json`)
-  if (!back || sha256(back) !== sha256File(file)) throw new Error('the backup index did not survive the round trip')
-}
+const readBack = createReadBack({
+  remote,
+  r2,
+  work: config.work,
+  stateDir: config.stateDir,
+  bucket: config.backupBucket,
+})
+const indexOptions = { r2, work: config.work, readBack, bucket: config.backupBucket }
+const readIndex = () => readBackupIndex(indexOptions)
+const writeIndex = (index) => writeBackupIndex(indexOptions, index)
 
 function walk(dir) {
   if (!fs.existsSync(dir)) return []
@@ -293,6 +260,16 @@ async function main() {
   }
   fs.writeFileSync(path.join(runDir, 'run.json'), JSON.stringify(summary, null, 2) + '\n')
 
+  const files = walk(runDir).map((file) => ({
+    file,
+    key: `${PREFIX}/runs/${runId}/${path.relative(runDir, file).split(path.sep).join('/')}`,
+  }))
+  // The full upload list, on disk before the first byte is sent. A run that
+  // dies halfway can be swept without guessing, and the prefix describes
+  // itself even if the index write is the thing that failed.
+  summary.expected = files.map((entry) => entry.key)
+  fs.writeFileSync(path.join(runDir, 'run.json'), JSON.stringify(summary, null, 2) + '\n')
+
   if (dryRun) {
     console.log(`\ndry run: ${runDir}`)
     console.log(`would upload ${walk(runDir).length} files to ${config.backupBucket}/${PREFIX}/runs/${runId}/`)
@@ -308,11 +285,12 @@ async function main() {
   writeIndex(index)
 
   stage = 'upload'
-  const files = walk(runDir).map((file) => ({
-    file,
-    key: `${PREFIX}/runs/${runId}/${path.relative(runDir, file).split(path.sep).join('/')}`,
-  }))
-  for (const entry of files) r2.put(entry.key, entry.file)
+  // The run document goes first, so the prefix is self-describing from its
+  // first object onward rather than only after a successful commit.
+  const document = files.find((entry) => entry.key === `${PREFIX}/runs/${runId}/run.json`)
+  const order = [document, ...files.filter((entry) => entry !== document)].filter(Boolean)
+  if (!document) console.warn('the run document is not in the upload list; uploading it last would be wrong')
+  for (const entry of order) r2.put(entry.key, entry.file)
   console.log(`uploaded ${files.length} files`)
 
   /* 5. verify the round trip */

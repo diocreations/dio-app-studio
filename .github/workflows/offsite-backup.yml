@@ -4,6 +4,8 @@ name: offsite backup
 #
 # Required repository secrets:
 #   CLOUDFLARE_API_TOKEN   D1 read + backup bucket object read/write + media read
+#                          (the backup and the sweep also list buckets to catch a
+#                           mistyped name, which needs account-level R2 read)
 #   CLOUDFLARE_ACCOUNT_ID
 #   BACKUP_ALERT_WEBHOOK   Slack/Discord incoming webhook (optional but recommended)
 #   BACKUP_HEARTBEAT_URL   dead-man switch pinged only after a verified run
@@ -58,6 +60,23 @@ jobs:
             --bucket plattr-media \
             --backup-bucket plattr-backups \
             --keep "${{ github.event.inputs.keep || '7' }}"
+
+      - name: Sweep abandoned runs
+        # Runs that failed before verifying stay in the index as `pending` and
+        # their objects stay in the bucket. This removes them once they are old
+        # enough that they cannot still be uploading, and never touches a
+        # verified run. It runs after a failed backup too: yesterday's leftover
+        # is still yesterday's leftover.
+        if: always()
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          bun scripts/backup-sweep.mjs \
+            --remote \
+            --backup-bucket plattr-backups \
+            --older-than 360 \
+            --execute
 
       - name: Explain the failure
         if: failure()

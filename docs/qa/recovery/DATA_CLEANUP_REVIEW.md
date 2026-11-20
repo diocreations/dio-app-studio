@@ -86,7 +86,7 @@ This is the same operation the restore path performs at read time, so a future
 | Projects | `prj_0186bead…`, `prj_2e31f516…`, `prj_a53d091e…`, `prj_b8d0b17b…`, `prj_dd887df0…` — all still exist |
 | Same hash as a live row | No (0 of 15) |
 | Referenced by any document | No |
-| Recoverable | Yes — every object, referenced or not, is copied by `scripts/backup.mjs` |
+| Recoverable | Yes, from a local `scripts/backup.mjs` snapshot, which copies unreferenced objects too. **Not** from an offsite run: `scripts/offsite-backup.mjs` copies only the variants a `media` row names, so these 15 are outside every offsite backup until R2 replication exists |
 
 These are the three stored widths of five photos whose `media` row is gone: an
 upload that was replaced or deleted, leaving its bytes behind. They are the
