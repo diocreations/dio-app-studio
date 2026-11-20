@@ -153,10 +153,12 @@ describe('a hosted storefront publishes prices and photographs per product', () 
     expect(items).toHaveLength(136)
     expect(items.filter((item) => item.price > 0)).toHaveLength(136)
     expect(items.filter((item) => item.priceEvidence?.validated)).toHaveLength(136)
-    // The photograph gate still refuses a handful of product filenames that
-    // read as page furniture (a product literally called "Cover"); those keep
-    // a verified price and no image rather than borrowing a neighbour's.
-    expect(report.images.withImage).toBeGreaterThanOrEqual(130)
+    // The feed names the product each file belongs to, so a product literally
+    // called "Cover" keeps its own photograph. Every product with a file gets
+    // one; the product the feed lists with no images keeps none.
+    expect(report.images.withImage).toBe(135)
+    const cover = items.find((item) => /cover/i.test(item.name))!
+    expect(cover.image?.url).toContain('hobonichi-cover')
   })
 
   test('each photograph belongs to its own product, never a neighbour', async () => {

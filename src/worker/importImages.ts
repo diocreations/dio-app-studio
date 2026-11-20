@@ -67,7 +67,15 @@ export type ImageAcceptance = { ok: true; url: string }
  * The one gate every candidate image passes through. Returns an absolute https
  * URL or a reason it cannot be used, so the report can explain the gap.
  */
-export function checkImageCandidate(raw: unknown, base?: string): ImageAcceptance | ImageRefusal {
+export function checkImageCandidate(
+  raw: unknown,
+  base?: string,
+  options: {
+    /** A product feed states which product this file belongs to, so a name like
+     *  "cover.jpg" is that product's photograph, not page furniture. */
+    allowDecorative?: boolean
+  } = {},
+): ImageAcceptance | ImageRefusal {
   const value = typeof raw === 'string' ? raw.trim() : ''
   if (!value) return { ok: false, reason: 'no image declared' }
   let url: URL
@@ -78,7 +86,8 @@ export function checkImageCandidate(raw: unknown, base?: string): ImageAcceptanc
   }
   if (url.protocol !== 'https:') return { ok: false, reason: 'not https' }
   if (STOCK_OR_PLACEHOLDER.test(url.href)) return { ok: false, reason: 'stock or placeholder library' }
-  if (DECORATIVE_PATH.test(url.pathname)) return { ok: false, reason: 'names page furniture, not a product' }
+  if (!options.allowDecorative && DECORATIVE_PATH.test(url.pathname))
+    return { ok: false, reason: 'names page furniture, not a product' }
   const looksLikeImage =
     IMAGE_EXTENSION.test(url.pathname) || /\/storage\/|\/images\/|\/media\//.test(url.pathname)
   if (!looksLikeImage) return { ok: false, reason: 'not an image file' }

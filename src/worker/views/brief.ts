@@ -620,11 +620,14 @@ function briefScript(verticals: string): string {
   }
 
   function useRead(data) {
-    read = data
     applyReadFeatures(data)
     // Concepts are the trade's own directions, each previewed on the real
-    // application document. The old designs stay as an advanced override.
-    const designs = data.concepts || data.designs || []
+    // application document. One list drives both the cards and the picker: the
+    // prompt route names its concepts (editorial, modern, luxe) separately from
+    // its older layout presets (editorial, calm, compact), so rendering one and
+    // resolving the other left two cards that could never be selected.
+    const designs = (data.concepts && data.concepts.length ? data.concepts : data.designs) || []
+    read = { ...data, designs, concepts: designs }
     const features = (data.suggestions || []).map((entry) =>
       '<li><b>' + esc(entry.label) + '</b> <span class="tiny">— ' + esc(entry.why) + '</span></li>'
     ).join('')
@@ -640,7 +643,7 @@ function briefScript(verticals: string): string {
       '</div>'
     designTrade.textContent = data.label
     designGrid.innerHTML = designs.map((design) =>
-      '<article class="card flat" style="padding:10px;display:flex;flex-direction:column;gap:8px;background:#fffdf9">' +
+      '<article class="card flat" data-concept="' + esc(design.id) + '" aria-pressed="false" style="padding:10px;display:flex;flex-direction:column;gap:8px;background:#fffdf9;border:1px solid var(--line)">' +
         '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px">' +
           '<b>' + esc(design.name) + '</b><span class="tiny">' + esc(design.axes.buttons) + ' buttons</span>' +
         '</div>' +
@@ -688,18 +691,28 @@ function briefScript(verticals: string): string {
   designGrid.addEventListener('click', (event) => {
     const button = event.target.closest('[data-pick]')
     if (!button || !read) return
-    const design = (read.designs || []).find((one) => one.id === button.dataset.pick)
+    const id = button.dataset.pick
+    const design = (read.designs || []).find((one) => one.id === id)
     if (!design) return
     chosenDesign = design
     designPick.hidden = false
     designPickName.textContent = design.name
     elementsEl.hidden = false
     paintElements(design.axes)
+    // The chosen concept stays on screen, marked, so the customer can see what
+    // they picked while the features step opens underneath it.
+    designGrid.querySelectorAll('[data-concept]').forEach((card) => {
+      const on = card.dataset.concept === design.id
+      card.setAttribute('aria-pressed', String(on))
+      card.style.border = on ? '2px solid var(--accent, #1f6feb)' : '1px solid var(--line)'
+      const pick = card.querySelector('[data-pick]')
+      if (pick) pick.textContent = on ? 'Selected ✓' : 'Use this design'
+    })
     // The design is the only question this step asks: go straight on to the
     // features. The trade, the brand colour and the name stay in the steps
     // either side of it, reachable from the buttons there.
-    designsEl.hidden = true
     show(2)
+    designPick.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   })
 
   document.querySelectorAll('[data-go-import]').forEach((link) => {

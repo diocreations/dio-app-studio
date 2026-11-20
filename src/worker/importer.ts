@@ -100,6 +100,9 @@ export type ImportQuality = {
   suspectPrices: { name: string; section: string; value: number; reason?: 'uniform' | 'unverified' | 'outlier' }[]
   duplicates: number
   categories: string[]
+  /** The page and the product feed disagree about the same product's price.
+   *  The page reading is kept and the disagreement is reported, never merged. */
+  priceConflicts?: { name: string; page: number; feed: number }[]
 }
 
 export type ImportReport = {
@@ -1460,9 +1463,23 @@ function logoFrom(page: Page, business: Record<string, unknown>, name: string): 
 
 /** A candidate photograph still has to pass the evidence gate: a stock URL, a
  *  logo or a banner declared as a product image is not one. */
-function acceptedImage(...candidates: string[]): string {
+function acceptedImage(
+  ...candidates: string[]
+): string {
   for (const candidate of candidates) {
     const checked = checkImageCandidate(candidate)
+    if (checked.ok) return checked.url
+  }
+  return ''
+}
+
+/** The same gate for a product feed, which names the product each file belongs
+ *  to: a product called "Cover" keeps its own photograph instead of losing it
+ *  to a rule about page furniture. Stock and placeholder libraries are still
+ *  refused, and so is anything that is not an image. */
+function feedImage(...candidates: string[]): string {
+  for (const candidate of candidates) {
+    const checked = checkImageCandidate(candidate, undefined, { allowDecorative: true })
     if (checked.ok) return checked.url
   }
   return ''
@@ -2263,6 +2280,8 @@ type Crawl = {
   currency: string
   /** Whether any page showed a cart or checkout control. */
   cartSignal: boolean
+  /** Products whose page price and feed price disagree. */
+  priceConflicts?: { name: string; page: number; feed: number }[]
 }
 
 /** A product page turned into a catalogue section, named the way the shop
@@ -2356,7 +2375,7 @@ async function shopifyProducts(
           null,
         )
         const images = Array.isArray(product.images) ? (product.images as Record<string, unknown>[]) : []
-        const image = acceptedImage(...images.slice(0, 3).map((entry) => String(entry.src ?? '')))
+        const image = feedImage(...images.slice(0, 3).map((entry) => String(entry.src ?? '')))
         const sectionName = collapse(String(product.product_type ?? ''), 40) || 'Catalogue'
         const item: Item = {
           name,
@@ -2429,6 +2448,19 @@ async function expandCatalogue(options: {
     if (feed.blocked) blocked += 1
     if (count >= 3) {
       read.push(feed.source)
+      // The entry page may already have named some of these products at their
+      // own prices. Those readings stay: the feed fills in what the page did
+      // not carry, and a disagreement is reported rather than resolved.
+      const onPage = new Map(
+        site.menu.flatMap((section) => section.items).map((item) => [item.name.toLowerCase(), item.price]),
+      )
+      const priceConflicts = feed.sections
+        .flatMap((section) => section.items)
+        .filter((item) => {
+          const page = onPage.get(item.name.toLowerCase())
+          return page !== undefined && page > 0 && item.price > 0 && page !== item.price
+        })
+        .map((item) => ({ name: item.name, page: onPage.get(item.name.toLowerCase())!, feed: item.price }))
       return {
         sections: feed.sections,
         pages: feed.pages,
@@ -2441,6 +2473,7 @@ async function expandCatalogue(options: {
         usedSitemap: false,
         currency: currency || site.currency,
         cartSignal: true,
+        priceConflicts,
       }
     }
   }
@@ -2655,6 +2688,7 @@ export async function importWebsite(
   // before anything else looks at it.
   const { sections: menu, quality } = cleanMenu(site.menu, site.vertical, { requireEvidence: true })
   site.menu = menu
+  if (crawl.priceConflicts?.length) quality.priceConflicts = crawl.priceConflicts
   // Photographs last, so only surviving items are looked up, and only against
   // evidence the site itself published for that item.
   const embedded = embeddedJsonImages(entry.html)
