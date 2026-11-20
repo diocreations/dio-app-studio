@@ -115,6 +115,55 @@ describe('a product with options', () => {
     expect(((await response.json()) as { order: { total: number } }).order.total).toBe(5800)
   })
 
+  test('a bag saved before a rebuild never prices a removed option at zero', async () => {
+    const before = await shop()
+    // The same shop rebuilt without the Large option, at the item's own price.
+    const after = await shop([
+      {
+        name: 'Shirts',
+        items: [
+          {
+            name: 'Linen Shirt',
+            desc: 'Washed linen, cut loose.',
+            price: 4200,
+            variants: [
+              { id: 'v-small', name: 'Small', price: 4200, currency: 'GBP', selected: true },
+              { id: 'v-medium', name: 'Medium', price: 5800, currency: 'GBP' },
+            ],
+          },
+        ],
+      },
+    ])
+
+    // The saved bag still names v-large, which this build no longer has. The
+    // server refuses the stale option rather than charging it silently.
+    const stale = await order(after.env, after.project.token, [{ key: '0-0', qty: 1, variant: 'v-large' }])
+    expect(stale.status).toBe(422)
+    expect(((await stale.json()) as { error: { code: string } }).error.code).toBe('variant_unknown')
+
+    // What the reconciled bag sends instead: the item with no option, charged at
+    // its own price — never a zero line.
+    const settled = await order(after.env, after.project.token, [{ key: '0-0', qty: 2 }])
+    expect(settled.status).toBe(201)
+    expect(((await settled.json()) as { order: { total: number } }).order.total).toBe(4200 * 2)
+
+    // The build the bag came from charged the option it named, so the two
+    // builds really do differ.
+    const original = await order(before.env, before.project.token, [{ key: '0-0', qty: 1, variant: 'v-large' }])
+    expect(original.status).toBe(201)
+    expect(((await original.json()) as { order: { total: number } }).order.total).toBe(4900)
+
+    const html = await (await app.request(`${ORIGIN}/p/${after.project.token}/app`, {}, after.env as never)).text()
+    // The client settles the stored bag before it shows a price: a line whose
+    // product is gone is dropped, a line whose option is gone falls back to the
+    // item key and the item's price.
+    expect(html).toContain('function reconcileCart()')
+    expect(html).toMatch(/function cartTotals\(\) \{\s+reconcileCart\(\)/)
+    expect(html).toContain('if (!parts.item || !(parts.item.price > 0))')
+    expect(html).toContain('const settled = parts.variant ? cartKey : parts.key')
+    expect(html).toContain('parts.variant ? parts.variant.price : parts.item ? parts.item.price : 0')
+  })
+
   test('an unknown option is refused, not quietly swapped for the lowest price', async () => {
     const { project, env } = await shop()
     const unknown = await order(env, project.token, [{ key: '0-0', qty: 1, variant: 'v-xxl' }])

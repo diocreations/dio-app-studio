@@ -1790,6 +1790,35 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const parts = cartParts(cartKey)
       return parts.variant ? parts.variant.price : parts.item ? parts.item.price : 0
     }
+    /** A rebuild can remove an option, or a whole product, while an older bag is
+     *  still in storage. Reconcile before anything reads the bag: a line whose
+     *  product is gone is dropped, and a line whose option is gone keeps its
+     *  quantity at the product's own price — the price the server would charge
+     *  when no option is named. A stored reference never leaves a line at zero. */
+    function reconcileCart() {
+      const next = {}
+      let changed = false
+      Object.keys(state.cart).forEach(function (cartKey) {
+        const qty = Number(state.cart[cartKey])
+        if (!(qty > 0)) {
+          changed = true
+          return
+        }
+        const parts = cartParts(cartKey)
+        if (!parts.item || !(parts.item.price > 0)) {
+          changed = true
+          return
+        }
+        const settled = parts.variant ? cartKey : parts.key
+        if (settled !== cartKey) changed = true
+        next[settled] = (next[settled] || 0) + qty
+      })
+      if (changed) {
+        state.cart = next
+        save()
+      }
+      return changed
+    }
     function variantHtml(item, key, chosen) {
       const list = variantsOf(item)
       if (list.length < 2) return ''
@@ -2230,6 +2259,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     }
 
     function cartTotals() {
+      reconcileCart()
       const lines = Object.entries(state.cart).filter((entry) => entry[1] > 0)
       const subtotal = lines.reduce((total, entry) => total + cartPrice(entry[0]) * entry[1], 0)
       const fee = state.orderType === 'Delivery' && subtotal > 0 ? DATA.deliveryFee : 0
