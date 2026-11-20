@@ -1,41 +1,45 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
- * Restore a local D1 backup into a target sqlite file.
+ * Restore a database backup into a target file.
  *
- * Usage: node scripts/d1-restore.mjs <backup.sqlite> <target.sqlite> [--force]
+ *   bun scripts/d1-restore.mjs <backup.sqlite> <target.sqlite> [--force]
  *
- * The target is replaced atomically from a verified copy. For a deployed D1,
- * restore with `wrangler d1 execute <name> --remote --file backup.sql` against
- * a freshly created database, verify it, then switch the binding. This script
- * is the rehearsal path and deliberately refuses to overwrite a target without
- * --force.
+ * The backup is integrity-checked, the copy is staged and verified, and only
+ * then renamed into place, so a failure leaves the target untouched. Use
+ * `scripts/restore.mjs` when you also have media to restore; it compares record
+ * counts and checksums against the manifest as well.
  */
-import { execFileSync } from 'node:child_process'
-import { copyFileSync, existsSync, mkdirSync, renameSync, rmSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
+import fs from 'node:fs'
+import path from 'node:path'
+import { openDatabase, tableCounts } from './backup/lib.mjs'
 
 const [backupArg, targetArg, ...flags] = process.argv.slice(2)
 if (!backupArg || !targetArg) {
-  console.error('usage: node scripts/d1-restore.mjs <backup.sqlite> <target.sqlite> [--force]')
+  console.error('usage: bun scripts/d1-restore.mjs <backup.sqlite> <target.sqlite> [--force]')
   process.exit(2)
 }
-const backup = resolve(backupArg)
-const target = resolve(targetArg)
-if (!existsSync(backup)) throw new Error(`backup not found: ${backup}`)
-const integrity = execFileSync('sqlite3', [backup, 'PRAGMA integrity_check;'], { encoding: 'utf8' }).trim()
-if (integrity !== 'ok') throw new Error(`backup failed integrity check: ${integrity}`)
-if (existsSync(target) && !flags.includes('--force')) {
+const backup = path.resolve(backupArg)
+const target = path.resolve(targetArg)
+if (!fs.existsSync(backup)) throw new Error(`backup not found: ${backup}`)
+if (fs.existsSync(target) && !flags.includes('--force'))
   throw new Error(`target exists; pass --force to replace ${target}`)
-}
-mkdirSync(dirname(target), { recursive: true })
+
 const staging = `${target}.restore-${process.pid}`
-copyFileSync(backup, staging)
-const counts = Object.fromEntries(
-  ['projects', 'orders', 'bookings', 'enquiries', 'media', 'doc_versions', 'owner_sessions'].map((table) => [
-    table,
-    Number(execFileSync('sqlite3', [staging, `SELECT COUNT(*) FROM ${table};`], { encoding: 'utf8' }).trim()),
-  ]),
-)
-rmSync(target, { force: true })
-renameSync(staging, target)
+fs.mkdirSync(path.dirname(target), { recursive: true })
+fs.copyFileSync(backup, staging)
+const db = openDatabase(staging)
+let integrity
+let counts
+try {
+  integrity = String(db.query('PRAGMA integrity_check').get().integrity_check)
+  counts = tableCounts(db)
+} finally {
+  db.close()
+}
+if (integrity !== 'ok') {
+  fs.rmSync(staging, { force: true })
+  throw new Error(`backup failed integrity check: ${integrity}`)
+}
+for (const suffix of ['', '-wal', '-shm']) fs.rmSync(`${target}${suffix}`, { force: true })
+fs.renameSync(staging, target)
 console.log(JSON.stringify({ restored: target, integrity, counts }, null, 2))

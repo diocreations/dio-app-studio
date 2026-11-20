@@ -78,7 +78,7 @@ export function pruneEmptySections(
       if (markup.trim()) return node
       emptied = true
       hidden.push(node.id)
-      return { ...node, hidden: true }
+      return { ...node, hidden: true, hiddenBecause: 'empty' as const }
     })
     return emptied ? { ...screen, sections } : screen
   })

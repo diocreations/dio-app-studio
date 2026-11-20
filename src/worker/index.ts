@@ -63,6 +63,7 @@ import {
   deleteMedia,
   listMedia,
   mediaIdsFor,
+  pruneMissingMedia,
   mediaSuggestions,
   mediaView,
   replaceMedia,
@@ -73,6 +74,13 @@ import {
 import type { MenuSection, VideoLink } from './types'
 import type { Doc } from './doc'
 import { pruneEmptySections, refreshCopiedCopy } from './publish'
+import {
+  MediaCleanupError,
+  clampGraceHours,
+  executeMediaCleanup,
+  listMediaCleanupLog,
+  planMediaCleanup,
+} from './mediaCleanup'
 
 /**
  * Media references a document or catalogue carries that this project does not
@@ -1142,10 +1150,12 @@ app.post('/api/projects/:token/doc/versions/:versionId/restore', async (c) => {
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
   const version = await getDocVersion(c.env.DB, project.id, c.req.param('versionId'))
   if (!version) return fail(c, 404, 'version_not_found', 'That saved design no longer exists.')
-  const doc = normalizeDoc(version, project.spec)
-  await saveDoc(c.env.DB, project, doc)
+  // A version can name a photograph deleted since it was saved. Restoring it
+  // shows an empty photo block rather than a broken image.
+  const pruned = pruneMissingMedia(normalizeDoc(version, project.spec), await mediaIdsFor(c.env.DB, project.id))
+  await saveDoc(c.env.DB, project, pruned.doc)
   c.header('Cache-Control', 'private, no-store')
-  return c.json({ ok: true, doc })
+  return c.json({ ok: true, doc: pruned.doc, mediaRemoved: pruned.removed })
 })
 
 function mediaFailure(
@@ -1235,6 +1245,58 @@ app.post(
     }
   },
 )
+
+/**
+ * Stage A (`dryRun` is the default) reports unused uploads; stage B deletes
+ * them once an operator has confirmed and named a verified backup. The route
+ * is inside the owner-auth middleware, and the same-origin check keeps a
+ * cross-site form from starting a cleanup.
+ */
+app.post('/api/projects/:token/media/cleanup', async (c) => {
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Images are cleaned up from the studio.')
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const body = (await readJson(c)) ?? {}
+  const dryRun = body.dryRun !== false
+  const graceHours = clampGraceHours(body.graceHours)
+  const ids = Array.isArray(body.ids)
+    ? body.ids.filter((id): id is string => typeof id === 'string' && /^med_[a-f0-9]{16,40}$/.test(id))
+    : undefined
+
+  try {
+    if (dryRun) {
+      const report = await planMediaCleanup(c.env.DB, project, { graceHours })
+      c.header('Cache-Control', 'private, no-store')
+      return c.json({ ok: true, dryRun: true, report })
+    }
+    if (body.confirm !== true)
+      return fail(c, 400, 'confirmation_required', 'Send confirm: true to delete unused images.')
+    if (!c.env.MEDIA)
+      return fail(c, 503, 'media_unavailable', 'Image storage is not configured for this environment.')
+    const outcome = await executeMediaCleanup(
+      c.env.DB,
+      c.env.MEDIA as unknown as MediaBucket,
+      project,
+      { backupId: str(body.backupId, 200), ids, graceHours },
+    )
+    c.header('Cache-Control', 'private, no-store')
+    return c.json({ ok: true, ...outcome })
+  } catch (error) {
+    if (error instanceof MediaCleanupError)
+      return fail(c, error.status as Parameters<typeof fail>[1], error.code, error.message)
+    return mediaFailure(c, error)
+  }
+})
+
+app.get('/api/projects/:token/media/cleanup', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  const log = await listMediaCleanupLog(c.env.DB, project.id, 50)
+  c.header('Cache-Control', 'private, no-store')
+  return c.json({ log })
+})
 
 app.delete('/api/projects/:token/media/:mediaId', async (c) => {
   const origin = c.req.header('origin')

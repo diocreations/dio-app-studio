@@ -1,0 +1,232 @@
+{
+  "createdAt": "2026-11-20T06:08:42.613Z",
+  "environment": {
+    "kind": "local Wrangler state (Miniflare D1 and R2)",
+    "sourceState": "/Users/jomyjoseph/.config/freebuff-desktop/local-projects/dd12c749-f87a-4f63-8bd7-791c793f775c/.wrangler/state",
+    "worker": "built with vite and served by wrangler dev --persist-to",
+    "production": "not exercised: needs Cloudflare credentials for d1 export and r2 object get"
+  },
+  "backup": {
+    "directory": ".wrangler/drill/backups/2026-11-20T06-08-36-719Z",
+    "databaseSha256": "3c491ba0a1e962193d429086cc53c6ad7ed23109d6b70fb9d12c23f42308d257",
+    "databaseBytes": 1454080,
+    "mediaChecksum": "149fed9363aebb9d9179f99269123435d52511b56c4683622099fb97a9045374",
+    "objects": 36,
+    "redaction": {
+      "rowSetsRemoved": {
+        "owner_sessions": 63,
+        "user_sessions": 0,
+        "auth_tokens": 0,
+        "invitations": 0
+      },
+      "columnsCleared": [
+        {
+          "table": "payment_connections",
+          "column": "secrets",
+          "rows": 1
+        }
+      ],
+      "policy": {
+        "excludedRows": {
+          "owner_sessions": "owner session tokens; owners sign in again after a restore",
+          "user_sessions": "platform session tokens",
+          "auth_tokens": "password reset and email verification tokens",
+          "invitations": "pending invitation links; re-invite after a restore"
+        },
+        "redactedColumns": {
+          "payment_connections": {
+            "secrets": "encrypted provider credentials; the owner reconnects the provider after a restore"
+          }
+        }
+      }
+    }
+  },
+  "counts": {
+    "activity": 1057,
+    "audit_events": 47,
+    "auth_tokens": 0,
+    "bookings": 43,
+    "customers": 42,
+    "daily_budget": 49,
+    "doc_versions": 128,
+    "enquiries": 29,
+    "import_budget": 1,
+    "invitations": 0,
+    "media": 7,
+    "media_cleanup_log": 0,
+    "memberships": 0,
+    "notes": 2,
+    "notifications": 164,
+    "operator_roles": 0,
+    "order_items": 41,
+    "orders": 38,
+    "organizations": 47,
+    "owner_sessions": 0,
+    "ownership_transfers": 0,
+    "payment_connections": 1,
+    "payment_events": 0,
+    "payment_settings": 1,
+    "payment_transactions": 1,
+    "plan_limits": 0,
+    "plans": 0,
+    "platform_billing_events": 0,
+    "platform_invoices": 0,
+    "project_budget": 0,
+    "project_claims": 0,
+    "projects": 58,
+    "subscription_changes": 0,
+    "subscriptions": 0,
+    "usage_events": 0,
+    "user_sessions": 0,
+    "users": 0,
+    "variation_counter": 1
+  },
+  "results": [
+    {
+      "name": "database backup has integrity and no credentials",
+      "ok": true,
+      "detail": "1757 rows, sha256 3c491ba0a1e96219…"
+    },
+    {
+      "name": "backup strips owner sessions and payment secrets",
+      "ok": true,
+      "detail": "removed 63 sessions, cleared 1 column"
+    },
+    {
+      "name": "media backup has every object with matching bytes and dimensions",
+      "ok": true,
+      "detail": "36 objects, 689 KB"
+    },
+    {
+      "name": "restored database matches the backup exactly",
+      "ok": true,
+      "detail": "7 checks, integrity ok"
+    },
+    {
+      "name": "restored database points at no missing media",
+      "ok": true,
+      "detail": "21/21 objects for 7 rows"
+    },
+    {
+      "name": "restored Worker answers its health check",
+      "ok": true,
+      "detail": "http://127.0.0.1:8796"
+    },
+    {
+      "name": "restored customer app renders",
+      "ok": true,
+      "detail": "200, 207652 bytes, Editor Probe"
+    },
+    {
+      "name": "restored app links to its images",
+      "ok": true,
+      "detail": "4 image URLs"
+    },
+    {
+      "name": "restored image is served as WebP bytes",
+      "ok": true,
+      "detail": "200 image/webp 4714 bytes"
+    },
+    {
+      "name": "another project cannot fetch that image",
+      "ok": true,
+      "detail": "status 404"
+    },
+    {
+      "name": "owner routes are closed after a restore",
+      "ok": true,
+      "detail": "status 401"
+    },
+    {
+      "name": "a fresh owner sign-in works after a restore",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "cleanup reports an unused upload without deleting it",
+      "ok": true,
+      "detail": "1 candidates, row and objects still present"
+    },
+    {
+      "name": "cleanup refuses to run without a backup id",
+      "ok": true,
+      "detail": "status 409"
+    },
+    {
+      "name": "cleanup deletes the row and every stored variant through the Worker",
+      "ok": true,
+      "detail": "1 deleted, 0 failed"
+    },
+    {
+      "name": "cleanup records the deletion against the backup",
+      "ok": true,
+      "detail": "1 audit entries"
+    },
+    {
+      "name": "missing original image is caught before it becomes a bad backup",
+      "ok": true,
+      "detail": "object file is missing: projects/prj_59efdd4f094f871d3353/media/0bb4bb3ae97480f1f5d4f9eece530057981aaeeb0533c99e71a56df19e16cfa3/320.webp"
+    },
+    {
+      "name": "missing WebP variant is caught by size and checksum",
+      "ok": true,
+      "detail": "size mismatch: projects/prj_59efdd4f094f871d3353/media/0bb4bb3ae97480f1f5d4f9eece530057981aaeeb0533c99e71a56df19e16cfa3/320.webp"
+    },
+    {
+      "name": "interrupted backup leaves a manifest that refuses to restore",
+      "ok": true,
+      "detail": "media manifest is missing"
+    },
+    {
+      "name": "a database whose bytes do not match its manifest is refused",
+      "ok": true,
+      "detail": "restore refused before writing"
+    },
+    {
+      "name": "an interrupted restore does not touch the existing target",
+      "ok": true,
+      "detail": "target byte-identical after refusal"
+    },
+    {
+      "name": "database restored without its bucket is reported, not hidden",
+      "ok": true,
+      "detail": "28 missing objects, recovery: restore the bucket from the same backup"
+    },
+    {
+      "name": "bucket restored without its database leaves no broken links",
+      "ok": true,
+      "detail": "0 references, 36 stored objects retained for a later restore"
+    },
+    {
+      "name": "deleting one stored variant is found and repaired from the backup",
+      "ok": true,
+      "detail": "2 problem found, repaired from backup"
+    },
+    {
+      "name": "a deleted media row is caught as a document/object mismatch",
+      "ok": true,
+      "detail": "project prj_a16b22f4cf2841d9de09 document → med_3815c9357b5c76b5f55f7289 has no media row; version in prj_625f69bd1fc7da0c9f05 → med_6ed8e46486c5417ff64dba36 has no media row; version in prj_625f69bd1fc7da0c9f05 → med_6ed8e46486c5417ff64dba36 has no media row; version in prj_b8d0b17b39129e5ce8e2 → med_35cbc71ab9019bb2f68e9b81 has no media row; version in prj_b8d0b17b39129e5ce8e2 → med_35cbc71ab9019bb2f68e9b81 has no media row"
+    },
+    {
+      "name": "running the same backup twice produces two valid, identical snapshots",
+      "ok": true,
+      "detail": "38 tables, identical checksums"
+    },
+    {
+      "name": "one project is restored without touching another",
+      "ok": true,
+      "detail": "Aster & Rye restored (15 versions, 2 media, 1 customers); Butter Tales™ unchanged; 1 sessions before, 1 after"
+    }
+  ],
+  "notes": [
+    {
+      "scenario": "failed object deletion during cleanup",
+      "detail": "Covered by tests/mediaCleanup.test.ts: a bucket failure keeps the metadata row, the run reports it, and the retry removes it."
+    },
+    {
+      "scenario": "project isolation during cleanup",
+      "detail": "Covered by tests/mediaCleanup.test.ts: another project media is never a candidate and cannot be named by id."
+    }
+  ],
+  "ok": true
+}

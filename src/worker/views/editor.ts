@@ -449,7 +449,20 @@ function save() {
   return fetch('/api/projects/' + TOKEN + '/doc', { method:'PUT', headers:{'content-type':'application/json'}, body, keepalive: true })
     .then((response) => {
       if (!response.ok) throw new Error('save');
+      return response.json().catch(() => null);
+    })
+    .then((payload) => {
       $('saveStatus').textContent = 'Saved'; $('saveStatus').classList.remove('busy');
+      // The server hides a component that cannot draw itself. Adopt its
+      // document only when nothing was typed while this save was in flight, so
+      // a late response can never overwrite newer words.
+      const hidden = payload && Array.isArray(payload.hidden) ? payload.hidden : [];
+      if (hidden.length) {
+        if (payload.doc && JSON.stringify({ doc: state.doc }) === body) { state.doc = payload.doc; render(); }
+        toast(hidden.length === 1
+          ? 'One section was hidden automatically: it has nothing to show yet'
+          : hidden.length + ' sections were hidden automatically: they have nothing to show yet');
+      }
       return true;
     })
     .catch(() => { $('saveStatus').textContent = 'Not saved'; $('saveStatus').classList.add('busy'); });
@@ -536,10 +549,10 @@ function renderLibrary() {
   }).join('');
 }
 function renderStructure() {
-  $('structure').innerHTML = current().sections.map((s) => '<div class="node' + (state.selected === s.id ? ' on' : '') + (s.hidden ? ' off' : '') + '" draggable="true" data-node="' + s.id + '">' +
+  $('structure').innerHTML = current().sections.map((s) => '<div class="node' + (state.selected === s.id ? ' on' : '') + (s.hidden ? ' off' : '') + '" draggable="true" data-node="' + s.id + '"' + (s.hidden && s.hiddenBecause === 'empty' ? ' title="Hidden automatically: nothing to show yet"' : '') + '>' +
     '<span class="grip">⠿</span>' +
-    '<button class="name" data-select="' + s.id + '">' + esc(nodeLabel(s)) + '<small>' + (VARIANT_LABELS[s.variant] || SECTION_LABELS[s.kind]) + '</small></button>' +
-    '<button class="act" data-hide="' + s.id + '" title="Hide">' + (s.hidden ? '◌' : '◉') + '</button>' +
+    '<button class="name" data-select="' + s.id + '">' + esc(nodeLabel(s)) + '<small>' + (VARIANT_LABELS[s.variant] || SECTION_LABELS[s.kind]) + (s.hidden && s.hiddenBecause === 'empty' ? ' · auto-hidden' : '') + '</small></button>' +
+    '<button class="act" data-hide="' + s.id + '" title="' + (s.hidden ? 'Show' : 'Hide') + '">' + (s.hidden ? '◌' : '◉') + '</button>' +
     '<button class="act" data-duplicate="' + s.id + '" title="Duplicate">⧉</button>' +
     (s.kind === 'hero' ? '' : '<button class="act" data-delete="' + s.id + '" title="Delete">✕</button>') +
     '</div>').join('') || '<p class="empty">No components yet. Add one from above.</p>';
@@ -572,6 +585,9 @@ function renderInspector() {
   if (!node) { renderScreenInspector(); return; }
   const style = node.style || {}; const hides = (node.responsive && node.responsive.hideOn) || [];
   $('inspector').innerHTML =
+    (node.hidden && node.hiddenBecause === 'empty'
+      ? '<div class="sec"><p class="hint" role="status">Hidden automatically: this section has nothing to show for this business yet. Add its details and it appears again.</p></div>'
+      : '') +
     '<div class="sec">' +
       '<div class="field"><label>Heading</label><input id="pTitle" type="text" maxlength="60" value="' + esc(node.title || '') + '" placeholder="' + (VARIANT_LABELS[node.variant] || SECTION_LABELS[node.kind]) + '" /></div>' +
       '<div class="field"><label>Words</label><textarea id="pText" maxlength="600" placeholder="A sentence or two">' + esc(node.text || '') + '</textarea></div>' +
@@ -1001,7 +1017,7 @@ document.addEventListener('click', (event) => {
   const open = event.target.closest('[data-open]'); if (open) { state.screen = open.dataset.open; state.selected = null; render(); reloadFrame(); return; }
   const del = event.target.closest('[data-screen-delete]'); if (del) { if (confirm('Delete this screen?')) removeScreen(del.dataset.screenDelete); return; }
   const select = event.target.closest('[data-select]'); if (select) { state.selected = select.dataset.select; render(); return; }
-  const hide = event.target.closest('[data-hide]'); if (hide) { commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); const node = screen && screen.sections.find((s) => s.id === hide.dataset.hide); if (node) node.hidden = !node.hidden; return doc; }, true); return; }
+  const hide = event.target.closest('[data-hide]'); if (hide) { commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); const node = screen && screen.sections.find((s) => s.id === hide.dataset.hide); if (node) { node.hidden = !node.hidden; if (!node.hidden) delete node.hiddenBecause; } return doc; }, true); return; }
   const dup = event.target.closest('[data-duplicate]'); if (dup) { commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc; const index = screen.sections.findIndex((s) => s.id === dup.dataset.duplicate); if (index < 0 || screen.sections[index].kind === 'hero') return doc; const cloneNode = clone(screen.sections[index]); cloneNode.id += '_' + Date.now().toString(36); screen.sections.splice(index + 1, 0, cloneNode); return doc; }, true); return; }
   const restore = event.target.closest('[data-restore]'); if (restore) { restoreVersion(restore.dataset.restore); return; }
   const remove = event.target.closest('[data-delete]'); if (remove) { if (!confirm('Delete this component?')) return; commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (screen) screen.sections = screen.sections.filter((s) => s.id !== remove.dataset.delete); return doc; }, true); if (state.selected === remove.dataset.delete) state.selected = null; render(); }
@@ -1054,7 +1070,7 @@ document.addEventListener('click', (event) => {
     state.selected = null; quickShown = null; render(); return;
   }
   if (kind === 'hide') {
-    commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); const hit = screen && screen.sections.find((s) => s.id === node.id); if (hit) hit.hidden = !hit.hidden; return doc; }, true);
+    commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); const hit = screen && screen.sections.find((s) => s.id === node.id);     if (hit) { hit.hidden = !hit.hidden; if (!hit.hidden) delete hit.hiddenBecause; } return doc; }, true);
     if (!node.hidden) { state.selected = null; quickShown = null; render(); toast('Hidden — show it again from This screen'); }
     return;
   }

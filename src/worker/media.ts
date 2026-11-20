@@ -602,6 +602,27 @@ export async function replaceMedia(
   }
 }
 
+/**
+ * Drops photo references that no longer resolve. A saved version can name an
+ * image that has since been deleted by an older build of the app; restoring it
+ * should show an empty photo block, never a broken image or another owner's
+ * photograph.
+ */
+export function pruneMissingMedia(doc: Doc, owned: Set<string>): { doc: Doc; removed: number } {
+  let removed = 0
+  const screens = doc.screens.map((screen) => ({
+    ...screen,
+    sections: screen.sections.map((node) => {
+      if (!node.media || owned.has(node.media.id)) return node
+      removed += 1
+      const next = { ...node }
+      delete next.media
+      return next
+    }),
+  }))
+  return removed ? { doc: { ...doc, screens }, removed } : { doc, removed }
+}
+
 /** The current document is the reference that protects an image from deletion. */
 export function mediaInDoc(doc: Doc | null, id: string): boolean {
   if (!doc) return false

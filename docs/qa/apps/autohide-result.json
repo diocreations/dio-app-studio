@@ -1,0 +1,39 @@
+{
+  "at": "2026-11-20T06:08:15.449Z",
+  "app": "gym",
+  "token": "a209e7ebde55c44f57444ad5",
+  "node": "sec_fx_gym_trainers",
+  "results": [
+    {
+      "name": "the fixture component starts hidden",
+      "ok": true,
+      "detail": true
+    },
+    {
+      "name": "the owner is told the section was hidden automatically",
+      "ok": true,
+      "detail": "One section was hidden automatically: it has nothing to show yet"
+    },
+    {
+      "name": "the selected component explains why it is hidden",
+      "ok": true,
+      "detail": "Hidden automatically: this section has nothing to show for this business yet. Add its details and it appears again.Headi"
+    },
+    {
+      "name": "the component is marked auto-hidden in the list",
+      "ok": true,
+      "detail": "⠿Your coachesCoach profiles · auto-hidden◌⧉✕"
+    },
+    {
+      "name": "the stored document keeps the reason",
+      "ok": true,
+      "detail": "{\"hidden\":true,\"hiddenBecause\":\"empty\"}"
+    },
+    {
+      "name": "the page raised no errors",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "ok": true
+}

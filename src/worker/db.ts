@@ -225,6 +225,20 @@ const SCHEMA = [
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
   )`,
+  `CREATE TABLE IF NOT EXISTS media_cleanup_log (
+    id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    project_id TEXT NOT NULL,
+    media_id TEXT NOT NULL,
+    action TEXT NOT NULL,
+    reason TEXT NOT NULL DEFAULT '',
+    object_keys TEXT NOT NULL DEFAULT '[]',
+    objects INTEGER NOT NULL DEFAULT 0,
+    bytes INTEGER NOT NULL DEFAULT 0,
+    backup_id TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS media_cleanup_log_by_project ON media_cleanup_log (project_id, created_at)`,
   `CREATE TABLE IF NOT EXISTS owner_sessions (
     id TEXT PRIMARY KEY,
     project_id TEXT NOT NULL,

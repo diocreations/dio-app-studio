@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T04:10:21.824Z",
+  "at": "2026-11-20T06:08:14.775Z",
   "base": "http://127.0.0.1:8795",
   "results": [
     {
@@ -41,7 +41,7 @@
       "name": "buttertales: a duplicate takes a new id",
       "ok": true,
       "detail": [
-        "sec_fx_shop_title_mwogntmq"
+        "sec_fx_shop_title_mwokvf58"
       ]
     },
     {

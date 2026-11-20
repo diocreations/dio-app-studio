@@ -236,6 +236,10 @@ export type DocNode = {
   style: SectionStyle
   responsive: Responsive
   hidden: boolean
+  /** Why the app hid this section by itself. Only ever set for a component
+   *  that draws nothing with the current business details; cleared the moment
+   *  the owner shows it again or it has something to say. */
+  hiddenBecause?: 'empty'
 }
 
 export type ScreenNode = {
@@ -916,6 +920,7 @@ function sanitizeSection(value: unknown, fallbackId: string): DocNode | null {
     },
     responsive: { hideOn },
     hidden: raw.hidden === true,
+    ...(raw.hiddenBecause === 'empty' ? { hiddenBecause: 'empty' as const } : {}),
   }
 }
 
@@ -1328,7 +1333,9 @@ export function updateSection(
                     ...node,
                     ...(patch.title !== undefined ? { title: CLAMP(patch.title, 60) || undefined } : {}),
                     ...(patch.text !== undefined ? { text: CLAMP(patch.text, 600) || undefined } : {}),
-                    ...(patch.hidden !== undefined ? { hidden: Boolean(patch.hidden) } : {}),
+                    ...(patch.hidden !== undefined
+                      ? { hidden: Boolean(patch.hidden), hiddenBecause: patch.hidden ? node.hiddenBecause : undefined }
+                      : {}),
                     ...(patch.media !== undefined ? { media: patch.media } : {}),
                     ...(patch.cta
                       ? {
