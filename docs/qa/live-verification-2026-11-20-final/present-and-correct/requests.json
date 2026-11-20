@@ -1,0 +1,83 @@
+{
+  "entry": "https://www.presentandcorrect.com/",
+  "wallMs": 7148,
+  "requests": [
+    {
+      "url": "https://www.presentandcorrect.com/robots.txt",
+      "status": 200,
+      "bytes": 3735,
+      "ms": 859,
+      "contentType": "text/plain; charset=utf-8"
+    },
+    {
+      "url": "https://www.presentandcorrect.com/",
+      "status": 200,
+      "bytes": 130998,
+      "ms": 515,
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "url": "https://www.presentandcorrect.com/cdn/shopifycloud/portable-wallets/latest/accelerated-checkout-backwards-compat.css",
+      "status": 200,
+      "bytes": 13812,
+      "ms": 73,
+      "contentType": "text/css"
+    },
+    {
+      "url": "https://www.presentandcorrect.com/cdn/shop/t/13/assets/base.css?v=37047530915295751971735991241",
+      "status": 200,
+      "bytes": 58177,
+      "ms": 46,
+      "contentType": "text/css"
+    },
+    {
+      "url": "https://www.presentandcorrect.com/sitemap.xml",
+      "status": 200,
+      "bytes": 1012,
+      "ms": 319,
+      "contentType": "application/xml; charset=utf-8"
+    },
+    {
+      "url": "https://www.presentandcorrect.com/sitemap_agentic_discovery.xml",
+      "status": 200,
+      "bytes": 222,
+      "ms": 332,
+      "contentType": "application/xml; charset=utf-8"
+    },
+    {
+      "url": "https://www.presentandcorrect.com/sitemap_products_1.xml?from=1263457092&to=15467971772795",
+      "status": 200,
+      "bytes": 299048,
+      "ms": 1190,
+      "contentType": "application/xml; charset=utf-8"
+    },
+    {
+      "url": "https://www.presentandcorrect.com/sitemap_pages_1.xml?from=55755716&to=693339652475",
+      "status": 200,
+      "bytes": 1189,
+      "ms": 334,
+      "contentType": "application/xml; charset=utf-8"
+    },
+    {
+      "url": "https://www.presentandcorrect.com/products.json?limit=250&page=1",
+      "status": 200,
+      "bytes": 472871,
+      "ms": 1037,
+      "contentType": "application/json; charset=utf-8"
+    },
+    {
+      "url": "https://www.presentandcorrect.com/products.json?limit=250&page=2",
+      "status": 200,
+      "bytes": 530838,
+      "ms": 1225,
+      "contentType": "application/json; charset=utf-8"
+    },
+    {
+      "url": "https://www.presentandcorrect.com/products.json?limit=250&page=3",
+      "status": 200,
+      "bytes": 480368,
+      "ms": 1180,
+      "contentType": "application/json; charset=utf-8"
+    }
+  ]
+}

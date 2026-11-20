@@ -1,0 +1,45 @@
+{
+  "note": "Computed from the saved feed and report of the final authorised run. No request was made to the shop.",
+  "run": "2026-11-20T15:04:53.427Z",
+  "products": {
+    "feed": 706,
+    "published": 706
+  },
+  "labels": [
+    {
+      "code": "GBP",
+      "raw": "£ in the option name \"£10\""
+    }
+  ],
+  "currencyAtRun": "INR",
+  "currencyAtRunMethod": "shopify-analytics",
+  "currencyUnderPresentmentRule": "GBP",
+  "currencyRule": "The page only offered a presentment code; the shop own labels decide. GBP.",
+  "variants": {
+    "multiOptionItems": 275,
+    "variantsShipped": 1190,
+    "variantsWithFeedId": 1190,
+    "feedVariantsForThoseProducts": 1193
+  },
+  "paging": {
+    "catalogueItems": 706,
+    "firstPaintCards": 19,
+    "firstPaintNote": "Showing 15 of 706 pieces",
+    "hasMoreControl": true,
+    "pageTwoCards": 24,
+    "pageTwoFirstKey": "12",
+    "pageTwoIsFragment": true,
+    "fullCatalogueInPayload": true
+  },
+  "images": {
+    "publishedWithImage": 706,
+    "associated": 705,
+    "unassociated": 0
+  },
+  "names": {
+    "matchedExactly": 705,
+    "normalisedOnly": [
+      "Braun Calculator"
+    ]
+  }
+}

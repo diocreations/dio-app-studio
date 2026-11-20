@@ -1,0 +1,618 @@
+{
+  "entry": "https://www.presentandcorrect.com/",
+  "at": "2026-11-20T15:04:53.427Z",
+  "budget": {
+    "wallMs": 7148,
+    "pageReads": 9,
+    "pageReadLimit": 10,
+    "feedPages": 3,
+    "feedPageLimit": 3,
+    "largestBodyBytes": 530838,
+    "bodyLimitBytes": 921600,
+    "longestRequestMs": 1225,
+    "requests": [
+      {
+        "url": "https://www.presentandcorrect.com/robots.txt",
+        "status": 200,
+        "bytes": 3735,
+        "ms": 859
+      },
+      {
+        "url": "https://www.presentandcorrect.com/",
+        "status": 200,
+        "bytes": 130998,
+        "ms": 515
+      },
+      {
+        "url": "https://www.presentandcorrect.com/cdn/shopifycloud/portable-wallets/latest/accelerated-checkout-backwards-compat.css",
+        "status": 200,
+        "bytes": 13812,
+        "ms": 73
+      },
+      {
+        "url": "https://www.presentandcorrect.com/cdn/shop/t/13/assets/base.css?v=37047530915295751971735991241",
+        "status": 200,
+        "bytes": 58177,
+        "ms": 46
+      },
+      {
+        "url": "https://www.presentandcorrect.com/sitemap.xml",
+        "status": 200,
+        "bytes": 1012,
+        "ms": 319
+      },
+      {
+        "url": "https://www.presentandcorrect.com/sitemap_agentic_discovery.xml",
+        "status": 200,
+        "bytes": 222,
+        "ms": 332
+      },
+      {
+        "url": "https://www.presentandcorrect.com/sitemap_products_1.xml?from=1263457092&to=15467971772795",
+        "status": 200,
+        "bytes": 299048,
+        "ms": 1190
+      },
+      {
+        "url": "https://www.presentandcorrect.com/sitemap_pages_1.xml?from=55755716&to=693339652475",
+        "status": 200,
+        "bytes": 1189,
+        "ms": 334
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=1",
+        "status": 200,
+        "bytes": 472871,
+        "ms": 1037
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=2",
+        "status": 200,
+        "bytes": 530838,
+        "ms": 1225
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=3",
+        "status": 200,
+        "bytes": 480368,
+        "ms": 1180
+      }
+    ]
+  },
+  "1_feed": {
+    "pageStatuses": [
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=1",
+        "status": 200
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=2",
+        "status": 200
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=3",
+        "status": 200
+      }
+    ],
+    "products": 706,
+    "contentType": "application/json; charset=utf-8",
+    "notes": [],
+    "pagesRead": [
+      "/",
+      "/products.json?limit=250&page=3"
+    ]
+  },
+  "2_pagination": {
+    "pages": [
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=1",
+        "status": 200,
+        "count": 250,
+        "bytes": 472871
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=2",
+        "status": 200,
+        "count": 250,
+        "bytes": 530838
+      },
+      {
+        "url": "https://www.presentandcorrect.com/products.json?limit=250&page=3",
+        "status": 200,
+        "count": 206,
+        "bytes": 480368
+      }
+    ],
+    "total": 706,
+    "lastPageShort": true,
+    "pageCapNote": []
+  },
+  "3_names": {
+    "published": 706,
+    "feedProducts": 706,
+    "matchedFeed": 705,
+    "pageOnly": [
+      "Braun Calculator"
+    ],
+    "feedOnly": [
+      "Braun  Calculator"
+    ],
+    "feedOnlyCount": 1,
+    "first": [
+      "'While You Were Out' Pad (1990s)",
+      "Osama 'King' Crayons (1960s)",
+      "The Sun Our Nearest Star (1960)",
+      "Gift Gift Wrap (1950s)",
+      "The Holiday Candy Book (1952)"
+    ]
+  },
+  "4_images": {
+    "publishedWithImage": 706,
+    "feedProductsWithImages": 706,
+    "associated": 705,
+    "unassociated": [],
+    "sample": [
+      {
+        "name": "'While You Were Out' Pad (1990s)",
+        "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/wywo_0cd00c73-110f-4d46-b10e-acb44984b457.jpg?v=1795175257",
+        "listedByFeed": true
+      },
+      {
+        "name": "Osama 'King' Crayons (1960s)",
+        "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/osama1.jpg?v=1794988159",
+        "listedByFeed": true
+      },
+      {
+        "name": "The Sun Our Nearest Star (1960)",
+        "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/sun2.jpg?v=1714032994",
+        "listedByFeed": true
+      },
+      {
+        "name": "Gift Gift Wrap (1950s)",
+        "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/giftswrap.jpg?v=1699540593",
+        "listedByFeed": true
+      },
+      {
+        "name": "The Holiday Candy Book (1952)",
+        "url": "https://cdn.shopify.com/s/files/1/0952/3604/files/candybook1.jpg?v=1730882341",
+        "listedByFeed": true
+      }
+    ],
+    "report": {
+      "products": 706,
+      "withImage": 706,
+      "withoutImage": 0,
+      "methods": {
+        "public-data": 706
+      },
+      "rejected": [],
+      "ambiguous": []
+    }
+  },
+  "5_variants": {
+    "multiOptionItems": 275,
+    "sample": [
+      {
+        "name": "Candy Cards",
+        "published": [
+          {
+            "id": "39858944639011",
+            "name": "Gingerbread",
+            "price": 300,
+            "currency": "INR",
+            "selected": true
+          },
+          {
+            "id": "39858944671779",
+            "name": "Bon Bons",
+            "price": 300,
+            "currency": "INR",
+            "selected": false
+          }
+        ],
+        "feed": [
+          {
+            "id": "39858944639011",
+            "title": "Gingerbread",
+            "price": "3.00"
+          },
+          {
+            "id": "39858944671779",
+            "title": "Bon Bons",
+            "price": "3.00"
+          }
+        ],
+        "selectedCount": 1,
+        "namesMatch": true,
+        "pricesMatch": true,
+        "idsKept": 2
+      },
+      {
+        "name": "Wood/Brass Angel Ornament (1970s)",
+        "published": [
+          {
+            "id": "56578117730683",
+            "name": "Pink",
+            "price": 950,
+            "currency": "INR",
+            "selected": true
+          },
+          {
+            "id": "56578117763451",
+            "name": "Orange",
+            "price": 950,
+            "currency": "INR",
+            "selected": false
+          },
+          {
+            "id": "56578117796219",
+            "name": "Red",
+            "price": 950,
+            "currency": "INR",
+            "selected": false
+          },
+          {
+            "id": "56578117828987",
+            "name": "Yellow",
+            "price": 950,
+            "currency": "INR",
+            "selected": false
+          },
+          {
+            "id": "56578117861755",
+            "name": "Blue",
+            "price": 950,
+            "currency": "INR",
+            "selected": false
+          },
+          {
+            "id": "56578117894523",
+            "name": "Mint",
+            "price": 950,
+            "currency": "INR",
+            "selected": false
+          }
+        ],
+        "feed": [
+          {
+            "id": "56578117730683",
+            "title": "Pink",
+            "price": "9.50"
+          },
+          {
+            "id": "56578117763451",
+            "title": "Orange",
+            "price": "9.50"
+          },
+          {
+            "id": "56578117796219",
+            "title": "Red",
+            "price": "9.50"
+          },
+          {
+            "id": "56578117828987",
+            "title": "Yellow",
+            "price": "9.50"
+          },
+          {
+            "id": "56578117861755",
+            "title": "Blue",
+            "price": "9.50"
+          },
+          {
+            "id": "56578117894523",
+            "title": "Mint",
+            "price": "9.50"
+          }
+        ],
+        "selectedCount": 1,
+        "namesMatch": true,
+        "pricesMatch": true,
+        "idsKept": 6
+      },
+      {
+        "name": "Christmas Tapes",
+        "published": [
+          {
+            "id": "40162885206051",
+            "name": "Silver",
+            "price": 350,
+            "currency": "INR",
+            "selected": true
+          },
+          {
+            "id": "40162885238819",
+            "name": "Diagonal Gold",
+            "price": 350,
+            "currency": "INR",
+            "selected": false
+          },
+          {
+            "id": "40162885271587",
+            "name": "Red",
+            "price": 350,
+            "currency": "INR",
+            "selected": false
+          },
+          {
+            "id": "40162885304355",
+            "name": "Silver Pin Stripe",
+            "price": 350,
+            "currency": "INR",
+            "selected": false
+          },
+          {
+            "id": "40162885337123",
+            "name": "Solid Gold",
+            "price": 350,
+            "currency": "INR",
+            "selected": false
+          },
+          {
+            "id": "40162885369891",
+            "name": "Red Pin Stripe",
+            "price": 350,
+            "currency": "INR",
+            "selected": false
+          },
+          {
+            "id": "40162885402659",
+            "name": "Green",
+            "price": 350,
+            "currency": "INR",
+            "selected": false
+          },
+          {
+            "id": "40162885435427",
+            "name": "Diagonal Red",
+            "price": 350,
+            "currency": "INR",
+            "selected": false
+          }
+        ],
+        "feed": [
+          {
+            "id": "40162885206051",
+            "title": "Silver",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885238819",
+            "title": "Diagonal Gold",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885271587",
+            "title": "Red",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885304355",
+            "title": "Silver Pin Stripe",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885337123",
+            "title": "Solid Gold",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885369891",
+            "title": "Red Pin Stripe",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885402659",
+            "title": "Green",
+            "price": "3.50"
+          },
+          {
+            "id": "40162885435427",
+            "title": "Diagonal Red",
+            "price": "3.50"
+          }
+        ],
+        "selectedCount": 1,
+        "namesMatch": true,
+        "pricesMatch": true,
+        "idsKept": 8
+      },
+      {
+        "name": "Honeycomb Tree",
+        "published": [
+          {
+            "id": "55920444342651",
+            "name": "Small (25cm)",
+            "price": 1100,
+            "currency": "INR",
+            "selected": true
+          },
+          {
+            "id": "55920444375419",
+            "name": "Large (40cm)",
+            "price": 1750,
+            "currency": "INR",
+            "selected": false
+          }
+        ],
+        "feed": [
+          {
+            "id": "55920444342651",
+            "title": "Small (25cm)",
+            "price": "11.00"
+          },
+          {
+            "id": "55920444375419",
+            "title": "Large (40cm)",
+            "price": "17.50"
+          }
+        ],
+        "selectedCount": 1,
+        "namesMatch": true,
+        "pricesMatch": true,
+        "idsKept": 2
+      },
+      {
+        "name": "Santa / Rudolph Card",
+        "published": [
+          {
+            "id": "39858943098915",
+            "name": "Santa",
+            "price": 300,
+            "currency": "INR",
+            "selected": true
+          },
+          {
+            "id": "39858943131683",
+            "name": "Rudolph",
+            "price": 300,
+            "currency": "INR",
+            "selected": false
+          }
+        ],
+        "feed": [
+          {
+            "id": "39858943098915",
+            "title": "Santa",
+            "price": "3.00"
+          },
+          {
+            "id": "39858943131683",
+            "title": "Rudolph",
+            "price": "3.00"
+          }
+        ],
+        "selectedCount": 1,
+        "namesMatch": true,
+        "pricesMatch": true,
+        "idsKept": 2
+      }
+    ],
+    "everySampleSingleSelected": true
+  },
+  "6_currency": {
+    "declared": "INR",
+    "variantCurrencies": [
+      "INR"
+    ],
+    "formatted": [
+      {
+        "name": "Perforated Box",
+        "price": 100,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Job Card (1980s)",
+        "price": 150,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Soviet Kosmos Pencil",
+        "price": 150,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Round Pencil Eraser",
+        "price": 150,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Hexagon Eraser",
+        "price": 175,
+        "evidence": "shopify-variant"
+      }
+    ]
+  },
+  "7_conflicts": {
+    "count": 0,
+    "list": []
+  },
+  "8_missing": {
+    "unpriced": 0,
+    "unpricedSample": [],
+    "dropped": 0,
+    "droppedSample": [],
+    "suspectPrices": 0,
+    "pagesFailed": [],
+    "feedOnlyCount": 1,
+    "pageOnlyCount": 1
+  },
+  "10_paging": {
+    "catalogueItems": 706,
+    "firstPaintCards": 19,
+    "firstPaintNote": "Showing 15 of 706 pieces",
+    "hasMoreControl": true,
+    "pageTwoCards": 24,
+    "pageTwoFirstKey": "12",
+    "pageTwoIsFragment": true,
+    "fullCatalogueInPayload": true
+  },
+  "11_ids": {
+    "itemsWithPrice": 706,
+    "multiOptionItems": 275,
+    "variantsWithFeedId": 1190,
+    "feedVariants": 1624,
+    "allVariantNamesMatch": true,
+    "allVariantPricesMatch": true,
+    "everySampleSingleSelected": true
+  },
+  "12_currency_visible": {
+    "declared": "INR",
+    "currencySource": {
+      "code": "INR",
+      "method": "shopify-analytics",
+      "source": "https://www.presentandcorrect.com/",
+      "raw": "ShopifyAnalytics = window.ShopifyAnalytics || {};\n  window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};\n "
+    },
+    "symbolsInApp": [
+      "₹",
+      "£"
+    ],
+    "dollarAmountsInApp": 0,
+    "pricedSample": [
+      {
+        "name": "Perforated Box",
+        "price": 100,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Job Card (1980s)",
+        "price": 150,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Soviet Kosmos Pencil",
+        "price": 150,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Round Pencil Eraser",
+        "price": 150,
+        "evidence": "shopify-variant"
+      },
+      {
+        "name": "Hexagon Eraser",
+        "price": 175,
+        "evidence": "shopify-variant"
+      }
+    ]
+  },
+  "9_budget": {
+    "withinBudget": true,
+    "wallMs": 7148,
+    "pageReads": 9,
+    "feedPages": 3
+  },
+  "quality": {
+    "discovered": 706,
+    "kept": 706,
+    "dropped": [],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "Catalogue",
+      "Pad",
+      "Geyer instructional"
+    ]
+  }
+}
