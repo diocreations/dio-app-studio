@@ -124,6 +124,20 @@ describe('structural blueprints', () => {
     }
   })
 
+  test('the three concepts also differ in arrangement and navigation model', () => {
+    for (const vertical of TRADES) {
+      const entries = docsFor(vertical)
+      const structures = entries.map((entry) => structureOf(entry.spec, entry.doc))
+      const arrangements = new Set(structures.map((entry) => entry.layouts.join('>')))
+      const models = new Set(entries.map((entry) => entry.doc.design?.nav))
+      expect(arrangements.size).toBeGreaterThan(1)
+      expect(models.size).toBe(3)
+      // A catalogue cannot lose its product grid or become a different data set
+      // just because the arrangement changed.
+      for (const entry of entries) expect(entry.doc.screens.map((screen) => screen.kind)).toContain('catalog')
+    }
+  })
+
   test('every visible component on each concept maps to its document node', () => {
     for (const vertical of TRADES) {
       for (const entry of docsFor(vertical)) {

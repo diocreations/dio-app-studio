@@ -134,7 +134,8 @@ describe('a product with several variants', () => {
   })
 
   test('a build keeps feed option IDs and drops ones that are not usable', () => {
-    const long = 'x'.repeat(41)
+    const long = 'x'.repeat(130)
+    const gid = 'gid://shopify/ProductVariant/445566778899'
     const menu = sanitizeMenu([
       {
         name: 'Tickets',
@@ -146,6 +147,7 @@ describe('a product with several variants', () => {
               { id: 'vp-early', name: 'Early entry', price: 3000, selected: true },
               { id: '  vp-late  ', name: 'Late entry', price: 3000 },
               { id: long, name: 'Week pass', price: 4500 },
+              { id: gid, name: 'GraphQL option', price: 4500 },
               { id: 42, name: 'Broken id', price: 4500 },
             ],
           },
@@ -156,6 +158,7 @@ describe('a product with several variants', () => {
       { id: 'vp-early', name: 'Early entry', price: 3000, selected: true },
       { id: 'vp-late', name: 'Late entry', price: 3000 },
       { name: 'Week pass', price: 4500 },
+      { id: gid, name: 'GraphQL option', price: 4500 },
       { name: 'Broken id', price: 4500 },
     ])
   })

@@ -1022,7 +1022,7 @@ function wrapDoc(node: DocNode, html: string): string {
   ]
     .filter(Boolean)
     .join(';')
-  return `<div class="doc-section${hides ? ` ${hides}` : ''}" data-sec="${node.id}"${style ? ` style="${style}"` : ''}>${html}</div>`
+  return `<div class="doc-section${hides ? ` ${hides}` : ''}" data-sec="${node.id}"${node.layout ? ` data-layout="${node.layout}"` : ''}${style ? ` style="${style}"` : ''}>${html}</div>`
 }
 
 function docSection(ctx: Ctx, node: DocNode, blocks: HomeBlocks): string {
@@ -1377,6 +1377,11 @@ function suppliedPreview(preview: PreviewOverrides | undefined): PreviewOverride
 /** Rules the document layer adds without touching the trade's own CSS. */
 const DOC_CSS = `
 .doc-section { position: relative; }
+.doc-section[data-layout="list"] :where(.fx-products, .fx-rooms, .fx-services, .fx-menu) { display: grid !important; grid-template-columns: 1fr !important; }
+.doc-section[data-layout="grid"] :where(.fx-products, .fx-rooms, .fx-services, .fx-menu) { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.doc-section[data-layout="strip"] :where(.fx-products, .fx-rooms, .fx-services, .fx-menu) { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px; }
+.doc-section[data-layout="strip"] :where(.fx-products, .fx-rooms, .fx-services, .fx-menu)::-webkit-scrollbar { display: none; }
+.doc-section[data-layout="strip"] :where(.fx-products, .fx-rooms, .fx-services, .fx-menu) > * { flex: 0 0 76%; scroll-snap-align: start; min-width: 0; }
 .doc-section[style*="padding-block"] { margin-inline: -2px; }
 @media (max-width: 599px) { .hide-mobile { display: none !important; } }
 @media (min-width: 600px) and (max-width: 1023px) { .hide-tablet { display: none !important; } }
@@ -1386,6 +1391,133 @@ body[data-editor="1"] .doc-section:hover { outline: 1px solid var(--accent); }
 body[data-editor="1"] .doc-section.doc-selected { outline: 2px solid var(--accent) !important; }
 body[data-editor="1"] .doc-section.doc-drop { box-shadow: inset 0 3px 0 var(--accent); }
 `
+
+/**
+ * Element layer. Every semantic element inside a section, and every tab, is
+ * given a stable slot name (`section~tag~ordinal`) before any override is
+ * applied. Overrides live on the document, so this runs in the published app
+ * too; it is not editor-only styling. Catalogue-bound text and photographs are
+ * marked `data-el-bound` and are never replaced here.
+ */
+const ELEMENT_LAYER = `
+<style>
+body[data-editor="1"] [data-el] { cursor: pointer; }
+body[data-editor="1"] [data-el]:hover { outline: 1px dashed color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
+body[data-editor="1"] [data-el].el-selected { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
+body[data-editor="1"] [data-el-bound].el-selected { outline-style: dashed !important; }
+</style>
+<script>
+(() => {
+  const config = window.__PLATTR_ELEMENTS__ || { elements: {}, token: '', editor: false }
+  const elements = config.elements || {}
+  const SELECTOR = 'h1,h2,h3,h4,h5,h6,p,span,img,button,a,svg,div[class*="fx-"]'
+  const tagOf = (el) => (el.tagName.toLowerCase() === 'div' ? 'div' : el.tagName.toLowerCase())
+  const bound = (el) => Boolean(el.closest('[data-item]') || el.closest('[data-el-bound]'))
+  function annotate() {
+    document.querySelectorAll('[data-sec]').forEach((section) => {
+      const counts = {}
+      section.querySelectorAll(SELECTOR).forEach((el) => {
+        const tag = tagOf(el)
+        const index = counts[tag] || 0
+        counts[tag] = index + 1
+        el.dataset.el = section.dataset.sec + '~' + tag + '~' + index
+        if (el.closest('[data-item]')) el.dataset.elBound = '1'
+      })
+    })
+    document.querySelectorAll('.tabbar .tab').forEach((tab, index) => {
+      tab.dataset.el = 'chrome~nav~' + index
+      tab.dataset.elNav = '1'
+    })
+  }
+  function apply() {
+    document.querySelectorAll('[data-el]').forEach((el) => {
+      const key = el.dataset.el
+      const entry = elements[key]
+      if (!entry) return
+      const style = entry.style || {}
+      const boundEl = bound(el)
+      if (entry.hidden) el.style.display = 'none'
+      if (entry.text && !boundEl) {
+        if (el.dataset.elNav === '1') {
+          const label = el.querySelector('span')
+          if (label) label.textContent = entry.text
+        } else if (el.tagName !== 'IMG' && el.tagName !== 'SVG') {
+          // A button may keep an arrow or icon beside its words. Replace the
+          // words where they live instead of deleting the icon with textContent.
+          const textNode = [...el.childNodes].find((node) => node.nodeType === 3 && node.textContent.trim())
+          const labels = [...el.children].filter(
+            (child) => child.tagName !== 'svg' && !/^[→←↑↓✕×+]$/.test(child.textContent.trim()),
+          )
+          if (textNode) textNode.nodeValue = entry.text + ' '
+          else if (!el.children.length) el.textContent = entry.text
+          else if (labels.length === 1 && labels[0].children.length === 0) labels[0].textContent = entry.text
+        }
+      }
+      if (entry.media && el.tagName === 'IMG' && !boundEl) {
+        const media = entry.media
+        el.src = '/p/' + config.token + '/media/' + media.id + '/640.webp'
+        if (media.alt) el.alt = media.alt
+      }
+      const set = (name, value) => { if (value !== undefined && value !== null && value !== '') el.style.setProperty(name, String(value), 'important') }
+      if (style.fontSize) set('font-size', style.fontSize + 'px')
+      if (style.weight) set('font-weight', style.weight)
+      if (style.color) set('color', style.color)
+      if (style.align) set('text-align', style.align)
+      if (style.lineHeight) set('line-height', style.lineHeight)
+      if (style.width) set('width', style.width + '%')
+      if (style.height) set('height', style.height + 'px')
+      if (style.padding !== undefined) set('padding', style.padding + 'px')
+      if (style.margin !== undefined) set('margin', style.margin + 'px')
+      if (style.gap !== undefined) set('gap', style.gap + 'px')
+      if (style.background) set('background', style.background)
+      if (style.radius !== undefined) set('border-radius', style.radius + 'px')
+      if (style.border !== undefined) set('border', style.border ? style.border + 'px solid currentColor' : 'none')
+      if (style.shadow) set('box-shadow', style.shadow === 'none'
+        ? 'none'
+        : style.shadow === 'strong'
+          ? '0 18px 40px -18px rgba(0,0,0,.55)'
+          : '0 10px 24px -16px rgba(0,0,0,.4)')
+      if (style.layout && (el.tagName === 'DIV' || el.tagName === 'A')) {
+        if (style.layout === 'row') { set('display', 'flex'); set('flex-direction', 'row'); set('align-items', 'center') }
+        else if (style.layout === 'grid') { set('display', 'grid'); set('grid-template-columns', 'repeat(2, minmax(0, 1fr))') }
+        else { set('display', 'flex'); set('flex-direction', 'column') }
+      }
+      if (style.order && el.dataset.elNav === '1') set('order', style.order)
+      if (style.icon && el.tagName === 'BUTTON' && el.dataset.elNav !== '1') {
+        const glyphs = { arrow: '→', plus: '+', chevron: '›', star: '★' }
+        let icon = el.querySelector(':scope > [data-el-icon]')
+        if (style.icon === 'none') { if (icon) icon.remove() }
+        else {
+          if (!icon) { icon = document.createElement('span'); icon.dataset.elIcon = '1' }
+          icon.textContent = ' ' + glyphs[style.icon]
+          el.appendChild(icon)
+        }
+      }
+      if (el.tagName === 'svg') {
+        if (style.color) { set('fill', style.color); set('stroke', style.color) }
+        if (entry.hidden) el.style.display = 'none'
+      }
+      if (el.tagName === 'IMG') {
+        if (style.imageFit) set('object-fit', style.imageFit)
+        const focalX = style.focalX ?? (entry.media && entry.media.focalX)
+        const focalY = style.focalY ?? (entry.media && entry.media.focalY)
+        if (focalX !== undefined || focalY !== undefined) set('object-position', (focalX ?? 50) + '% ' + (focalY ?? 50) + '%')
+        if (style.aspect === 'square') set('aspect-ratio', '1')
+        else if (style.aspect === 'portrait') set('aspect-ratio', '4 / 5')
+        else if (style.aspect === 'wide') set('aspect-ratio', '16 / 9')
+        else if (style.aspect === 'auto') set('aspect-ratio', 'auto')
+      }
+      if (entry.action && !boundEl && (el.hasAttribute('data-go') || el.tagName === 'A')) {
+        el.setAttribute('data-go', entry.action.screen)
+        if (el.tagName === 'A') el.setAttribute('href', '#')
+      }
+    })
+  }
+  annotate()
+  apply()
+  window.__plattrAnnotate = () => { annotate(); apply() }
+})()
+</script>`
 
 /**
  * The bridge the editor's canvas needs: it selects a section on click and
@@ -1405,7 +1537,14 @@ body[data-editor="1"] .doc-section { cursor: pointer; }
     section.addEventListener('click', (event) => {
       event.preventDefault()
       event.stopPropagation()
-      send({ type: 'select', id: section.dataset.sec })
+      const hit = event.target.closest('[data-el]')
+      if (hit) {
+        document.querySelectorAll('.el-selected').forEach((el) => el.classList.remove('el-selected'))
+        hit.classList.add('el-selected')
+        send({ type: 'element', id: section.dataset.sec, key: hit.dataset.el, tag: hit.tagName.toLowerCase(), bound: hit.dataset.elBound === '1', nav: hit.dataset.elNav === '1', action: hit.hasAttribute('data-go') || hit.tagName === 'A' })
+      } else {
+        send({ type: 'select', id: section.dataset.sec })
+      }
     }, true)
     section.addEventListener('dragstart', (event) => {
       event.dataTransfer.setData('text/plain', section.dataset.sec)
@@ -1423,6 +1562,15 @@ body[data-editor="1"] .doc-section { cursor: pointer; }
       if (id && id !== section.dataset.sec) send({ type: 'move', id, before: section.dataset.sec })
     })
   }
+  document.querySelectorAll('.tabbar .tab').forEach((tab) => {
+    tab.addEventListener('click', (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      document.querySelectorAll('.el-selected').forEach((el) => el.classList.remove('el-selected'))
+      tab.classList.add('el-selected')
+      send({ type: 'element', id: null, key: tab.dataset.el, tag: 'button', bound: false, nav: true })
+    }, true)
+  })
   document.addEventListener('click', (event) => {
     const go = event.target.closest('[data-go]')
     if (go) setTimeout(() => send({ type: 'screen', id: go.dataset.go }), 60)
@@ -1432,8 +1580,17 @@ body[data-editor="1"] .doc-section { cursor: pointer; }
     if (!message || message.source !== 'plattr-editor') return
     if (message.type === 'select') {
       for (const section of sections) section.classList.toggle('doc-selected', section.dataset.sec === message.id)
+      document.querySelectorAll('.el-selected').forEach((el) => el.classList.remove('el-selected'))
       const target = sections.find((section) => section.dataset.sec === message.id)
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    if (message.type === 'element') {
+      document.querySelectorAll('.el-selected').forEach((el) => el.classList.remove('el-selected'))
+      const node = document.querySelector('[data-el="' + String(message.key).replace(/"/g, '') + '"]')
+      if (node) {
+        node.classList.add('el-selected')
+        node.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
     }
   })
   send({ type: 'ready' })
@@ -2058,6 +2215,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         list.map(function (variant) {
           const on = chosen && variantRef(chosen) === variantRef(variant)
           return '<button class="variant' + (on ? ' on' : '') + '" type="button" data-variant="' + esc(variantRef(variant)) + '" data-variant-key="' + key + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
+            (variant.media ? '<img src="/p/' + esc(DATA.token) + '/media/' + esc(variant.media.id) + '/320.webp" alt="" style="width:18px;height:18px;object-fit:cover;border-radius:50%;margin-right:5px" />' : '') +
             '<span>' + esc(variant.name) + '</span><b>' + money(variant.price) + '</b></button>'
         }).join('') + '</div></div>'
     }
@@ -3219,7 +3377,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       navigator.serviceWorker.register('./sw.js').catch(() => {})
     }
   })()
-  </script>${options.editor ? EDITOR_BRIDGE : ''}
+  </script><script>window.__PLATTR_ELEMENTS__=${JSON.stringify({ token: options.token, elements: doc?.elements ?? {}, editor: Boolean(options.editor) }).replace(/</g, '\\u003c')};</script>${ELEMENT_LAYER}${options.editor ? EDITOR_BRIDGE : ''}
 </body>
 </html>`
 }

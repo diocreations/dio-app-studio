@@ -2520,7 +2520,7 @@ async function shopifyProducts(
         const variants = rawVariants
           .slice(0, 200)
           .map((variant) => ({
-            id: variant.id == null ? '' : String(variant.id).slice(0, 40),
+            id: variant.id == null ? '' : String(variant.id).slice(0, 120),
             name: collapse(String(variant.title ?? ''), 40),
             price: toCents(String(variant.price ?? '')),
             currency,
@@ -2547,6 +2547,7 @@ async function shopifyProducts(
         const sectionName =
           collapse(String(product.product_type ?? product.productType ?? ''), 40) || 'Catalogue'
         const item: Item = {
+          ...(product.id == null ? {} : { sourceId: String(product.id).slice(0, 120) }),
           name,
           desc: collapse(stripMarkup(String(product.body_html ?? '')), 90),
           price: cheapest?.price ?? 0,

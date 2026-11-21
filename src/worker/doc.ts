@@ -265,6 +265,55 @@ export type MediaRef = {
   aspect?: 'auto' | 'wide' | 'square' | 'portrait'
 }
 
+/**
+ * One editable element inside a component. The key names a stable slot in the
+ * rendered block (section, tag and ordinal), so an override survives a reload,
+ * a rebuild and a reorder without a second component tree.
+ *
+ * Everything here is presentation except the navigation action: catalogue-bound
+ * text and photographs are deliberately not overridable, so editing a card can
+ * never rename a product or replace the photograph the catalogue owns.
+ */
+export type ElementStyle = {
+  fontSize?: number
+  weight?: number
+  color?: string
+  align?: 'left' | 'center' | 'right'
+  lineHeight?: number
+  width?: number
+  height?: number
+  padding?: number
+  margin?: number
+  gap?: number
+  background?: string
+  radius?: number
+  shadow?: 'none' | 'soft' | 'strong'
+  border?: number
+  imageFit?: 'cover' | 'contain'
+  focalX?: number
+  focalY?: number
+  aspect?: 'auto' | 'wide' | 'square' | 'portrait'
+  /** Child arrangement for a container or card. */
+  layout?: 'stack' | 'row' | 'grid'
+  /** A glyph added beside a button's words; not a replacement for app icons. */
+  icon?: 'none' | 'arrow' | 'plus' | 'chevron' | 'star'
+  /** Tab order, for a navigation item. */
+  order?: number
+}
+
+export type ElementConfig = {
+  /** The owner's name for this element in the layer tree. */
+  name?: string
+  /** Replacement words. Ignored for catalogue-bound elements. */
+  text?: string
+  hidden?: boolean
+  style?: ElementStyle
+  /** A replacement photograph. Ignored for catalogue-owned images. */
+  media?: MediaRef
+  /** A destination for an element that already navigates. */
+  action?: { screen: string }
+}
+
 /** Business values a generated component copied from the specification. */
 export type CopiedField = 'name' | 'tagline' | 'hours' | 'address'
 export type Follows = { title?: CopiedField; text?: CopiedField }
@@ -281,6 +330,9 @@ export type DocNode = {
   cta?: { label: string; screen: string }
   /** Presentation inside a flagship composition. Never used by generic kinds. */
   variant?: FlagshipVariant
+  /** How this component arranges its own children. Set by a blueprint so the
+   *  same product data can read as a list, a grid or a filmstrip. */
+  layout?: 'grid' | 'list' | 'strip' | 'split'
   /** The catalogue item this component features, by its stable item id. The
    *  component resolves the current name, description, price and photograph
    *  from the catalogue instead of keeping a copy that can go stale. */
@@ -327,6 +379,8 @@ export type Doc = {
   /** Screen id the app opens on. */
   initialScreen: string
   screens: ScreenNode[]
+  /** Element overrides, keyed by the stable slot the renderer tags. */
+  elements?: Record<string, ElementConfig>
 }
 
 const SHAPE = (value: unknown): ElementShape | undefined =>
@@ -1095,6 +1149,9 @@ function sanitizeSection(value: unknown, fallbackId: string): DocNode | null {
     id,
     kind,
     ...(variant ? { variant } : {}),
+    ...(raw.layout === 'grid' || raw.layout === 'list' || raw.layout === 'strip' || raw.layout === 'split'
+      ? { layout: raw.layout }
+      : {}),
     ...(media ? { media } : {}),
     title: CLAMP(raw.title, 60) || undefined,
     text: CLAMP(raw.text, 600) || undefined,
@@ -1117,6 +1174,105 @@ function sanitizeSection(value: unknown, fallbackId: string): DocNode | null {
     hidden: raw.hidden === true,
     ...(raw.hiddenBecause === 'empty' ? { hiddenBecause: 'empty' as const } : {}),
   }
+}
+
+const ELEMENT_KEY = /^[a-z0-9_]{2,40}~(?:h[1-6]|p|span|img|button|a|div|nav|svg)~\d{1,3}$/
+const ELEMENT_TARGET = /^[a-z][a-z0-9_-]{0,30}$/
+const whole = (value: unknown, min: number, max: number): number | undefined =>
+  typeof value === 'number' && Number.isFinite(value)
+    ? Math.max(min, Math.min(max, Math.round(value)))
+    : undefined
+
+function sanitizeElementStyle(value: unknown): ElementStyle | undefined {
+  if (!value || typeof value !== 'object') return undefined
+  const raw = value as Record<string, unknown>
+  const colour = (input: unknown) =>
+    typeof input === 'string' ? sanitizeHex(input, '') || undefined : undefined
+  const lineHeight =
+    typeof raw.lineHeight === 'number' && Number.isFinite(raw.lineHeight)
+      ? Math.max(0.8, Math.min(2.4, Math.round(raw.lineHeight * 100) / 100))
+      : undefined
+  const style: ElementStyle = {
+    ...(whole(raw.fontSize, 8, 96) ? { fontSize: whole(raw.fontSize, 8, 96) } : {}),
+    ...(whole(raw.weight, 100, 900) ? { weight: whole(raw.weight, 100, 900) } : {}),
+    ...(colour(raw.color) ? { color: colour(raw.color) } : {}),
+    ...(raw.align === 'left' || raw.align === 'center' || raw.align === 'right'
+      ? { align: raw.align }
+      : {}),
+    ...(lineHeight ? { lineHeight } : {}),
+    ...(whole(raw.width, 10, 100) ? { width: whole(raw.width, 10, 100) } : {}),
+    ...(whole(raw.height, 8, 800) ? { height: whole(raw.height, 8, 800) } : {}),
+    ...(whole(raw.padding, 0, 64) !== undefined ? { padding: whole(raw.padding, 0, 64) } : {}),
+    ...(whole(raw.margin, 0, 64) !== undefined ? { margin: whole(raw.margin, 0, 64) } : {}),
+    ...(whole(raw.gap, 0, 64) !== undefined ? { gap: whole(raw.gap, 0, 64) } : {}),
+    ...(colour(raw.background) ? { background: colour(raw.background) } : {}),
+    ...(whole(raw.radius, 0, 64) !== undefined ? { radius: whole(raw.radius, 0, 64) } : {}),
+    ...(raw.shadow === 'none' || raw.shadow === 'soft' || raw.shadow === 'strong'
+      ? { shadow: raw.shadow }
+      : {}),
+    ...(whole(raw.border, 0, 8) !== undefined ? { border: whole(raw.border, 0, 8) } : {}),
+    ...(raw.imageFit === 'cover' || raw.imageFit === 'contain' ? { imageFit: raw.imageFit } : {}),
+    ...(whole(raw.focalX, 0, 100) !== undefined ? { focalX: whole(raw.focalX, 0, 100) } : {}),
+    ...(whole(raw.focalY, 0, 100) !== undefined ? { focalY: whole(raw.focalY, 0, 100) } : {}),
+    ...(raw.aspect === 'auto' || raw.aspect === 'wide' || raw.aspect === 'square' || raw.aspect === 'portrait'
+      ? { aspect: raw.aspect }
+      : {}),
+    ...(raw.layout === 'stack' || raw.layout === 'row' || raw.layout === 'grid' ? { layout: raw.layout } : {}),
+    ...(raw.icon === 'none' || raw.icon === 'arrow' || raw.icon === 'plus' || raw.icon === 'chevron' || raw.icon === 'star'
+      ? { icon: raw.icon }
+      : {}),
+    ...(whole(raw.order, 1, 20) ? { order: whole(raw.order, 1, 20) } : {}),
+  }
+  return Object.keys(style).length ? style : undefined
+}
+
+function sanitizeElementMedia(value: unknown): MediaRef | undefined {
+  if (!value || typeof value !== 'object') return undefined
+  const raw = value as Record<string, unknown>
+  const id =
+    typeof raw.id === 'string' && /^med_[a-f0-9]{16,40}$/.test(raw.id) ? raw.id : ''
+  if (!id) return undefined
+  const dimension = (input: unknown) => whole(input, 1, 12_000)
+  const focal = (input: unknown) => whole(input, 0, 100)
+  return {
+    id,
+    ...(CLAMP(raw.alt, 120) ? { alt: CLAMP(raw.alt, 120) } : {}),
+    ...(dimension(raw.width) ? { width: dimension(raw.width) } : {}),
+    ...(dimension(raw.height) ? { height: dimension(raw.height) } : {}),
+    ...(focal(raw.focalX) !== undefined ? { focalX: focal(raw.focalX) } : {}),
+    ...(focal(raw.focalY) !== undefined ? { focalY: focal(raw.focalY) } : {}),
+    ...(raw.fit === 'contain' || raw.fit === 'cover' ? { fit: raw.fit } : {}),
+    ...(raw.aspect === 'auto' || raw.aspect === 'wide' || raw.aspect === 'square' || raw.aspect === 'portrait'
+      ? { aspect: raw.aspect }
+      : {}),
+  }
+}
+
+/** Bounded element overrides. A key that is not a renderer slot is dropped. */
+function sanitizeElements(value: unknown): Record<string, ElementConfig> | undefined {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined
+  const out: Record<string, ElementConfig> = {}
+  for (const [key, entry] of Object.entries(value as Record<string, unknown>).slice(0, 400)) {
+    if (!ELEMENT_KEY.test(key) || !entry || typeof entry !== 'object') continue
+    const raw = entry as Record<string, unknown>
+    const action =
+      raw.action && typeof raw.action === 'object'
+        ? (raw.action as Record<string, unknown>)
+        : null
+    const screen = action && typeof action.screen === 'string' ? action.screen.trim() : ''
+    const config: ElementConfig = {
+      ...(CLAMP(raw.name, 40) ? { name: CLAMP(raw.name, 40) } : {}),
+      ...(typeof raw.text === 'string' && raw.text.trim()
+        ? { text: raw.text.trim().slice(0, 300) }
+        : {}),
+      ...(raw.hidden === true ? { hidden: true } : {}),
+      ...(sanitizeElementStyle(raw.style) ? { style: sanitizeElementStyle(raw.style) } : {}),
+      ...(sanitizeElementMedia(raw.media) ? { media: sanitizeElementMedia(raw.media) } : {}),
+      ...(screen && ELEMENT_TARGET.test(screen) ? { action: { screen } } : {}),
+    }
+    if (Object.keys(config).length) out[key] = config
+  }
+  return Object.keys(out).length ? out : undefined
 }
 
 function sanitizeSections(value: unknown): DocNode[] {
@@ -1181,7 +1337,14 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
     const initial = screens.find((entry) => entry.id === raw.initialScreen) ?? screens[0]!
     return followCopies(
       bindItemRefs(
-        { v: 2, accent, design: sanitizeDesign(raw.design, spec), initialScreen: initial.id, screens },
+        {
+          v: 2,
+          accent,
+          design: sanitizeDesign(raw.design, spec),
+          initialScreen: initial.id,
+          screens,
+          elements: sanitizeElements(raw.elements),
+        },
         spec,
       ),
       spec,
@@ -1201,6 +1364,7 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
         design: sanitizeDesign(raw.design, spec) ?? fallback.design,
         initialScreen: fallback.initialScreen,
         screens,
+        elements: sanitizeElements(raw.elements),
       },
       spec,
     ),

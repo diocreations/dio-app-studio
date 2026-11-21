@@ -250,6 +250,24 @@ button { cursor: pointer; }
   .cat-media .cat-remove-photo { justify-self: start; }
 }
 .cat-offer { display: grid; grid-template-columns: 1fr 2fr 24px; gap: 6px; margin-bottom: 6px; }
+.variant-bar { display: flex; align-items: center; gap: 8px; margin: 0 0 8px 50px; }
+.variant-bar button { border: 1px dashed var(--line); background: none; border-radius: 7px; padding: 5px 8px; font-size: 10px; color: var(--muted); }
+.variant-bar button:hover { border-color: var(--accent); color: var(--ink); }
+.variant-bar span { color: var(--muted); font-size: 10px; }
+.variant-panel { margin: 0 0 12px 50px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.variant-panel h4 { margin: 0 0 8px; font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.variant-row { display: grid; grid-template-columns: 34px minmax(0,1.4fr) 76px 52px minmax(0,1fr) 22px 22px 22px; gap: 5px; align-items: center; margin-bottom: 6px; }
+.variant-row input { min-width: 0; padding: 6px 7px; font-size: 11px; border: 1px solid var(--line); border-radius: 6px; }
+.variant-row input[type="radio"] { justify-self: center; }
+.variant-row .id { font-size: 9px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.variant-row .x, .variant-row .mv { border: 0; background: none; color: var(--muted); font-size: 11px; padding: 2px; }
+.variant-row .x { color: #a13b2b; }
+.variant-vphoto { width: 34px; height: 34px; padding: 0; border: 1px dashed var(--line); border-radius: 7px; background: var(--paper); overflow: hidden; color: var(--muted); }
+.variant-vphoto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.variant-group { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1.4fr) 22px; gap: 5px; margin-bottom: 6px; }
+.variant-group input { padding: 6px 7px; font-size: 11px; border: 1px solid var(--line); border-radius: 6px; }
+.variant-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 7px; }
+.variant-foot .hint { margin: 0; flex: 1 1 150px; }
 .cat-offer input { min-width: 0; padding: 7px 8px; font-size: 11px; }
 .dir-grid { display: grid; gap: 6px; }
 .dir { display: grid; gap: 2px; text-align: left; border: 1px solid var(--line-soft); background: #fff; border-radius: 10px; padding: 9px 10px; }
@@ -329,6 +347,11 @@ button { cursor: pointer; }
       <h3>Screens</h3>
       <div class="list" id="screens"></div>
       <div class="tiles" id="screenLibrary" style="margin-top:8px"></div>
+    </div>
+    <div class="sec">
+      <h3>Elements</h3>
+      <div class="list" id="elements"></div>
+      <p class="hint">Click any text, photo, button or container in the preview. Nested elements can be selected here.</p>
     </div>
     <div class="sec">
       <h3>Add component</h3>
@@ -440,7 +463,7 @@ const SCREEN_LABELS = { home:'Home', catalog:'Catalogue', search:'Search', saved
 const COMPONENTS = ['heading','text','button','image','banner','gallery','productList','search','form','testimonials','cta','offers','loyalty','visit','story','featured'];
 const SINGLE = ['hero','featured','offers','loyalty','visit','story','testimonials','cta','search','form','productList'];
 const SCREENS = [['contact','Contact','Address, hours and a message'],['about','About','Your story and a photo'],['profile','Profile','Account and shortcuts'],['custom','Blank','A new screen']];
-const state = { doc: JSON.parse(JSON.stringify(INITIAL)), screen: INITIAL.initialScreen || INITIAL.screens[0].id, selected: null, device: 'mobile', history: [], future: [], historyMode: false, media: [], mediaSuggestions: [], mediaTarget: null, catalogTarget: null, mediaQuery: '', mediaFilter: 'all', mediaBusy: false, mediaReplaceId: null, catalog: [], offers: [] };
+const state = { doc: JSON.parse(JSON.stringify(INITIAL)), screen: INITIAL.initialScreen || INITIAL.screens[0].id, selected: null, element: null, elementMeta: null, device: 'mobile', history: [], future: [], historyMode: false, media: [], mediaSuggestions: [], mediaTarget: null, elementTarget: null, catalogTarget: null, variantTarget: null, variantMediaTarget: null, mediaQuery: '', mediaFilter: 'all', mediaBusy: false, mediaReplaceId: null, catalog: [], offers: [] };
 const $ = (id) => document.getElementById(id);
 const frame = $('frame');
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
@@ -517,12 +540,12 @@ function reloadFrame() {
     });
   }, 240);
 }
-function render() { renderScreens(); renderScreenLibrary(); renderLibrary(); renderStructure(); renderInspector(); renderQuick(); renderToolbar(); }
+function render() { renderScreens(); renderScreenLibrary(); renderLibrary(); renderStructure(); renderElements(); renderInspector(); renderQuick(); renderToolbar(); }
 let quickShown = null;
 const CATALOG_VARIANTS = ['shop-products', 'salon-services', 'hotel-rooms', 'pro-index', 'cafe-menu', 'gym-plans', 'clinic-specialities', 'property-listings', 'studio-services', 'offers'];
 function renderQuick() {
   const box = $('quickEditor'); const node = component();
-  const show = Boolean(node && !state.historyMode); box.hidden = !show;
+  const show = Boolean(node && !state.historyMode && !state.element); box.hidden = !show;
   if (!show) { quickShown = null; return; }
   $('quickLabel').textContent = nodeLabel(node); $('quickHide').textContent = node.hidden ? 'Show' : 'Hide';
   $('quickCtaRow').hidden = !node.cta;
@@ -604,6 +627,140 @@ function renderStructure() {
     });
   });
 }
+function elementEntry(key) { return (state.doc.elements && state.doc.elements[key]) || {}; }
+function elementDomain() {
+  const frameDoc = frame.contentDocument;
+  if (!frameDoc) return [];
+  const ids = current().sections.map((section) => section.id);
+  const rows = [];
+  const nav = frameDoc.querySelector('.tabbar .tab');
+  if (nav) {
+    frameDoc.querySelectorAll('.tabbar .tab').forEach((tab) => {
+      const key = tab.dataset.el;
+      if (!key) return;
+      const entry = elementEntry(key);
+      rows.push({ key, tag: 'button', label: entry.name || (tab.textContent || 'Tab').trim() || 'Tab', nav: true, bound: false, depth: 0, hidden: Boolean(entry.hidden), action: tab.hasAttribute('data-go') });
+    });
+  }
+  frameDoc.querySelectorAll('[data-sec] [data-el]').forEach((el) => {
+    const section = el.closest('[data-sec]');
+    if (!section || !ids.includes(section.dataset.sec)) return;
+    const entry = elementEntry(el.dataset.el);
+    const words = (el.textContent || '').replace(/\s+/g, ' ').trim();
+    let depth = 0;
+    let parent = el.parentElement;
+    while (parent && parent !== section) { if (parent.hasAttribute('data-el')) depth += 1; parent = parent.parentElement; }
+    rows.push({
+      key: el.dataset.el,
+      tag: el.tagName.toLowerCase(),
+      label: entry.name || (el.tagName === 'IMG' ? (el.getAttribute('alt') || 'Photo') : words ? words.slice(0, 34) : el.tagName.toLowerCase()),
+      nav: false,
+      bound: el.dataset.elBound === '1',
+      depth,
+      hidden: Boolean(entry.hidden),
+      action: el.hasAttribute('data-go') || el.tagName === 'A',
+    });
+  });
+  return rows.slice(0, 160);
+}
+function renderElements() {
+  let rows = [];
+  try { rows = elementDomain(); } catch (error) { rows = []; }
+  $('elements').innerHTML = rows.length ? rows.map((row) => '<div class="node' + (state.element === row.key ? ' on' : '') + (row.hidden ? ' off' : '') + '" style="padding-left:' + (4 + row.depth * 10) + 'px">' +
+    '<button class="name" data-element="' + esc(row.key) + '">' + esc(row.label) + '<small>' + row.tag + (row.bound ? ' · catalogue' : row.nav ? ' · navigation' : '') + '</small></button>' +
+    (row.toggle === false ? '' : '') +
+    '</div>').join('') : '<p class="empty">No elements on this screen yet.</p>';
+}
+function selectElement(key) {
+  const row = (() => { try { return elementDomain().find((entry) => entry.key === key); } catch (error) { return null; } })();
+  state.element = key; state.elementMeta = row || null;
+  if (row && !row.nav) state.selected = key.split('~')[0];
+  quickShown = null;
+  render();
+  try { frame.contentWindow.postMessage({ source: 'plattr-editor', type: 'element', key }, '*'); } catch (error) {}
+}
+function setElement(key, patch) {
+  commit((doc) => {
+    doc.elements = doc.elements || {};
+    const before = doc.elements[key] || {};
+    const next = Object.assign({}, before);
+    if (patch.style) next.style = Object.assign({}, before.style, patch.style);
+    if (patch.media === null) delete next.media;
+    else if (patch.media) next.media = Object.assign({}, before.media, patch.media);
+    if (patch.action === null) delete next.action;
+    else if (patch.action) next.action = Object.assign({}, before.action, patch.action);
+    if (patch.text !== undefined) { if (String(patch.text).trim()) next.text = String(patch.text).slice(0, 300); else delete next.text; }
+    if (patch.name !== undefined) { if (String(patch.name).trim()) next.name = String(patch.name).trim().slice(0, 40); else delete next.name; }
+    if (patch.hidden !== undefined) { if (patch.hidden) next.hidden = true; else delete next.hidden; }
+    if (Object.keys(next).length) doc.elements[key] = next; else delete doc.elements[key];
+    return doc;
+  }, true);
+}
+function resetElement(key) {
+  commit((doc) => { if (doc.elements) delete doc.elements[key]; return doc; }, true);
+  toast('Element reset to its design');
+}
+function renderElementInspector() {
+  const key = state.element; const entry = elementEntry(key); const meta = state.elementMeta || {};
+  const style = entry.style || {};
+  const isImage = meta.tag === 'img';
+  const isIcon = meta.tag === 'svg';
+  const isContainer = meta.tag === 'div' || meta.tag === 'a';
+  const bound = Boolean(meta.bound);
+  const nav = Boolean(meta.nav);
+  $('selectionLabel').textContent = entry.name || (nav ? 'Navigation item' : isImage ? 'Image' : isIcon ? 'Icon' : meta.tag || 'Element');
+  const number = (id, label, value, min, max, step) => '<div class="field"><label>' + label + '</label><input id="' + id + '" type="number" min="' + min + '" max="' + max + '" step="' + (step || 1) + '" value="' + (value === undefined ? '' : value) + '" placeholder="Auto" /></div>';
+  $('inspector').innerHTML =
+    '<div class="sec"><button class="btn" id="eBack">← Component properties</button>' +
+      '<p class="hint" style="margin-top:10px">' + (bound ? 'This text and its photograph come from your catalogue. Its appearance is editable; its identity, price and option IDs are not.' : nav ? 'This is a navigation item. Its label and destination are saved with the document.' : 'Element changes are saved with the design, not applied as a one-off style.') + '</p>' +
+      '<div class="field"><label>Name in layers</label><input id="eName" type="text" maxlength="40" value="' + esc(entry.name || '') + '" placeholder="e.g. Hero photo" /></div>' +
+    '</div>' +
+    (!bound && !isImage && !isIcon ? '<div class="sec"><h3>Words</h3><div class="field"><label>Content</label><textarea id="eText" maxlength="300" placeholder="Leave empty to keep the design copy">' + esc(entry.text || '') + '</textarea></div></div>' : '') +
+    '<div class="sec"><h3>Typography</h3>' +
+      number('eSize', 'Size (px)', style.fontSize, 8, 96) +
+      '<div class="field"><label>Weight</label><select id="eWeight"><option value="">Default</option>' + [300,400,500,600,700,800,900].map((value) => '<option value="' + value + '"' + (style.weight === value ? ' selected' : '') + '>' + value + '</option>').join('') + '</select></div>' +
+      '<div class="field"><label>Colour</label><input id="eColor" type="color" value="' + esc(style.color || '#17110d') + '" /></div>' +
+      '<div class="field"><label>Alignment</label><div class="seg">' + [['left','Left'],['center','Centre'],['right','Right']].map(([value,label]) => '<button data-ealign="' + value + '" class="' + (style.align === value ? 'on' : '') + '">' + label + '</button>').join('') + '</div></div>' +
+      number('eLine', 'Line height', style.lineHeight, 0.8, 2.4, 0.05) +
+    '</div>' +
+    '<div class="sec"><h3>Box</h3>' +
+      (isContainer ? '<div class="field"><label>Arrangement</label><select id="eLayout">' + [['','Default'],['stack','Stacked'],['row','Side by side'],['grid','Two columns']].map(([value,label]) => '<option value="' + value + '"' + ((style.layout || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' : '') +
+      number('eWidth', 'Width (% of container)', style.width, 10, 100) +
+      number('eHeight', 'Height (px)', style.height, 8, 800) +
+      number('ePadding', 'Padding (px)', style.padding, 0, 64) +
+      number('eMargin', 'Margin (px)', style.margin, 0, 64) +
+      number('eGap', 'Gap (px)', style.gap, 0, 64) +
+      '<div class="field"><label>Background</label><input id="eBg" type="color" value="' + esc(style.background || '#ffffff') + '" /></div>' +
+      number('eRadius', 'Corner radius (px)', style.radius, 0, 64) +
+      number('eBorder', 'Border (px)', style.border, 0, 8) +
+      '<div class="field"><label>Shadow</label><select id="eShadow">' + [['','Default'],['none','None'],['soft','Soft'],['strong','Strong']].map(([value,label]) => '<option value="' + value + '"' + ((style.shadow || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
+    '</div>' +
+    (nav ? '<div class="sec"><h3>Navigation</h3>' + number('eOrder', 'Position in tab bar', style.order, 1, 20) + '</div>' : '') +
+    (meta.tag === 'button' && !nav ? '<div class="sec"><h3>Icon</h3><div class="field"><label>Beside the label</label><select id="eIcon">' + [['','Design default'],['none','Remove added icon'],['arrow','Arrow'],['chevron','Chevron'],['plus','Plus'],['star','Star']].map(([value,label]) => '<option value="' + value + '"' + ((style.icon || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div></div>' : '') +
+    (isImage ? '<div class="sec"><h3>Image</h3>' +
+      (bound ? '<p class="hint">The product photograph belongs to the catalogue. Change it under Catalogue → item photo, not here.</p>' : '<button class="btn primary" id="ePhoto" style="width:100%">' + (entry.media ? 'Replace photo' : 'Choose photo') + '</button>' + (entry.media ? ' <button class="btn" id="eRemovePhoto" style="width:100%;margin-top:6px">Remove photo</button>' : '')) +
+      '<div class="field"><label>Aspect</label><select id="eAspect">' + [['','Default'],['auto','Original'],['wide','Wide 16:9'],['square','Square'],['portrait','Portrait 4:5']].map(([value,label]) => '<option value="' + value + '"' + ((style.aspect || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
+      '<div class="field"><label>Fitting</label><select id="eFit">' + [['','Default'],['cover','Crop to fill'],['contain','Fit whole image']].map(([value,label]) => '<option value="' + value + '"' + ((style.imageFit || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
+      number('eFocalX', 'Crop focus X (%)', style.focalX, 0, 100) + number('eFocalY', 'Crop focus Y (%)', style.focalY, 0, 100) +
+    '</div>' : '') +
+    (meta.action ? '<div class="sec"><h3>Action</h3><div class="field"><label>Opens</label><select id="eAction"><option value="">Design default</option>' + state.doc.screens.filter((screen) => screen.kind !== 'detail').map((screen) => '<option value="' + appId(screen) + '"' + ((entry.action && entry.action.screen) === appId(screen) ? ' selected' : '') + '>' + esc(screen.name) + '</option>').join('') + '</select></div></div>' : '') +
+    '<div class="sec"><div class="actions" style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" id="eHide">' + (entry.hidden ? 'Show element' : 'Hide element') + '</button><button class="btn" id="eReset" style="color:#a13b2b">Reset element</button></div></div>';
+  $('eBack').addEventListener('click', () => { state.element = null; state.elementMeta = null; render(); });
+  $('eName').addEventListener('input', (event) => setElement(key, { name: event.target.value }));
+  const text = $('eText'); if (text) text.addEventListener('input', (event) => setElement(key, { text: event.target.value }));
+  const bind = (id, field, numberValue) => { const input = $(id); if (!input) return; input.addEventListener('change', () => { const value = numberValue ? (input.value === '' ? undefined : Number(input.value)) : input.value; setElement(key, { style: { [field]: value } }); }); };
+  bind('eSize','fontSize',true); bind('eWeight','weight',true); bind('eColor','color',false); bind('eLine','lineHeight',true);
+  bind('eWidth','width',true); bind('eHeight','height',true); bind('ePadding','padding',true); bind('eMargin','margin',true);
+  bind('eGap','gap',true); bind('eBg','background',false); bind('eRadius','radius',true); bind('eBorder','border',true);
+  bind('eShadow','shadow',false); bind('eAspect','aspect',false); bind('eFit','imageFit',false); bind('eFocalX','focalX',true); bind('eFocalY','focalY',true);
+  bind('eLayout','layout',false); bind('eIcon','icon',false); bind('eOrder','order',true);
+  document.querySelectorAll('[data-ealign]').forEach((button) => button.addEventListener('click', () => setElement(key, { style: { align: button.dataset.ealign } })));
+  const action = $('eAction'); if (action) action.addEventListener('change', () => setElement(key, { action: action.value ? { screen: action.value } : null }));
+  const photo = $('ePhoto'); if (photo) photo.addEventListener('click', () => openMedia(null, null, key));
+  const removePhoto = $('eRemovePhoto'); if (removePhoto) removePhoto.addEventListener('click', () => setElement(key, { media: null }));
+  $('eHide').addEventListener('click', () => setElement(key, { hidden: !entry.hidden }));
+  $('eReset').addEventListener('click', () => resetElement(key));
+}
 function moveComponent(doc, screenId, id, beforeId) {
   const target = doc.screens.find((s) => s.id === screenId); if (!target) return doc;
   const from = target.sections.findIndex((s) => s.id === id); if (from < 0) return doc;
@@ -616,6 +773,7 @@ function moveComponent(doc, screenId, id, beforeId) {
 }
 function renderInspector() {
   if (state.historyMode) { renderHistory(); return; }
+  if (state.element) { renderElementInspector(); return; }
   const node = component();
   $('selectionLabel').textContent = node ? nodeLabel(node) : 'Screen';
   if (!node) { renderScreenInspector(); return; }
@@ -767,18 +925,20 @@ function patchMedia(id, patch) {
     return doc;
   }, true);
 }
-function openMedia(targetId, catalogTarget) {
+function openMedia(targetId, catalogTarget, elementTarget, variantTarget) {
   state.mediaTarget = targetId || null;
   state.catalogTarget = catalogTarget || null;
-  if (catalogTarget) $('catalogModal').hidden = true;
-  $('mediaSub').textContent = catalogTarget ? 'Choose a photo for this item' : targetId ? 'Choose a photo for this block' : 'Your image library';
+  state.elementTarget = elementTarget || null;
+  state.variantMediaTarget = variantTarget || null;
+  if (catalogTarget || variantTarget) $('catalogModal').hidden = true;
+  $('mediaSub').textContent = variantTarget ? 'Choose a photo for this option' : catalogTarget ? 'Choose a photo for this item' : elementTarget ? 'Choose a photo for this element' : targetId ? 'Choose a photo for this block' : 'Your image library';
   $('mediaModal').hidden = false;
   loadMedia();
 }
 function closeMedia() {
-  const reopenCatalog = Boolean(state.catalogTarget);
+  const reopenCatalog = Boolean(state.catalogTarget || state.variantMediaTarget);
   $('mediaModal').hidden = true;
-  state.mediaTarget = null; state.catalogTarget = null; state.mediaReplaceId = null; state.mediaBusy = false; $('mediaStatus').textContent = '';
+  state.mediaTarget = null; state.catalogTarget = null; state.elementTarget = null; state.variantMediaTarget = null; state.mediaReplaceId = null; state.mediaBusy = false; $('mediaStatus').textContent = '';
   if (reopenCatalog) $('catalogModal').hidden = false;
 }
 function loadMedia() {
@@ -795,6 +955,7 @@ function formatBytes(bytes) {
 function mediaUsed(id) {
   let used = 0;
   state.doc.screens.forEach((screen) => screen.sections.forEach((node) => { if (node.media && node.media.id === id) used += 1; }));
+  Object.values(state.doc.elements || {}).forEach((entry) => { if (entry.media && entry.media.id === id) used += 1; });
   CATALOG.forEach((section) => (section.items || []).forEach((item) => { if (item.media && item.media.id === id) used += 1; }));
   return used;
 }
@@ -813,7 +974,7 @@ function renderMedia(suggestions) {
     '<img src="' + mediaSrc(item, 320) + '" alt="' + esc(item.alt || 'Uploaded image') + '" loading="lazy" decoding="async" />' +
     '<div class="meta"><b>' + esc(item.alt || 'Untitled photo') + '</b><span>' + item.width + ' × ' + item.height + ' · ' + formatBytes(item.bytes) + ' · WebP</span>' +
     (used ? '<span class="used">In use · ' + used + ' place' + (used === 1 ? '' : 's') + '</span>' : '') + '</div>' +
-    '<div class="actions"><button class="btn" data-media-use="' + item.id + '">' + (state.mediaTarget || state.catalogTarget ? 'Use photo' : 'Add to screen') + '</button><button class="btn" data-media-replace="' + item.id + '">Replace</button>' +
+    '<div class="actions"><button class="btn" data-media-use="' + item.id + '">' + (state.mediaTarget || state.catalogTarget || state.elementTarget ? 'Use photo' : 'Add to screen') + '</button><button class="btn" data-media-replace="' + item.id + '">Replace</button>' +
     (used ? '<button class="btn del" disabled title="Used in the app">In use</button>' : '<button class="btn del" data-media-delete="' + item.id + '">Delete</button>') + '</div></div>'; }).join('')
     : '<p class="empty">' + (state.media.length ? 'No photos match that search or filter.' : 'No photos yet. Upload one — it is resized to mobile widths automatically and never published at full resolution.') + '</p>';
   const suggestionsEl = $('mediaSuggestions');
@@ -829,6 +990,24 @@ function applyMedia(record, nodeId) {
       closeMedia(); renderCatalog(); toast('Photo assigned. Save catalogue to publish.');
     } else closeMedia();
     return;
+  }
+  if (state.variantMediaTarget) {
+    const parts = state.variantMediaTarget.split(':'); const index = parts.pop(); const target = parts.join(':'); const item = catalogItem(target);
+    const variant = item && item.variants && item.variants[Number(index)];
+    if (variant) {
+      variant.media = { id: record.id, width: record.width, height: record.height, alt: record.alt || variant.name || '', focalX: record.focalX ?? 50, focalY: record.focalY ?? 50, fit: (variant.media && variant.media.fit) || 'cover' };
+      closeMedia(); renderCatalog(); toast('Option photo assigned. Save catalogue to publish.');
+    } else closeMedia();
+    return;
+  }
+  if (state.elementTarget) {
+    commit((doc) => {
+      doc.elements = doc.elements || {};
+      const key = state.elementTarget;
+      doc.elements[key] = Object.assign({}, doc.elements[key], { media: { id: record.id, width: record.width, height: record.height, alt: record.alt || '', focalX: record.focalX ?? 50, focalY: record.focalY ?? 50, fit: (doc.elements[key] && doc.elements[key].media && doc.elements[key].media.fit) || 'cover' } });
+      return doc;
+    }, true);
+    closeMedia(); toast('Element photo updated'); return;
   }
   commit((doc) => {
     const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc;
@@ -878,6 +1057,8 @@ async function uploadPhoto(file) {
     $('mediaStatus').textContent = '';
     if (replaceId) { state.mediaReplaceId = null; await loadMedia(); toast('Photo replaced'); return; }
     if (state.catalogTarget) return applyMedia(payload.media, null);
+    if (state.elementTarget) return applyMedia(payload.media, null);
+    if (state.variantMediaTarget) return applyMedia(payload.media, null);
     if (state.mediaTarget) return applyMedia(payload.media, state.mediaTarget);
     await loadMedia(); toast('Photo uploaded');
   } catch (error) {
@@ -894,6 +1075,38 @@ function openCatalog() {
   $('catalogModal').hidden = false; renderCatalog();
 }
 function closeCatalog() { $('catalogModal').hidden = true; }
+function catalogItem(target) {
+  const [section, item] = String(target).split(':').map(Number);
+  return state.catalog[section] && state.catalog[section].items[item] ? state.catalog[section].items[item] : null;
+}
+function variantPanel(item, target) {
+  const variants = item.variants || [];
+  const groups = item.optionGroups || [];
+  return '<div class="variant-panel" data-variant-panel="' + target + '">' +
+    '<h4>Option groups</h4>' +
+    (groups.length ? groups.map((group, index) => '<div class="variant-group">' +
+      '<input data-vg-name="' + target + '" data-index="' + index + '" value="' + esc(group.name) + '" maxlength="24" aria-label="Option group name" placeholder="Size" />' +
+      '<input data-vg-options="' + target + '" data-index="' + index + '" value="' + esc((group.options || []).join(', ')) + '" maxlength="400" aria-label="Option values" placeholder="Small, Medium, Large" />' +
+      '<button class="x" data-vg-remove="' + target + '" data-index="' + index + '" title="Remove group">✕</button></div>').join('')
+      : '<p class="hint" style="margin:0 0 7px">No groups yet. Groups name the choices; each option below still has its own price and ID.</p>') +
+    '<button class="cat-add" type="button" data-vg-add="' + target + '">+ Option group</button>' +
+    '<h4 style="margin-top:14px">Variants · ' + variants.length + '</h4>' +
+    (variants.length ? variants.map((variant, index) => {
+      const selected = variant.selected === true || (index === 0 && !variants.some((entry) => entry.selected === true));
+      return '<div class="variant-row">' +
+        '<button class="variant-vphoto" type="button" data-variant-photo="' + target + ':' + index + '" title="' + (variant.media ? 'Change photo' : 'Add photo') + '">' + (variant.media ? '<img src="' + mediaSrc(variant.media, 320) + '" alt="" />' : '📷') + '</button>' +
+        '<input data-variant-field="name" data-target="' + target + '" data-index="' + index + '" value="' + esc(variant.name) + '" maxlength="40" aria-label="Variant name" />' +
+        '<input data-variant-field="price" data-target="' + target + '" data-index="' + index + '" type="number" min="0" step="0.01" value="' + ((variant.price || 0) / 100).toFixed(2) + '" aria-label="Variant price" />' +
+        '<span class="id" title="' + (variant.id ? 'Variant ID ' + esc(variant.id) : 'No ID') + '">' + esc(variant.currency || '') + '</span>' +
+        '<span class="id" title="' + (variant.id ? 'Preserved ID: ' + esc(variant.id) : 'New option') + '">' + esc(variant.id || 'new') + '</span>' +
+        '<input type="radio" name="default-' + target + '" data-variant-default="' + target + '" data-index="' + index + '" ' + (selected ? 'checked' : '') + ' aria-label="Default option" title="Default option" />' +
+        '<button class="mv" type="button" data-variant-move="' + target + ':' + index + ':-1" title="Move up" ' + (index === 0 ? 'disabled' : '') + '>↑</button>' +
+        '<button class="x" type="button" data-variant-remove="' + target + ':' + index + '" title="Delete variant">✕</button>' +
+        '</div>';
+    }).join('') : '<p class="hint" style="margin:0 0 7px">No variants. This product has one price.</p>') +
+    '<div class="variant-foot"><button class="cat-add" type="button" data-variant-add="' + target + '">+ Add variant</button><p class="hint">Prices are in the shop currency. Default is what the product shows before the customer chooses. IDs are preserved, including Shopify IDs.</p></div>' +
+    '</div>';
+}
 function renderCatalog() {
   const body = $('catalogBody');
   body.innerHTML = (state.catalog.length ? state.catalog.map((section, sectionIndex) => '<div class="cat-group">' +
@@ -906,6 +1119,8 @@ function renderCatalog() {
       '<input data-cat-field="menu" data-sec="' + sectionIndex + '" data-item="' + itemIndex + '" data-field="desc" value="' + esc(item.desc || '') + '" maxlength="120" placeholder="Short description" aria-label="Item description" />' +
       '<input data-cat-field="menu" data-sec="' + sectionIndex + '" data-item="' + itemIndex + '" data-field="price" type="number" min="0" step="0.01" value="' + ((item.price || 0) / 100).toFixed(2) + '" aria-label="Price" />' +
       '<button class="x" data-cat-remove="' + target + '" title="Remove item">✕</button></div>' +
+      '<div class="variant-bar"><button type="button" data-cat-options="' + target + '">Options: ' + ((item.variants || []).length) + '</button><span>' + ((item.optionGroups || []).map((group) => esc(group.name)).join(' · ') || 'No option groups') + '</span></div>' +
+      (state.variantTarget === target ? variantPanel(item, target) : '') +
       (item.media ? '<div class="cat-media" data-cat-media="' + target + '">' +
         '<div class="field"><label>Describe the photo</label><input data-cat-media="' + target + '" data-field="alt" maxlength="120" value="' + esc(item.media.alt || '') + '" placeholder="What is in this image?" /></div>' +
         '<div class="field"><label>Crop focus</label><input type="range" min="0" max="100" value="' + (item.media.focalX ?? 50) + '" data-cat-media="' + target + '" data-field="focalX" aria-label="Horizontal crop focus" /><input type="range" min="0" max="100" value="' + (item.media.focalY ?? 50) + '" data-cat-media="' + target + '" data-field="focalY" aria-label="Vertical crop focus" /></div>' +
@@ -946,6 +1161,25 @@ function catalogInput(event) {
     if (input.dataset.field === 'positionX' || input.dataset.field === 'positionY') target.image[input.dataset.field] = Math.max(0, Math.min(100, Math.round(Number(input.value || 50))));
     else target.image[input.dataset.field] = input.value;
     return;
+  }
+  if (input.dataset.variantField) {
+    const item = catalogItem(input.dataset.target); const variant = item && item.variants && item.variants[Number(input.dataset.index)];
+    if (!variant) return;
+    if (input.dataset.variantField === 'price') variant.price = Math.max(0, Math.round(Number(input.value || 0) * 100));
+    else variant.name = input.value.slice(0, 40);
+    return;
+  }
+  if (input.dataset.vgName !== undefined || input.dataset.vgOptions !== undefined) {
+    const item = catalogItem(input.dataset.vgName || input.dataset.vgOptions); if (!item) return;
+    const group = item.optionGroups && item.optionGroups[Number(input.dataset.index)]; if (!group) return;
+    if (input.dataset.vgName !== undefined) group.name = input.value.slice(0, 24);
+    else group.options = input.value.split(',').map((value) => value.trim()).filter(Boolean).slice(0, 20).map((value) => value.slice(0, 30));
+    return;
+  }
+  if (input.dataset.variantDefault !== undefined) {
+    const item = catalogItem(input.dataset.variantDefault); if (!item || !item.variants) return;
+    item.variants.forEach((variant, index) => { if (index === Number(input.dataset.index)) variant.selected = true; else delete variant.selected; });
+    renderCatalog(); return;
   }
   if (input.dataset.catField === 'menu') {
     const item = state.catalog[Number(input.dataset.sec)]?.items[Number(input.dataset.item)]; if (!item) return;
@@ -1050,9 +1284,10 @@ document.addEventListener('click', (event) => {
   const mediaDelete = event.target.closest('[data-media-delete]'); if (mediaDelete) { deleteMediaItem(mediaDelete.dataset.mediaDelete); return; }
   const screenAdd = event.target.closest('[data-add-screen]'); if (screenAdd) { addScreen(screenAdd.dataset.addScreen); return; }
   const componentAdd = event.target.closest('[data-add-component]'); if (componentAdd) { addComponent(componentAdd.dataset.addComponent); return; }
-  const open = event.target.closest('[data-open]'); if (open) { state.screen = open.dataset.open; state.selected = null; render(); reloadFrame(); return; }
+  const open = event.target.closest('[data-open]'); if (open) { state.screen = open.dataset.open; state.selected = null; state.element = null; state.elementMeta = null; render(); reloadFrame(); return; }
   const del = event.target.closest('[data-screen-delete]'); if (del) { if (confirm('Delete this screen?')) removeScreen(del.dataset.screenDelete); return; }
-  const select = event.target.closest('[data-select]'); if (select) { state.selected = select.dataset.select; render(); return; }
+  const element = event.target.closest('[data-element]'); if (element) { selectElement(element.dataset.element); return; }
+  const select = event.target.closest('[data-select]'); if (select) { state.selected = select.dataset.select; state.element = null; state.elementMeta = null; render(); return; }
   const hide = event.target.closest('[data-hide]'); if (hide) { commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); const node = screen && screen.sections.find((s) => s.id === hide.dataset.hide); if (node) { node.hidden = !node.hidden; if (!node.hidden) delete node.hiddenBecause; } return doc; }, true); return; }
   const dup = event.target.closest('[data-duplicate]'); if (dup) { commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc; const index = screen.sections.findIndex((s) => s.id === dup.dataset.duplicate); if (index < 0 || screen.sections[index].kind === 'hero') return doc; const cloneNode = clone(screen.sections[index]); cloneNode.id += '_' + Date.now().toString(36); screen.sections.splice(index + 1, 0, cloneNode); return doc; }, true); return; }
   const restore = event.target.closest('[data-restore]'); if (restore) { restoreVersion(restore.dataset.restore); return; }
@@ -1061,11 +1296,17 @@ document.addEventListener('click', (event) => {
 window.addEventListener('message', (event) => {
   const message = event.data;
   if (!message || message.source !== 'plattr-canvas') return;
-  if (message.type === 'select') { state.selected = message.id; quickShown = null; render(); }
+  if (message.type === 'select') { state.selected = message.id; state.element = null; state.elementMeta = null; quickShown = null; render(); }
+  if (message.type === 'element') { state.selected = message.id || null; state.element = message.key; state.elementMeta = message; quickShown = null; render(); }
   if (message.type === 'move') commit((doc) => moveComponent(doc, state.screen, message.id, message.before), true);
   if (message.type === 'screen') { const screen = state.doc.screens.find((s) => appId(s) === message.id); if (screen) { state.screen = screen.id; state.selected = null; quickShown = null; render(); } }
 });
-frame.addEventListener('load', () => { if (state.selected) setTimeout(() => { try { frame.contentWindow.postMessage({ source: 'plattr-editor', type: 'select', id: state.selected }, '*'); } catch {} }, 90); });
+frame.addEventListener('load', () => {
+  setTimeout(() => {
+    try { if (state.element) frame.contentWindow.postMessage({ source: 'plattr-editor', type: 'element', key: state.element }, '*'); else if (state.selected) frame.contentWindow.postMessage({ source: 'plattr-editor', type: 'select', id: state.selected }, '*'); } catch (error) {}
+    renderElements();
+  }, 120);
+});
 $('quickClose').addEventListener('click', () => { state.selected = null; quickShown = null; render(); });
 $('quickTitle').addEventListener('input', (event) => commit((doc) => patchNode(doc, state.selected, { title: event.target.value }), true));
 $('quickText').addEventListener('input', (event) => commit((doc) => patchNode(doc, state.selected, { text: event.target.value }), true));
@@ -1152,6 +1393,36 @@ $('catalogBody').addEventListener('click', (event) => {
   if (addSection) { state.catalog.push({ name: 'New category', items: [{ name: '', desc: '', price: 0 }] }); renderCatalog(); return; }
   const remove = event.target.closest('[data-cat-remove]');
   if (remove) { const [section, item] = remove.dataset.catRemove.split(':').map(Number); state.catalog[section].items.splice(item, 1); renderCatalog(); return; }
+  const options = event.target.closest('[data-cat-options]');
+  if (options) { state.variantTarget = state.variantTarget === options.dataset.catOptions ? null : options.dataset.catOptions; renderCatalog(); return; }
+  const addVariant = event.target.closest('[data-variant-add]');
+  if (addVariant) {
+    const item = catalogItem(addVariant.dataset.variantAdd); if (!item) return;
+    item.variants = item.variants || [];
+    const first = item.variants.length === 0;
+    item.variants.push({ id: 'var_' + Date.now().toString(36), name: first ? 'Standard' : 'New option', price: item.price || 0, ...(first ? { selected: true } : {}) });
+    renderCatalog(); return;
+  }
+  const removeVariant = event.target.closest('[data-variant-remove]');
+  if (removeVariant) {
+    const parts = removeVariant.dataset.variantRemove.split(':'); const index = parts.pop(); const target = parts.join(':'); const item = catalogItem(target); if (!item || !item.variants) return;
+    const removed = item.variants.splice(Number(index), 1)[0];
+    if (removed && removed.selected && item.variants.length) item.variants[0].selected = true;
+    renderCatalog(); return;
+  }
+  const moveVariant = event.target.closest('[data-variant-move]');
+  if (moveVariant) {
+    const parts = moveVariant.dataset.variantMove.split(':'); const delta = parts.pop(); const index = parts.pop(); const target = parts.join(':'); const item = catalogItem(target); if (!item || !item.variants) return;
+    const from = Number(index); const to = from + Number(delta);
+    if (to < 0 || to >= item.variants.length) return;
+    const [moving] = item.variants.splice(from, 1); item.variants.splice(to, 0, moving); renderCatalog(); return;
+  }
+  const variantPhoto = event.target.closest('[data-variant-photo]');
+  if (variantPhoto) { openMedia(null, null, null, variantPhoto.dataset.variantPhoto); return; }
+  const addGroup = event.target.closest('[data-vg-add]');
+  if (addGroup) { const item = catalogItem(addGroup.dataset.vgAdd); if (!item) return; item.optionGroups = item.optionGroups || []; item.optionGroups.push({ name: 'Size', options: ['Small', 'Medium', 'Large'] }); renderCatalog(); return; }
+  const removeGroup = event.target.closest('[data-vg-remove]');
+  if (removeGroup) { const item = catalogItem(removeGroup.dataset.vgRemove); if (!item || !item.optionGroups) return; item.optionGroups.splice(Number(removeGroup.dataset.index), 1); renderCatalog(); return; }
   const addOffer = event.target.closest('[data-offer-add]');
   if (addOffer) { state.offers.push({ title: '', body: '' }); renderCatalog(); return; }
   const removeOffer = event.target.closest('[data-offer-remove]');

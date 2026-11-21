@@ -514,6 +514,21 @@ function sanitizeItemImage(value: unknown): MenuItem['image'] {
   }
 }
 
+function sanitizeOptionGroups(value: unknown): { name: string; options: string[] }[] {
+  if (!Array.isArray(value)) return []
+  return value.slice(0, 8).flatMap((raw) => {
+    const entry = (raw ?? {}) as Record<string, unknown>
+    const name = typeof entry.name === 'string' ? entry.name.trim().slice(0, 24) : ''
+    const options = Array.isArray(entry.options)
+      ? entry.options
+          .map((option) => String(option ?? '').trim().slice(0, 30))
+          .filter(Boolean)
+          .slice(0, 20)
+      : []
+    return name && options.length ? [{ name, options }] : []
+  })
+}
+
 function sanitizeItemMedia(value: unknown): MenuItem['media'] {
   if (!value || typeof value !== 'object') return undefined
   const input = value as Record<string, unknown>
@@ -593,9 +608,11 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               tag?: unknown
               meta?: unknown
               vendor?: unknown
+              sourceId?: unknown
               media?: unknown
               image?: unknown
               variants?: unknown
+              optionGroups?: unknown
             }
             const price =
               typeof entry.price === 'number' && Number.isFinite(entry.price)
@@ -610,8 +627,11 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
             const seen = (used.get(base) ?? 0) + 1
             used.set(base, seen)
             const id = seen === 1 ? base : `${base}_${seen}`
+            const rawSource = typeof entry.sourceId === 'string' ? entry.sourceId.trim() : ''
+            const sourceId = /^[A-Za-z0-9_:/.-]{1,120}$/.test(rawSource) ? rawSource : undefined
             return {
               id,
+              ...(sourceId ? { sourceId } : {}),
               name: itemName,
               desc: String(entry.desc ?? '').trim().slice(0, 400),
               price,
@@ -620,6 +640,9 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               vendor: String(entry.vendor ?? '').trim().slice(0, 40) || undefined,
               ...(sanitizeItemMedia(entry.media) ? { media: sanitizeItemMedia(entry.media) } : {}),
               ...(sanitizeItemImage(entry.image) ? { image: sanitizeItemImage(entry.image) } : {}),
+              ...(sanitizeOptionGroups(entry.optionGroups).length
+                ? { optionGroups: sanitizeOptionGroups(entry.optionGroups) }
+                : {}),
               ...(sanitizeVariants(entry.variants).length
                 ? { variants: sanitizeVariants(entry.variants) }
                 : {}),
@@ -636,8 +659,18 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
  *  catalogue is not flattened to a single unexplained figure. */
 function sanitizeVariants(
   input: unknown,
-): { id?: string; name: string; price: number; currency?: string; selected?: boolean }[] {
+): {
+  id?: string
+  name: string
+  price: number
+  currency?: string
+  selected?: boolean
+  media?: MenuItem['media']
+}[] {
   if (!Array.isArray(input)) return []
+  const selectedSeen = input.some(
+    (entry) => entry && typeof entry === 'object' && (entry as Record<string, unknown>).selected === true,
+  )
   return input.slice(0, 200).flatMap((raw) => {
     const entry = (raw ?? {}) as Record<string, unknown>
     const name = typeof entry.name === 'string' ? entry.name.trim().slice(0, 40) : ''
@@ -646,14 +679,19 @@ function sanitizeVariants(
     const currency =
       typeof entry.currency === 'string' && /^[A-Z]{3}$/.test(entry.currency) ? entry.currency : undefined
     const rawId = typeof entry.id === 'string' ? entry.id.trim() : ''
-    const id = /^[A-Za-z0-9_-]{1,40}$/.test(rawId) ? rawId : undefined
+    // Shopify may send a numeric id or a GraphQL gid; both are opaque identity
+    // and are preserved rather than rewritten.
+    const id = /^[A-Za-z0-9_:/.-]{1,120}$/.test(rawId) ? rawId : undefined
     return [
       {
         ...(id ? { id } : {}),
         name,
         price: Math.min(1_000_000, Math.round(price)),
         ...(currency ? { currency } : {}),
-        ...(entry.selected === true ? { selected: true } : {}),
+        // A default is meaningful only when the catalogue still marks one; the
+        // first option is the fallback at render time.
+        ...(selectedSeen && entry.selected === true ? { selected: true } : {}),
+        ...(sanitizeItemMedia(entry.media) ? { media: sanitizeItemMedia(entry.media) } : {}),
       },
     ]
   })

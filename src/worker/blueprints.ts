@@ -224,10 +224,23 @@ export function composeHome(
     if (chosen.length >= 3) break
     take(role)
   }
+  // The same catalogue, arranged for this concept: a narrative reads as rows,
+  // an index as a dense grid, an image-led screen as a swipeable strip. This is
+  // component layout, not a different data set, so nothing is lost.
+  const layoutFor = (role: BlockRole | null): NonNullable<DocNode['layout']> =>
+    !role || role === 'lead' || role === 'note'
+      ? blueprint.id === 'lead' ? 'split' : blueprint.id === 'index' ? 'grid' : 'split'
+      : blueprint.id === 'lead' ? 'list' : blueprint.id === 'index' ? 'grid' : 'strip'
+  // Arrange clones, but decide membership on the originals so a block can never
+  // appear both on home and in the leftovers.
+  const arranged = chosen.map((node) => ({
+    ...node,
+    layout: layoutFor(roles[sections.indexOf(node)] ?? null),
+  }))
   // Nothing a blueprint does not put on home is silently deleted: the other
   // blocks keep their own order after the composed run, where the owner can
   // still select and move them.
-  return { home: chosen, elsewhere: sections.filter((section) => !chosen.includes(section)) }
+  return { home: arranged, elsewhere: sections.filter((section) => !chosen.includes(section)) }
 }
 
 /** Navigation belongs to the blueprint: the same trade can open on its
@@ -266,6 +279,12 @@ export function composeScreens(spec: AppSpec, doc: Doc): { doc: Doc; blueprint: 
   })
   doc.screens = ordered
   doc.initialScreen = initial
+  // Navigation model is part of the structure: a bar, a floating pill and a
+  // dock read differently and leave different room for content.
+  doc.design = {
+    ...(doc.design ?? {}),
+    nav: blueprint.id === 'index' ? 'dock' : blueprint.id === 'immersive' ? 'floating' : 'bar',
+  }
   return { doc, blueprint }
 }
 
@@ -287,6 +306,8 @@ export type Structure = {
   nav: string[]
   sections: string[]
   roles: BlockRole[]
+  /** How each home component arranges its own children. */
+  layouts: string[]
   count: number
 }
 
@@ -305,6 +326,7 @@ export function structureOf(spec: AppSpec, doc: Doc): Structure {
     nav: doc.screens.filter((screen) => screen.nav).map((screen) => screen.kind),
     sections: nodes.map((node) => node.variant ?? node.kind),
     roles: roleList(spec, nodes),
+    layouts: nodes.map((node) => node.layout ?? 'default'),
     count: nodes.length,
   }
 }
@@ -347,18 +369,21 @@ export function validateConcepts(
       const sameOrder = left.sections.join('>') === right.sections.join('>')
       const sectionScore = jaccard(left.sections, right.sections)
       const navScore = jaccard(left.nav, right.nav)
+      const sameLayout = left.layouts.join('>') === right.layouts.join('>')
       // Hierarchy and chrome are what an owner experiences, so they carry the
       // weight. A shared block vocabulary is expected within one trade; the
       // same order, opening screen and tabs are what make it one design.
       const score =
-        (sameOrder ? 0.4 : 0) +
-        (sameInitial ? 0.25 : 0) +
-        (navScore === 1 ? 0.25 : 0) +
+        (sameOrder ? 0.35 : 0) +
+        (sameInitial ? 0.2 : 0) +
+        (navScore === 1 ? 0.2 : 0) +
+        (sameLayout ? 0.15 : 0) +
         (sectionScore === 1 ? 0.1 : 0)
       const reasons: string[] = []
       if (sameOrder) reasons.push('same sections in the same order')
       if (sameInitial) reasons.push('same opening screen')
       if (navScore === 1) reasons.push('same tabs')
+      if (sameLayout) reasons.push('same component arrangement')
       if (sectionScore >= 0.8) reasons.push('same block set')
       pairs.push({
         a: docs[i].id,

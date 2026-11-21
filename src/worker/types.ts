@@ -70,6 +70,9 @@ export type MenuItem = {
   /** Stable identity derived from the section and name, not from position, so
    *  a document can reference this item across re-imports and reorderings. */
   id?: string
+  /** The source's own product id (for example a Shopify product id). Preserved
+   *  so a variant can always be traced back to the product it belongs to. */
+  sourceId?: string
   name: string
   desc: string
   /** In cents. 0 means "priced on request". */
@@ -89,7 +92,12 @@ export type MenuItem = {
     price: number
     currency?: string
     selected?: boolean
+    /** A photograph of this option, when the owner has one. */
+    media?: ItemMedia
   }[]
+  /** Option groups such as Size, Colour or Material. Variants keep their own
+   *  names and prices; groups describe the choices the owner offers. */
+  optionGroups?: { name: string; options: string[] }[]
   /** The seller on a marketplace: the store an item is bought from. */
   vendor?: string
   /** A photograph owned by this product, service or room. */

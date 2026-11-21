@@ -380,7 +380,7 @@ function fxWrap(ctx: FlagshipContext, node: DocNode, html: string): string {
   ]
     .filter(Boolean)
     .join(';')
-  return `<div class="doc-section fx-block${hides ? ` ${hides}` : ''}" data-sec="${node.id}" data-variant="${node.variant || ''}"${style ? ` style="${style}"` : ''}>${html}</div>`
+  return `<div class="doc-section fx-block${hides ? ` ${hides}` : ''}" data-sec="${node.id}" data-variant="${node.variant || ''}"${node.layout ? ` data-layout="${node.layout}"` : ''}${style ? ` style="${style}"` : ''}>${html}</div>`
 }
 
 const MEDIA_BLOCKS = new Set([
@@ -1338,8 +1338,47 @@ function tradeClass(spec: AppSpec): string {
   }
 }
 
+/** Generic document components on a flagship home. They are ordinary doc
+ *  nodes added from the editor, so they must draw here rather than silently
+ *  disappearing because the trade has a flagship composition. */
+function genericDocBlock(ctx: FlagshipContext, node: DocNode): string {
+  const title = node.title || ''
+  const text = node.text || ''
+  const go = (target?: string) => {
+    const screen = ctx.doc?.screens.find((entry) => entry.id === target)
+    return screen && ['contact', 'profile', 'about', 'custom'].includes(screen.kind) ? screen.id : screen?.kind || target || 'home'
+  }
+  switch (node.kind) {
+    case 'image': {
+      if (node.media) return `<figure class="media-frame" style="margin:14px 0">${photoFor(ctx, node.media, title)}</figure>`
+      return '<div class="fx-art" style="aspect-ratio:16/10;margin:14px 0;border-radius:12px;background:var(--surface-2)" aria-hidden="true"></div>'
+    }
+    case 'heading':
+      return `<h2 style="margin:18px 0 6px">${esc(title)}</h2>`
+    case 'text':
+      return `<p style="margin:10px 0;line-height:1.65">${esc(text || title)}</p>`
+    case 'button':
+      return `<div style="margin:14px 0"><button class="fx-primary" type="button" data-go="${esc(go(node.cta?.screen))}">${esc(node.cta?.label || title || 'Continue')}</button></div>`
+    case 'banner':
+      return `<div class="fx-generic-banner" style="margin:14px 0;padding:18px;border-radius:14px;background:var(--surface-2)"><b>${esc(title)}</b>${text ? `<p style="margin:6px 0 0">${esc(text)}</p>` : ''}</div>`
+    case 'cta':
+      return `<div style="margin:18px 0;text-align:center"><b style="display:block;font-size:20px">${esc(title || 'Ready when you are')}</b>${text ? `<p style="margin:6px 0 12px">${esc(text)}</p>` : ''}<button class="fx-primary" type="button" data-go="${esc(go(node.cta?.screen))}">${esc(node.cta?.label || 'Continue')}</button></div>`
+    case 'story':
+      return `<div style="margin:18px 0"><span class="fx-eyebrow">Our story</span><p style="margin:6px 0;line-height:1.7">${esc(text || title)}</p></div>`
+    case 'visit':
+      return `<div style="margin:18px 0"><b>${esc(title || 'Visit')}</b><p style="margin:4px 0;line-height:1.6">${esc([ctx.spec.hours, ctx.spec.address].filter(Boolean).join(' · '))}</p></div>`
+    case 'search':
+      return `<button class="fx-primary" type="button" data-search-open style="margin:12px 0">Search</button>`
+    default:
+      return ''
+  }
+}
+
 function flagshipNode(ctx: FlagshipContext, node: DocNode, standalone = false): string {
-  if (node.kind !== 'flagship') return ''
+  if (node.kind !== 'flagship') {
+    const generic = genericDocBlock(ctx, node)
+    return generic ? fxWrap(ctx, node, generic) : ''
+  }
   const body = flagshipBody(ctx, node)
   if (!body) return ''
   // An editorial photo keeps the shape it was published in: the frame takes the
@@ -1379,7 +1418,7 @@ export function flagshipHome(input: AppSpec | FlagshipContext): string {
   const activeDoc = ctx.doc ?? generated
   const renderCtx: FlagshipContext = activeDoc === ctx.doc ? ctx : { ...ctx, doc: activeDoc }
   const nodes = activeDoc
-    ? homeSections(activeDoc).filter((node) => node.kind === 'flagship' && !node.hidden)
+    ? homeSections(activeDoc).filter((node) => !node.hidden)
     : []
   if (nodes.length)
     return `<div class="fx-home ${tradeClass(ctx.spec)}">${nodes.map((node) => flagshipNode(renderCtx, node)).join('')}</div>`
