@@ -1510,6 +1510,14 @@ body[data-trade="shop"] :is(
 ) { border-radius: 2px; }
 body[data-trade="shop"] .sheet { border-radius: 2px 2px 0 0; }
 
+/* The shop's related products are a list too: one piece per row on a phone,
+   then a pair. The rail's horizontal swipe stays for other compositions. */
+body[data-trade="shop"] .rec-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; overflow: visible; }
+body[data-trade="shop"] .rec { grid-template-columns: 92px minmax(0, 1fr); align-items: center; gap: 14px; }
+body[data-trade="shop"] .rec-art { aspect-ratio: 1 / 1; }
+body[data-trade="shop"] .rec-copy b { font-size: 13px; }
+@media (min-width: 720px) { body[data-trade="shop"] .rec-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; } }
+
 /* Salon: a lookbook. Arched portraits, hairline service lines and a serif
    scale that reads like a printed price list. */
 body[data-trade="salon"] .appbar {
@@ -2506,10 +2514,12 @@ html body[data-layout="retail"] .more { padding: 26px 0 0; }
 .rl-grid { display: grid; grid-template-columns: 1fr; gap: 46px 30px; align-items: start; }
 @media (min-width: 720px) { .rl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 58px 34px; } }
 @media (min-width: 1080px) { .rl-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 66px 42px; } }
-.rl-grid.is-home { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 16px; }
+.rl-grid.is-home { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+@media (min-width: 720px) { .rl-grid.is-home { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 20px; } }
 @media (min-width: 1080px) { .rl-grid.is-home { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 30px 22px; } }
-/* The curated home shelf is a 2-up on a phone; on a wide screen that would
-   make each photograph a poster, so it opens out into a four-panel run. */
+/* The curated home shelf keeps one piece per row on a phone, where a pair of
+   half-width photographs would be the smallest thing on the page. It opens
+   out only once two and then four pictures can each hold their own. */
 @media (min-width: 1080px) {
   html body[data-layout="retail"] .fx-products { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 44px 26px !important; }
 }

@@ -1681,12 +1681,18 @@ body[data-trade="shop"][data-flagship="1"] .fx-rail { margin-bottom: 25px; }
 body[data-trade="shop"][data-flagship="1"] .fx-shop-head { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 12px; }
 body[data-trade="shop"][data-flagship="1"] .fx-shop-head span { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
 body[data-trade="shop"][data-flagship="1"] .fx-shop-head button { border: 0; background: none; color: inherit; font: inherit; font-size: 10px; opacity: .5; text-decoration: underline; text-underline-offset: 3px; }
-body[data-trade="shop"][data-flagship="1"] .fx-products { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 14px; align-items: start; }
+/* A shop reads one piece at a time on a phone. Columns appear only when there
+   is room to give each product a real photograph rather than two postage
+   stamps; the direction below decides the card's edges, never the count. */
+body[data-trade="shop"][data-flagship="1"] .fx-products { display: grid; grid-template-columns: minmax(0, 1fr); gap: 34px; align-items: start; }
+@media (min-width: 720px) {
+  body[data-trade="shop"][data-flagship="1"] .fx-products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 22px; }
+}
 body[data-trade="shop"][data-flagship="1"] .fx-product { min-width: 0; cursor: pointer; }
 body[data-trade="shop"][data-flagship="1"] .fx-product .fx-art { width: 100%; aspect-ratio: .78; border-radius: 2px; }
 /* A real product photograph keeps its own shape rather than sitting letterboxed
    inside a decorative frame. */
-body[data-trade="shop"][data-flagship="1"] .fx-product .fx-art.has-photo { aspect-ratio: auto; background: var(--surface-2); }
+body[data-trade="shop"][data-flagship="1"] .fx-product .fx-art.has-photo { aspect-ratio: auto !important; background: var(--surface-2); }
 body[data-trade="shop"][data-flagship="1"] .fx-product .fx-art.has-photo > img.fx-photo { position: static; width: 100%; height: auto; object-fit: cover; }
 body[data-trade="shop"][data-flagship="1"] .fx-product:nth-child(2n) .fx-art { background: radial-gradient(115% 95% at 20% 16%, color-mix(in srgb, var(--accent) 40%, transparent), transparent 60%), linear-gradient(165deg, color-mix(in srgb, var(--ink) 14%, var(--bg)), color-mix(in srgb, var(--accent) 22%, var(--bg))); }
 body[data-trade="shop"][data-flagship="1"] .fx-product:nth-child(3n) .fx-art { background: radial-gradient(100% 80% at 84% 78%, color-mix(in srgb, var(--accent) 42%, transparent), transparent 60%), linear-gradient(130deg, color-mix(in srgb, var(--accent) 12%, var(--bg)), color-mix(in srgb, var(--ink) 16%, var(--bg))); }
@@ -1701,7 +1707,10 @@ body[data-trade="shop"][data-flagship="1"] .fx-wide-link { display: flex; justif
 body[data-trade="shop"][data-flagship="1"] .fx-shop-lead { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; padding: 22px 0 18px; }
 body[data-trade="shop"][data-flagship="1"] .fx-shop-lead h1 { font-family: var(--display); font-size: 27px; line-height: 1.05; letter-spacing: -.035em; font-weight: 500; margin: 6px 0 0; max-width: 19ch; }
 body[data-trade="shop"][data-flagship="1"] .fx-count { flex: 0 0 auto; font-size: 9px; opacity: .45; padding-bottom: 3px; }
-body[data-trade="shop"][data-flagship="1"] .tiles { grid-template-columns: 1fr 1fr; gap: 16px 10px; }
+body[data-trade="shop"][data-flagship="1"] .tiles { display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px; }
+@media (min-width: 720px) {
+  body[data-trade="shop"][data-flagship="1"] .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 18px; }
+}
 body[data-trade="shop"][data-flagship="1"] .tile { border: 0; background: transparent; padding: 0; }
 body[data-trade="shop"][data-flagship="1"] .tile .thumb { width: 100%; height: auto; aspect-ratio: .78; }
 body[data-trade="shop"][data-flagship="1"] .tile .body { padding: 8px 2px 0; }
@@ -2616,7 +2625,6 @@ body[data-flagship="1"][data-layout="editorial"] .fx-art { aspect-ratio: 3 / 2 !
 body[data-flagship="1"][data-layout="editorial"] .fx-search { display: none !important; }
 body[data-flagship="1"][data-layout="editorial"] .fx-shop-title { font-family: ui-serif, Georgia, serif !important; font-weight: 500 !important; }
 
-body[data-flagship="1"][data-layout="rows"] .fx-products { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
 body[data-flagship="1"][data-layout="rows"] .fx-product { border: 1px solid var(--line) !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
 body[data-flagship="1"][data-layout="rows"] .fx-art { aspect-ratio: 1 / 1 !important; border-radius: 0 !important; }
 body[data-flagship="1"][data-layout="rows"] .fx-search { display: none !important; }

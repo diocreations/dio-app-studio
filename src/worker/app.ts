@@ -1401,6 +1401,20 @@ const DOC_CSS = `
 .doc-section[data-layout="strip"] :where(.fx-products, .fx-rooms, .fx-services, .fx-menu) { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px; }
 .doc-section[data-layout="strip"] :where(.fx-products, .fx-rooms, .fx-services, .fx-menu)::-webkit-scrollbar { display: none; }
 .doc-section[data-layout="strip"] :where(.fx-products, .fx-rooms, .fx-services, .fx-menu) > * { flex: 0 0 76%; scroll-snap-align: start; min-width: 0; }
+/* A shop still reads one piece at a time on a phone, whatever shelf layout the
+   owner chose. Their grid takes over from the tablet width up. */
+@media (max-width: 719px) {
+  body:where([data-trade="shop"]) .doc-section[data-layout="grid"] .fx-products { grid-template-columns: minmax(0, 1fr) !important; gap: 28px !important; }
+  /* A shop shelf is a list on a phone even when its shelf layout is a strip;
+     one piece per row is the retail reading, not a 76% carousel. */
+  body:where([data-trade="shop"]) .doc-section[data-layout="strip"] .fx-products { display: grid !important; grid-template-columns: minmax(0, 1fr) !important; gap: 34px !important; overflow: visible !important; }
+}
+@media (min-width: 720px) {
+  body:where([data-trade="shop"]) .doc-section[data-layout="strip"] .fx-products { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 40px 22px !important; overflow: visible !important; }
+}
+@media (min-width: 1080px) {
+  body:where([data-trade="shop"]) .doc-section[data-layout="strip"] .fx-products { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 44px 26px !important; }
+}
 .doc-section[style*="padding-block"] { margin-inline: -2px; }
 @media (max-width: 599px) { .hide-mobile { display: none !important; } }
 @media (min-width: 600px) and (max-width: 1023px) { .hide-tablet { display: none !important; } }
