@@ -93,16 +93,21 @@ function art(index: number, shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' 
   return `<span class="fx-art is-${shape}" style="--fx-i:${index % 6}" aria-hidden="true"><i></i><i></i><i></i></span>`
 }
 
-/** Real photography where the trade has a local set, artwork otherwise. */
+/** One quiet absence state for a product image, never generated product art. */
+function missingArt(shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' = 'card'): string {
+  return `<span class="fx-art is-${shape} is-missing" aria-hidden="true"><span class="media-missing"><svg class="media-missing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg></span></span>`
+}
+
+/** Real photography where the trade has a local set, a neutral frame otherwise. */
 function still(spec: AppSpec, index: number, shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' = 'card'): string {
-  // Imported businesses get artwork, not this trade's stock photography.
-  if (spec.website) return art(index, shape)
+  // Imported businesses get a neutral frame, not this trade's stock photography.
+  if (spec.website) return missingArt(shape)
   const sizes =
     shape === 'room' ? '100vw' : shape === 'plate' ? '(max-width: 620px) 30vw, 140px' : shape === 'quiet' ? '54px' : '(max-width: 620px) 45vw, 220px'
   const photo = stockImageTag(spec.vertical, index, { sizes })
   return photo
     ? `<span class="fx-art is-${shape} has-photo">${photo}</span>`
-    : art(index, shape)
+    : missingArt(shape)
 }
 
 function entryPhotoIndex(spec: AppSpec, key: string): number {
@@ -358,14 +363,14 @@ function visual(
   if (useMedia && node.media)
     return `<span class="fx-art is-${shape} has-photo">${photoFor(ctx, node.media, node.title || '', undefined, priority)}</span>`
   // An imported business never gets this trade's stock photography as if it
-  // were its own. Only artwork, unless the owner uploads or the site supplies
-  // the exact image above.
-  if (ctx.spec.website) return art(index, shape)
+  // were its own. The owner's uploads or the source image above are the only
+  // photographs; everything else gets the same quiet missing-image frame.
+  if (ctx.spec.website) return missingArt(shape)
   const sizes =
     shape === 'room' ? '100vw' : shape === 'plate' ? '(max-width: 620px) 30vw, 140px' : shape === 'quiet' ? '54px' : '(max-width: 620px) 45vw, 220px'
   const shot = stockImageTag(ctx.spec.vertical, photoIndex, { sizes, priority })
   if (shot) return `<span class="fx-art is-${shape} has-photo">${shot}</span>`
-  return art(index, shape)
+  return missingArt(shape)
 }
 
 function fxWrap(ctx: FlagshipContext, node: DocNode, html: string): string {
@@ -1613,6 +1618,11 @@ body[data-flagship="1"] .doc-section { margin-top: 18px; }
 /* Decorative artwork, clearly not a product photograph. */
 .fx-art { position: relative; display: block; overflow: hidden; flex: 0 0 auto; background: radial-gradient(115% 95% at 78% 12%, color-mix(in srgb, var(--accent) 38%, transparent), transparent 58%), linear-gradient(148deg, color-mix(in srgb, var(--accent) 24%, var(--bg)) 0%, color-mix(in srgb, var(--ink) 9%, var(--bg)) 100%); isolation: isolate; }
 .fx-art::after { content: ""; position: absolute; inset: 0; opacity: .18; background-image: repeating-linear-gradient(115deg, rgba(255,255,255,.24) 0 1px, transparent 1px 5px); mix-blend-mode: soft-light; }
+.fx-art.is-missing { background: var(--surface-2); }
+.fx-art.is-missing::after { display: none; }
+.fx-art.is-missing .media-missing { padding: 8px; }
+.fx-art.is-missing .media-missing-icon { width: 22px; height: 22px; opacity: .48; }
+.fx-art.is-missing .media-missing-label { display: none; }
 .fx-art i { position: absolute; display: block; border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent); border-radius: 50%; }
 .fx-art i:nth-child(1) { width: 78%; height: 78%; left: -16%; top: -22%; background: color-mix(in srgb, var(--bg) 12%, transparent); }
 .fx-art i:nth-child(2) { width: 48%; height: 48%; right: -6%; bottom: -10%; background: color-mix(in srgb, var(--accent) 19%, transparent); }

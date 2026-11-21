@@ -1539,9 +1539,20 @@ const SCREEN_DEFAULT_SECTIONS: Partial<Record<ScreenKind, (spec: AppSpec) => Doc
 
 export function addScreen(doc: Doc, kind: ScreenKind, spec: AppSpec): Doc {
   if (screenFor(doc, kind)) return doc
-  const defaults = SCREEN_DEFAULT_SECTIONS[kind]?.(spec) ?? []
+  const screenId = nextScreenId(doc, kind)
+  const used = new Set(doc.screens.flatMap((entry) => entry.sections.map((sectionNode) => sectionNode.id)))
+  const defaults = (SCREEN_DEFAULT_SECTIONS[kind]?.(spec) ?? []).map((sectionNode) => {
+    let id = sectionNode.id
+    if (used.has(id)) {
+      id = `${screenId}_${sectionNode.id}`
+      let suffix = 2
+      while (used.has(id)) { id = `${screenId}_${sectionNode.id}_${suffix}`; suffix += 1 }
+    }
+    used.add(id)
+    return { ...sectionNode, id }
+  })
   const entry = screen(kind, {
-    id: nextScreenId(doc, kind),
+    id: screenId,
     nav: kind === 'contact' || kind === 'profile' || kind === 'about',
     sections: defaults,
   })
@@ -1560,24 +1571,74 @@ export function removeScreen(doc: Doc, id: string): Doc {
   const initial = screens.some((entry) => entry.id === doc.initialScreen)
     ? doc.initialScreen
     : homeScreen({ ...doc, screens }).id
-  return { ...doc, screens, initialScreen: initial }
+  // A legacy document can repeat a section id across screens. Only drop a
+  // record when no remaining screen still owns that id.
+  const remainingIds = new Set(screens.flatMap((entry) => entry.sections.map((section) => section.id)))
+  const removed = target.sections.map((entry) => entry.id).filter((id) => !remainingIds.has(id))
+  const elements = doc.elements
+    ? Object.fromEntries(Object.entries(doc.elements).filter(([key]) => !removed.some((section) => key.startsWith(section + '~'))))
+    : undefined
+  return { ...doc, screens, initialScreen: initial, ...(elements ? { elements } : {}) }
 }
 
 export function duplicateScreen(doc: Doc, id: string): Doc {
   const index = doc.screens.findIndex((entry) => entry.id === id)
   if (index < 0 || doc.screens[index].kind === 'home') return doc
   const source = doc.screens[index]
+  const used = new Set(doc.screens.flatMap((entry) => entry.sections.map((section) => section.id)))
+  // An older document may share a section id with another screen. Its element
+  // records are ambiguous, so copy the content without claiming either side.
+  const shared = new Set(
+    doc.screens
+      .filter((entry) => entry !== source)
+      .flatMap((entry) => entry.sections.map((section) => section.id)),
+  )
+  const sectionMap = new Map<string, string>()
+  source.sections.forEach((entry) => {
+    let next = `${entry.id}_copy`
+    let suffix = 2
+    while (used.has(next)) {
+      next = `${entry.id}_copy_${suffix}`
+      suffix += 1
+    }
+    used.add(next)
+    sectionMap.set(entry.id, next)
+  })
   const clone: ScreenNode = {
     ...source,
-    id: nextScreenId(doc, source.kind === 'custom' ? 'custom' : 'custom'),
+    id: nextScreenId(doc, 'custom'),
     kind: 'custom',
     name: `${source.name} copy`.slice(0, 24),
     nav: false,
-    sections: source.sections.map((entry) => ({ ...entry, id: `${entry.id}_copy` })),
+    sections: source.sections.map((entry) => ({ ...entry, id: sectionMap.get(entry.id)! })),
   }
   const screens = [...doc.screens]
   screens.splice(index + 1, 0, clone)
-  return { ...doc, screens }
+  const elements = doc.elements ? { ...doc.elements } : undefined
+  if (elements) {
+    const remap = (key: string) => {
+      for (const [from, to] of sectionMap) {
+        if (key.startsWith(from + '~')) return to + key.slice(from.length)
+      }
+      return key
+    }
+    for (const [from, to] of sectionMap) {
+      if (shared.has(from)) continue
+      for (const [key, entry] of Object.entries(doc.elements ?? {})) {
+        if (!key.startsWith(from + '~')) continue
+        const next = { ...entry }
+        if (next.duplicateOf) next.duplicateOf = remap(next.duplicateOf)
+        if (next.copyParent) next.copyParent = remap(next.copyParent)
+        if (next.copyTree) {
+          next.copyTree = Object.fromEntries(
+            Object.entries(next.copyTree).map(([sourceKey, targetKey]) => [remap(sourceKey), remap(targetKey)]),
+          )
+        }
+        elements[to + key.slice(from.length)] = next
+      }
+    }
+  }
+  return { ...doc, screens, ...(elements ? { elements } : {}) }
 }
 
 export function renameScreen(doc: Doc, id: string, name: string): Doc {

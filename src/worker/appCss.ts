@@ -317,6 +317,21 @@ body[data-accent-style="underline"] .sect { border-bottom: 1px solid var(--hair)
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   z-index: 2; display: block;
 }
+.thumb.is-empty { background: var(--surface-2); }
+.thumb.is-empty::before, .thumb.is-empty::after { display: none; }
+/* One absence state for every product image surface. The frame keeps its
+   intended shape; the artwork underneath is never presented as a product. */
+.media-missing {
+  position: absolute; inset: 0; z-index: 0; display: grid; place-items: center; align-content: center;
+  gap: 8px; padding: 14px; background: var(--surface-2); color: var(--muted); text-align: center;
+}
+.media-missing-icon { width: 26px; height: 26px; opacity: 0.55; }
+.media-missing-label {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; line-height: 1.35; text-transform: uppercase;
+}
+.r-row .r-art .media-missing, .rec-art .media-missing { padding: 4px; gap: 2px; }
+.r-row .r-art .media-missing-icon, .rec-art .media-missing-icon { width: 18px; height: 18px; }
+.r-row .r-art .media-missing-label, .rec-art .media-missing-label { display: none; }
 .hero-art { position: absolute; inset: 0; z-index: 0; }
 .hero-art::before { content: ""; position: absolute; z-index: 1; }
 .m-circle::before {
@@ -688,6 +703,8 @@ input:focus, textarea:focus {
   color: var(--on-accent); font-size: 10px; font-weight: 750; letter-spacing: 0.16em; text-transform: uppercase;
 }
 .detail-band .cap .tag { background: color-mix(in srgb, #fff 18%, transparent); color: var(--on-accent); }
+.detail-band.is-empty .cap { color: var(--ink); opacity: 0.58; }
+.detail-band.is-empty .cap .tag { background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--ink); }
 .detail-body { padding: 22px 0 0; display: flex; flex-direction: column; flex: 1 1 auto; }
 /* breathing room between the last line of copy and the pinned bar */
 .detail-gap { flex: 0 0 14px; }
@@ -2509,15 +2526,7 @@ html body[data-layout="retail"] .tabbar { background: var(--bg) !important; box-
   transition: transform 0.6s var(--ease);
 }
 .rl-card:active .rl-photo { transform: scale(0.996); }
-.rl-media.is-empty { aspect-ratio: 4 / 5; }
-.rd-media.is-empty { aspect-ratio: 4 / 5; }
-/* The fallback sits underneath the photograph. It is shown when there is no
-   photograph at all, and when a source image stops loading mid-session. */
-.rl-absent {
-  display: grid; place-items: center; position: absolute; inset: 0; padding: 18px;
-  color: var(--muted); font-size: 9.5px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
-  text-align: center;
-}
+.rl-media.is-empty, .rd-media.is-empty { aspect-ratio: 4 / 5; }
 .rl-save {
   position: absolute; top: 10px; right: 10px; z-index: 2; width: 36px; height: 36px;
   border-radius: 999px; background: color-mix(in srgb, var(--bg) 86%, transparent);

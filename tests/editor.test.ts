@@ -179,6 +179,50 @@ describe('screens and navigation', () => {
     expect(html).toContain('Best shop in town.')
   })
 
+  test('a duplicated screen keeps its remapped element records and a deleted screen drops them', () => {
+    let doc = docFromSpec(spec())
+    doc = addScreen(doc, 'contact', spec())
+    const contact = screenFor(doc, 'contact')!
+    const sourceSection = contact.sections[0].id
+    const sourceKey = `${sourceSection}~h1~0`
+    const cloneKey = `${sourceSection}~div~0~cabc123`
+    doc = normalizeDoc(
+      {
+        ...doc,
+        elements: {
+          [sourceKey]: { text: 'A copied welcome', style: { fontSize: 31 }, action: { screen: 'scr_home' } },
+          [cloneKey]: {
+            duplicateOf: sourceKey,
+            copyTree: { [sourceKey]: `${sourceSection}~h1~0~cabc123` },
+          },
+        },
+      },
+      spec(),
+    )
+
+    const duplicated = duplicateScreen(doc, contact.id)
+    const custom = duplicated.screens.find((entry) => entry.kind === 'custom')!
+    const copiedSection = custom.sections[0].id
+    expect(copiedSection).not.toBe(sourceSection)
+    expect(duplicated.elements?.[`${copiedSection}~h1~0`]).toMatchObject({
+      text: 'A copied welcome',
+      style: { fontSize: 31 },
+      action: { screen: 'scr_home' },
+    })
+    expect(duplicated.elements?.[`${copiedSection}~div~0~cabc123`]?.copyTree).toEqual({
+      [`${copiedSection}~h1~0`]: `${copiedSection}~h1~0~cabc123`,
+    })
+    expect(duplicated.elements?.[sourceKey]?.text).toBe('A copied welcome')
+
+    const repeated = duplicateScreen(duplicated, contact.id)
+    const allSections = repeated.screens.flatMap((entry) => entry.sections.map((section) => section.id))
+    expect(new Set(allSections).size).toBe(allSections.length)
+
+    const removed = removeScreen(repeated, custom.id)
+    expect(Object.keys(removed.elements ?? {}).some((key) => key.startsWith(copiedSection + '~'))).toBe(false)
+    expect(removed.elements?.[sourceKey]?.text).toBe('A copied welcome')
+  })
+
   test('mobile component kinds render as real controls', () => {
     let doc = docFromSpec(spec())
     doc = addScreen(doc, 'custom', spec())

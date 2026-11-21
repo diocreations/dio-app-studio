@@ -106,6 +106,8 @@ describe('the retail catalogue', () => {
 
   test('a product with no photograph gets a quiet blank frame, never artwork', () => {
     expect(html).toContain('Photograph to come')
+    expect(html).toContain('media-missing-icon')
+    expect(html).toContain('media-missing-label')
     const second = html.slice(html.indexOf('data-item="0-1"'), html.indexOf('data-item="0-2"'))
     expect(second).not.toContain('<img')
     expect(second).not.toContain('class="mono"')
@@ -174,6 +176,7 @@ describe('sample messaging follows the data, not the trade', () => {
   test('verified catalogue with remaining sample extras names only those extras', () => {
     const notice = sampleNotice({ menu: false, contact: true, offers: true, story: false })
     expect(notice?.menu).toBe(false)
+    expect(notice?.compact).toBe(true)
     expect(notice?.groups).toEqual(['offers', 'contact details'])
     expect(notice?.text).not.toContain('catalogue, prices and photographs below are examples')
     expect(notice?.text).toContain('Your catalogue, prices and photographs are your own.')
@@ -187,6 +190,7 @@ describe('sample messaging follows the data, not the trade', () => {
   test('a generated catalogue still says so', () => {
     const notice = sampleNotice({ menu: true, contact: false, story: false, offers: false })
     expect(notice?.menu).toBe(true)
+    expect(notice?.compact).toBe(false)
     expect(notice?.text).toContain('are examples')
   })
 })

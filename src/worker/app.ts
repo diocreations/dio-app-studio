@@ -177,6 +177,12 @@ function motif(theme: Theme, label: string, extra = '', inner = ''): string {
   return `<span class="thumb ${extra} m-${theme.motif}">${inner}<span class="mono">${esc(label)}</span></span>`
 }
 
+/** Product imagery has one quiet absence state everywhere: no trade artwork,
+ *  no invented object, just a neutral frame with a small photograph glyph. */
+function missingMedia(label = 'Photograph to come'): string {
+  return `<span class="media-missing" aria-hidden="true"><svg class="media-missing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg><span class="media-missing-label">${esc(label)}</span></span>`
+}
+
 /** Item keys are `section-item`; walking them in order keeps every product or
  *  dish on a different photograph instead of letting a hash collide. */
 function photoIndex(ctx: Ctx, seed: string): number {
@@ -205,7 +211,7 @@ function photo(ctx: Ctx, seed: string, kind: 'wide' | 'thumb', alt = ''): string
   const srcset = local
     ? ` srcset="${esc(local[1])}-320.webp 320w, ${esc(local[1])}-640.webp 640w, ${esc(local[1])}-1280.webp 1280w" sizes="${kind === 'wide' ? '100vw' : '(max-width: 620px) 38vw, 200px'}"`
     : ''
-  return `<img class="photo" src="${esc(url)}"${srcset} alt="${esc(alt)}" loading="lazy" decoding="async" onerror="this.remove()" />`
+  return `<img class="photo" src="${esc(url)}"${srcset} alt="${esc(alt)}" loading="lazy" decoding="async" onerror="this.parentElement.classList.add(&quot;is-empty&quot;);this.remove()" />`
 }
 
 /** An owner-assigned catalogue photograph. The media id, not a URL, is stored
@@ -218,7 +224,7 @@ function itemPhoto(
 ): string {
   if (!media) return ''
   const base = `/p/${ctx.token}/media/${media.id}`
-  return `<img class="photo" src="${esc(base)}/640.webp" srcset="${esc(base)}/320.webp 320w, ${esc(base)}/640.webp 640w, ${esc(base)}/1280.webp 1280w" sizes="${kind === 'wide' ? '100vw' : '(max-width: 620px) 38vw, 200px'}" alt="${esc(media.alt || alt || '')}" loading="lazy" decoding="async" style="object-fit:${media.fit === 'contain' ? 'contain' : 'cover'};object-position:${media.focalX ?? 50}% ${media.focalY ?? 50}%" onerror="this.remove()" />`
+  return `<img class="photo" src="${esc(base)}/640.webp" srcset="${esc(base)}/320.webp 320w, ${esc(base)}/640.webp 640w, ${esc(base)}/1280.webp 1280w" sizes="${kind === 'wide' ? '100vw' : '(max-width: 620px) 38vw, 200px'}" alt="${esc(media.alt || alt || '')}" loading="lazy" decoding="async" style="object-fit:${media.fit === 'contain' ? 'contain' : 'cover'};object-position:${media.focalX ?? 50}% ${media.focalY ?? 50}%" onerror="this.parentElement.classList.add(&quot;is-empty&quot;);this.remove()" />`
 }
 
 /** Photography replaces the artwork where it does the most for the page. */
@@ -548,7 +554,7 @@ function itemRowEditorial(ctx: Ctx, item: MenuItem, key: string): string {
 
 function itemRowCompact(ctx: Ctx, item: MenuItem, key: string): string {
   return `<div class="r-row" data-item="${key}" role="button" tabindex="0">
-    ${artThumb(ctx, item.name.slice(0, 1).toUpperCase(), key, 'r-art', 'thumb', item.name, item.media, item.image)}
+    ${artThumb(ctx, key, 'r-art', 'thumb', item.name, item.media, item.image)}
     <div class="lead">
       <div class="name">${esc(item.name)}${item.tag ? ` <span class="tag">${esc(item.tag)}</span>` : ''}</div>
       ${item.desc ? `<div class="desc">${esc(item.desc)}</div>` : ''}
@@ -570,14 +576,13 @@ function sitePhoto(image: NonNullable<MenuItem['image']>, kind: 'wide' | 'thumb'
   const sizes = kind === 'wide' ? '100vw' : '(max-width: 620px) 38vw, 200px'
   const fit = image.fit === 'contain' ? 'contain' : 'cover'
   const position = `${image.positionX ?? 50}% ${image.positionY ?? 50}%`
-  return `<img class="photo" src="${esc(image.url)}" sizes="${sizes}" alt="${esc(image.alt || alt)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:${fit};object-position:${position}" onerror="this.remove()" />`
+  return `<img class="photo" src="${esc(image.url)}" sizes="${sizes}" alt="${esc(image.alt || alt)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:${fit};object-position:${position}" onerror="this.parentElement.classList.add(&quot;is-empty&quot;);this.remove()" />`
 }
 
 /** The same thumb, with a photo on top when this build uses photography. An
  *  owner's own upload wins over the source site's photograph. */
 function artThumb(
   ctx: Ctx,
-  label: string,
   seed: string,
   extra = '',
   kind: 'wide' | 'thumb' = 'thumb',
@@ -592,12 +597,12 @@ function artThumb(
       : showsPhoto(ctx, 'tile')
         ? photo(ctx, seed, kind, alt)
         : ''
-  return `<span class="thumb ${extra} m-${ctx.theme.motif}">${shot}<span class="mono">${esc(label)}</span></span>`
+  return `<span class="thumb ${extra}${shot ? '' : ' is-empty'} m-${ctx.theme.motif}">${missingMedia()}${shot}</span>`
 }
 
 function itemTile(ctx: Ctx, item: MenuItem, key: string, wide = false): string {
   return `<div class="tile${wide ? ' wide' : ''}" data-item="${key}" role="button" tabindex="0">
-    ${artThumb(ctx, item.name.slice(0, 1), key, '', 'thumb', item.name, item.media, item.image)}
+    ${artThumb(ctx, key, '', 'thumb', item.name, item.media, item.image)}
     ${saveButton(key, item.name, ' on-art')}
     <div class="body">
       <div class="name">${esc(item.name)}</div>
@@ -610,7 +615,7 @@ function itemTile(ctx: Ctx, item: MenuItem, key: string, wide = false): string {
 
 function itemStackCard(ctx: Ctx, item: MenuItem, key: string): string {
   return `<div class="stack-card" data-item="${key}" role="button" tabindex="0">
-    ${artThumb(ctx, ctx.spec.logo, key, 'band', 'wide', item.name, item.media, item.image)}
+    ${artThumb(ctx, key, 'band', 'wide', item.name, item.media, item.image)}
     <div class="body">
       <div class="top">
         <span class="name">${esc(item.name)}</span>
@@ -639,7 +644,7 @@ function retailShot(ctx: Ctx, item: MenuItem, alt: string): string {
   if (item.image) {
     const fit = item.image.fit === 'contain' ? 'contain' : 'cover'
     const position = `${item.image.positionX ?? 50}% ${item.image.positionY ?? 50}%`
-    return `<img class="rl-photo" src="${esc(item.image.url)}" alt="${esc(item.image.alt || alt)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:${fit};object-position:${position}" onerror="this.parentElement.classList.add('is-empty');this.remove()" />`
+    return `<img class="rl-photo" src="${esc(item.image.url)}" alt="${esc(item.image.alt || alt)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:${fit};object-position:${position}" onerror="this.parentElement.classList.add(&quot;is-empty&quot;);this.remove()" />`
   }
   return ''
 }
@@ -654,7 +659,7 @@ function retailCard(ctx: Ctx, sectionIndex: number, itemIndex: number): string {
   const shot = retailShot(ctx, item, item.name)
   const options = optionCount(item)
   return `<article class="rl-card" data-item="${key}" role="button" tabindex="0" aria-label="${esc(item.name)}">
-    <figure class="rl-media${shot ? '' : ' is-empty'}">${shot}<span class="rl-absent" aria-hidden="true"><span>Photograph to come</span></span>${saveButton(key, item.name, ' rl-save')}</figure>
+    <figure class="rl-media${shot ? '' : ' is-empty'}">${missingMedia()}${shot}${saveButton(key, item.name, ' rl-save')}</figure>
     <div class="rl-copy">
       <span class="rl-kicker">${esc(section.name)}</span>
       <div class="rl-title"><h3>${esc(item.name)}</h3><span class="rl-price">${priceFrom(item, ctx.spec)}</span></div>
@@ -2213,6 +2218,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     }
     const esc = (value) => String(value == null ? '' : value)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    const missingMedia = () => '<span class="media-missing" aria-hidden="true"><svg class="media-missing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg><span class="media-missing-label">Photograph to come</span></span>'
     const buzz = (ms) => { try { if (navigator.vibrate) navigator.vibrate(ms) } catch (error) {} }
     const appbar = document.querySelector('.appbar')
     const titleEl = document.querySelector('[data-title]')
@@ -2406,11 +2412,14 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       if (item && item.media && item.media.id) {
         const media = item.media
         const base = '/p/' + DATA.token + '/media/' + media.id
-        return '<img class="photo" src="' + base + '/640.webp" srcset="' + base + '/320.webp 320w, ' + base + '/640.webp 640w, ' + base + '/1280.webp 1280w" sizes="' + (list === 'photoWide' ? '100vw' : '(max-width: 620px) 38vw, 200px') + '" alt="' + esc(media.alt || alt || '') + '" loading="lazy" decoding="async" style="object-fit:' + (media.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (media.focalX ?? 50) + '% ' + (media.focalY ?? 50) + '%" onerror="this.remove()" />'
+        return '<img class="photo" src="' + base + '/640.webp" srcset="' + base + '/320.webp 320w, ' + base + '/640.webp 640w, ' + base + '/1280.webp 1280w" sizes="' + (list === 'photoWide' ? '100vw' : '(max-width: 620px) 38vw, 200px') + '" alt="' + esc(media.alt || alt || '') + '" loading="lazy" decoding="async" style="object-fit:' + (media.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (media.focalX ?? 50) + '% ' + (media.focalY ?? 50) + '%" onerror="this.parentElement.classList.add(&quot;is-empty&quot;);this.remove()" />'
       }
       if (item && item.image && item.image.url) {
-        return '<img class="photo" src="' + esc(item.image.url) + '" sizes="' + (list === 'photoWide' ? '100vw' : '(max-width: 620px) 38vw, 200px') + '" alt="' + esc((item.image.alt || alt || '')) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:cover" onerror="this.remove()" />'
+        return '<img class="photo" src="' + esc(item.image.url) + '" sizes="' + (list === 'photoWide' ? '100vw' : '(max-width: 620px) 38vw, 200px') + '" alt="' + esc((item.image.alt || alt || '')) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:cover" onerror="this.parentElement.classList.add(&quot;is-empty&quot;);this.remove()" />'
       }
+      // An imported business is never given this trade's stock photography as
+      // if it were its own. Its upload or its source image is the only proof.
+      if (DATA.imported) return ''
       const urls = DATA[list]
       if (DATA.media !== 'photo' || !urls || !urls.length) return ''
       let index = -1
@@ -2427,7 +2436,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const srcset = local
         ? ' srcset="' + local[1] + '-320.webp 320w, ' + local[1] + '-640.webp 640w, ' + local[1] + '-1280.webp 1280w" sizes="100vw"'
         : ''
-      return '<img class="photo" src="' + url + '"' + srcset + ' alt="' + esc(alt || '') + '" loading="lazy" decoding="async" onerror="this.remove()" />'
+      return '<img class="photo" src="' + url + '"' + srcset + ' alt="' + esc(alt || '') + '" loading="lazy" decoding="async" onerror="this.parentElement.classList.add(&quot;is-empty&quot;);this.remove()" />'
     }
 
     // A short, real recommendation rail: other items from the same catalogue,
@@ -2444,8 +2453,9 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       if (!picks.length) return ''
       return '<div class="recs"><div class="recs-head"><b>You might also like</b><span>' + esc(DATA.catalogWord) + '</span></div><div class="rec-row">' +
         picks.map(function (pick) {
+          const shot = pickShot(pick.key, 'photoThumb', pick.item.name, pick.item)
           return '<button class="rec" type="button" data-item="' + pick.key + '">' +
-            '<span class="thumb m-' + DATA.motif + ' rec-art">' + pickShot(pick.key, 'photoThumb', pick.item.name, pick.item) + '<span class="mono">' + esc(pick.item.name.slice(0, 1).toUpperCase()) + '</span></span>' +
+            '<span class="thumb m-' + DATA.motif + ' rec-art' + (shot ? '' : ' is-empty') + '">' + missingMedia() + shot + '</span>' +
             '<span class="rec-copy"><b>' + esc(pick.item.name) + '</b><span class="rec-price">' + (pick.item.price > 0 ? money(pick.item.price) : '') + '</span></span></button>'
         }).join('') + '</div></div>'
     }
@@ -2460,9 +2470,10 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const shot = function (seed, list, alt, useItem) {
         return pickShot(seed, list, alt, useItem ? photo : null)
       }
-      const band = '<div class="thumb m-' + DATA.motif + ' detail-band">' + shot(key, 'photoWide', item.name, true) + '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' + save + '</div>'
+      const image = shot(key, 'photoWide', item.name, true)
+      const band = '<div class="thumb m-' + DATA.motif + ' detail-band' + (image ? '' : ' is-empty') + '">' + missingMedia() + image + save + '</div>'
       if (DATA.shell === 'menu')
-        return '<div class="thumb m-' + DATA.motif + ' menu-band">' + shot(key, 'photoWide', item.name, true) + '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' + save + '</div>' +
+        return '<div class="thumb m-' + DATA.motif + ' menu-band' + (image ? '' : ' is-empty') + '">' + missingMedia() + image + save + '</div>' +
           '<div class="detail-body menu-body">' +
           '<span class="eyebrow">' + esc(item.tag || DATA.catalogWord) + '</span>' +
           '<h1 class="menu-title">' + esc(item.name) + '</h1>' +
@@ -2503,10 +2514,13 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         const specs = String(item.meta || '').split('·').map(function (part) { return part.trim() }).filter(Boolean)
         const section = DATA.menu[Number(key.split('-')[0])]
         const category = section ? section.name : ''
+        const wideShot = shot(item.name + '-wide', 'photoWide', item.name, true)
+        const secondShot = shot(item.name + '-b', 'photoThumb')
+        const thirdShot = shot(item.name + '-c', 'photoThumb')
         return '<div class="listing-gallery">' +
-          '<div class="thumb m-' + DATA.motif + ' listing-shot wide">' + shot(item.name + '-wide', 'photoWide', item.name, true) + '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span></div>' +
-          '<div class="thumb m-' + DATA.motif + ' listing-shot">' + shot(item.name + '-b', 'photoThumb') + '</div>' +
-          '<div class="thumb m-' + DATA.motif + ' listing-shot">' + shot(item.name + '-c', 'photoThumb') + '</div>' + save + '</div>' +
+          '<div class="thumb m-' + DATA.motif + ' listing-shot wide' + (wideShot ? '' : ' is-empty') + '">' + missingMedia() + wideShot + '</div>' +
+          '<div class="thumb m-' + DATA.motif + ' listing-shot' + (secondShot ? '' : ' is-empty') + '">' + missingMedia() + secondShot + '</div>' +
+          '<div class="thumb m-' + DATA.motif + ' listing-shot' + (thirdShot ? '' : ' is-empty') + '">' + missingMedia() + thirdShot + '</div>' + save + '</div>' +
           '<div class="detail-body listing-body">' +
           '<span class="eyebrow">' + esc(item.tag || category || 'Listing') + '</span>' +
           '<h1 class="listing-title">' + esc(item.name) + '</h1>' +
@@ -2536,7 +2550,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const save = '<button class="save rl-save detail-save' + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save">' + HEART + '</button>'
       const prices = variantsOf(item).map(function (variant) { return variant.price })
       const options = prices.length > 1 ? prices.length + ' options' : ''
-      return '<figure class="rd-media' + (shot ? '' : ' is-empty') + '">' + shot + '<span class="rl-absent" aria-hidden="true"><span>Photograph to come</span></span>' + save + '</figure>' +
+      return '<figure class="rd-media' + (shot ? '' : ' is-empty') + '">' + missingMedia() + shot + save + '</figure>' +
         '<div class="rd-copy">' +
         '<span class="eyebrow">' + esc(section ? section.name : DATA.catalogWord) + '</span>' +
         '<h1>' + esc(item.name) + '</h1>' +
@@ -2585,10 +2599,11 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         ? shellDetail.replace('<div class="detail-gap"', picker + '<div class="detail-gap"')
         : shellDetail
       const photoItem = settled && settled.media ? Object.assign({}, item, { media: settled.media }) : item
+      const fallbackImage = pickShot(key, 'photoWide', item.name, photoItem)
       host.innerHTML = withPicker ||
-        '<div class="thumb m-' + DATA.motif + ' detail-band">' +
-        pickShot(key, 'photoWide', item.name, photoItem) +
-        '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' +
+        '<div class="thumb m-' + DATA.motif + ' detail-band' + (fallbackImage ? '' : ' is-empty') + '">' +
+        missingMedia() +
+        fallbackImage +
         '<span class="cap"><span>' + esc(item.tag || DATA.catalogWord) + '</span><span>' + price + '</span></span>' +
         '<button class="save on-art detail-save' + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save">' + HEART + '</button></div>' +
         '<div class="detail-body">' +
@@ -2672,9 +2687,9 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const differs = prices.length > 1 && new Set(prices).size > 1
       const price = differs ? 'From ' + money(Math.min.apply(null, prices)) : item.price > 0 ? money(item.price) : ''
       const note = [item.meta || item.desc || DATA.catalogWord, differs ? prices.length + ' options' : ''].filter(Boolean).join(' · ')
+      const shot = pickShot(key, 'photoThumb', item.name, item)
       return '<div class="r-row" data-item="' + key + '" role="button" tabindex="0">' +
-        '<span class="thumb r-art m-' + DATA.motif + '">' + pickShot(key, 'photoThumb', item.name, item) +
-        '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span></span>' +
+        '<span class="thumb r-art m-' + DATA.motif + (shot ? '' : ' is-empty') + '">' + missingMedia() + shot + '</span>' +
         '<div class="lead"><div class="name">' + esc(item.name) + '</div>' +
         '<div class="desc">' + esc(note) + '</div></div>' +
         '<div class="tail"><span class="price">' + price + '</span>' +
@@ -2891,10 +2906,10 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const media = chosen && chosen.media ? chosen.media : item && item.media
       if (media && media.id) {
         const base = '/p/' + DATA.token + '/media/' + media.id
-        return '<img class="rl-photo" src="' + base + '/640.webp" srcset="' + base + '/320.webp 320w, ' + base + '/640.webp 640w, ' + base + '/1280.webp 1280w" sizes="(max-width: 719px) 92vw, (max-width: 1099px) 44vw, 30vw" alt="' + esc((media.alt || item.name)) + '" loading="lazy" decoding="async" style="object-fit:' + (media.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (media.focalX ?? 50) + '% ' + (media.focalY ?? 50) + '%" onerror="this.remove()" />'
+        return '<img class="rl-photo" src="' + base + '/640.webp" srcset="' + base + '/320.webp 320w, ' + base + '/640.webp 640w, ' + base + '/1280.webp 1280w" sizes="(max-width: 719px) 92vw, (max-width: 1099px) 44vw, 30vw" alt="' + esc((media.alt || item.name)) + '" loading="lazy" decoding="async" style="object-fit:' + (media.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (media.focalX ?? 50) + '% ' + (media.focalY ?? 50) + '%" onerror="this.parentElement.classList.add(&quot;is-empty&quot;);this.remove()" />'
       }
       if (item && item.image && item.image.url) {
-        return '<img class="rl-photo" src="' + esc(item.image.url) + '" alt="' + esc(item.image.alt || item.name) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:' + (item.image.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (item.image.positionX ?? 50) + '% ' + (item.image.positionY ?? 50) + '%" onerror="this.remove()" />'
+        return '<img class="rl-photo" src="' + esc(item.image.url) + '" alt="' + esc(item.image.alt || item.name) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:' + (item.image.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (item.image.positionX ?? 50) + '% ' + (item.image.positionY ?? 50) + '%" onerror="this.parentElement.classList.add(&quot;is-empty&quot;);this.remove()" />'
       }
       return ''
     }
@@ -2917,7 +2932,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const prices = variantsOf(item).map(function (variant) { return variant.price })
       const options = prices.length > 1 ? prices.length + ' options' : ''
       return '<article class="rl-card" data-item="' + key + '" role="button" tabindex="0" aria-label="' + esc(item.name) + '">' +
-        '<figure class="rl-media' + (shot ? '' : ' is-empty') + '">' + shot + '<span class="rl-absent" aria-hidden="true"><span>Photograph to come</span></span>' +
+        '<figure class="rl-media' + (shot ? '' : ' is-empty') + '">' + missingMedia() + shot +
         '<button class="save rl-save' + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save ' + esc(item.name) + '" aria-pressed="' + (state.saved[key] ? 'true' : 'false') + '">' + HEART + '</button></figure>' +
         '<div class="rl-copy"><span class="rl-kicker">' + esc(section ? section.name : DATA.catalogWord) + '</span>' +
         '<div class="rl-title"><h3>' + esc(item.name) + '</h3><span class="rl-price">' + retailPrice(item) + '</span></div>' +

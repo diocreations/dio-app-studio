@@ -18,6 +18,7 @@ import { esc } from './shell'
 export function sampleNotice(sample: Project['spec']['sampleContent']): {
   groups: string[]
   menu: boolean
+  compact: boolean
   text: string
 } | null {
   if (!sample) return null
@@ -31,11 +32,15 @@ export function sampleNotice(sample: Project['spec']['sampleContent']): {
     sample.staff ? 'staff names' : '',
   ].filter(Boolean)
   if (!groups.length) return null
+  const menu = sample.menu === true
   return {
     groups,
-    menu: sample.menu === true,
-    text: sample.menu
-      ? 'The catalogue, prices and photographs below are examples — replace anything that is not yours.'
+    menu,
+    // A catalogue-wide disclosure stays a full notice. Once the catalogue is
+    // verified, only name the small groups that are still examples.
+    compact: !menu,
+    text: menu
+      ? `Sample ${groups.join(', ')} are examples — replace anything that is not yours.`
       : `Sample ${groups.join(', ')} remain. Your catalogue, prices and photographs are your own.`,
   }
 }
@@ -126,6 +131,9 @@ button { cursor: pointer; }
 .sample-note b { flex: 0 0 auto; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 6px; border-radius: 999px; background: #f0ddbb; }
 .sample-note span { flex: 1 1 180px; min-width: 0; }
 .sample-note button, .sample-note a { flex: 0 0 auto; border: 1px solid #d9c39a; background: #fffdf8; color: inherit; border-radius: 7px; padding: 5px 8px; font: inherit; font-weight: 600; text-decoration: none; }
+.sample-note.compact { padding: 5px 12px; border-bottom-color: var(--line-soft); background: transparent; color: var(--muted); }
+.sample-note.compact b { background: var(--paper); border: 1px solid var(--line); color: var(--ink); }
+.sample-note.compact button, .sample-note.compact a { border-color: var(--line); background: transparent; color: var(--ink); padding: 3px 7px; }
 @media (max-width: 700px) {
   .sample-note { display: grid; grid-template-columns: auto 1fr auto; align-items: center; }
   .sample-note b { grid-column: 1; grid-row: 1; }
@@ -136,13 +144,15 @@ button { cursor: pointer; }
 .ai { display: flex; align-items: center; gap: 8px; margin-left: auto; width: min(430px, 52%); }
 .ai input { flex: 1; min-width: 0; border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 7px 12px; outline: none; }
 .ai input:focus { border-color: var(--accent); }
-.canvas { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 22px; }
-.phone { position: relative; width: 390px; height: 780px; max-height: 100%; background: #0d0c0a; border-radius: 48px; padding: 9px; box-shadow: 0 30px 70px -34px rgba(25,23,19,.65), inset 0 0 0 2px #2a2824; transition: width .2s ease, height .2s ease; }
+.canvas { flex: 1; min-height: 0; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 22px; }
+.device-wrap { position: relative; flex: 0 0 auto; width: 390px; height: 780px; }
+.phone { position: absolute; top: 0; left: 0; width: var(--preview-source-w, 390px); height: var(--preview-source-h, 780px); background: #0d0c0a; border-radius: 48px; padding: 9px; box-shadow: 0 30px 70px -34px rgba(25,23,19,.65), inset 0 0 0 2px #2a2824; transform: scale(var(--preview-scale, 1)); transform-origin: top left; transition: transform .2s ease, width .2s ease, height .2s ease; }
 .phone::after { content: ''; position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 118px; height: 24px; background: #0d0c0a; border-radius: 0 0 16px 16px; z-index: 2; pointer-events: none; }
 .phone iframe { width: 100%; height: 100%; border: 0; border-radius: 39px; background: #fff; display: block; }
-.phone.tablet { width: 820px; height: 640px; border-radius: 30px; padding: 7px; }
+.phone.tablet { border-radius: 30px; padding: 7px; }
+.phone.tablet::after, .phone.desktop::after { display: none; }
 .phone.tablet iframe { border-radius: 24px; }
-.phone.desktop { width: 100%; max-width: 1180px; height: 100%; border-radius: 18px; padding: 5px; }
+.phone.desktop { border-radius: 18px; padding: 5px; }
 .phone.desktop iframe { border-radius: 14px; }
 .aibar { display: none; align-items: center; gap: 10px; padding: 9px 14px; border-bottom: 1px solid var(--line); background: #fff8ec; }
 .aibar.on { display: flex; }
@@ -291,7 +301,6 @@ button { cursor: pointer; }
   .panel.right { position: fixed; right: 0; top: 56px; bottom: 0; width: 292px; z-index: 10; box-shadow: -20px 0 50px -30px rgba(0,0,0,.4); transform: translateX(100%); transition: transform .18s; }
   .panel.right.open { transform: none; }
   .ai { width: min(320px, 46%); }
-  .phone.desktop { width: 100%; }
 }
 @media (max-width: 900px) {
   .bar { gap: 5px; padding: 0 9px; }
@@ -318,7 +327,7 @@ button { cursor: pointer; }
   .brand b { max-width: 110px; }
   .ai { display: none; }
   .canvas { padding: 10px; }
-  .phone, .phone.tablet, .phone.desktop { width: 100%; height: 100%; border-radius: 24px; padding: 5px; }
+  .phone, .phone.tablet, .phone.desktop { border-radius: 24px; padding: 5px; }
   .phone iframe { border-radius: 20px; }
   .phone::after { display: none; }
 }
@@ -376,15 +385,17 @@ button { cursor: pointer; }
         <button class="btn" id="aiRun">Preview</button>
       </div>
     </div>
-    ${notice ? `<div class="sample-note" id="sampleNote"><b>Sample</b><span>${esc(notice.text)}</span>${notice.menu ? `<button type="button" id="sampleEdit">Items &amp; prices</button>` : ''}<a href="/p/${esc(token)}/dashboard">Details</a></div>` : ''}
+    ${notice ? `<div class="sample-note${notice.compact ? ' compact' : ''}" id="sampleNote"><b>Sample</b><span>${esc(notice.text)}</span>${notice.menu ? `<button type="button" id="sampleEdit">Items &amp; prices</button>` : ''}<a href="/p/${esc(token)}/dashboard">Review</a></div>` : ''}
     <div class="aibar" id="aiBar">
       <p id="aiSummary"></p>
       <button class="btn" id="aiDiscard">Discard</button>
       <button class="btn primary" id="aiApply">Apply</button>
     </div>
     <div class="canvas">
-      <div class="phone mobile" id="phone">
-        <iframe id="frame" title="Live application preview" src="/p/${esc(token)}/app?editor=1"></iframe>
+      <div class="device-wrap" id="deviceWrap">
+        <div class="phone mobile" id="phone">
+          <iframe id="frame" title="Live application preview" src="/p/${esc(token)}/app?editor=1"></iframe>
+        </div>
       </div>
     </div>
     <div class="quick" id="quickEditor" hidden role="region" aria-label="Selected component controls">
@@ -472,6 +483,24 @@ const NAV_ICONS = [['home','Home'],['catalog','Catalogue'],['bag','Bag'],['calen
 const state = { doc: JSON.parse(JSON.stringify(INITIAL)), screen: INITIAL.initialScreen || INITIAL.screens[0].id, selected: null, element: null, elementMeta: null, device: 'mobile', history: [], future: [], historyMode: false, clipboard: null, media: [], mediaSuggestions: [], mediaTarget: null, elementTarget: null, catalogTarget: null, variantTarget: null, variantMediaTarget: null, mediaQuery: '', mediaFilter: 'all', mediaBusy: false, mediaReplaceId: null, catalog: [], offers: [] };
 const $ = (id) => document.getElementById(id);
 const frame = $('frame');
+const DEVICE_SIZES = { mobile: [390, 780], tablet: [820, 640], desktop: [1180, 760] };
+/** Fit the whole device into the canvas without changing the device's aspect
+ *  ratio. The phone is scaled as one piece, so its iframe is never stretched. */
+function fitPreview() {
+  const canvas = document.querySelector('.canvas');
+  const wrap = $('deviceWrap');
+  if (!canvas || !wrap || !canvas.clientWidth || !canvas.clientHeight) return;
+  const [width, height] = DEVICE_SIZES[state.device] || DEVICE_SIZES.mobile;
+  const style = getComputedStyle(canvas);
+  const availableWidth = Math.max(1, canvas.clientWidth - parseFloat(style.paddingLeft || '0') - parseFloat(style.paddingRight || '0'));
+  const availableHeight = Math.max(1, canvas.clientHeight - parseFloat(style.paddingTop || '0') - parseFloat(style.paddingBottom || '0'));
+  const scale = Math.max(0.05, Math.min(1, availableWidth / width, availableHeight / height));
+  wrap.style.setProperty('--preview-source-w', width + 'px');
+  wrap.style.setProperty('--preview-source-h', height + 'px');
+  wrap.style.setProperty('--preview-scale', String(scale));
+  wrap.style.width = width * scale + 'px';
+  wrap.style.height = height * scale + 'px';
+}
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
 function esc(value) { return String(value ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function current() { return state.doc.screens.find((s) => s.id === state.screen) || state.doc.screens[0]; }
@@ -1475,7 +1504,18 @@ function addScreen(kind) {
       profile: [{ id:'sec_heading', kind:'heading', title:'Your account', style:{}, responsive:{hideOn:[]}, hidden:false }, { id:'sec_text', kind:'text', text:'Orders, bookings and saved items appear here.', style:{}, responsive:{hideOn:[]}, hidden:false }],
       custom: [{ id:'sec_heading', kind:'heading', title:'New screen', style:{}, responsive:{hideOn:[]}, hidden:false }]
     };
-    doc.screens.push({ id, kind, name: kind === 'custom' ? 'New screen' : kind[0].toUpperCase() + kind.slice(1), icon: kind === 'contact' ? 'phone' : 'dots', nav: kind !== 'custom', hidden: false, sections: defaults[kind] || [] });
+    const used = new Set(doc.screens.flatMap((s) => s.sections.map((section) => section.id)));
+    const sections = (defaults[kind] || []).map((section) => {
+      let sectionId = section.id;
+      if (used.has(sectionId)) {
+        sectionId = id + '_' + section.id;
+        let suffix = 2;
+        while (used.has(sectionId)) { sectionId = id + '_' + section.id + '_' + suffix; suffix += 1; }
+      }
+      used.add(sectionId);
+      return Object.assign({}, section, { id: sectionId });
+    });
+    doc.screens.push({ id, kind, name: kind === 'custom' ? 'New screen' : kind[0].toUpperCase() + kind.slice(1), icon: kind === 'contact' ? 'phone' : 'dots', nav: kind !== 'custom', hidden: false, sections });
     state.screen = id; state.selected = null;
     return doc;
   }, true);
@@ -1483,9 +1523,19 @@ function addScreen(kind) {
 function duplicateScreen(id) {
   commit((doc) => {
     const index = doc.screens.findIndex((s) => s.id === id); if (index < 0) return doc;
+    const source = doc.screens[index]; if (source.kind === 'home') return doc;
     let newId = 'scr_custom'; let n = 2; while (doc.screens.some((s) => s.id === newId)) { newId = 'scr_custom_' + n; n += 1; }
-    const source = doc.screens[index];
-    doc.screens.splice(index + 1, 0, Object.assign(clone(source), { id: newId, kind: 'custom', name: (source.name + ' copy').slice(0,24), nav: false, sections: source.sections.map((s) => Object.assign(clone(s), { id: s.id + '_copy' })) }));
+    const used = new Set(doc.screens.flatMap((s) => s.sections.map((section) => section.id)));
+    const shared = new Set(doc.screens.filter((s) => s.id !== id).flatMap((s) => s.sections.map((section) => section.id)));
+    const sectionMap = new Map();
+    const sections = source.sections.map((section) => {
+      let next = section.id + '_copy'; let suffix = 2;
+      while (used.has(next)) { next = section.id + '_copy_' + suffix; suffix += 1; }
+      used.add(next); sectionMap.set(section.id, next);
+      return Object.assign(clone(section), { id: next });
+    });
+    doc.screens.splice(index + 1, 0, Object.assign(clone(source), { id: newId, kind: 'custom', name: (source.name + ' copy').slice(0,24), nav: false, sections }));
+    sectionMap.forEach((to, from) => { if (!shared.has(from)) remapSectionElements(doc, from, to); });
     state.screen = newId; state.selected = null;
     return doc;
   }, true);
@@ -1493,6 +1543,8 @@ function duplicateScreen(id) {
 function removeScreen(id) {
   commit((doc) => {
     const screen = doc.screens.find((s) => s.id === id); if (!screen || screen.kind === 'home') return doc;
+    const remaining = new Set(doc.screens.filter((s) => s.id !== id).flatMap((s) => s.sections.map((section) => section.id)));
+    screen.sections.forEach((section) => { if (!remaining.has(section.id)) dropSectionElements(doc, section.id); });
     doc.screens = doc.screens.filter((s) => s.id !== id);
     if (!doc.screens.some((s) => s.id === doc.initialScreen)) doc.initialScreen = doc.screens[0].id;
     if (state.screen === id) { state.screen = doc.screens[0].id; state.selected = null; }
@@ -1607,6 +1659,7 @@ document.querySelectorAll('[data-device]').forEach((button) => button.addEventLi
   document.querySelectorAll('[data-device]').forEach((other) => other.classList.toggle('on', other === button));
   state.device = button.dataset.device;
   $('phone').className = 'phone ' + state.device;
+  fitPreview();
 }));
 $('mediaBtn').addEventListener('click', () => openMedia(null));
 $('mediaClose').addEventListener('click', closeMedia);
@@ -1709,6 +1762,9 @@ $('aiApply').addEventListener('click', () => {
 });
 $('aiCommand').addEventListener('keydown', (event) => { if (event.key === 'Enter') $('aiRun').click(); });
 render();
+fitPreview();
+addEventListener('resize', fitPreview);
+if (typeof ResizeObserver !== 'undefined' && document.querySelector('.canvas')) new ResizeObserver(fitPreview).observe(document.querySelector('.canvas'));
 if (!HAS_SAVED) save().then(reloadFrame);
 </script>
 </body>
