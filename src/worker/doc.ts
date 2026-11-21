@@ -295,11 +295,14 @@ export type ElementStyle = {
   aspect?: 'auto' | 'wide' | 'square' | 'portrait'
   /** Child arrangement for a container or card. */
   layout?: 'stack' | 'row' | 'grid'
-  /** A glyph added beside a button's words; not a replacement for app icons. */
-  icon?: 'none' | 'arrow' | 'plus' | 'chevron' | 'star'
-  /** Tab order, for a navigation item. */
-  order?: number
+  /** Percentage cropped from each edge with CSS object-view-box. */
+  cropTop?: number
+  cropRight?: number
+  cropBottom?: number
+  cropLeft?: number
 }
+
+export type NavIconName = ScreenIcon | 'none'
 
 export type ElementConfig = {
   /** The owner's name for this element in the layer tree. */
@@ -312,6 +315,18 @@ export type ElementConfig = {
   media?: MediaRef
   /** A destination for an element that already navigates. */
   action?: { screen: string }
+  /** A copy of another slot's element, inserted beside it by the element layer. */
+  duplicateOf?: string
+  /** A copied descendant belongs to this copied container. */
+  copyParent?: string
+  /** For a copied container: source slot -> copied slot for every descendant. */
+  copyTree?: Record<string, string>
+  /** Deleted from the page. Unlike hidden, this is only reversible with undo. */
+  removed?: boolean
+  /** Order among this element's siblings. Applied after slots are named. */
+  position?: number
+  /** A library icon replacing a bottom-navigation glyph. */
+  navIcon?: NavIconName
 }
 
 /** Business values a generated component copied from the specification. */
@@ -1176,7 +1191,7 @@ function sanitizeSection(value: unknown, fallbackId: string): DocNode | null {
   }
 }
 
-const ELEMENT_KEY = /^[a-z0-9_]{2,40}~(?:h[1-6]|p|span|img|button|a|div|nav|svg)~\d{1,3}$/
+const ELEMENT_KEY = /^[a-z0-9_]{2,40}~(?:h[1-6]|p|span|img|button|a|div|nav|svg)~\d{1,3}(?:~c[a-z0-9]{4,12})?$/
 const ELEMENT_TARGET = /^[a-z][a-z0-9_-]{0,30}$/
 const whole = (value: unknown, min: number, max: number): number | undefined =>
   typeof value === 'number' && Number.isFinite(value)
@@ -1192,6 +1207,18 @@ function sanitizeElementStyle(value: unknown): ElementStyle | undefined {
     typeof raw.lineHeight === 'number' && Number.isFinite(raw.lineHeight)
       ? Math.max(0.8, Math.min(2.4, Math.round(raw.lineHeight * 100) / 100))
       : undefined
+  const crop = (input: Record<string, unknown>): ElementStyle | undefined => {
+    const top = whole(input.cropTop, 0, 45)
+    const right = whole(input.cropRight, 0, 45)
+    const bottom = whole(input.cropBottom, 0, 45)
+    const left = whole(input.cropLeft, 0, 45)
+    if (top === undefined && right === undefined && bottom === undefined && left === undefined) return undefined
+    const clean = { cropTop: top ?? 0, cropRight: right ?? 0, cropBottom: bottom ?? 0, cropLeft: left ?? 0 }
+    // An object-view-box is inset from each side; more than 90% in one axis
+    // leaves no image, so that crop is dropped instead of rendered broken.
+    if (clean.cropTop + clean.cropBottom >= 90 || clean.cropLeft + clean.cropRight >= 90) return undefined
+    return clean
+  }
   const style: ElementStyle = {
     ...(whole(raw.fontSize, 8, 96) ? { fontSize: whole(raw.fontSize, 8, 96) } : {}),
     ...(whole(raw.weight, 100, 900) ? { weight: whole(raw.weight, 100, 900) } : {}),
@@ -1218,10 +1245,7 @@ function sanitizeElementStyle(value: unknown): ElementStyle | undefined {
       ? { aspect: raw.aspect }
       : {}),
     ...(raw.layout === 'stack' || raw.layout === 'row' || raw.layout === 'grid' ? { layout: raw.layout } : {}),
-    ...(raw.icon === 'none' || raw.icon === 'arrow' || raw.icon === 'plus' || raw.icon === 'chevron' || raw.icon === 'star'
-      ? { icon: raw.icon }
-      : {}),
-    ...(whole(raw.order, 1, 20) ? { order: whole(raw.order, 1, 20) } : {}),
+    ...(crop(raw) ? crop(raw) : {}),
   }
   return Object.keys(style).length ? style : undefined
 }
@@ -1260,12 +1284,39 @@ function sanitizeElements(value: unknown): Record<string, ElementConfig> | undef
         ? (raw.action as Record<string, unknown>)
         : null
     const screen = action && typeof action.screen === 'string' ? action.screen.trim() : ''
+    const duplicateOf = CLAMP(raw.duplicateOf, 80)
+    const canCopy =
+      duplicateOf && duplicateOf !== key && ELEMENT_KEY.test(duplicateOf) && !/~c[a-z0-9]{4,12}$/.test(duplicateOf)
+    const copyParent = CLAMP(raw.copyParent, 80)
+    const canAttach =
+      canCopy && copyParent && copyParent !== key && copyParent !== duplicateOf && ELEMENT_KEY.test(copyParent) && /~c[a-z0-9]{4,12}$/.test(copyParent)
+    const copyTree: Record<string, string> = {}
+    const copiedSlots = new Set<string>()
+    if (canCopy && raw.copyTree && typeof raw.copyTree === 'object' && !Array.isArray(raw.copyTree)) {
+      for (const [from, to] of Object.entries(raw.copyTree as Record<string, unknown>).slice(0, 100)) {
+        const target = typeof to === 'string' ? to : ''
+        if (!ELEMENT_KEY.test(from) || !ELEMENT_KEY.test(target) || from === target) continue
+        if (from === key || /~c[a-z0-9]{4,12}$/.test(from) || !/~c[a-z0-9]{4,12}$/.test(target)) continue
+        if (copiedSlots.has(target)) continue
+        copyTree[from] = target
+        copiedSlots.add(target)
+      }
+    }
+    const navIcon = raw.navIcon as NavIconName | undefined
     const config: ElementConfig = {
       ...(CLAMP(raw.name, 40) ? { name: CLAMP(raw.name, 40) } : {}),
       ...(typeof raw.text === 'string' && raw.text.trim()
         ? { text: raw.text.trim().slice(0, 300) }
         : {}),
       ...(raw.hidden === true ? { hidden: true } : {}),
+      ...(raw.removed === true ? { removed: true } : {}),
+      ...(whole(raw.position, 0, 999) !== undefined ? { position: whole(raw.position, 0, 999) } : {}),
+      ...(canCopy ? { duplicateOf } : {}),
+      ...(canAttach ? { copyParent } : {}),
+      ...(canCopy && Object.keys(copyTree).length ? { copyTree } : {}),
+      ...(['home', 'catalog', 'bag', 'calendar', 'dots', 'plus', 'chevron', 'phone', 'search', 'heart', 'quote', 'none'].includes(String(navIcon))
+        ? { navIcon }
+        : {}),
       ...(sanitizeElementStyle(raw.style) ? { style: sanitizeElementStyle(raw.style) } : {}),
       ...(sanitizeElementMedia(raw.media) ? { media: sanitizeElementMedia(raw.media) } : {}),
       ...(screen && ELEMENT_TARGET.test(screen) ? { action: { screen } } : {}),

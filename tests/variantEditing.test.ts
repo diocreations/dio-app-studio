@@ -114,6 +114,102 @@ describe('editing product variants', () => {
     expect(editor).toContain('Option groups')
   })
 
+  test('structured option values drive selection and survive reload', async () => {
+    const { project, env, cookie } = await shop()
+    const structured = [
+      {
+        name: 'Shirts',
+        items: [
+          {
+            ...MENU[0].items[0],
+            optionGroups: [
+              { name: 'Size', options: ['Small', 'Medium'] },
+              { name: 'Colour', options: ['Ecru', 'Ink'] },
+            ],
+            variants: [
+              { id: 'gid://shopify/ProductVariant/11', name: 'Small / Ecru', price: 4200, currency: 'GBP', values: { Size: 'Small', Colour: 'Ecru' }, selected: true },
+              { id: 'gid://shopify/ProductVariant/12', name: 'Medium / Ink', price: 5800, currency: 'GBP', values: { Size: 'Medium', Colour: 'Ink' } },
+              { id: 'gid://shopify/ProductVariant/13', name: 'Medium / Ecru', price: 6100, currency: 'GBP', values: { Size: 'Medium', Colour: 'Ecru' }, available: false },
+              { id: 'gid://shopify/ProductVariant/14', name: 'Broken', price: 7000, currency: 'GBP', values: { Size: 'Giant', Colour: 'Ink' } },
+            ],
+          },
+        ],
+      },
+    ]
+    const response = await save(env, project.token, cookie, structured)
+    expect(response.status).toBe(200)
+    const payload = (await response.json()) as {
+      menu: { items: { variants?: { id?: string; values?: Record<string, string>; available?: boolean }[]; optionGroups?: unknown[] }[] }[]
+    }
+    const item = payload.menu[0].items[0]
+    expect(item.optionGroups).toHaveLength(2)
+    expect(item.variants?.find((variant) => variant.id === 'gid://shopify/ProductVariant/12')?.values).toEqual({ Size: 'Medium', Colour: 'Ink' })
+    expect(item.variants?.find((variant) => variant.id === 'gid://shopify/ProductVariant/13')?.available).toBe(false)
+    // A value absent from its group is dropped, not invented into the matrix.
+    expect(item.variants?.find((variant) => variant.id === 'gid://shopify/ProductVariant/14')?.values).toEqual({ Colour: 'Ink' })
+
+    const html = await (await app.request(`${ORIGIN}/p/${project.token}/app`, {}, env as never)).text()
+    expect(html).toContain('"values":{"Size":"Small","Colour":"Ecru"}')
+    expect(html).toContain('"optionGroups":[{"name":"Size"')
+    const editor = await (await app.request(`${ORIGIN}/p/${project.token}/edit`, { headers: { cookie } }, env as never)).text()
+    expect(editor).toContain('data-variant-value')
+
+    const blocked = await order(env, project.token, [{ key: '0-0', qty: 1, variant: 'gid://shopify/ProductVariant/13' }])
+    expect(blocked.status).toBe(422)
+    const allowed = await order(env, project.token, [{ key: '0-0', qty: 1, variant: 'gid://shopify/ProductVariant/12' }])
+    expect(allowed.status).toBe(201)
+    expect(((await allowed.json()) as { order: { total: number } }).order.total).toBe(5800)
+  })
+
+  test('structured defaults, stock, images and partial matrices keep real variant data', async () => {
+    const { project, env, cookie } = await shop()
+    const image = { id: 'med_0123456789abcdef', width: 800, height: 800 }
+    const edited = [
+      {
+        name: 'Shirts',
+        items: [
+          {
+            ...MENU[0].items[0],
+            optionGroups: [
+              { name: 'Size', options: ['Small', 'Medium', 'Large'] },
+              { name: 'Colour', options: ['Ecru', 'Ink'] },
+            ],
+            variants: [
+              { id: 'gid://shopify/ProductVariant/11', name: 'Small / Ecru', price: 4500, currency: 'GBP', values: { Size: 'Small', Colour: 'Ecru' } },
+              { id: 'gid://shopify/ProductVariant/12', name: 'Medium / Ink', price: 6300, currency: 'GBP', selected: true, media: image, values: { Size: 'Medium', Colour: 'Ink' } },
+              { id: 'gid://shopify/ProductVariant/13', name: 'Medium / Ecru', price: 6100, currency: 'GBP', available: false, values: { Size: 'Medium', Colour: 'Ecru' } },
+              { id: 'gid://shopify/ProductVariant/14', name: 'Large / Ink', price: 7000, currency: 'GBP', values: { Size: 'Large' } },
+            ],
+          },
+        ],
+      },
+    ]
+    const response = await save(env, project.token, cookie, edited)
+    expect(response.status).toBe(200)
+    const payload = (await response.json()) as {
+      menu: { items: { variants?: { id?: string; price: number; selected?: boolean; available?: boolean; media?: { id: string }; values?: Record<string, string> }[]; optionGroups?: unknown[] }[] }[]
+    }
+    const item = payload.menu[0].items[0]
+    expect(item.optionGroups).toHaveLength(2)
+    expect(item.variants?.map((variant) => variant.id)).toEqual([
+      'gid://shopify/ProductVariant/11',
+      'gid://shopify/ProductVariant/12',
+      'gid://shopify/ProductVariant/13',
+      'gid://shopify/ProductVariant/14',
+    ])
+    expect(item.variants?.filter((variant) => variant.selected).map((variant) => variant.id)).toEqual(['gid://shopify/ProductVariant/12'])
+    expect(item.variants?.find((variant) => variant.id === 'gid://shopify/ProductVariant/12')?.media?.id).toBe(image.id)
+    expect(item.variants?.find((variant) => variant.id === 'gid://shopify/ProductVariant/13')?.available).toBe(false)
+    // A partial row keeps only the value it really has; no group matrix is invented.
+    expect(item.variants?.find((variant) => variant.id === 'gid://shopify/ProductVariant/14')?.values).toEqual({ Size: 'Large' })
+
+    const html = await (await app.request(`${ORIGIN}/p/${project.token}/app`, {}, env as never)).text()
+    expect(html).toContain('"selected":true')
+    expect(html).toContain('"available":false')
+    expect(html).toContain(`"media":{"id":"${image.id}"`)
+    expect(html).toContain('"values":{"Size":"Medium","Colour":"Ink"}')
+  })
+
   test('orders use the edited variant price and preserve the Shopify variant id', async () => {
     const { project, env, cookie } = await shop()
     await save(env, project.token, cookie, [

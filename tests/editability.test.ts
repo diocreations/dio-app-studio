@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 import { renderApp } from '../src/worker/app'
 import { flagshipDocFromSpec, normalizeDoc, type Doc } from '../src/worker/doc'
-import { auditElementCoverage, elementSlots, SYSTEM_CONTROLLED } from '../src/worker/editability'
+import { APPEARANCE_CONTROLS, AUDIT_COVERAGE, auditElementCoverage, elementSlots, SYSTEM_CONTROLLED } from '../src/worker/editability'
 import { directionsFor } from '../src/worker/directions'
 import { buildSpec } from '../src/worker/pricing'
 
@@ -82,9 +82,93 @@ describe('element editability', () => {
     expect(slots).toBeGreaterThan(500)
   })
 
+  test('element copies, removals and sibling positions survive the audit', () => {
+    const spec = specFor('shop')
+    const base = flagshipDocFromSpec(spec)
+    const doc = normalizeDoc(
+      {
+        ...base,
+        elements: {
+          'sec_fx_shop_title~h1~0': { position: 20, removed: true, style: { fontSize: 30 } },
+          'sec_fx_shop_title~h1~0~cabc123': {
+            duplicateOf: 'sec_fx_shop_title~h1~0',
+            name: 'Second headline',
+            text: 'A second headline',
+            position: 10,
+            style: { fontSize: 20 },
+          },
+          'chrome~nav~0': { navIcon: 'bag', action: { screen: 'catalog' } },
+        },
+      },
+      spec,
+    )
+    const original = doc.elements?.['sec_fx_shop_title~h1~0']
+    const copy = doc.elements?.['sec_fx_shop_title~h1~0~cabc123']
+    expect(original?.removed).toBe(true)
+    expect(original?.position).toBe(20)
+    expect(copy?.duplicateOf).toBe('sec_fx_shop_title~h1~0')
+    expect(copy?.position).toBe(10)
+    expect(doc.elements?.['chrome~nav~0']?.navIcon).toBe('bag')
+    const audit = auditElementCoverage(doc, render(doc, spec))
+    expect(audit.copies).toBe(1)
+    expect(audit.missing).toEqual([])
+    expect(audit.duplicates).toEqual([])
+  })
+
+  test('a container copy keeps its remapped child tree and counts as one copy', () => {
+    const spec = specFor('shop')
+    const base = flagshipDocFromSpec(spec)
+    const root = 'sec_fx_shop_title~div~0~cabc123'
+    const child = 'sec_fx_shop_title~h1~0~cabc123'
+    const doc = normalizeDoc(
+      {
+        ...base,
+        elements: {
+          [root]: {
+            duplicateOf: 'sec_fx_shop_title~div~0',
+            copyTree: { 'sec_fx_shop_title~h1~0': child },
+            name: 'Intro copy',
+          },
+          [child]: {
+            duplicateOf: 'sec_fx_shop_title~h1~0',
+            copyParent: root,
+            text: 'A copied headline',
+            style: { fontSize: 20 },
+          },
+        },
+      },
+      spec,
+    )
+    expect(doc.elements?.[root]?.copyTree).toEqual({ 'sec_fx_shop_title~h1~0': child })
+    expect(doc.elements?.[child]?.copyParent).toBe(root)
+    expect(doc.elements?.[child]?.duplicateOf).toBe('sec_fx_shop_title~h1~0')
+    const audit = auditElementCoverage(doc, render(doc, spec))
+    expect(audit.copies).toBe(1)
+    expect(audit.copiedElements).toBe(2)
+    expect(audit.missing).toEqual([])
+    expect(audit.coverage).toEqual(AUDIT_COVERAGE)
+
+    const bad = normalizeDoc(
+      {
+        ...base,
+        elements: {
+          [root]: { duplicateOf: 'sec_fx_shop_title~div~0', copyTree: { 'bad': 'also-bad' } },
+          [child]: { duplicateOf: 'sec_fx_shop_title~h1~0', copyParent: 'not-a-clone' },
+        },
+      },
+      spec,
+    )
+    expect(bad.elements?.[root]?.copyTree).toBeUndefined()
+    expect(bad.elements?.[child]?.copyParent).toBeUndefined()
+  })
+
   test('system chrome is reported rather than pretending it is an element', () => {
-    expect(SYSTEM_CONTROLLED.length).toBeGreaterThan(3)
+    expect(SYSTEM_CONTROLLED.length).toBeGreaterThan(5)
     expect(SYSTEM_CONTROLLED.join(' ')).toContain('App bar')
+    expect(APPEARANCE_CONTROLS.length).toBeGreaterThan(2)
+    expect(AUDIT_COVERAGE.map(([area]) => area)).toEqual(
+      expect.arrayContaining(['Nested elements', 'Dynamic components', 'Navigation', 'Responsive layouts', 'Empty and loading states']),
+    )
   })
 
   test('hostile or malformed element overrides are dropped and clamped', () => {
@@ -97,7 +181,19 @@ describe('element editability', () => {
           'sec_fx_shop_title~h1~0': {
             name: 'Hero',
             text: 'A different headline',
-            style: { fontSize: 900, color: 'url(javascript:alert(1))', background: '#fff', width: 900, layout: 'diagonal', icon: 'sparkles', order: 99 },
+            style: {
+              fontSize: 900,
+              color: 'url(javascript:alert(1))',
+              background: '#fff',
+              width: 900,
+              layout: 'diagonal',
+              cropTop: 60,
+              cropBottom: 60,
+              cropLeft: 10,
+            },
+            navIcon: 'sparkles',
+            duplicateOf: 'sec_fx_shop_title~p~0',
+            position: 9999,
           },
           'not a slot': { text: 'nope' },
           'sec_fx_shop_title~script~0': { text: 'nope' },
@@ -111,8 +207,12 @@ describe('element editability', () => {
     expect(entry?.style?.width).toBe(100)
     expect(entry?.style?.color).toBeUndefined()
     expect(entry?.style?.layout).toBeUndefined()
-    expect(entry?.style?.icon).toBeUndefined()
-    expect(entry?.style?.order).toBe(20)
+    // A crop leaving no image is dropped whole, while a valid inset survives.
+    expect(entry?.style?.cropTop).toBeUndefined()
+    expect(entry?.style?.cropLeft).toBeUndefined()
+    expect(entry?.navIcon).toBeUndefined()
+    expect(entry?.duplicateOf).toBe('sec_fx_shop_title~p~0')
+    expect(entry?.position).toBe(999)
     expect(doc.elements?.['not a slot']).toBeUndefined()
     expect(doc.elements?.['sec_fx_shop_title~script~0']).toBeUndefined()
     expect(doc.elements?.['sec_fx_shop_title~p~0']).toBeUndefined()

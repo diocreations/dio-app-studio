@@ -35,6 +35,20 @@ function esc(value: string): string {
     .replace(/"/g, '&quot;')
 }
 
+export const NAV_ICON_NAMES = [
+  'home',
+  'catalog',
+  'bag',
+  'calendar',
+  'dots',
+  'plus',
+  'chevron',
+  'phone',
+  'search',
+  'heart',
+  'quote',
+] as const
+
 function icon(
   name:
     | 'home'
@@ -1405,11 +1419,13 @@ body[data-editor="1"] [data-el] { cursor: pointer; }
 body[data-editor="1"] [data-el]:hover { outline: 1px dashed color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 2px; }
 body[data-editor="1"] [data-el].el-selected { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
 body[data-editor="1"] [data-el-bound].el-selected { outline-style: dashed !important; }
+.tabbar img.nav-custom-icon { width: 22px; height: 22px; object-fit: contain; border-radius: 4px; display: block; margin: 0 auto; }
 </style>
 <script>
 (() => {
-  const config = window.__PLATTR_ELEMENTS__ || { elements: {}, token: '', editor: false }
+  const config = window.__PLATTR_ELEMENTS__ || { elements: {}, token: '', editor: false, icons: {} }
   const elements = config.elements || {}
+  const icons = config.icons || {}
   const SELECTOR = 'h1,h2,h3,h4,h5,h6,p,span,img,button,a,svg,div[class*="fx-"]'
   const tagOf = (el) => (el.tagName.toLowerCase() === 'div' ? 'div' : el.tagName.toLowerCase())
   const bound = (el) => Boolean(el.closest('[data-item]') || el.closest('[data-el-bound]'))
@@ -1417,6 +1433,7 @@ body[data-editor="1"] [data-el-bound].el-selected { outline-style: dashed !impor
     document.querySelectorAll('[data-sec]').forEach((section) => {
       const counts = {}
       section.querySelectorAll(SELECTOR).forEach((el) => {
+        if (el.closest('[data-el-clone]')) return
         const tag = tagOf(el)
         const index = counts[tag] || 0
         counts[tag] = index + 1
@@ -1429,6 +1446,51 @@ body[data-editor="1"] [data-el-bound].el-selected { outline-style: dashed !impor
       tab.dataset.elNav = '1'
     })
   }
+  function buildClones() {
+    Object.keys(elements).sort().forEach((key) => {
+      const entry = elements[key]
+      // Child copies are part of a container copy; only root copies are built.
+      if (!entry || !entry.duplicateOf || entry.copyParent) return
+      if (document.querySelector('[data-el="' + key + '"]')) return
+      const source = document.querySelector('[data-el="' + entry.duplicateOf + '"]')
+      if (!source || source.closest('[data-el-clone]')) return
+      // A catalogue-owned node or a node containing catalogue-bound children
+      // must not be duplicated: the copy would carry a second product identity.
+      if (source.dataset.elBound === '1' || source.querySelector('[data-el-bound]')) return
+      const children = [...source.querySelectorAll('[data-el]')]
+      const copyTree = entry.copyTree || {}
+      if (children.length && !children.every((child) => copyTree[child.dataset.el])) return
+      const node = source.cloneNode(true)
+      node.querySelectorAll('[data-el]').forEach((child) => {
+        child.dataset.el = copyTree[child.dataset.el]
+        delete child.dataset.elBound
+        delete child.dataset.elNav
+      })
+      delete node.dataset.elBound
+      delete node.dataset.elNav
+      node.dataset.el = key
+      node.dataset.elClone = '1'
+      node.setAttribute('data-el-clone', '1')
+      source.parentNode.insertBefore(node, source.nextSibling)
+    })
+  }
+  function orderElements() {
+    const parents = new Set()
+    document.querySelectorAll('[data-el]').forEach((el) => {
+      if (elements[el.dataset.el] && elements[el.dataset.el].position !== undefined) parents.add(el.parentElement)
+    })
+    parents.forEach((parent) => {
+      if (!parent) return
+      const rows = Array.from(parent.children).filter((node) => node.dataset && node.dataset.el && elements[node.dataset.el])
+      if (rows.length < 2) return
+      rows.sort((a, b) => {
+        const left = elements[a.dataset.el].position
+        const right = elements[b.dataset.el].position
+        return (left === undefined ? 9999 : left) - (right === undefined ? 9999 : right)
+      })
+      rows.forEach((node) => parent.appendChild(node))
+    })
+  }
   function apply() {
     document.querySelectorAll('[data-el]').forEach((el) => {
       const key = el.dataset.el
@@ -1436,7 +1498,7 @@ body[data-editor="1"] [data-el-bound].el-selected { outline-style: dashed !impor
       if (!entry) return
       const style = entry.style || {}
       const boundEl = bound(el)
-      if (entry.hidden) el.style.display = 'none'
+      if (entry.hidden || entry.removed) el.style.display = 'none'
       if (entry.text && !boundEl) {
         if (el.dataset.elNav === '1') {
           const label = el.querySelector('span')
@@ -1457,6 +1519,34 @@ body[data-editor="1"] [data-el-bound].el-selected { outline-style: dashed !impor
         const media = entry.media
         el.src = '/p/' + config.token + '/media/' + media.id + '/640.webp'
         if (media.alt) el.alt = media.alt
+      }
+      if (el.dataset.elNav === '1') {
+        // Keep the design's own glyph and hide it, so changing or removing a
+        // custom icon can always return to the default instead of losing it.
+        const glyph = el.querySelector(':scope > svg:not([data-nav-icon])')
+        const custom = el.querySelector(':scope > img.nav-custom-icon')
+        const injected = el.querySelector(':scope > svg[data-nav-icon]')
+        if (injected) injected.remove()
+        if (!entry.media && !entry.navIcon) {
+          if (custom) custom.remove()
+          if (glyph) glyph.style.removeProperty('display')
+        } else {
+          if (glyph) glyph.style.display = 'none'
+          if (entry.media) {
+            const image = custom || document.createElement('img')
+            image.className = 'nav-custom-icon'
+            image.src = '/p/' + config.token + '/media/' + entry.media.id + '/320.webp'
+            image.alt = ''
+            if (!custom) el.appendChild(image)
+          } else {
+            if (custom) custom.remove()
+            if (entry.navIcon && entry.navIcon !== 'none') {
+              if (glyph) glyph.insertAdjacentHTML('afterend', icons[entry.navIcon] || '')
+              const next = glyph && glyph.nextElementSibling
+              if (next && next.tagName.toLowerCase() === 'svg') next.dataset.navIcon = '1'
+            }
+          }
+        }
       }
       const set = (name, value) => { if (value !== undefined && value !== null && value !== '') el.style.setProperty(name, String(value), 'important') }
       if (style.fontSize) set('font-size', style.fontSize + 'px')
@@ -1482,17 +1572,6 @@ body[data-editor="1"] [data-el-bound].el-selected { outline-style: dashed !impor
         else if (style.layout === 'grid') { set('display', 'grid'); set('grid-template-columns', 'repeat(2, minmax(0, 1fr))') }
         else { set('display', 'flex'); set('flex-direction', 'column') }
       }
-      if (style.order && el.dataset.elNav === '1') set('order', style.order)
-      if (style.icon && el.tagName === 'BUTTON' && el.dataset.elNav !== '1') {
-        const glyphs = { arrow: '→', plus: '+', chevron: '›', star: '★' }
-        let icon = el.querySelector(':scope > [data-el-icon]')
-        if (style.icon === 'none') { if (icon) icon.remove() }
-        else {
-          if (!icon) { icon = document.createElement('span'); icon.dataset.elIcon = '1' }
-          icon.textContent = ' ' + glyphs[style.icon]
-          el.appendChild(icon)
-        }
-      }
       if (el.tagName === 'svg') {
         if (style.color) { set('fill', style.color); set('stroke', style.color) }
         if (entry.hidden) el.style.display = 'none'
@@ -1502,6 +1581,10 @@ body[data-editor="1"] [data-el-bound].el-selected { outline-style: dashed !impor
         const focalX = style.focalX ?? (entry.media && entry.media.focalX)
         const focalY = style.focalY ?? (entry.media && entry.media.focalY)
         if (focalX !== undefined || focalY !== undefined) set('object-position', (focalX ?? 50) + '% ' + (focalY ?? 50) + '%')
+        const crop = [style.cropTop, style.cropRight, style.cropBottom, style.cropLeft]
+        if (crop.some((value) => value !== undefined)) {
+          set('object-view-box', 'inset(' + (style.cropTop || 0) + '% ' + (style.cropRight || 0) + '% ' + (style.cropBottom || 0) + '% ' + (style.cropLeft || 0) + '%)')
+        } else el.style.removeProperty('object-view-box')
         if (style.aspect === 'square') set('aspect-ratio', '1')
         else if (style.aspect === 'portrait') set('aspect-ratio', '4 / 5')
         else if (style.aspect === 'wide') set('aspect-ratio', '16 / 9')
@@ -1514,8 +1597,10 @@ body[data-editor="1"] [data-el-bound].el-selected { outline-style: dashed !impor
     })
   }
   annotate()
+  buildClones()
+  orderElements()
   apply()
-  window.__plattrAnnotate = () => { annotate(); apply() }
+  window.__plattrAnnotate = () => { annotate(); buildClones(); orderElements(); apply() }
 })()
 </script>`
 
@@ -2098,11 +2183,12 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     const hadDeadFilter = !!stored && typeof stored === 'object' && 'filter' in stored
     if (hadDeadFilter) delete stored.filter
     const state = Object.assign(
-      { cart: {}, stamps: 0, orderType: DATA.fulfilment[0], party: 2, day: 0, slot: null, stars: 0, saved: {}, pick: {}, recent: [], orders: [], bookings: [], customerName: '', customerContact: '' },
+      { cart: {}, stamps: 0, orderType: DATA.fulfilment[0], party: 2, day: 0, slot: null, stars: 0, saved: {}, pick: {}, optionPicks: {}, recent: [], orders: [], bookings: [], customerName: '', customerContact: '' },
       stored,
     )
     if (!state.saved || typeof state.saved !== 'object') state.saved = {}
     if (!state.pick || typeof state.pick !== 'object') state.pick = {}
+    if (!state.optionPicks || typeof state.optionPicks !== 'object') state.optionPicks = {}
     if (!Array.isArray(state.recent)) state.recent = []
     if (!Array.isArray(state.orders)) state.orders = []
     if (!Array.isArray(state.bookings)) state.bookings = []
@@ -2152,7 +2238,12 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const list = variantsOf(item)
       if (list.length < 2) return null
       const wanted = state.pick[key]
-      return list.find((variant) => variantRef(variant) === wanted) || list.find((variant) => variant.selected) || list[0]
+      const picked = list.find((variant) => variantRef(variant) === wanted)
+      // A choice can go out of stock after it was saved in a bag. Move to the
+      // default (or first) option still on sale; only show a sold-out choice
+      // when the whole product is sold out.
+      if (picked && picked.available !== false) return picked
+      return list.find((variant) => variant.selected && variant.available !== false) || list.find((variant) => variant.available !== false) || picked || list[0]
     }
     /** The only option of a simple product. It is not a choice to show, but it
      *  is the Shopify identity the order and the shop share, so the bag and the
@@ -2214,10 +2305,62 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       return '<div class="variants" data-variants><span class="label">Choose an option · ' + list.length + '</span><div class="variant-row">' +
         list.map(function (variant) {
           const on = chosen && variantRef(chosen) === variantRef(variant)
-          return '<button class="variant' + (on ? ' on' : '') + '" type="button" data-variant="' + esc(variantRef(variant)) + '" data-variant-key="' + key + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
+          const soldOut = variant.available === false
+          return '<button class="variant' + (on ? ' on' : '') + (soldOut ? ' is-sold-out' : '') + '" type="button" data-variant="' + esc(variantRef(variant)) + '" data-variant-key="' + key + '" aria-pressed="' + (on ? 'true' : 'false') + '"' + (soldOut ? ' disabled' : '') + '>' +
             (variant.media ? '<img src="/p/' + esc(DATA.token) + '/media/' + esc(variant.media.id) + '/320.webp" alt="" style="width:18px;height:18px;object-fit:cover;border-radius:50%;margin-right:5px" />' : '') +
-            '<span>' + esc(variant.name) + '</span><b>' + money(variant.price) + '</b></button>'
+            '<span>' + esc(variant.name) + '</span><b>' + (soldOut ? 'Unavailable' : money(variant.price)) + '</b></button>'
         }).join('') + '</div></div>'
+    }
+
+    /** A structured product is one whose variants carry a value for every
+     *  group. Flat variant lists keep the old picker, so no saved catalogue
+     *  gains combinations its owner never entered. */
+    function structuredGroups(item) {
+      const groups = Array.isArray(item && item.optionGroups) ? item.optionGroups.filter(function (group) { return group && group.name && Array.isArray(group.options) && group.options.length }) : []
+      if (!groups.length) return []
+      const list = variantsOf(item)
+      // Only a complete set of values earns the grouped picker. A half-filled
+      // catalogue keeps the flat, real variant list instead of inventing the
+      // combinations its owner has not entered yet.
+      const structured = list.length > 0 && list.every(function (variant) { return variant.values && groups.every(function (group) { return variant.values[group.name] }) })
+      return structured ? groups : []
+    }
+    function optionPicks(item, key, chosen) {
+      if (!structuredGroups(item).length) return null
+      const current = state.optionPicks[key]
+      const match = current ? optionMatch(item, current) : null
+      if (!match || (match.available === false && chosen && chosen.available !== false)) delete state.optionPicks[key]
+      if (!state.optionPicks[key]) {
+        const from = chosen && chosen.values ? chosen.values : {}
+        state.optionPicks[key] = {}
+        structuredGroups(item).forEach(function (group) { if (from[group.name]) state.optionPicks[key][group.name] = from[group.name] })
+      }
+      return state.optionPicks[key]
+    }
+    function optionMatch(item, picks) {
+      const groups = structuredGroups(item)
+      if (!groups.length) return null
+      if (!groups.every(function (group) { return picks && picks[group.name] })) return null
+      return variantsOf(item).find(function (variant) {
+        return variant.values && groups.every(function (group) { return variant.values[group.name] === picks[group.name] })
+      }) || null
+    }
+    function optionGroupsHtml(item, key, chosen) {
+      const groups = structuredGroups(item)
+      if (!groups.length) return ''
+      const list = variantsOf(item)
+      const picks = optionPicks(item, key, chosen)
+      return '<div class="option-groups" data-option-groups><span class="label">Choose your options</span>' +
+        groups.map(function (group) {
+          return '<div class="option-group"><span class="option-name">' + esc(group.name) + '</span><div class="variant-row" role="group" aria-label="' + esc(group.name) + '">' +
+            group.options.map(function (option) {
+              const candidates = list.filter(function (variant) { return variant.values && variant.values[group.name] === option })
+              const found = candidates.find(function (variant) { return variant.available !== false })
+              const on = picks[group.name] === option
+              const soldOut = !found && candidates.length > 0
+              return '<button class="variant' + (on ? ' on' : '') + (soldOut ? ' is-sold-out' : '') + '" type="button" data-option-group="' + esc(group.name) + '" data-option-value="' + esc(option) + '" data-option-key="' + key + '" aria-pressed="' + (on ? 'true' : 'false') + '"' + (!found || soldOut ? ' disabled' : '') + '>' + esc(option) + '</button>'
+            }).join('') + '</div></div>'
+        }).join('') + '</div>'
     }
 
     function toast(message) {
@@ -2309,13 +2452,13 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
     // Each shell opens an item its own way: a menu line, a class card, a
     // treatment sheet or a property listing — not one shared detail page.
-    function detailHtml(item, key, price) {
+    function detailHtml(item, key, price, chosen) {
       const save = '<button class="save on-art detail-save' + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save">' + HEART + '</button>'
-      // Photography only where the build asked for it; removing the node on
-      // failure reveals the generated artwork underneath, which is why the
-      // app still looks complete offline.
+      // A variant's own photograph replaces the product's without changing the
+      // catalogue association; the fallback art keeps the app complete offline.
+      const photo = chosen && chosen.media ? Object.assign({}, item, { media: chosen.media }) : item
       const shot = function (seed, list, alt, useItem) {
-        return pickShot(seed, list, alt, useItem ? item : null)
+        return pickShot(seed, list, alt, useItem ? photo : null)
       }
       const band = '<div class="thumb m-' + DATA.motif + ' detail-band">' + shot(key, 'photoWide', item.name, true) + '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' + save + '</div>'
       if (DATA.shell === 'menu')
@@ -2388,7 +2531,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     // The retail product page: the photograph at its own shape, then the name,
     // price, words and options. No boxed card, no monogram over the product.
     function retailDetailHtml(item, key, price, chosen, picker, footer) {
-      const shot = retailShotHtml(item)
+      const shot = retailShotHtml(item, chosen)
       const section = DATA.menu[Number(String(key).split('-')[0])]
       const save = '<button class="save rl-save detail-save' + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save">' + HEART + '</button>'
       const prices = variantsOf(item).map(function (variant) { return variant.price })
@@ -2412,28 +2555,39 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       if (!item) return
       const host = document.querySelector('[data-detail-body]')
       const screen = document.querySelector('[data-screen="detail"]')
-      const chosen = chosenVariant(item, key)
-      const unitPrice = chosen ? chosen.price : item.price
+      const groups = structuredGroups(item)
+      // A grouped product may have only one real combination; the flat picker
+      // hides that case, but its group values still describe the product.
+      const chosen = groups.length ? chosenVariant(item, key) || variantsOf(item)[0] : chosenVariant(item, key)
+      const picks = groups.length ? optionPicks(item, key, chosen) : null
+      const structured = groups.length ? optionMatch(item, picks) : null
+      const settled = groups.length ? structured : chosen
+      const awaitingChoice = Boolean(groups.length && !structured)
+      const unavailable = Boolean(settled && settled.available === false)
+      const unitPrice = awaitingChoice ? 0 : settled ? settled.price : item.price
       const price = unitPrice > 0 ? money(unitPrice) : ''
-      const picker = variantHtml(item, key, chosen)
-      const footer = DATA.ordering && unitPrice > 0
-        ? '<div class="detail-cta"><div class="detail-cta-line"><span class="tiny dim">' + esc(chosen ? chosen.name : item.meta || DATA.catalogWord) + '</span>' +
+      const picker = groups.length ? optionGroupsHtml(item, key, chosen) : variantHtml(item, key, chosen)
+      const footer = DATA.ordering && (unitPrice > 0 || awaitingChoice)
+        ? '<div class="detail-cta"><div class="detail-cta-line"><span class="tiny dim">' + esc(awaitingChoice ? 'Choose your options' : settled ? settled.name : item.meta || DATA.catalogWord) + '</span>' +
           '<b class="price" data-unit-price>' + price + '</b></div>' +
-          '<button class="btn accent" type="button" data-add="' + key + '">' + DATA.addLabel + '</button></div>'
+          (awaitingChoice
+            ? '<button class="btn accent" type="button" disabled>Select options</button>'
+            : '<button class="btn accent" type="button" data-add="' + key + '"' + (unavailable ? ' disabled' : '') + '>' + (unavailable ? 'Unavailable' : DATA.addLabel) + '</button>') + '</div>'
         : DATA.booking
           ? '<div class="detail-cta"><button class="btn accent block" type="button" data-go="book">' + DATA.bookTitle + '</button></div>'
           : DATA.quoting
             ? '<div class="detail-cta"><button class="btn accent block" type="button" data-go="quote">' + DATA.quoteTitle + '</button></div>'
             : ''
       const shellDetail = DATA.retail
-        ? retailDetailHtml(item, key, price, chosen, picker, footer)
-        : detailHtml(item, key, price)
+        ? retailDetailHtml(item, key, price, settled, picker, footer)
+        : detailHtml(item, key, price, settled)
       const withPicker = shellDetail && picker && !DATA.retail
         ? shellDetail.replace('<div class="detail-gap"', picker + '<div class="detail-gap"')
         : shellDetail
+      const photoItem = settled && settled.media ? Object.assign({}, item, { media: settled.media }) : item
       host.innerHTML = withPicker ||
         '<div class="thumb m-' + DATA.motif + ' detail-band">' +
-        pickShot(key, 'photoWide', item.name, item) +
+        pickShot(key, 'photoWide', item.name, photoItem) +
         '<span class="mono">' + esc(item.name.slice(0, 1).toUpperCase()) + '</span>' +
         '<span class="cap"><span>' + esc(item.tag || DATA.catalogWord) + '</span><span>' + price + '</span></span>' +
         '<button class="save on-art detail-save' + (state.saved[key] ? ' on' : '') + '" type="button" data-save="' + key + '" aria-label="Save">' + HEART + '</button></div>' +
@@ -2733,10 +2887,11 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     let retailLimit = RETAIL_PAGE
     const pieces = (count) => count + ' ' + (count === 1 ? DATA.itemWord || 'item' : DATA.itemWords)
 
-    function retailShotHtml(item) {
-      if (item && item.media && item.media.id) {
-        const base = '/p/' + DATA.token + '/media/' + item.media.id
-        return '<img class="rl-photo" src="' + base + '/640.webp" srcset="' + base + '/320.webp 320w, ' + base + '/640.webp 640w, ' + base + '/1280.webp 1280w" sizes="(max-width: 719px) 92vw, (max-width: 1099px) 44vw, 30vw" alt="' + esc((item.media.alt || item.name)) + '" loading="lazy" decoding="async" style="object-fit:' + (item.media.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (item.media.focalX ?? 50) + '% ' + (item.media.focalY ?? 50) + '%" onerror="this.remove()" />'
+    function retailShotHtml(item, chosen) {
+      const media = chosen && chosen.media ? chosen.media : item && item.media
+      if (media && media.id) {
+        const base = '/p/' + DATA.token + '/media/' + media.id
+        return '<img class="rl-photo" src="' + base + '/640.webp" srcset="' + base + '/320.webp 320w, ' + base + '/640.webp 640w, ' + base + '/1280.webp 1280w" sizes="(max-width: 719px) 92vw, (max-width: 1099px) 44vw, 30vw" alt="' + esc((media.alt || item.name)) + '" loading="lazy" decoding="async" style="object-fit:' + (media.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (media.focalX ?? 50) + '% ' + (media.focalY ?? 50) + '%" onerror="this.remove()" />'
       }
       if (item && item.image && item.image.url) {
         return '<img class="rl-photo" src="' + esc(item.image.url) + '" alt="' + esc(item.image.alt || item.name) + '" loading="lazy" decoding="async" referrerpolicy="no-referrer" style="object-fit:' + (item.image.fit === 'contain' ? 'contain' : 'cover') + ';object-position:' + (item.image.positionX ?? 50) + '% ' + (item.image.positionY ?? 50) + '%" onerror="this.remove()" />'
@@ -3123,7 +3278,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
     document.addEventListener('click', (event) => {
       const target = event.target.closest(
-        '[data-add],[data-inc],[data-pay],[data-go],[data-jump],[data-place],[data-type],[data-party],[data-book],[data-reserve],[data-quote-send],[data-send-review],[data-cart-open],[data-nav-open],[data-save],[data-search-open],[data-saved-open],[data-search-clear],[data-filter],[data-property-filter],[data-recent],[data-install],[data-close-sheet],[data-back],[data-store],[data-variant],[data-more-go],.stars span,[data-item]',
+        '[data-add],[data-inc],[data-pay],[data-go],[data-jump],[data-place],[data-type],[data-party],[data-book],[data-reserve],[data-quote-send],[data-send-review],[data-cart-open],[data-nav-open],[data-save],[data-search-open],[data-saved-open],[data-search-clear],[data-filter],[data-property-filter],[data-recent],[data-install],[data-close-sheet],[data-back],[data-store],[data-variant],[data-option-value],[data-more-go],.stars span,[data-item]',
       )
       if (!target) return
 
@@ -3159,8 +3314,32 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         return
       }
       if (target.dataset.moreGo !== undefined) return loadMore(target)
+      if (target.dataset.optionValue !== undefined) {
+        const key = target.dataset.optionKey
+        const item = itemFor(key)
+        const group = target.dataset.optionGroup
+        const value = target.dataset.optionValue
+        const current = state.optionPicks[key] || {}
+        const candidates = variantsOf(item).filter(function (variant) {
+          return variant.values && variant.values[group] === value && variant.available !== false
+        })
+        // Changing one choice selects a real combination, preferring the one
+        // that keeps the other choices the customer already made. No missing
+        // combination is filled in or priced by the browser.
+        const score = function (variant) {
+          return Object.keys(current).filter(function (name) { return name !== group && variant.values[name] === current[name] }).length
+        }
+        const match = candidates.slice().sort(function (a, b) { return score(b) - score(a) })[0]
+        if (match) {
+          state.optionPicks[key] = Object.assign({}, match.values)
+          state.pick[key] = variantRef(match)
+        } else delete state.pick[key]
+        save()
+        return openDetail(key, false)
+      }
       if (target.dataset.variant) {
         state.pick[target.dataset.variantKey] = target.dataset.variant
+        delete state.optionPicks[target.dataset.variantKey]
         save()
         return openDetail(target.dataset.variantKey, false)
       }
@@ -3377,7 +3556,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       navigator.serviceWorker.register('./sw.js').catch(() => {})
     }
   })()
-  </script><script>window.__PLATTR_ELEMENTS__=${JSON.stringify({ token: options.token, elements: doc?.elements ?? {}, editor: Boolean(options.editor) }).replace(/</g, '\\u003c')};</script>${ELEMENT_LAYER}${options.editor ? EDITOR_BRIDGE : ''}
+  </script><script>window.__PLATTR_ELEMENTS__=${JSON.stringify({ token: options.token, elements: doc?.elements ?? {}, editor: Boolean(options.editor), icons: Object.fromEntries(NAV_ICON_NAMES.map((name) => [name, icon(name)])) }).replace(/</g, '\\u003c')};</script>${ELEMENT_LAYER}${options.editor ? EDITOR_BRIDGE : ''}
 </body>
 </html>`
 }

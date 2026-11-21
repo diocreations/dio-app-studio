@@ -262,6 +262,11 @@ button { cursor: pointer; }
 .variant-row .id { font-size: 9px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .variant-row .x, .variant-row .mv { border: 0; background: none; color: var(--muted); font-size: 11px; padding: 2px; }
 .variant-row .x { color: #a13b2b; }
+.variant-opts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 7px; padding: 2px 0 4px 34px; }
+.variant-opts label { display: grid; gap: 3px; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.variant-opts select { border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px; font-size: 11px; min-width: 92px; }
+.vv-avail { display: flex; align-items: center; gap: 3px; font-size: 9px; color: var(--muted); white-space: nowrap; }
+.vv-avail input { margin: 0; }
 .variant-vphoto { width: 34px; height: 34px; padding: 0; border: 1px dashed var(--line); border-radius: 7px; background: var(--paper); overflow: hidden; color: var(--muted); }
 .variant-vphoto img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .variant-group { display: grid; grid-template-columns: minmax(0,.8fr) minmax(0,1.4fr) 22px; gap: 5px; margin-bottom: 6px; }
@@ -463,7 +468,8 @@ const SCREEN_LABELS = { home:'Home', catalog:'Catalogue', search:'Search', saved
 const COMPONENTS = ['heading','text','button','image','banner','gallery','productList','search','form','testimonials','cta','offers','loyalty','visit','story','featured'];
 const SINGLE = ['hero','featured','offers','loyalty','visit','story','testimonials','cta','search','form','productList'];
 const SCREENS = [['contact','Contact','Address, hours and a message'],['about','About','Your story and a photo'],['profile','Profile','Account and shortcuts'],['custom','Blank','A new screen']];
-const state = { doc: JSON.parse(JSON.stringify(INITIAL)), screen: INITIAL.initialScreen || INITIAL.screens[0].id, selected: null, element: null, elementMeta: null, device: 'mobile', history: [], future: [], historyMode: false, media: [], mediaSuggestions: [], mediaTarget: null, elementTarget: null, catalogTarget: null, variantTarget: null, variantMediaTarget: null, mediaQuery: '', mediaFilter: 'all', mediaBusy: false, mediaReplaceId: null, catalog: [], offers: [] };
+const NAV_ICONS = [['home','Home'],['catalog','Catalogue'],['bag','Bag'],['calendar','Calendar'],['dots','More dots'],['plus','Plus'],['chevron','Chevron'],['phone','Phone'],['search','Search'],['heart','Heart'],['quote','Quote'],['none','No icon']];
+const state = { doc: JSON.parse(JSON.stringify(INITIAL)), screen: INITIAL.initialScreen || INITIAL.screens[0].id, selected: null, element: null, elementMeta: null, device: 'mobile', history: [], future: [], historyMode: false, clipboard: null, media: [], mediaSuggestions: [], mediaTarget: null, elementTarget: null, catalogTarget: null, variantTarget: null, variantMediaTarget: null, mediaQuery: '', mediaFilter: 'all', mediaBusy: false, mediaReplaceId: null, catalog: [], offers: [] };
 const $ = (id) => document.getElementById(id);
 const frame = $('frame');
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
@@ -602,7 +608,7 @@ function renderScreenLibrary() {
   }).join('');
 }
 function renderLibrary() {
-  $('library').innerHTML = COMPONENTS.map((kind) => {
+  $('library').innerHTML = (state.clipboard ? '<button class="btn" data-paste-component="1" style="grid-column:1/-1">Paste ' + esc(nodeLabel(state.clipboard)) + '</button>' : '') + COMPONENTS.map((kind) => {
     const present = SINGLE.includes(kind) && current().sections.some((s) => s.kind === kind);
     return '<button class="tile-add" data-add-component="' + kind + '"' + (present ? ' disabled' : '') + '><b>' + SECTION_LABELS[kind] + '</b><span>' + (present ? 'On this screen' : 'Add to screen') + '</span></button>';
   }).join('');
@@ -612,7 +618,8 @@ function renderStructure() {
     '<span class="grip">⠿</span>' +
     '<button class="name" data-select="' + s.id + '">' + esc(nodeLabel(s)) + '<small>' + (VARIANT_LABELS[s.variant] || SECTION_LABELS[s.kind]) + (s.hidden && s.hiddenBecause === 'empty' ? ' · auto-hidden' : '') + '</small></button>' +
     '<button class="act" data-hide="' + s.id + '" title="' + (s.hidden ? 'Show' : 'Hide') + '">' + (s.hidden ? '◌' : '◉') + '</button>' +
-    '<button class="act" data-duplicate="' + s.id + '" title="Duplicate">⧉</button>' +
+    '<button class="act" data-copy-component="' + s.id + '" title="Copy">⧉</button>' +
+    '<button class="act" data-duplicate="' + s.id + '" title="Duplicate">＋</button>' +
     (s.kind === 'hero' ? '' : '<button class="act" data-delete="' + s.id + '" title="Delete">✕</button>') +
     '</div>').join('') || '<p class="empty">No components yet. Add one from above.</p>';
   document.querySelectorAll('[data-node]').forEach((el) => {
@@ -692,13 +699,174 @@ function setElement(key, patch) {
     if (patch.text !== undefined) { if (String(patch.text).trim()) next.text = String(patch.text).slice(0, 300); else delete next.text; }
     if (patch.name !== undefined) { if (String(patch.name).trim()) next.name = String(patch.name).trim().slice(0, 40); else delete next.name; }
     if (patch.hidden !== undefined) { if (patch.hidden) next.hidden = true; else delete next.hidden; }
+    if (patch.navIcon === null) delete next.navIcon;
+    else if (patch.navIcon) next.navIcon = patch.navIcon;
     if (Object.keys(next).length) doc.elements[key] = next; else delete doc.elements[key];
     return doc;
   }, true);
 }
+const isCloneKey = (key) => /~c[a-z0-9]{4,12}$/.test(String(key));
+function dropCopyEntries(doc, key) {
+  doc.elements = doc.elements || {};
+  delete doc.elements[key];
+  Object.keys(doc.elements).forEach((candidate) => {
+    if (doc.elements[candidate] && doc.elements[candidate].copyParent === key) delete doc.elements[candidate];
+  });
+}
 function resetElement(key) {
-  commit((doc) => { if (doc.elements) delete doc.elements[key]; return doc; }, true);
+  commit((doc) => {
+    if (!doc.elements) return doc;
+    if (isCloneKey(key)) dropCopyEntries(doc, key);
+    else delete doc.elements[key];
+    return doc;
+  }, true);
   toast('Element reset to its design');
+}
+function elementNode(key) {
+  try { return frame.contentDocument.querySelector('[data-el="' + key + '"]'); } catch (error) { return null; }
+}
+function siblingKeys(key) {
+  const node = elementNode(key); if (!node || !node.parentElement) return [];
+  return [...node.parentElement.children].filter((child) => child.dataset && child.dataset.el).map((child) => child.dataset.el);
+}
+function positionSiblings(doc, keys) {
+  doc.elements = doc.elements || {};
+  keys.forEach((key, index) => {
+    doc.elements[key] = Object.assign({}, doc.elements[key], { position: index * 10 });
+  });
+}
+function duplicateElement(key) {
+  const node = elementNode(key); const meta = state.elementMeta || {};
+  if (!node || meta.nav) return toast('Navigation items are edited, not duplicated');
+  if (meta.bound || node.dataset.elBound === '1') return toast('Catalogue-owned elements keep one identity and cannot be duplicated');
+  if (isCloneKey(key)) return toast('A copied element cannot be copied again');
+  const descendants = [...node.querySelectorAll('[data-el]')];
+  if (descendants.some((child) => child.dataset.elBound === '1' || child.closest('[data-item]'))) {
+    return toast('This container holds catalogue-owned content and cannot be duplicated');
+  }
+  if (descendants.some((child) => isCloneKey(child.dataset.el))) return toast('Remove copied children before copying this container');
+  const siblings = siblingKeys(key); const at = siblings.indexOf(key);
+  if (at < 0) return toast('This element is not on the current screen');
+  let suffix = Date.now().toString(36).slice(-6);
+  let cloneKey = key + '~c' + suffix;
+  let attempt = 1;
+  while (state.doc.elements && state.doc.elements[cloneKey]) {
+    suffix = Date.now().toString(36).slice(-6) + attempt.toString(36);
+    cloneKey = key + '~c' + suffix;
+    attempt += 1;
+  }
+  const copyTree = {};
+  descendants.forEach((child) => { copyTree[child.dataset.el] = child.dataset.el + '~c' + suffix; });
+  commit((doc) => {
+    doc.elements = doc.elements || {};
+    const source = doc.elements[key] ? clone(doc.elements[key]) : {};
+    delete source.hidden; delete source.removed; delete source.copyParent; delete source.copyTree; delete source.duplicateOf;
+    const copy = Object.assign(source, {
+      duplicateOf: key,
+      name: ((source.name || (descendants.length ? 'Container' : meta.label || 'Element')) + ' copy').slice(0, 40),
+      ...(Object.keys(copyTree).length ? { copyTree } : {}),
+    });
+    const nextOrder = siblings.slice(); nextOrder.splice(at + 1, 0, cloneKey);
+    positionSiblings(doc, nextOrder);
+    doc.elements[cloneKey] = copy;
+    descendants.forEach((child) => {
+      const before = doc.elements[child.dataset.el];
+      if (!before) return;
+      const childCopy = clone(before);
+      delete childCopy.hidden; delete childCopy.removed; delete childCopy.copyParent; delete childCopy.copyTree; delete childCopy.duplicateOf;
+      doc.elements[copyTree[child.dataset.el]] = Object.assign(childCopy, { duplicateOf: child.dataset.el, copyParent: cloneKey });
+    });
+    return doc;
+  }, true);
+  state.element = cloneKey; state.elementMeta = null; render();
+  toast(descendants.length ? 'Container duplicated with its children' : 'Element duplicated');
+}
+function deleteElement(key) {
+  const meta = state.elementMeta || {};
+  if (meta.nav) return toast('Remove navigation on the screen instead');
+  if (meta.bound) return toast('Catalogue-owned elements keep their product identity');
+  const entry = elementEntry(key);
+  commit((doc) => {
+    doc.elements = doc.elements || {};
+    if (entry.copyParent) delete doc.elements[key];
+    else if (entry.duplicateOf || isCloneKey(key)) dropCopyEntries(doc, key);
+    else doc.elements[key] = Object.assign({}, doc.elements[key], { removed: true });
+    return doc;
+  }, true);
+  state.element = null; state.elementMeta = null; render();
+  toast('Element deleted · undo restores it');
+}
+function moveElement(key, delta) {
+  const siblings = siblingKeys(key); const from = siblings.indexOf(key); const to = from + delta;
+  if (from < 0 || to < 0 || to >= siblings.length) return;
+  const swapped = siblings.slice(); [swapped[from], swapped[to]] = [swapped[to], swapped[from]];
+  commit((doc) => { positionSiblings(doc, swapped); return doc; }, true);
+}
+function navScreenFor(key) {
+  const index = Number(String(key).split('~').pop());
+  const nav = state.doc.screens.filter((screen) => screen.nav && !screen.hidden && screen.kind !== 'detail');
+  return nav[index] || current();
+}
+function moveNav(key, delta) {
+  const target = navScreenFor(key);
+  commit((doc) => {
+    const nav = doc.screens.filter((screen) => screen.nav && !screen.hidden && screen.kind !== 'detail');
+    const at = nav.findIndex((screen) => screen.id === target.id); const to = at + delta;
+    if (at < 0 || to < 0 || to >= nav.length) return doc;
+    const a = doc.screens.findIndex((screen) => screen.id === nav[at].id);
+    const b = doc.screens.findIndex((screen) => screen.id === nav[to].id);
+    [doc.screens[a], doc.screens[b]] = [doc.screens[b], doc.screens[a]];
+    return doc;
+  }, true);
+}
+function toggleNav(key) {
+  const target = navScreenFor(key);
+  if (!target.nav) {
+    const active = state.doc.screens.filter((screen) => screen.nav && !screen.hidden && screen.kind !== 'detail');
+    if (active.length >= 5) return toast('A tab bar holds five items. Remove one first.');
+  }
+  commit((doc) => { const screen = doc.screens.find((entry) => entry.id === target.id); if (screen) screen.nav = !screen.nav; return doc; }, true);
+}
+function dropSectionElements(doc, sectionId) {
+  doc.elements = doc.elements || {};
+  Object.keys(doc.elements).forEach((key) => { if (String(key).startsWith(sectionId + '~')) delete doc.elements[key]; });
+}
+function remapSectionElements(doc, fromId, toId) {
+  doc.elements = doc.elements || {};
+  const map = (key) => String(key).startsWith(fromId + '~') ? toId + String(key).slice(fromId.length) : key;
+  const copied = {};
+  Object.keys(doc.elements).forEach((key) => {
+    if (!String(key).startsWith(fromId + '~')) return;
+    const next = clone(doc.elements[key]);
+    if (next.duplicateOf) next.duplicateOf = map(next.duplicateOf);
+    if (next.copyParent) next.copyParent = map(next.copyParent);
+    if (next.copyTree) next.copyTree = Object.fromEntries(Object.entries(next.copyTree).map(([source, target]) => [map(source), map(target)]));
+    copied[map(key)] = next;
+  });
+  doc.elements = Object.assign({}, doc.elements, copied);
+}
+function uniqueSectionId(screen, base) {
+  let id = base; let index = 2;
+  while (screen.sections.some((section) => section.id === id)) { id = base + '_' + index; index += 1; }
+  return id;
+}
+function copyComponent(id) {
+  const node = current().sections.find((section) => section.id === id); if (!node) return;
+  state.clipboard = clone(node); toast('Component copied');
+}
+function pasteComponent() {
+  if (!state.clipboard) return;
+  commit((doc) => {
+    const screen = doc.screens.find((entry) => entry.id === state.screen); if (!screen) return doc;
+    const id = uniqueSectionId(screen, state.clipboard.id);
+    const pasted = Object.assign(clone(state.clipboard), { id });
+    const at = screen.sections.findIndex((section) => section.id === state.selected);
+    screen.sections.splice(at < 0 ? screen.sections.length : at + 1, 0, pasted);
+    remapSectionElements(doc, state.clipboard.id, id);
+    state.selected = id; state.element = null;
+    return doc;
+  }, true);
+  toast('Component pasted');
 }
 function renderElementInspector() {
   const key = state.element; const entry = elementEntry(key); const meta = state.elementMeta || {};
@@ -735,16 +903,26 @@ function renderElementInspector() {
       number('eBorder', 'Border (px)', style.border, 0, 8) +
       '<div class="field"><label>Shadow</label><select id="eShadow">' + [['','Default'],['none','None'],['soft','Soft'],['strong','Strong']].map(([value,label]) => '<option value="' + value + '"' + ((style.shadow || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
     '</div>' +
-    (nav ? '<div class="sec"><h3>Navigation</h3>' + number('eOrder', 'Position in tab bar', style.order, 1, 20) + '</div>' : '') +
-    (meta.tag === 'button' && !nav ? '<div class="sec"><h3>Icon</h3><div class="field"><label>Beside the label</label><select id="eIcon">' + [['','Design default'],['none','Remove added icon'],['arrow','Arrow'],['chevron','Chevron'],['plus','Plus'],['star','Star']].map(([value,label]) => '<option value="' + value + '"' + ((style.icon || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div></div>' : '') +
+    (nav ? '<div class="sec"><h3>Navigation</h3>' +
+      '<div class="field"><label>Icon</label><select id="eNavIcon"><option value="">Design default</option>' + NAV_ICONS.map(([value,label]) => '<option value="' + value + '"' + ((entry.navIcon || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
+      '<button class="btn" id="eNavPhoto" style="width:100%">' + (entry.media ? 'Replace custom icon' : 'Upload custom icon') + '</button>' +
+      (entry.media ? ' <button class="btn" id="eNavPhotoRemove" style="width:100%;margin-top:6px">Remove custom icon</button>' : '') +
+      '<div class="actions" style="display:flex;gap:6px;margin-top:8px"><button class="btn" id="eNavEarlier">← Earlier</button><button class="btn" id="eNavLater">Later →</button><button class="btn" id="eNavToggle">' + (navScreenFor(key).nav ? 'Remove from nav' : 'Add to nav') + '</button></div>' +
+      '<p class="hint">Five items fit. Labels, destination and icon are saved with the document; custom icons are uploaded media.</p>' +
+    '</div>' : '') +
     (isImage ? '<div class="sec"><h3>Image</h3>' +
       (bound ? '<p class="hint">The product photograph belongs to the catalogue. Change it under Catalogue → item photo, not here.</p>' : '<button class="btn primary" id="ePhoto" style="width:100%">' + (entry.media ? 'Replace photo' : 'Choose photo') + '</button>' + (entry.media ? ' <button class="btn" id="eRemovePhoto" style="width:100%;margin-top:6px">Remove photo</button>' : '')) +
       '<div class="field"><label>Aspect</label><select id="eAspect">' + [['','Default'],['auto','Original'],['wide','Wide 16:9'],['square','Square'],['portrait','Portrait 4:5']].map(([value,label]) => '<option value="' + value + '"' + ((style.aspect || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
       '<div class="field"><label>Fitting</label><select id="eFit">' + [['','Default'],['cover','Crop to fill'],['contain','Fit whole image']].map(([value,label]) => '<option value="' + value + '"' + ((style.imageFit || '') === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
       number('eFocalX', 'Crop focus X (%)', style.focalX, 0, 100) + number('eFocalY', 'Crop focus Y (%)', style.focalY, 0, 100) +
+      number('eCropTop', 'Crop from top (%)', style.cropTop, 0, 45) + number('eCropRight', 'Crop from right (%)', style.cropRight, 0, 45) +
+      number('eCropBottom', 'Crop from bottom (%)', style.cropBottom, 0, 45) + number('eCropLeft', 'Crop from left (%)', style.cropLeft, 0, 45) +
+      '<p class="hint">Crop insets the photograph without changing the stored file or its catalogue association.</p>' +
     '</div>' : '') +
     (meta.action ? '<div class="sec"><h3>Action</h3><div class="field"><label>Opens</label><select id="eAction"><option value="">Design default</option>' + state.doc.screens.filter((screen) => screen.kind !== 'detail').map((screen) => '<option value="' + appId(screen) + '"' + ((entry.action && entry.action.screen) === appId(screen) ? ' selected' : '') + '>' + esc(screen.name) + '</option>').join('') + '</select></div></div>' : '') +
-    '<div class="sec"><div class="actions" style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" id="eHide">' + (entry.hidden ? 'Show element' : 'Hide element') + '</button><button class="btn" id="eReset" style="color:#a13b2b">Reset element</button></div></div>';
+    '<div class="sec"><div class="actions" style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" id="eEarlier">↑ Earlier</button><button class="btn" id="eLater">↓ Later</button>' +
+      (nav ? '' : '<button class="btn" id="eDuplicate"' + (bound ? ' disabled title="Catalogue-owned"' : '') + '>Duplicate</button><button class="btn" id="eDelete" style="color:#a13b2b"' + (bound ? ' disabled title="Catalogue-owned"' : '') + '>Delete</button>') +
+      '</div><div class="actions" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><button class="btn" id="eHide">' + (entry.hidden ? 'Show element' : 'Hide element') + '</button><button class="btn" id="eReset" style="color:#a13b2b">Reset element</button></div></div>';
   $('eBack').addEventListener('click', () => { state.element = null; state.elementMeta = null; render(); });
   $('eName').addEventListener('input', (event) => setElement(key, { name: event.target.value }));
   const text = $('eText'); if (text) text.addEventListener('input', (event) => setElement(key, { text: event.target.value }));
@@ -753,11 +931,22 @@ function renderElementInspector() {
   bind('eWidth','width',true); bind('eHeight','height',true); bind('ePadding','padding',true); bind('eMargin','margin',true);
   bind('eGap','gap',true); bind('eBg','background',false); bind('eRadius','radius',true); bind('eBorder','border',true);
   bind('eShadow','shadow',false); bind('eAspect','aspect',false); bind('eFit','imageFit',false); bind('eFocalX','focalX',true); bind('eFocalY','focalY',true);
-  bind('eLayout','layout',false); bind('eIcon','icon',false); bind('eOrder','order',true);
+  bind('eLayout','layout',false);
+  bind('eCropTop','cropTop',true); bind('eCropRight','cropRight',true); bind('eCropBottom','cropBottom',true); bind('eCropLeft','cropLeft',true);
   document.querySelectorAll('[data-ealign]').forEach((button) => button.addEventListener('click', () => setElement(key, { style: { align: button.dataset.ealign } })));
   const action = $('eAction'); if (action) action.addEventListener('change', () => setElement(key, { action: action.value ? { screen: action.value } : null }));
   const photo = $('ePhoto'); if (photo) photo.addEventListener('click', () => openMedia(null, null, key));
   const removePhoto = $('eRemovePhoto'); if (removePhoto) removePhoto.addEventListener('click', () => setElement(key, { media: null }));
+  const navPhoto = $('eNavPhoto'); if (navPhoto) navPhoto.addEventListener('click', () => openMedia(null, null, key));
+  const navPhotoRemove = $('eNavPhotoRemove'); if (navPhotoRemove) navPhotoRemove.addEventListener('click', () => setElement(key, { media: null }));
+  const navIcon = $('eNavIcon'); if (navIcon) navIcon.addEventListener('change', () => setElement(key, navIcon.value ? { navIcon: navIcon.value, media: null } : { navIcon: null }));
+  const navEarlier = $('eNavEarlier'); if (navEarlier) navEarlier.addEventListener('click', () => moveNav(key, -1));
+  const navLater = $('eNavLater'); if (navLater) navLater.addEventListener('click', () => moveNav(key, 1));
+  const navToggle = $('eNavToggle'); if (navToggle) navToggle.addEventListener('click', () => toggleNav(key));
+  const earlier = $('eEarlier'); if (earlier) earlier.addEventListener('click', () => moveElement(key, -1));
+  const later = $('eLater'); if (later) later.addEventListener('click', () => moveElement(key, 1));
+  const duplicate = $('eDuplicate'); if (duplicate) duplicate.addEventListener('click', () => duplicateElement(key));
+  const remove = $('eDelete'); if (remove) remove.addEventListener('click', () => deleteElement(key));
   $('eHide').addEventListener('click', () => setElement(key, { hidden: !entry.hidden }));
   $('eReset').addEventListener('click', () => resetElement(key));
 }
@@ -891,7 +1080,7 @@ function bindInspector(node) {
   })));
   const remove = $('pDelete'); if (remove) remove.addEventListener('click', () => {
     if (!confirm('Delete this component?')) return;
-    commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (screen) screen.sections = screen.sections.filter((s) => s.id !== node.id); return doc; }, true);
+    commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (screen) { screen.sections = screen.sections.filter((s) => s.id !== node.id); dropSectionElements(doc, node.id); } return doc; }, true);
     state.selected = null; render();
   });
 }
@@ -974,7 +1163,7 @@ function renderMedia(suggestions) {
     '<img src="' + mediaSrc(item, 320) + '" alt="' + esc(item.alt || 'Uploaded image') + '" loading="lazy" decoding="async" />' +
     '<div class="meta"><b>' + esc(item.alt || 'Untitled photo') + '</b><span>' + item.width + ' × ' + item.height + ' · ' + formatBytes(item.bytes) + ' · WebP</span>' +
     (used ? '<span class="used">In use · ' + used + ' place' + (used === 1 ? '' : 's') + '</span>' : '') + '</div>' +
-    '<div class="actions"><button class="btn" data-media-use="' + item.id + '">' + (state.mediaTarget || state.catalogTarget || state.elementTarget ? 'Use photo' : 'Add to screen') + '</button><button class="btn" data-media-replace="' + item.id + '">Replace</button>' +
+    '<div class="actions"><button class="btn" data-media-use="' + item.id + '">' + (state.mediaTarget || state.catalogTarget || state.elementTarget || state.variantMediaTarget ? 'Use photo' : 'Add to screen') + '</button><button class="btn" data-media-replace="' + item.id + '">Replace</button>' +
     (used ? '<button class="btn del" disabled title="Used in the app">In use</button>' : '<button class="btn del" data-media-delete="' + item.id + '">Delete</button>') + '</div></div>'; }).join('')
     : '<p class="empty">' + (state.media.length ? 'No photos match that search or filter.' : 'No photos yet. Upload one — it is resized to mobile widths automatically and never published at full resolution.') + '</p>';
   const suggestionsEl = $('mediaSuggestions');
@@ -1085,26 +1274,31 @@ function variantPanel(item, target) {
   return '<div class="variant-panel" data-variant-panel="' + target + '">' +
     '<h4>Option groups</h4>' +
     (groups.length ? groups.map((group, index) => '<div class="variant-group">' +
-      '<input data-vg-name="' + target + '" data-index="' + index + '" value="' + esc(group.name) + '" maxlength="24" aria-label="Option group name" placeholder="Size" />' +
+      '<input data-vg-name="' + target + '" data-vg-prev="' + esc(group.name) + '" data-index="' + index + '" value="' + esc(group.name) + '" maxlength="24" aria-label="Option group name" placeholder="Size" />' +
       '<input data-vg-options="' + target + '" data-index="' + index + '" value="' + esc((group.options || []).join(', ')) + '" maxlength="400" aria-label="Option values" placeholder="Small, Medium, Large" />' +
       '<button class="x" data-vg-remove="' + target + '" data-index="' + index + '" title="Remove group">✕</button></div>').join('')
-      : '<p class="hint" style="margin:0 0 7px">No groups yet. Groups name the choices; each option below still has its own price and ID.</p>') +
+      : '<p class="hint" style="margin:0 0 7px">No groups yet. Groups name the choices; each combination below still has its own price and ID.</p>') +
     '<button class="cat-add" type="button" data-vg-add="' + target + '">+ Option group</button>' +
     '<h4 style="margin-top:14px">Variants · ' + variants.length + '</h4>' +
     (variants.length ? variants.map((variant, index) => {
-      const selected = variant.selected === true || (index === 0 && !variants.some((entry) => entry.selected === true));
+      const selected = variant.selected === true;
       return '<div class="variant-row">' +
         '<button class="variant-vphoto" type="button" data-variant-photo="' + target + ':' + index + '" title="' + (variant.media ? 'Change photo' : 'Add photo') + '">' + (variant.media ? '<img src="' + mediaSrc(variant.media, 320) + '" alt="" />' : '📷') + '</button>' +
-        '<input data-variant-field="name" data-target="' + target + '" data-index="' + index + '" value="' + esc(variant.name) + '" maxlength="40" aria-label="Variant name" />' +
-        '<input data-variant-field="price" data-target="' + target + '" data-index="' + index + '" type="number" min="0" step="0.01" value="' + ((variant.price || 0) / 100).toFixed(2) + '" aria-label="Variant price" />' +
+        '<input data-variant-field="name" data-target="' + target + '" data-index="' + index + '" value="' + esc(variant.name) + '" maxlength="40" aria-label="Variant name" placeholder="Name this combination" />' +
+        '<input data-variant-field="price" data-target="' + target + '" data-index="' + index + '" type="number" min="0" step="0.01" value="' + (variant.price > 0 ? (variant.price / 100).toFixed(2) : '') + '" aria-label="Variant price" placeholder="Price" />' +
         '<span class="id" title="' + (variant.id ? 'Variant ID ' + esc(variant.id) : 'No ID') + '">' + esc(variant.currency || '') + '</span>' +
         '<span class="id" title="' + (variant.id ? 'Preserved ID: ' + esc(variant.id) : 'New option') + '">' + esc(variant.id || 'new') + '</span>' +
         '<input type="radio" name="default-' + target + '" data-variant-default="' + target + '" data-index="' + index + '" ' + (selected ? 'checked' : '') + ' aria-label="Default option" title="Default option" />' +
+        '<label class="vv-avail" title="Available to order"><input type="checkbox" data-variant-available="' + target + '" data-index="' + index + '" ' + (variant.available === false ? '' : 'checked') + ' /> Live</label>' +
         '<button class="mv" type="button" data-variant-move="' + target + ':' + index + ':-1" title="Move up" ' + (index === 0 ? 'disabled' : '') + '>↑</button>' +
         '<button class="x" type="button" data-variant-remove="' + target + ':' + index + '" title="Delete variant">✕</button>' +
+        (groups.length ? '<div class="variant-opts">' + groups.map((group) => '<label>' + esc(group.name || 'Option') +
+          '<select data-variant-value="' + target + '" data-index="' + index + '" data-group="' + esc(group.name) + '"><option value="">Not set</option>' +
+          (group.options || []).map((option) => '<option value="' + esc(option) + '"' + ((variant.values && variant.values[group.name]) === option ? ' selected' : '') + '>' + esc(option) + '</option>').join('') +
+          '</select></label>').join('') + '</div>' : '') +
         '</div>';
     }).join('') : '<p class="hint" style="margin:0 0 7px">No variants. This product has one price.</p>') +
-    '<div class="variant-foot"><button class="cat-add" type="button" data-variant-add="' + target + '">+ Add variant</button><p class="hint">Prices are in the shop currency. Default is what the product shows before the customer chooses. IDs are preserved, including Shopify IDs.</p></div>' +
+    '<div class="variant-foot"><button class="cat-add" type="button" data-variant-add="' + target + '">+ Add variant</button><p class="hint">Prices are in the shop currency. Default is what the product shows before the customer chooses. IDs are preserved, including Shopify IDs. Leave values unset rather than guessing a combination.</p></div>' +
     '</div>';
 }
 function renderCatalog() {
@@ -1169,11 +1363,38 @@ function catalogInput(event) {
     else variant.name = input.value.slice(0, 40);
     return;
   }
+  if (input.dataset.variantValue !== undefined) {
+    const item = catalogItem(input.dataset.variantValue); const variant = item && item.variants && item.variants[Number(input.dataset.index)];
+    if (!variant) return;
+    variant.values = Object.assign({}, variant.values);
+    if (input.value) variant.values[input.dataset.group] = input.value; else delete variant.values[input.dataset.group];
+    if (!Object.keys(variant.values).length) delete variant.values;
+    return;
+  }
+  if (input.dataset.variantAvailable !== undefined) {
+    const item = catalogItem(input.dataset.variantAvailable); const variant = item && item.variants && item.variants[Number(input.dataset.index)];
+    if (!variant) return;
+    if (input.checked) delete variant.available; else variant.available = false;
+    return;
+  }
   if (input.dataset.vgName !== undefined || input.dataset.vgOptions !== undefined) {
     const item = catalogItem(input.dataset.vgName || input.dataset.vgOptions); if (!item) return;
     const group = item.optionGroups && item.optionGroups[Number(input.dataset.index)]; if (!group) return;
-    if (input.dataset.vgName !== undefined) group.name = input.value.slice(0, 24);
-    else group.options = input.value.split(',').map((value) => value.trim()).filter(Boolean).slice(0, 20).map((value) => value.slice(0, 30));
+    if (input.dataset.vgName !== undefined) {
+      const previous = input.dataset.vgPrev || group.name;
+      const next = input.value.slice(0, 24);
+      group.name = next;
+      if (previous && previous !== next) {
+        (item.variants || []).forEach((variant) => {
+          if (!variant.values || !Object.prototype.hasOwnProperty.call(variant.values, previous)) return;
+          variant.values[next] = variant.values[previous];
+          delete variant.values[previous];
+        });
+      }
+      input.dataset.vgPrev = next;
+    } else {
+      group.options = input.value.split(',').map((value) => value.trim()).filter(Boolean).slice(0, 20).map((value) => value.slice(0, 30));
+    }
     return;
   }
   if (input.dataset.variantDefault !== undefined) {
@@ -1289,9 +1510,26 @@ document.addEventListener('click', (event) => {
   const element = event.target.closest('[data-element]'); if (element) { selectElement(element.dataset.element); return; }
   const select = event.target.closest('[data-select]'); if (select) { state.selected = select.dataset.select; state.element = null; state.elementMeta = null; render(); return; }
   const hide = event.target.closest('[data-hide]'); if (hide) { commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); const node = screen && screen.sections.find((s) => s.id === hide.dataset.hide); if (node) { node.hidden = !node.hidden; if (!node.hidden) delete node.hiddenBecause; } return doc; }, true); return; }
-  const dup = event.target.closest('[data-duplicate]'); if (dup) { commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc; const index = screen.sections.findIndex((s) => s.id === dup.dataset.duplicate); if (index < 0 || screen.sections[index].kind === 'hero') return doc; const cloneNode = clone(screen.sections[index]); cloneNode.id += '_' + Date.now().toString(36); screen.sections.splice(index + 1, 0, cloneNode); return doc; }, true); return; }
+  const copyComponentButton = event.target.closest('[data-copy-component]'); if (copyComponentButton) { copyComponent(copyComponentButton.dataset.copyComponent); renderLibrary(); return; }
+  const pasteComponentButton = event.target.closest('[data-paste-component]'); if (pasteComponentButton) { pasteComponent(); return; }
+  const dup = event.target.closest('[data-duplicate]'); if (dup) {
+    const screen = current(); const index = screen.sections.findIndex((s) => s.id === dup.dataset.duplicate);
+    const source = screen.sections[index];
+    if (!source || source.kind === 'hero') return;
+    const id = uniqueSectionId(screen, source.id + '_' + Date.now().toString(36));
+    commit((doc) => {
+      const target = doc.screens.find((s) => s.id === state.screen); if (!target) return doc;
+      const at = target.sections.findIndex((s) => s.id === source.id); if (at < 0) return doc;
+      const cloneNode = Object.assign(clone(source), { id });
+      target.sections.splice(at + 1, 0, cloneNode);
+      remapSectionElements(doc, source.id, id);
+      state.selected = id; state.element = null;
+      return doc;
+    }, true);
+    return;
+  }
   const restore = event.target.closest('[data-restore]'); if (restore) { restoreVersion(restore.dataset.restore); return; }
-  const remove = event.target.closest('[data-delete]'); if (remove) { if (!confirm('Delete this component?')) return; commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (screen) screen.sections = screen.sections.filter((s) => s.id !== remove.dataset.delete); return doc; }, true); if (state.selected === remove.dataset.delete) state.selected = null; render(); }
+  const remove = event.target.closest('[data-delete]'); if (remove) { if (!confirm('Delete this component?')) return; commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (screen) { screen.sections = screen.sections.filter((s) => s.id !== remove.dataset.delete); dropSectionElements(doc, remove.dataset.delete); } return doc; }, true); if (state.selected === remove.dataset.delete) state.selected = null; render(); }
 });
 window.addEventListener('message', (event) => {
   const message = event.data;
@@ -1333,17 +1571,19 @@ document.addEventListener('click', (event) => {
   if (kind === 'catalog') { openCatalog(); return; }
   if (kind === 'more') { $('right').classList.add('open'); return; }
   if (kind === 'duplicate') {
-    const id = node.id + '_' + Date.now().toString(36);
+    const id = uniqueSectionId(current(), node.id + '_' + Date.now().toString(36));
     commit((doc) => {
       const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc;
       const index = screen.sections.findIndex((s) => s.id === node.id); if (index < 0) return doc;
-      const copy = clone(screen.sections[index]); copy.id = id; screen.sections.splice(index + 1, 0, copy); return doc;
+      const copy = clone(screen.sections[index]); copy.id = id; screen.sections.splice(index + 1, 0, copy);
+      remapSectionElements(doc, node.id, id);
+      return doc;
     }, true);
     state.selected = id; quickShown = null; render(); toast('Component duplicated'); return;
   }
   if (kind === 'delete') {
     if (!confirm('Delete this component?')) return;
-    commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (screen) screen.sections = screen.sections.filter((s) => s.id !== node.id); return doc; }, true);
+    commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (screen) { screen.sections = screen.sections.filter((s) => s.id !== node.id); dropSectionElements(doc, node.id); } return doc; }, true);
     state.selected = null; quickShown = null; render(); return;
   }
   if (kind === 'hide') {
@@ -1382,6 +1622,21 @@ $('catalogClose').addEventListener('click', closeCatalog);
 $('catalogModal').addEventListener('click', (event) => { if (event.target === $('catalogModal')) closeCatalog(); });
 $('catalogSave').addEventListener('click', saveCatalog);
 $('catalogBody').addEventListener('input', catalogInput);
+// Rebuild the per-variant selects after a group edit so newly added values can
+// be assigned without closing and reopening the panel. Editing itself still
+// happens on input, so typing never loses the caret.
+$('catalogBody').addEventListener('change', (event) => {
+  if (!event.target.matches('[data-vg-name], [data-vg-options]')) return;
+  if (event.target.matches('[data-vg-options]')) {
+    const item = catalogItem(event.target.dataset.vgOptions);
+    const group = item && item.optionGroups && item.optionGroups[Number(event.target.dataset.index)];
+    // Prune now that the owner has finished the list, never mid-keystroke.
+    if (group) (item.variants || []).forEach((variant) => {
+      if (variant.values && variant.values[group.name] && !group.options.includes(variant.values[group.name])) delete variant.values[group.name];
+    });
+  }
+  renderCatalog();
+});
 $('catalogBody').addEventListener('click', (event) => {
   const photo = event.target.closest('[data-cat-photo]');
   if (photo) { openMedia(null, photo.dataset.catPhoto); return; }
@@ -1399,8 +1654,9 @@ $('catalogBody').addEventListener('click', (event) => {
   if (addVariant) {
     const item = catalogItem(addVariant.dataset.variantAdd); if (!item) return;
     item.variants = item.variants || [];
-    const first = item.variants.length === 0;
-    item.variants.push({ id: 'var_' + Date.now().toString(36), name: first ? 'Standard' : 'New option', price: item.price || 0, ...(first ? { selected: true } : {}) });
+    // A new combination starts blank: the owner names it, prices it and picks
+    // its values. The editor never fills those in from the product or a sibling.
+    item.variants.push({ id: 'var_' + Date.now().toString(36), name: '', price: 0 });
     renderCatalog(); return;
   }
   const removeVariant = event.target.closest('[data-variant-remove]');
@@ -1420,9 +1676,14 @@ $('catalogBody').addEventListener('click', (event) => {
   const variantPhoto = event.target.closest('[data-variant-photo]');
   if (variantPhoto) { openMedia(null, null, null, variantPhoto.dataset.variantPhoto); return; }
   const addGroup = event.target.closest('[data-vg-add]');
-  if (addGroup) { const item = catalogItem(addGroup.dataset.vgAdd); if (!item) return; item.optionGroups = item.optionGroups || []; item.optionGroups.push({ name: 'Size', options: ['Small', 'Medium', 'Large'] }); renderCatalog(); return; }
+  if (addGroup) { const item = catalogItem(addGroup.dataset.vgAdd); if (!item) return; item.optionGroups = item.optionGroups || []; item.optionGroups.push({ name: '', options: [] }); renderCatalog(); return; }
   const removeGroup = event.target.closest('[data-vg-remove]');
-  if (removeGroup) { const item = catalogItem(removeGroup.dataset.vgRemove); if (!item || !item.optionGroups) return; item.optionGroups.splice(Number(removeGroup.dataset.index), 1); renderCatalog(); return; }
+  if (removeGroup) {
+    const item = catalogItem(removeGroup.dataset.vgRemove); if (!item || !item.optionGroups) return;
+    const [removed] = item.optionGroups.splice(Number(removeGroup.dataset.index), 1);
+    if (removed) (item.variants || []).forEach((variant) => { if (variant.values) delete variant.values[removed.name]; });
+    renderCatalog(); return;
+  }
   const addOffer = event.target.closest('[data-offer-add]');
   if (addOffer) { state.offers.push({ title: '', body: '' }); renderCatalog(); return; }
   const removeOffer = event.target.closest('[data-offer-remove]');

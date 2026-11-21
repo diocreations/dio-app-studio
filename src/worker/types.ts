@@ -92,6 +92,11 @@ export type MenuItem = {
     price: number
     currency?: string
     selected?: boolean
+    /** One value per option group, for example { Size: 'Medium', Colour: 'Black' }.
+     *  Empty or partial values are never completed by the editor. */
+    values?: Record<string, string>
+    /** False only when the owner has marked this combination unavailable. */
+    available?: boolean
     /** A photograph of this option, when the owner has one. */
     media?: ItemMedia
   }[]

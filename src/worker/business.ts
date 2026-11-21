@@ -356,6 +356,8 @@ export async function createOrder(db: D1Database, project: Project, input: Order
       )
       if (!matchVariant)
         throw new BusinessError('variant_unknown', 'That option is not available for this item.', 422)
+      if (matchVariant.available === false)
+        throw new BusinessError('variant_unavailable', 'That option is marked unavailable.', 422)
       variant = matchVariant.name
       variantId = matchVariant.id ?? ''
       price = matchVariant.price

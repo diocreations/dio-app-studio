@@ -505,6 +505,11 @@ body[data-accent-style="underline"] .sect { border-bottom: 1px solid var(--hair)
 .variant.on { background: var(--chip-on); color: var(--chip-on-ink); border-color: transparent; }
 .variant.on b { color: inherit; }
 .variant:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.variant:disabled, .variant.is-sold-out { opacity: .45; cursor: not-allowed; text-decoration: line-through; }
+.option-groups { margin: 18px 0 6px; display: grid; gap: 14px; }
+.option-group { display: grid; gap: 7px; }
+.option-group .option-name { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 650; }
+.option-group .variant { min-height: 40px; padding: 8px 13px; }
 
 /* ----------------------------------------------------------- compact rows */
 .status-card {

@@ -629,6 +629,8 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
             const id = seen === 1 ? base : `${base}_${seen}`
             const rawSource = typeof entry.sourceId === 'string' ? entry.sourceId.trim() : ''
             const sourceId = /^[A-Za-z0-9_:/.-]{1,120}$/.test(rawSource) ? rawSource : undefined
+            const optionGroups = sanitizeOptionGroups(entry.optionGroups)
+            const variants = sanitizeVariants(entry.variants, optionGroups)
             return {
               id,
               ...(sourceId ? { sourceId } : {}),
@@ -640,12 +642,8 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               vendor: String(entry.vendor ?? '').trim().slice(0, 40) || undefined,
               ...(sanitizeItemMedia(entry.media) ? { media: sanitizeItemMedia(entry.media) } : {}),
               ...(sanitizeItemImage(entry.image) ? { image: sanitizeItemImage(entry.image) } : {}),
-              ...(sanitizeOptionGroups(entry.optionGroups).length
-                ? { optionGroups: sanitizeOptionGroups(entry.optionGroups) }
-                : {}),
-              ...(sanitizeVariants(entry.variants).length
-                ? { variants: sanitizeVariants(entry.variants) }
-                : {}),
+              ...(optionGroups.length ? { optionGroups } : {}),
+              ...(variants.length ? { variants } : {}),
             }
           })
           .filter((item) => item.name !== 'Item' || item.price > 0),
@@ -659,15 +657,29 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
  *  catalogue is not flattened to a single unexplained figure. */
 function sanitizeVariants(
   input: unknown,
+  groups: { name: string; options: string[] }[],
 ): {
   id?: string
   name: string
   price: number
   currency?: string
   selected?: boolean
+  values?: Record<string, string>
+  available?: boolean
   media?: MenuItem['media']
 }[] {
   if (!Array.isArray(input)) return []
+  const groupNames = new Map(groups.map((group) => [group.name, new Set(group.options)]))
+  const cleanValues = (value: unknown): Record<string, string> | undefined => {
+    if (!value || typeof value !== 'object' || !groups.length) return undefined
+    const out: Record<string, string> = {}
+    for (const [name, option] of Object.entries(value as Record<string, unknown>)) {
+      const allowed = groupNames.get(name)
+      const text = typeof option === 'string' ? option.trim().slice(0, 30) : ''
+      if (allowed && allowed.has(text)) out[name] = text
+    }
+    return Object.keys(out).length ? out : undefined
+  }
   const selectedSeen = input.some(
     (entry) => entry && typeof entry === 'object' && (entry as Record<string, unknown>).selected === true,
   )
@@ -691,6 +703,8 @@ function sanitizeVariants(
         // A default is meaningful only when the catalogue still marks one; the
         // first option is the fallback at render time.
         ...(selectedSeen && entry.selected === true ? { selected: true } : {}),
+        ...(cleanValues(entry.values) ? { values: cleanValues(entry.values) } : {}),
+        ...(entry.available === false ? { available: false } : {}),
         ...(sanitizeItemMedia(entry.media) ? { media: sanitizeItemMedia(entry.media) } : {}),
       },
     ]
