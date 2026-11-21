@@ -481,6 +481,8 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       book: 'Book',
       bookTitle: 'Book an intro call',
       quoteTitle: 'Request a proposal',
+      // The practice's real first step is a proposal, not a confirmed meeting.
+      detailAction: 'quote',
       partyLabel: 'Attendees',
       fulfilment: ['Online'],
       homeCta: 'Request a proposal',

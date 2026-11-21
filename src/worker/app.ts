@@ -1235,13 +1235,22 @@ function bookingBlock(ctx: Ctx): string {
         <button type="button" data-party="1" aria-label="More">${icon('plus')}</button>
       </div>
     </div>
-    <div class="sect"><span class="label">Choose a day</span></div>
-    <div class="chips" data-days></div>
     ${
-      ctx.vocab.slots.length
-        ? `<div class="sect"><span class="label">Choose a time</span></div>
-           <div class="slots" data-slots></div>`
-        : ''
+      ctx.spec.vertical === 'hotel'
+        ? `<div class="sect"><span class="label">Check in</span></div>
+           <div class="field"><input id="book-checkin" type="date" data-checkin aria-label="Check-in" /></div>
+           <div class="sect"><span class="label">Check out</span></div>
+           <div class="field"><input id="book-checkout" type="date" data-checkout aria-label="Check-out" /></div>
+           <p class="tiny dim" data-stay-summary role="status">Choose your dates.</p>
+           <p class="tiny dim">No live availability is shown. This sends a request; the business confirms the room is free.</p>`
+        : `<div class="sect"><span class="label">Choose a day</span></div>
+           <div class="chips" data-days></div>
+           ${
+             ctx.vocab.slots.length
+               ? `<div class="sect"><span class="label">Choose a time</span></div>
+                  <div class="slots" data-slots></div>`
+               : ''
+           }`
     }
     ${
       ctx.spec.vertical !== 'restaurant' && ctx.spec.vertical !== 'cafe' && services.length
@@ -1894,7 +1903,9 @@ export function renderApp(
 
   const cta = ctaFor(vertical.id)
   const primary =
-    cta === 'order' && ordering
+    vocab.detailAction === 'quote' && quoting
+      ? { label: vocab.homeCta, screen: 'quote' }
+      : cta === 'order' && ordering
       ? { label: vocab.homeCta, screen: 'cart' }
       : cta === 'quote' && quoting
         ? { label: vocab.homeCta, screen: 'quote' }
@@ -1983,6 +1994,9 @@ export function renderApp(
     listingSpecLabel: vocab.listingSpecLabel || 'Included',
     bookTitle: vocab.bookTitle,
     quoteTitle: vocab.quoteTitle,
+    // A trade may sell a proposal rather than an appointment even when it also
+    // offers a booking screen. The detail page leads with the real first step.
+    detailAction: vocab.detailAction ?? (booking ? 'book' : quoting ? 'quote' : ''),
     motif: theme.motif,
     media,
     // Only ship the sets this build can actually use.
@@ -2003,8 +2017,20 @@ export function renderApp(
 
   // A real logo replaces the initials wherever the brand mark appears; the
   // monogram remains the fallback when no trustworthy image was found.
+  // A failed remote logo falls back to initials, not to a long wordmark that
+  // the 26px mark would clip to its first few letters.
+  const initials = (spec.name.match(/[A-Za-z0-9]+/g) || [])
+    .filter((word) => !['and', 'the', 'of', 'for'].includes(word.toLowerCase()))
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join('')
+    .toUpperCase() || spec.logo.slice(0, 2)
+  // The logo sits beside the business name, so it is decorative. An empty alt
+  // also stops a failed remote logo dumping its alt text across the title.
   const markHtml = spec.logoImage
-    ? `<img src="${esc(spec.logoImage.url)}" alt="${esc(spec.logoImage.alt || `${spec.name} logo`)}" width="32" height="32" decoding="async" />`
+    // No width/height attributes: they would impose a square ratio on a wide
+    // wordmark and crop it to the first few letters at 26px tall.
+    ? `<img src="${esc(spec.logoImage.url)}" alt="" decoding="async" />`
     : esc(spec.logo)
 
   return `<!doctype html>
@@ -2036,7 +2062,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
     <header class="appbar${shell === 'menu' ? ' is-brand' : ''}${shell === 'session' ? ' is-session' : ''}${shell === 'care' ? ' is-care' : ''}${shell === 'listing' ? ' is-listing' : ''}">
       <button class="iconbtn" type="button" data-back hidden aria-label="Back">${icon('chevron')}</button>
-      ${shell === 'menu' ? '' : `<span class="mark${spec.logoImage ? ' is-logo' : ''}">${markHtml}</span>`}
+      ${shell === 'menu' ? '' : `<span class="mark${spec.logoImage ? ' is-logo' : ''}"${spec.logoImage ? ` data-logo="${esc(initials)}"` : ''}>${markHtml}</span>`}
       ${
         shell === 'listing'
           ? `<button class="search-pill bar-pill" type="button" data-search-open>${icon('search')}<span>Search</span></button>
@@ -2260,8 +2286,30 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     }
     const esc = (value) => String(value == null ? '' : value)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    // "1 people" was wrong on every confirmation. The trade decides the noun.
+    const partyUnit = (count) => {
+      const word = DATA.vertical === 'restaurant' || DATA.vertical === 'hotel' ? 'guest' : DATA.vertical === 'clinic' ? 'patient' : 'person'
+      return count + ' ' + (count === 1 ? word : word === 'person' ? 'people' : word + 's')
+    }
     const missingMedia = (label) => '<span class="media-missing" data-label="' + esc(label) + '" aria-hidden="true"><svg class="media-missing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg><span class="media-missing-label">' + esc(label) + '</span></span>'
     const buzz = (ms) => { try { if (navigator.vibrate) navigator.vibrate(ms) } catch (error) {} }
+    // A remote logo that fails, or is a wordmark too wide to read at 26px
+    // tall, falls back to the monogram instead of a clipped fragment.
+    all('.mark.is-logo').forEach((mark) => {
+      const logo = mark.querySelector('img')
+      if (!logo) return
+      const fallback = () => {
+        if (!mark.querySelector('img')) return
+        mark.textContent = mark.dataset.logo || ''
+      }
+      const fit = () => {
+        if (!logo.naturalWidth || !logo.naturalHeight) return fallback()
+        if (logo.naturalWidth / logo.naturalHeight > 4) return fallback()
+      }
+      if (logo.complete) fit()
+      else logo.addEventListener('load', fit, { once: true })
+      logo.addEventListener('error', fallback, { once: true })
+    })
     const appbar = document.querySelector('.appbar')
     const titleEl = document.querySelector('[data-title]')
     const backBtn = document.querySelector('[data-back]')
@@ -2374,9 +2422,20 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       return structured ? groups : []
     }
     function optionPicks(item, key, chosen) {
-      if (!structuredGroups(item).length) return null
+      const groups = structuredGroups(item)
+      if (!groups.length) return null
       const current = state.optionPicks[key]
       const match = current ? optionMatch(item, current) : null
+      // An incomplete choice is kept while every value is a real option, so a
+      // combination the owner never entered stays unpriced until the customer
+      // changes a group. Only an impossible value resets the selection.
+      const realValues = Boolean(current) && groups.every(function (group) {
+        const value = current[group.name]
+        return !value || variantsOf(item).some(function (variant) {
+          return variant.values && variant.values[group.name] === value && variant.available !== false
+        })
+      })
+      if (current && !match && realValues) return current
       if (!match || (match.available === false && chosen && chosen.available !== false)) delete state.optionPicks[key]
       if (!state.optionPicks[key]) {
         const from = chosen && chosen.values ? chosen.values : {}
@@ -2428,6 +2487,18 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       try { history.pushState(entry, '') } catch (error) {}
     }
 
+    /** The booking form opens on the service the customer was just reading,
+     *  not on whichever entry happens to be first in the catalogue. */
+    function applyBookingService() {
+      const select = $('[data-book-service]')
+      if (!select || !state.bookService) return
+      const known = Array.prototype.some.call(select.options, function (option) {
+        return option.value === state.bookService
+      })
+      if (known) select.value = state.bookService
+      updateStay()
+    }
+
     function go(id, record) {
       const screen = document.querySelector('[data-screen="' + id + '"]')
       if (!screen) return
@@ -2441,6 +2512,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       // A store is a step off the catalogue, so it keeps the back affordance.
       if (backBtn) backBtn.hidden = id !== 'store'
       if (titleEl) titleEl.textContent = screen.dataset.title || DATA.catalogWord
+      if (id === 'book') applyBookingService()
       screen.scrollTop = 0
       lastScroll = 0
       if (appbar) appbar.classList.remove('is-hidden')
@@ -2647,10 +2719,10 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           (awaitingChoice
             ? '<button class="btn accent" type="button" disabled>Select options</button>'
             : '<button class="btn accent" type="button" data-add="' + key + '"' + (unavailable ? ' disabled' : '') + '>' + (unavailable ? 'Unavailable' : DATA.addLabel) + '</button>') + '</div>'
-        : DATA.booking
-          ? '<div class="detail-cta"><button class="btn accent block" type="button" data-go="book">' + DATA.bookTitle + '</button></div>'
-          : DATA.quoting
-            ? '<div class="detail-cta"><button class="btn accent block" type="button" data-go="quote">' + DATA.quoteTitle + '</button></div>'
+        : DATA.detailAction === 'quote' && DATA.quoting
+          ? '<div class="detail-cta"><button class="btn accent block" type="button" data-go="quote">' + DATA.quoteTitle + '</button></div>'
+          : DATA.detailAction === 'book' && DATA.booking
+            ? '<div class="detail-cta"><button class="btn accent block" type="button" data-go="book">' + DATA.bookTitle + '</button></div>'
             : ''
       const shellDetail = DATA.retail
         ? retailDetailHtml(item, key, price, settled, picker, footer)
@@ -2679,6 +2751,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       applyHearts()
       all('.screen').forEach((s) => s.classList.toggle('on', s === screen))
       all('.tab').forEach((tab) => tab.classList.remove('on'))
+      screen.dataset.itemName = item.name
       if (backBtn) backBtn.hidden = false
       if (titleEl) titleEl.textContent = item.name
       detailOpen = true
@@ -3236,7 +3309,63 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       }
     }
 
+    // A hotel stay is two dates, not a slot. The screen shows the nights and
+    // the room total from the saved rate; the server checks both again.
+    function stayDays(from, to) {
+      const parse = (value) => {
+        const parts = String(value).split('-').map(Number)
+        return parts.length === 3 ? Date.UTC(parts[0], parts[1] - 1, parts[2]) : null
+      }
+      const a = parse(from)
+      const b = parse(to)
+      return Number.isFinite(a) && Number.isFinite(b) ? Math.round((b - a) / 86400000) : 0
+    }
+    function isoDay(offset) {
+      const date = new Date()
+      date.setDate(date.getDate() + offset)
+      return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0')
+    }
+    function stayRate() {
+      const select = $('[data-book-service]')
+      const item = (DATA.menu || [])
+        .reduce(function (all, section) { return all.concat(section.items || []) }, [])
+        .find(function (entry) { return entry.name === (select ? select.value : '') })
+      return item && item.price > 0 && /night/i.test(item.meta || '') ? item.price : 0
+    }
+    function updateStay() {
+      const inEl = $('[data-checkin]')
+      const outEl = $('[data-checkout]')
+      const summary = $('[data-stay-summary]')
+      if (!inEl || !outEl) return
+      const nights = stayDays(inEl.value, outEl.value)
+      if (inEl.value) {
+        const next = new Date(inEl.value + 'T12:00:00')
+        next.setDate(next.getDate() + 1)
+        outEl.min = next.getFullYear() + '-' + String(next.getMonth() + 1).padStart(2, '0') + '-' + String(next.getDate()).padStart(2, '0')
+      }
+      if (summary) {
+        const rate = stayRate()
+        summary.textContent = nights > 0
+          ? nights + (nights === 1 ? ' night' : ' nights') + (rate ? ' \u00b7 ' + money(rate * nights) : '')
+          : 'Check-out must be after check-in.'
+      }
+    }
+    function buildStay() {
+      const inEl = $('[data-checkin]')
+      const outEl = $('[data-checkout]')
+      if (!inEl || !outEl) return
+      if (!inEl.value) inEl.value = isoDay(1)
+      if (!outEl.value) outEl.value = isoDay(3)
+      inEl.min = isoDay(0)
+      inEl.addEventListener('change', updateStay)
+      outEl.addEventListener('change', updateStay)
+      const service = $('[data-book-service]')
+      if (service) service.addEventListener('change', updateStay)
+      updateStay()
+    }
+
     function buildBooking() {
+      buildStay()
       const days = $('[data-days]')
       if (!days) return
       const names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -3303,11 +3432,20 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     }
 
     async function book() {
+      const stayIn = $('[data-checkin]')
+      const stayOut = $('[data-checkout]')
       const chip = $('[data-days] .chip.on')
       const dayLabel = chip ? chip.textContent : 'Today'
-      const date = new Date()
-      date.setDate(date.getDate() + Number(state.day || 0))
-      const iso = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0')
+      let iso = ''
+      if (stayIn) {
+        iso = stayIn.value
+        if (!iso) return toast('Choose a check-in day')
+        if (!stayOut || stayDays(iso, stayOut.value) < 1) return toast('Check-out must be after check-in')
+      } else {
+        const date = new Date()
+        date.setDate(date.getDate() + Number(state.day || 0))
+        iso = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0')
+      }
       const name = ($('[data-book-name]')?.value || '').trim()
       const contact = ($('[data-book-contact]')?.value || '').trim()
       if (name.length < 2) return toast('Add your name so the business can confirm')
@@ -3315,14 +3453,14 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const button = $('[data-book]')
       if (button) button.disabled = true
       try {
-        const payload = await postJson('/p/' + DATA.token + '/bookings', {
+        const payload = await postJson('/p/' + DATA.token + '/bookings', Object.assign({
           customer: Object.assign({ name }, contactFields(contact)),
           date: iso,
-          slot: state.slot || '',
+          slot: stayIn ? '' : state.slot || '',
           party: state.party,
           service: ($('[data-book-service]')?.value || ''),
           staff: ($('[data-book-staff]')?.value || ''),
-        })
+        }, stayOut && stayOut.value ? { checkOut: stayOut.value } : {}))
         const booking = payload.booking
         state.bookings = [{ id: booking.id, number: booking.number, status: booking.status, date: booking.date, slot: booking.slot }, ...state.bookings].slice(0, 12)
         state.customerName = name
@@ -3330,8 +3468,12 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         save()
         renderHistory()
         const service = ($('[data-book-service]')?.value || '')
+        const nights = Number(booking.nights) || 0
+        const when = booking.checkOut
+          ? esc(booking.date) + ' → ' + esc(booking.checkOut) + ' · ' + nights + (nights === 1 ? ' night' : ' nights')
+          : esc(dayLabel) + (state.slot ? ' at ' + esc(state.slot) : '')
         note('<div class="done"><div class="tick">✓</div><h2>Request sent</h2>' +
-          '<p>' + esc(dayLabel) + (state.slot ? ' at ' + esc(state.slot) : '') + ' · ' + state.party + ' ' + DATA.partyLabel.toLowerCase() + '<br />The business will confirm this request. You can check its status in More.</p>' +
+          '<p>' + when + ' · ' + partyUnit(state.party) + (booking.total ? ' · ' + money(booking.total) : '') + '<br />This is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.</p>' +
           (DATA.payments && DATA.payments.bookings && service
             ? '<button class="btn accent block" type="button" data-pay="booking" data-ref="' + esc(booking.id) + '" style="margin-top:14px">Pay a deposit online</button>'
             : '') +
@@ -3400,17 +3542,21 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         const candidates = variantsOf(item).filter(function (variant) {
           return variant.values && variant.values[group] === value && variant.available !== false
         })
-        // Changing one choice selects a real combination, preferring the one
-        // that keeps the other choices the customer already made. No missing
-        // combination is filled in or priced by the browser.
-        const score = function (variant) {
-          return Object.keys(current).filter(function (name) { return name !== group && variant.values[name] === current[name] }).length
-        }
-        const match = candidates.slice().sort(function (a, b) { return score(b) - score(a) })[0]
+        // Changing one choice may only settle on a real combination. Keep the
+        // other choices when one exists; with no match, leave the selection
+        // incomplete and let the customer choose again rather than silently
+        // switching a different group to a combination they did not ask for.
+        const others = Object.keys(current).filter(function (name) { return name !== group })
+        const match = candidates.find(function (variant) {
+          return others.every(function (name) { return variant.values[name] === current[name] })
+        }) || (others.length ? undefined : candidates[0])
         if (match) {
           state.optionPicks[key] = Object.assign({}, match.values)
           state.pick[key] = variantRef(match)
-        } else delete state.pick[key]
+        } else {
+          state.optionPicks[key] = Object.assign({}, current, { [group]: value })
+          delete state.pick[key]
+        }
         save()
         return openDetail(key, false)
       }
@@ -3440,6 +3586,15 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         if (target.dataset.go === 'cart') {
           renderCart()
           return openSheet('cart')
+        }
+        // Remember which service or room opened this booking, so the form does
+        // not silently book the first catalogue entry instead.
+        if (target.dataset.go === 'book' && detailOpen) {
+          const openName = document.querySelector('[data-screen="detail"]')?.dataset.itemName
+          if (openName) {
+            state.bookService = openName
+            save()
+          }
         }
         if (document.querySelector('[data-sheet].on')) closeSheets()
         go(target.dataset.go)

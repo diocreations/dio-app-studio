@@ -185,7 +185,9 @@ body[data-layout="rows"] .appbar, body[data-layout="grid"] .appbar { border-bott
   font-family: var(--display); font-weight: 800; font-size: 12.5px; letter-spacing: 0.04em;
   box-shadow: 0 8px 18px -12px var(--accent), var(--edge);
 }
-.appbar .mark.is-logo { background: transparent; box-shadow: none; padding: 0; width: auto; min-width: 26px; max-width: 104px; }
+/* max-content: as a clipped grid item, width:auto collapsed to min-width and
+   cropped a wide wordmark to its first letters. */
+.appbar .mark.is-logo { background: transparent; box-shadow: none; padding: 0; width: max-content; min-width: 26px; max-width: 104px; overflow: hidden; }
 .appbar .mark.is-logo img { height: 26px; width: auto; max-width: 104px; object-fit: contain; display: block; }
 .splash .s-mark.is-logo { background: color-mix(in srgb, #fff 94%, transparent); padding: 14px; }
 .splash .s-mark.is-logo img { height: 60px; width: auto; max-width: 120px; object-fit: contain; display: block; }

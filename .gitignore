@@ -17,3 +17,8 @@ dist/
 
 # intermediate renders; the shipped copies live in public/
 scripts/art/*.png
+
+# browser acceptance state: owner cookies, tokens and a throwaway profile
+.chrome-qa/
+# regenerable acceptance captures; the JSON reports are kept
+/docs/qa/acceptance-2026-11-21/*.png

@@ -80,6 +80,9 @@ export type MenuItem = {
   tag?: string
   /** Secondary line: duration, bed count, "per night", "from". */
   meta?: string
+  /** Most guests this room sleeps, only when the source stated it ("Sleeps 2").
+   *  Never inferred from a photograph or from the trade's sample copy. */
+  capacity?: number
   /** Where this price was read, when the source made it verifiable. */
   priceEvidence?: PriceEvidence
   /** Every option the source lists for one product, at its own price and in its
@@ -162,6 +165,10 @@ export type Vocab = {
   partyLabel: string
   fulfilment: string[]
   homeCta: string
+  /** The action the detail page leads with. Defaults to booking when offered,
+   *  otherwise the enquiry form. A trade whose real workflow is a proposal can
+   *  declare `quote` even when a booking screen also exists. */
+  detailAction?: 'quote' | 'book'
   /** Heading over the gallery; "The work" when the trade has no better word. */
   galleryTitle?: string
   /** Reassurance shown above the enquiry form; clinic copy avoids medical details. */

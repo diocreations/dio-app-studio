@@ -16,6 +16,11 @@ function money(cents: number, symbol: string): string {
   return symbol + (cents / 100).toFixed(2)
 }
 
+function partyCount(count: number, vertical: string): string {
+  const word = vertical === 'restaurant' || vertical === 'hotel' ? 'guest' : vertical === 'clinic' ? 'patient' : 'person'
+  return `${count} ${count === 1 ? word : word === 'person' ? 'people' : word + 's'}`
+}
+
 function when(value: string): string {
   if (!value) return '—'
   const date = new Date(value)
@@ -163,7 +168,7 @@ export function dashboardPage(options: {
         .map(
           (booking) => `<article class="record">
         <div class="record-head">
-          <div><b>${esc(booking.date)} ${esc(booking.slot)}</b><span>#${esc(booking.number)} · ${booking.party} ${esc(project.spec.vertical === 'restaurant' ? 'guests' : 'people')}</span></div>
+          <div><b>${esc(booking.date)}${booking.checkOut ? ' → ' + esc(booking.checkOut) : ' ' + esc(booking.slot)}</b><span>#${esc(booking.number)} · ${partyCount(booking.party, project.spec.vertical)}${booking.nights ? ' · ' + booking.nights + (booking.nights === 1 ? ' night' : ' nights') : ''}${booking.total ? ' · ' + money(booking.total, symbol) : ''}</span></div>
           ${pill(booking.status)}
         </div>
         <div class="record-body">
@@ -523,7 +528,7 @@ td b { font-weight: 600; }
         </div>
         <div class="panel">
           <h2>Next bookings</h2>
-          ${modules.bookings ? (nextBookings.length ? nextBookings.map((booking) => `<div class="record"><div class="record-head"><div><b>${esc(booking.date)} ${esc(booking.slot)} · ${esc(booking.customer.name)}</b><span>${booking.party} people${booking.service ? ' · ' + esc(booking.service) : ''}</span></div>${pill(booking.status)}</div></div>`).join('') : '<div class="empty"><b>No bookings yet</b><span>Requests from the app land here for confirmation.</span></div>') : '<p class="muted">This app does not take bookings.</p>'}
+          ${modules.bookings ? (nextBookings.length ? nextBookings.map((booking) => `<div class="record"><div class="record-head"><div><b>${esc(booking.date)}${booking.checkOut ? ' → ' + esc(booking.checkOut) : ' ' + esc(booking.slot)} · ${esc(booking.customer.name)}</b><span>${partyCount(booking.party, project.spec.vertical)}${booking.nights ? ' · ' + booking.nights + (booking.nights === 1 ? ' night' : ' nights') : ''}${booking.service ? ' · ' + esc(booking.service) : ''}</span></div>${pill(booking.status)}</div></div>`).join('') : '<div class="empty"><b>No bookings yet</b><span>Requests from the app land here for confirmation.</span></div>') : '<p class="muted">This app does not take bookings.</p>'}
           ${modules.bookings ? '<div class="links"><button class="btn" type="button" data-go-tab="bookings">View all bookings</button></div>' : ''}
         </div>
       </div>

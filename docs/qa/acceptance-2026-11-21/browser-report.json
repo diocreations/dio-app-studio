@@ -1,0 +1,1282 @@
+{
+  "generatedAt": "2026-11-21T11:51:53.718Z",
+  "report": [
+    {
+      "trade": "restaurant",
+      "direction": "editorial",
+      "token": "b4d054442e411a5aba0af80d",
+      "elapsed": 5486,
+      "result": {
+        "results": 1,
+        "detail": "MENU\nBurrata, heirloom tomatoes\n\nBasil, olive oil\n\nHOUSE\n$12\nYou might also like\nMENU\nWarm sourdough\n$6\nSea bass\n$24\nLamb ragu\n$21\nMushroom risotto\n$18\nAdd to order",
+        "price": "$12",
+        "category": "MENU",
+        "cart": "Burrata, heirloom tomatoes\n$12\n−\n1\n+",
+        "total": "Subtotal\n$12\nTotal\n$12",
+        "confirmation": "✓\nOrder #5830\n\nPickup · $12\nSent to Restaurant. They will confirm when it is ready.\n\nDone",
+        "orders": [
+          {
+            "id": "ord_fe5e1d387a8758be45",
+            "number": "5830",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T11:49:42.551Z"
+          },
+          {
+            "id": "ord_ddcc28c0b6c28aa0b1",
+            "number": "3447",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T11:46:02.554Z"
+          },
+          {
+            "id": "ord_4d31045443c7c04e99",
+            "number": "1167",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T11:28:32.859Z"
+          },
+          {
+            "id": "ord_28a75cd9c7a202753b",
+            "number": "5192",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T10:24:05.442Z"
+          },
+          {
+            "id": "ord_5d650843443504d040",
+            "number": "1260",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T10:14:23.371Z"
+          },
+          {
+            "id": "ord_90ac79599cfa802424",
+            "number": "5349",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T10:10:56.885Z"
+          }
+        ]
+      },
+      "readOrder": {
+        "order": {
+          "id": "ord_fe5e1d387a8758be45",
+          "number": "5830",
+          "status": "new",
+          "fulfilment": "Pickup",
+          "total": 1200,
+          "currency": "",
+          "items": [
+            {
+              "name": "Burrata, heirloom tomatoes",
+              "variant": "",
+              "variantId": "",
+              "price": 1200,
+              "qty": 1
+            }
+          ],
+          "createdAt": "2026-11-21T11:49:42.551Z",
+          "updatedAt": "2026-11-21T11:49:42.551Z"
+        }
+      },
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 6,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "restaurant",
+      "direction": "modern",
+      "token": "180069720e7fffa4d43116c3",
+      "elapsed": 5561,
+      "result": {
+        "results": 1,
+        "detail": "MENU\nBurrata, heirloom tomatoes\n\nBasil, olive oil\n\nHOUSE\n$12\nYou might also like\nMENU\nWarm sourdough\n$6\nSea bass\n$24\nLamb ragu\n$21\nMushroom risotto\n$18\nAdd to order",
+        "price": "$12",
+        "category": "MENU",
+        "cart": "Burrata, heirloom tomatoes\n$12\n−\n1\n+",
+        "total": "Subtotal\n$12\nTotal\n$12",
+        "confirmation": "✓\nOrder #6587\n\nPickup · $12\nSent to Restaurant. They will confirm when it is ready.\n\nDone",
+        "orders": [
+          {
+            "id": "ord_25c331d482c27326e4",
+            "number": "6587",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T11:49:48.125Z"
+          },
+          {
+            "id": "ord_83c3ad1394d7e57868",
+            "number": "6882",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T11:46:08.013Z"
+          },
+          {
+            "id": "ord_5c8784d81e113dda8b",
+            "number": "8932",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T11:28:38.340Z"
+          },
+          {
+            "id": "ord_286b761d6230405d75",
+            "number": "6331",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T10:24:10.936Z"
+          },
+          {
+            "id": "ord_69005780f9e8b7931a",
+            "number": "9077",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T10:14:28.872Z"
+          },
+          {
+            "id": "ord_7d1b9e3ba86cd1679b",
+            "number": "6284",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T10:11:02.347Z"
+          }
+        ]
+      },
+      "readOrder": {
+        "order": {
+          "id": "ord_25c331d482c27326e4",
+          "number": "6587",
+          "status": "new",
+          "fulfilment": "Pickup",
+          "total": 1200,
+          "currency": "",
+          "items": [
+            {
+              "name": "Burrata, heirloom tomatoes",
+              "variant": "",
+              "variantId": "",
+              "price": 1200,
+              "qty": 1
+            }
+          ],
+          "createdAt": "2026-11-21T11:49:48.125Z",
+          "updatedAt": "2026-11-21T11:49:48.125Z"
+        }
+      },
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 6,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "restaurant",
+      "direction": "luxe",
+      "token": "90dd9e80f2d5b9f9ebed0a9f",
+      "elapsed": 5502,
+      "result": {
+        "results": 1,
+        "detail": "MENU\nBurrata, heirloom tomatoes\n\nBasil, olive oil\n\nHOUSE\n$12\nYou might also like\nMENU\nWarm sourdough\n$6\nSea bass\n$24\nLamb ragu\n$21\nMushroom risotto\n$18\nAdd to order",
+        "price": "$12",
+        "category": "MENU",
+        "cart": "Burrata, heirloom tomatoes\n$12\n−\n1\n+",
+        "total": "Subtotal\n$12\nTotal\n$12",
+        "confirmation": "✓\nOrder #8015\n\nPickup · $12\nSent to Restaurant. They will confirm when it is ready.\n\nDone",
+        "orders": [
+          {
+            "id": "ord_a60217c4f229cf1412",
+            "number": "8015",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T11:49:53.619Z"
+          },
+          {
+            "id": "ord_67949c0dc8bd852e56",
+            "number": "3647",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T11:46:13.491Z"
+          },
+          {
+            "id": "ord_5f446dd8ea0f52985a",
+            "number": "9166",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T11:28:43.834Z"
+          },
+          {
+            "id": "ord_395419b6076284d3fb",
+            "number": "8313",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T10:24:16.419Z"
+          },
+          {
+            "id": "ord_a7226546117e83e6c9",
+            "number": "8619",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T10:14:34.345Z"
+          },
+          {
+            "id": "ord_354042d24ef27d3301",
+            "number": "2643",
+            "status": "new",
+            "total": 1200,
+            "createdAt": "2026-11-21T10:11:07.795Z"
+          }
+        ]
+      },
+      "readOrder": {
+        "order": {
+          "id": "ord_a60217c4f229cf1412",
+          "number": "8015",
+          "status": "new",
+          "fulfilment": "Pickup",
+          "total": 1200,
+          "currency": "",
+          "items": [
+            {
+              "name": "Burrata, heirloom tomatoes",
+              "variant": "",
+              "variantId": "",
+              "price": 1200,
+              "qty": 1
+            }
+          ],
+          "createdAt": "2026-11-21T11:49:53.619Z",
+          "updatedAt": "2026-11-21T11:49:53.619Z"
+        }
+      },
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 6,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "hotel",
+      "direction": "luxe",
+      "token": "9bf061b69dec2314d1fb3223",
+      "elapsed": 5578,
+      "result": {
+        "results": 1,
+        "detail": "ROOMS\n$260\nPOPULAR\nLoft suite\n\nSea view, roll-top bath\n\nper night\n$260\n\nRates include tax. Tell the team about access needs before you arrive.\n\nCheck availability",
+        "label": "Guests\n7\nCheck in\nCheck out\n\n2 nights · $520\n\nNo live availability is shown. This sends a request; the business confirms the room is free.\n\nSERVICE\nGarden double\nLoft suite\nSingle\nBreakfast\nLate checkout\nYOUR NAME\nPHONE OR EMAIL\nRequest booking\n\nReception 7:00–22:00",
+        "service": "Loft suite",
+        "slots": 0,
+        "party": "8",
+        "date": "2026-11-22",
+        "checkOut": "2026-11-25",
+        "summary": "3 nights · $780",
+        "confirmation": "✓\nRequest sent\n\n2026-11-22 → 2026-11-25 · 3 nights · 8 guests · $780\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_35411814c6ddf37613",
+            "number": "2957",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_bc870cf65317e7e4e9",
+            "number": "1307",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_8985eeaf02b27504bb",
+            "number": "6005",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_578d7ee8df70022e49",
+            "number": "5726",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_0e4a3b9d46d49137d2",
+            "number": "2114",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_0806726b42ab141494",
+            "number": "3364",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_35411814c6ddf37613",
+          "number": "2957",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "2026-11-25",
+          "nights": 3,
+          "total": 78000,
+          "slot": "",
+          "party": 8,
+          "service": "Loft suite"
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 6,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "hotel",
+      "direction": "editorial",
+      "token": "c2a375cb84e172c78397af31",
+      "elapsed": 5586,
+      "result": {
+        "results": 1,
+        "detail": "ROOMS\n$260\nPOPULAR\nLoft suite\n\nSea view, roll-top bath\n\nper night\n$260\n\nRates include tax. Tell the team about access needs before you arrive.\n\nCheck availability",
+        "label": "Guests\n7\nCheck in\nCheck out\n\n2 nights · $520\n\nNo live availability is shown. This sends a request; the business confirms the room is free.\n\nSERVICE\nGarden double\nLoft suite\nSingle\nBreakfast\nLate checkout\nYOUR NAME\nPHONE OR EMAIL\nRequest booking\n\nReception 7:00–22:00",
+        "service": "Loft suite",
+        "slots": 0,
+        "party": "8",
+        "date": "2026-11-22",
+        "checkOut": "2026-11-25",
+        "summary": "3 nights · $780",
+        "confirmation": "✓\nRequest sent\n\n2026-11-22 → 2026-11-25 · 3 nights · 8 guests · $780\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_7bf8698c563126d802",
+            "number": "1228",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_410694b88b34611086",
+            "number": "6179",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_badb294f036a5e96c1",
+            "number": "6525",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_0420cb079bebd90812",
+            "number": "9146",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_361c8b44571919684d",
+            "number": "5085",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_3bb8c5504d05fa2e1d",
+            "number": "4693",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_7bf8698c563126d802",
+          "number": "1228",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "2026-11-25",
+          "nights": 3,
+          "total": 78000,
+          "slot": "",
+          "party": 8,
+          "service": "Loft suite"
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 6,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "hotel",
+      "direction": "minimal",
+      "token": "5d1c0aa55620d6e2f6550448",
+      "elapsed": 5627,
+      "result": {
+        "results": 1,
+        "detail": "ROOMS\n$260\nPOPULAR\nLoft suite\n\nSea view, roll-top bath\n\nper night\n$260\n\nRates include tax. Tell the team about access needs before you arrive.\n\nCheck availability",
+        "label": "GUESTS\n7\nCHECK IN\nCHECK OUT\n\n2 nights · $520\n\nNo live availability is shown. This sends a request; the business confirms the room is free.\n\nSERVICE\nGarden double\nLoft suite\nSingle\nBreakfast\nLate checkout\nYOUR NAME\nPHONE OR EMAIL\nRequest booking\n\nReception 7:00–22:00",
+        "service": "Loft suite",
+        "slots": 0,
+        "party": "8",
+        "date": "2026-11-22",
+        "checkOut": "2026-11-25",
+        "summary": "3 nights · $780",
+        "confirmation": "✓\nRequest sent\n\n2026-11-22 → 2026-11-25 · 3 nights · 8 guests · $780\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_ab42280584df7987dc",
+            "number": "4241",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_b323864255bdee1687",
+            "number": "2959",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_cd7a08a5216856345c",
+            "number": "3135",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_f865046ee1786405a4",
+            "number": "3309",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_cd44fbf4db699e92f2",
+            "number": "8086",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_1b3af99fe5395a7b43",
+            "number": "1666",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_ab42280584df7987dc",
+          "number": "4241",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "2026-11-25",
+          "nights": 3,
+          "total": 78000,
+          "slot": "",
+          "party": 8,
+          "service": "Loft suite"
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 6,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "salon",
+      "direction": "luxe",
+      "token": "58a7f58344d5ed8740b7b309",
+      "elapsed": 5271,
+      "result": {
+        "results": 2,
+        "detail": "HAIR\n$120\nPOPULAR\nColour\n\nFull head, toner included\n\n2 hr\n$120\n\nPrices include tax. Tell us about allergies or access needs before your appointment.\n\nBook an appointment",
+        "detailCta": [
+          "Book an appointment"
+        ],
+        "service": "Colour",
+        "hasStaffChoice": false,
+        "confirmation": "✓\nRequest sent\n\nTomorrow at 12:00 · 1 person\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_c681deb8f11189aeec",
+            "number": "4655",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_2cfb549c3b04ad2938",
+            "number": "1130",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_97516ce9c6cc089e74",
+            "number": "8589",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_bc054cffeaba22be54",
+            "number": "5008",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "10:30"
+          },
+          {
+            "id": "bkg_d078b3ec020d161bde",
+            "number": "7634",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "10:30"
+          },
+          {
+            "id": "bkg_4f9eac39c20a4e7e58",
+            "number": "2946",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "10:30"
+          },
+          {
+            "id": "bkg_353f5adf9b145ecfdf",
+            "number": "8634",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "10:30"
+          },
+          {
+            "id": "bkg_4e558058254db808cc",
+            "number": "5037",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_644e32dbfbf9a2fefa",
+            "number": "7453",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_33f791db07b69b9078",
+            "number": "8747",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_c681deb8f11189aeec",
+          "number": "4655",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "",
+          "nights": 0,
+          "total": 0,
+          "slot": "12:00",
+          "party": 1,
+          "service": "Colour"
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 10,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "salon",
+      "direction": "minimal",
+      "token": "9ea747fed8ce5ca06fe6dbf5",
+      "elapsed": 5268,
+      "result": {
+        "results": 2,
+        "detail": "HAIR\n$120\nPOPULAR\nColour\n\nFull head, toner included\n\n2 hr\n$120\n\nPrices include tax. Tell us about allergies or access needs before your appointment.\n\nBook an appointment",
+        "detailCta": [
+          "Book an appointment"
+        ],
+        "service": "Colour",
+        "hasStaffChoice": false,
+        "confirmation": "✓\nRequest sent\n\nTomorrow at 12:00 · 1 person\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_0f2d17db00c951ff4a",
+            "number": "8403",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_dcd017efbacd08f6dd",
+            "number": "4366",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_b3499d660e7f4d6d98",
+            "number": "6394",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_7d582d5fbb739ea37c",
+            "number": "9060",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_cc563442a6e77859bc",
+            "number": "5074",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_524d1de31577033d15",
+            "number": "9966",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_0f2d17db00c951ff4a",
+          "number": "8403",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "",
+          "nights": 0,
+          "total": 0,
+          "slot": "12:00",
+          "party": 1,
+          "service": "Colour"
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 6,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "salon",
+      "direction": "editorial",
+      "token": "b89bcfcf103f4aa4dd1d2f53",
+      "elapsed": 5260,
+      "result": {
+        "results": 2,
+        "detail": "HAIR\n$120\nPOPULAR\nColour\n\nFull head, toner included\n\n2 hr\n$120\n\nPrices include tax. Tell us about allergies or access needs before your appointment.\n\nBook an appointment",
+        "detailCta": [
+          "Book an appointment"
+        ],
+        "service": "Colour",
+        "hasStaffChoice": false,
+        "confirmation": "✓\nRequest sent\n\nTomorrow at 12:00 · 1 person\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_e61c107e6e4302801f",
+            "number": "9765",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_7ac5381f007c6ca516",
+            "number": "2208",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_621ad7ee4c46226a8d",
+            "number": "6915",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_48b0afbd503cf0adb8",
+            "number": "6158",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_707793a6f0219d5826",
+            "number": "1562",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_1109a72c6944424746",
+            "number": "7958",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_e61c107e6e4302801f",
+          "number": "9765",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "",
+          "nights": 0,
+          "total": 0,
+          "slot": "12:00",
+          "party": 1,
+          "service": "Colour"
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 6,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "professional",
+      "direction": "classic",
+      "token": "2d01b7c730e3e4cef94f17ac",
+      "elapsed": 5205,
+      "result": {
+        "results": 1,
+        "detail": "COMPLIANCE\n$950\nAnnual accounts\n\nLimited company, filed\n\nper year\n$950\n\nAsk the team what this engagement includes before you book.\n\nRequest a proposal",
+        "detailCta": [
+          "Request a proposal"
+        ],
+        "detailPrimary": "Request a proposal",
+        "homeActions": [
+          "Request a proposal"
+        ],
+        "opened": true,
+        "openedFromDetail": true,
+        "quoteTitle": "Request a proposal",
+        "heading": "Request sent",
+        "confirmation": "✓\nRequest sent\n\nThanks Maya Rao — the business will reply on maya@example.com. Your request is now in their dashboard.\n\nDone"
+      },
+      "readOrder": null,
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 4,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "professional",
+      "direction": "minimal",
+      "token": "c544651b7b78d5d8e995f55e",
+      "elapsed": 5218,
+      "result": {
+        "results": 1,
+        "detail": "COMPLIANCE\n$950\nAnnual accounts\n\nLimited company, filed\n\nper year\n$950\n\nAsk the team what this engagement includes before you book.\n\nRequest a proposal",
+        "detailCta": [
+          "Request a proposal"
+        ],
+        "detailPrimary": "Request a proposal",
+        "homeActions": [],
+        "opened": true,
+        "openedFromDetail": true,
+        "quoteTitle": "REQUEST A PROPOSAL",
+        "heading": "Request sent",
+        "confirmation": "✓\nRequest sent\n\nThanks Maya Rao — the business will reply on maya@example.com. Your request is now in their dashboard.\n\nDone"
+      },
+      "readOrder": null,
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 6,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "professional",
+      "direction": "editorial",
+      "token": "5bf2479b856a6f2dc68e36c9",
+      "elapsed": 5220,
+      "result": {
+        "results": 1,
+        "detail": "COMPLIANCE\n$950\nAnnual accounts\n\nLimited company, filed\n\nper year\n$950\n\nAsk the team what this engagement includes before you book.\n\nRequest a proposal",
+        "detailCta": [
+          "Request a proposal"
+        ],
+        "detailPrimary": "Request a proposal",
+        "homeActions": [
+          "Request a proposal"
+        ],
+        "opened": true,
+        "openedFromDetail": true,
+        "quoteTitle": "Request a proposal",
+        "heading": "Request sent",
+        "confirmation": "✓\nRequest sent\n\nThanks Maya Rao — the business will reply on maya@example.com. Your request is now in their dashboard.\n\nDone"
+      },
+      "readOrder": null,
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 6,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "shop",
+      "direction": "minimal",
+      "token": "279c6ca71633c6aaad01c35b",
+      "elapsed": 7326,
+      "result": {
+        "results": 1,
+        "detailHasName": true,
+        "variants": [
+          "Small (25cm)\n£11",
+          "Large (40cm)\n£17.50"
+        ],
+        "pickedLarge": true,
+        "addedLarge": true,
+        "pickedSmall": true,
+        "addedSmall": true,
+        "initialPrice": "£11",
+        "largePrice": "£17.50",
+        "twoLines": "Honeycomb Tree — Large (40cm)\n£17.50\n−\n1\n+\nHoneycomb Tree — Small (25cm)\n£11\n−\n1\n+",
+        "twoTotal": "Subtotal\n£28.50\nDelivery\n£2.99\nTotal\n£31.49",
+        "oneTotal": "Subtotal\n£17.50\nDelivery\n£2.99\nTotal\n£20.49",
+        "deliveryTotal": "Subtotal\n£17.50\nDelivery\n£2.99\nTotal\n£20.49",
+        "confirmation": "✓\nOrder #2494\n\nDelivery · £20.49\nSent to Present & Correct. They will confirm when it is ready.\n\nDone",
+        "orders": [
+          {
+            "id": "ord_f2e4ed8c76ed2de8cd",
+            "number": "2494",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T11:50:48.972Z"
+          },
+          {
+            "id": "ord_035c94ee393e1c89e5",
+            "number": "1341",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T11:47:09.105Z"
+          },
+          {
+            "id": "ord_d47dd014673de3766f",
+            "number": "7996",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T11:29:39.321Z"
+          },
+          {
+            "id": "ord_200bf5cd717b4bcad6",
+            "number": "7589",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T10:25:12.420Z"
+          },
+          {
+            "id": "ord_97ef2b84c535f79e26",
+            "number": "1471",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T10:15:30.224Z"
+          },
+          {
+            "id": "ord_fb912c8f83ac61a92d",
+            "number": "5472",
+            "status": "new",
+            "total": 1799,
+            "createdAt": "2026-11-21T10:12:03.023Z"
+          }
+        ]
+      },
+      "readOrder": {
+        "order": {
+          "id": "ord_f2e4ed8c76ed2de8cd",
+          "number": "2494",
+          "status": "new",
+          "fulfilment": "Delivery",
+          "total": 2049,
+          "currency": "GBP",
+          "items": [
+            {
+              "name": "Honeycomb Tree",
+              "variant": "Large (40cm)",
+              "variantId": "55920444375419",
+              "price": 1750,
+              "qty": 1
+            }
+          ],
+          "createdAt": "2026-11-21T11:50:48.972Z",
+          "updatedAt": "2026-11-21T11:50:48.972Z"
+        }
+      },
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 6,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "shop",
+      "direction": "editorial",
+      "token": "47e68871f1b8aaa0f6a5fb32",
+      "elapsed": 7318,
+      "result": {
+        "results": 1,
+        "detailHasName": true,
+        "variants": [
+          "Small (25cm)\n£11",
+          "Large (40cm)\n£17.50"
+        ],
+        "pickedLarge": true,
+        "addedLarge": true,
+        "pickedSmall": true,
+        "addedSmall": true,
+        "initialPrice": "£11",
+        "largePrice": "£17.50",
+        "twoLines": "Honeycomb Tree — Large (40cm)\n£17.50\n−\n1\n+\nHoneycomb Tree — Small (25cm)\n£11\n−\n1\n+",
+        "twoTotal": "Subtotal\n£28.50\nDelivery\n£2.99\nTotal\n£31.49",
+        "oneTotal": "Subtotal\n£17.50\nDelivery\n£2.99\nTotal\n£20.49",
+        "deliveryTotal": "Subtotal\n£17.50\nDelivery\n£2.99\nTotal\n£20.49",
+        "confirmation": "✓\nOrder #4019\n\nDelivery · £20.49\nSent to Present & Correct. They will confirm when it is ready.\n\nDone",
+        "orders": [
+          {
+            "id": "ord_9adf36fbfec5bdcb5d",
+            "number": "4019",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T11:50:56.280Z"
+          },
+          {
+            "id": "ord_3be858993c85562bcd",
+            "number": "8280",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T11:47:16.428Z"
+          },
+          {
+            "id": "ord_52f60d580b7afbbdc0",
+            "number": "1620",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T11:29:46.632Z"
+          },
+          {
+            "id": "ord_944dd83fcdca8eb0e7",
+            "number": "6070",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T10:25:19.736Z"
+          },
+          {
+            "id": "ord_0b9d919b0973139567",
+            "number": "8593",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T10:15:37.556Z"
+          },
+          {
+            "id": "ord_82a37aedfb8d3f7ed2",
+            "number": "7327",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T10:12:10.320Z"
+          }
+        ]
+      },
+      "readOrder": {
+        "order": {
+          "id": "ord_9adf36fbfec5bdcb5d",
+          "number": "4019",
+          "status": "new",
+          "fulfilment": "Delivery",
+          "total": 2049,
+          "currency": "GBP",
+          "items": [
+            {
+              "name": "Honeycomb Tree",
+              "variant": "Large (40cm)",
+              "variantId": "55920444375419",
+              "price": 1750,
+              "qty": 1
+            }
+          ],
+          "createdAt": "2026-11-21T11:50:56.280Z",
+          "updatedAt": "2026-11-21T11:50:56.280Z"
+        }
+      },
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 6,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "shop",
+      "direction": "lifestyle",
+      "token": "ae8ac58aba78817391d67530",
+      "elapsed": 7351,
+      "result": {
+        "results": 1,
+        "detailHasName": true,
+        "variants": [
+          "Small (25cm)\n£11",
+          "Large (40cm)\n£17.50"
+        ],
+        "pickedLarge": true,
+        "addedLarge": true,
+        "pickedSmall": true,
+        "addedSmall": true,
+        "initialPrice": "£11",
+        "largePrice": "£17.50",
+        "twoLines": "Honeycomb Tree — Large (40cm)\n£17.50\n−\n1\n+\nHoneycomb Tree — Small (25cm)\n£11\n−\n1\n+",
+        "twoTotal": "Subtotal\n£28.50\nDelivery\n£2.99\nTotal\n£31.49",
+        "oneTotal": "Subtotal\n£17.50\nDelivery\n£2.99\nTotal\n£20.49",
+        "deliveryTotal": "Subtotal\n£17.50\nDelivery\n£2.99\nTotal\n£20.49",
+        "confirmation": "✓\nOrder #4538\n\nDelivery · £20.49\nSent to Present & Correct. They will confirm when it is ready.\n\nDone",
+        "orders": [
+          {
+            "id": "ord_d7110532c6e3ad12dd",
+            "number": "4538",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T11:51:03.625Z"
+          },
+          {
+            "id": "ord_99ae9c640eeebdf209",
+            "number": "7908",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T11:47:23.740Z"
+          },
+          {
+            "id": "ord_08a17a8cea1f95de34",
+            "number": "3852",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T11:29:53.930Z"
+          },
+          {
+            "id": "ord_d6850ff50ea5c3d5e4",
+            "number": "1513",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T10:25:27.040Z"
+          },
+          {
+            "id": "ord_f887a1eff032bc1fc8",
+            "number": "2080",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T10:15:44.835Z"
+          },
+          {
+            "id": "ord_c562faf79a0dd54608",
+            "number": "8437",
+            "status": "new",
+            "total": 2049,
+            "createdAt": "2026-11-21T10:12:17.628Z"
+          }
+        ]
+      },
+      "readOrder": {
+        "order": {
+          "id": "ord_d7110532c6e3ad12dd",
+          "number": "4538",
+          "status": "new",
+          "fulfilment": "Delivery",
+          "total": 2049,
+          "currency": "GBP",
+          "items": [
+            {
+              "name": "Honeycomb Tree",
+              "variant": "Large (40cm)",
+              "variantId": "55920444375419",
+              "price": 1750,
+              "qty": 1
+            }
+          ],
+          "createdAt": "2026-11-21T11:51:03.625Z",
+          "updatedAt": "2026-11-21T11:51:03.625Z"
+        }
+      },
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 6,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    }
+  ],
+  "responsive": [
+    {
+      "trade": "shop",
+      "width": 390,
+      "screen": "detail"
+    },
+    {
+      "trade": "shop",
+      "width": 430,
+      "screen": "detail"
+    },
+    {
+      "trade": "shop",
+      "width": 768,
+      "screen": "detail"
+    },
+    {
+      "trade": "shop",
+      "width": 1280,
+      "screen": "detail"
+    },
+    {
+      "trade": "restaurant",
+      "width": 390,
+      "screen": "detail"
+    },
+    {
+      "trade": "restaurant",
+      "width": 430,
+      "screen": "detail"
+    },
+    {
+      "trade": "restaurant",
+      "width": 768,
+      "screen": "detail"
+    },
+    {
+      "trade": "restaurant",
+      "width": 1280,
+      "screen": "detail"
+    },
+    {
+      "trade": "hotel",
+      "width": 390,
+      "screen": "detail"
+    },
+    {
+      "trade": "hotel",
+      "width": 430,
+      "screen": "detail"
+    },
+    {
+      "trade": "hotel",
+      "width": 768,
+      "screen": "detail"
+    },
+    {
+      "trade": "hotel",
+      "width": 1280,
+      "screen": "detail"
+    },
+    {
+      "trade": "salon",
+      "width": 390,
+      "screen": "detail"
+    },
+    {
+      "trade": "salon",
+      "width": 430,
+      "screen": "detail"
+    },
+    {
+      "trade": "salon",
+      "width": 768,
+      "screen": "detail"
+    },
+    {
+      "trade": "salon",
+      "width": 1280,
+      "screen": "detail"
+    },
+    {
+      "trade": "professional",
+      "width": 390,
+      "screen": "detail"
+    },
+    {
+      "trade": "professional",
+      "width": 430,
+      "screen": "detail"
+    },
+    {
+      "trade": "professional",
+      "width": 768,
+      "screen": "detail"
+    },
+    {
+      "trade": "professional",
+      "width": 1280,
+      "screen": "detail"
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'bun:test'
 import app from '../src/worker/index'
+import { dashboardData } from '../src/worker/business'
 import { createProject, getProject } from '../src/worker/db'
+import { buildSpec } from '../src/worker/pricing'
 import {
   createOwnerSession,
   deleteOwnerSessions,
@@ -14,7 +16,7 @@ const OWNER_SECRET = 'test-owner-secret'
 
 const JSON_HEADERS = { 'content-type': 'application/json', origin: 'https://plattr.example' }
 
-async function projectFor(vertical: 'shop' | 'salon' | 'professional' | 'restaurant') {
+async function projectFor(vertical: 'shop' | 'salon' | 'professional' | 'restaurant' | 'hotel') {
   const db = new MemoryD1() as unknown as D1Database
   const features =
     vertical === 'shop'
@@ -23,7 +25,9 @@ async function projectFor(vertical: 'shop' | 'salon' | 'professional' | 'restaur
         ? ['catalog', 'booking', 'offers']
         : vertical === 'professional'
           ? ['catalog', 'quote', 'booking']
-          : ['catalog', 'ordering', 'booking']
+          : vertical === 'hotel'
+            ? ['catalog', 'booking', 'quote']
+            : ['catalog', 'ordering', 'booking']
   const project = await createProject(db, {
     name: 'Fern & Flint',
     contact: '',
@@ -612,5 +616,326 @@ describe('enquiries and dashboard', () => {
 
     await deleteOwnerSessions(shop.env.DB, shop.project.id)
     expect(await hasOwnerSession(shop.env.DB, shop.project.id, second.id)).toBe(false)
+  })
+})
+
+describe('building a real shop', () => {
+  test('a catalogue larger than the JSON limit is still built in one request', async () => {
+    // The saved Present & Correct run holds 706 products and about 335 KB of
+    // JSON. The general API ceiling is 256 KB, so creation needs its own
+    // allowance for the catalogue it carries.
+    const items = Array.from({ length: 1400 }, (_, index) => ({
+      name: `Product ${index + 1}`,
+      desc: 'A saved catalogue line with a description long enough to make a real shop payload rather than a toy one.',
+      price: 750 + index,
+      image: { url: `https://cdn.example.com/${index}.jpg`, alt: `Product ${index + 1}` },
+    }))
+    const body = {
+      name: 'Present & Correct',
+      vertical: 'shop',
+      features: ['catalog', 'ordering'],
+      platforms: ['pwa'],
+      plan: 'onetime',
+      direction: 'minimal',
+      site: { currency: 'GBP', website: 'https://www.presentandcorrect.com', menu: [{ name: 'Catalogue', items }] },
+    }
+    expect(JSON.stringify(body).length).toBeGreaterThan(256 * 1024)
+
+    const db = new MemoryD1() as unknown as D1Database
+    const env = { DB: db, ASSETS: {} as Fetcher }
+    const response = await app.request(
+      'https://plattr.example/api/projects',
+      { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) },
+      env as never,
+    )
+    expect(response.status).toBe(201)
+    const { token } = (await response.json()) as { token: string }
+    const project = await getProject(db, token)
+    expect(project?.spec.menu[0].items).toHaveLength(1400)
+    expect(project?.spec.currency).toBe('GBP')
+  })
+})
+
+describe('a hotel stay', () => {
+  const day = (offset: number) => new Date(Date.now() + offset * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+
+  test('books a range, derives the nights and prices the saved room rate', async () => {
+    const { db, project, env } = await projectFor('hotel')
+    const room = project.spec.menu[0].items[0]
+    expect(room.meta).toBe('per night')
+    const response = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', email: 'maya@example.com' },
+      date: day(2),
+      checkOut: day(5),
+      party: 2,
+      service: room.name,
+    })
+    expect(response.status).toBe(201)
+    const body = (await response.json()) as {
+      booking: { id: string; date: string; checkOut: string; nights: number; total: number; party: number }
+    }
+    expect(body.booking.nights).toBe(3)
+    expect(body.booking.checkOut).toBe(day(5))
+    expect(body.booking.total).toBe(room.price * 3)
+    expect(body.booking.party).toBe(2)
+
+    const read = await app.request(`https://plattr.example/p/${project.token}/bookings/${body.booking.id}`, {}, env as never)
+    const stored = (await read.json()) as { booking: { nights: number; total: number; service: string } }
+    expect(stored.booking.nights).toBe(3)
+    expect(stored.booking.total).toBe(room.price * 3)
+    expect(stored.booking.service).toBe(room.name)
+
+    const data = await dashboardData(db, project)
+    expect(data.bookings[0].nights).toBe(3)
+    expect(data.bookings[0].total).toBe(room.price * 3)
+  })
+
+  test('refuses a stay that ends before it starts, or runs too long', async () => {
+    const { project, env } = await projectFor('hotel')
+    const backwards = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', phone: '555 0100' },
+      date: day(3),
+      checkOut: day(3),
+      party: 2,
+      service: project.spec.menu[0].items[0].name,
+    })
+    expect(backwards.status).toBe(422)
+    const long = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', phone: '555 0100' },
+      date: day(2),
+      checkOut: day(40),
+      party: 2,
+      service: project.spec.menu[0].items[0].name,
+    })
+    expect(long.status).toBe(422)
+    const malformed = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', phone: '555 0100' },
+      date: day(2),
+      checkOut: 'next week',
+      party: 2,
+      service: project.spec.menu[0].items[0].name,
+    })
+    expect(malformed.status).toBe(422)
+    const row = await env.DB.prepare('SELECT COUNT(*) AS count FROM bookings WHERE project_id = ?')
+      .bind(project.id)
+      .first<{ count: number }>()
+    expect(Number(row?.count)).toBe(0)
+  })
+
+  test('a non-room extra is not multiplied into a stay price', async () => {
+    const { project, env } = await projectFor('hotel')
+    const extra = project.spec.menu[1].items[0]
+    expect(extra.meta).not.toContain('night')
+    const response = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', phone: '555 0100' },
+      date: day(2),
+      checkOut: day(4),
+      party: 2,
+      service: extra.name,
+    })
+    expect(response.status).toBe(201)
+    const body = (await response.json()) as { booking: { nights: number; total: number } }
+    expect(body.booking.nights).toBe(2)
+    expect(body.booking.total).toBe(0)
+  })
+})
+
+describe('a hotel room capacity', () => {
+  const day = (offset: number) => new Date(Date.now() + offset * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+
+  async function withRoomCapacity(
+    env: { DB: D1Database; ASSETS: Fetcher },
+    project: { token: string; spec: { menu: { name: string; items: Record<string, unknown>[] }[]; offers: unknown[] } },
+    cookie: string,
+    statement: string,
+  ) {
+    const menu = project.spec.menu.map((section, sectionIndex) => ({
+      ...section,
+      items: section.items.map((item, itemIndex) =>
+        sectionIndex === 0 && itemIndex === 0 ? { ...item, meta: statement } : item,
+      ),
+    }))
+    const response = await app.request(
+      `https://plattr.example/api/projects/${project.token}/catalog`,
+      {
+        method: 'PUT',
+        headers: { ...JSON_HEADERS, cookie },
+        body: JSON.stringify({ menu, offers: project.spec.offers }),
+      },
+      env as never,
+    )
+    expect(response.status).toBe(200)
+  }
+
+  test('persists the capacity only when the room record states it', () => {
+    const spec = buildSpec({
+      name: 'Harbour Rooms',
+      vertical: 'hotel',
+      accent: '#2a5a8f',
+      logo: 'HR',
+      features: ['booking'],
+      site: {
+        menu: [
+          {
+            name: 'Rooms',
+            items: [
+              { name: 'Cabin', desc: 'Sleeps 4 · sea view', price: 18000, meta: 'per night' },
+              { name: 'Twin', desc: 'Two single beds', price: 14000, meta: 'per night · up to 2 guests' },
+              { name: 'Suite', desc: 'Roll-top bath', price: 26000, meta: 'per night' },
+            ],
+          },
+        ],
+      },
+    })
+    expect(spec.menu[0].items[0].capacity).toBe(4)
+    expect(spec.menu[0].items[1].capacity).toBe(2)
+    expect(spec.menu[0].items[2].capacity).toBeUndefined()
+  })
+
+  test('refuses more guests than the saved room sleeps, and keeps the row unwritten', async () => {
+    const { db, project, env, cookie } = await projectFor('hotel')
+    await withRoomCapacity(env, project, cookie, 'Sleeps 2 · per night')
+    const updated = await getProject(db, project.token)
+    const room = updated!.spec.menu[0].items[0]
+    expect(room.capacity).toBe(2)
+
+    const response = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', email: 'maya@example.com' },
+      date: day(2),
+      checkOut: day(4),
+      party: 3,
+      service: room.name,
+    })
+    expect(response.status).toBe(422)
+    const error = (await response.json()) as { error: { code: string } }
+    expect(error.error.code).toBe('party_exceeds_room')
+    const row = await env.DB.prepare('SELECT COUNT(*) AS count FROM bookings WHERE project_id = ?')
+      .bind(project.id)
+      .first<{ count: number }>()
+    expect(Number(row?.count)).toBe(0)
+
+    const accepted = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', email: 'maya@example.com' },
+      date: day(2),
+      checkOut: day(4),
+      party: 2,
+      service: room.name,
+    })
+    expect(accepted.status).toBe(201)
+  })
+
+  test('recalculates nights and total and ignores a client-supplied total', async () => {
+    const { project, env } = await projectFor('hotel')
+    const room = project.spec.menu[0].items[0]
+    const response = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', email: 'maya@example.com' },
+      date: day(2),
+      checkOut: day(6),
+      party: 2,
+      service: room.name,
+      // A forged figure must never become the booking's price.
+      total: 1,
+      nights: 99,
+    })
+    expect(response.status).toBe(201)
+    const body = (await response.json()) as { booking: { status: string; nights: number; total: number } }
+    expect(body.booking.status).toBe('requested')
+    expect(body.booking.nights).toBe(4)
+    expect(body.booking.total).toBe(room.price * 4)
+  })
+
+  test('rejects a check-in in the past', async () => {
+    const { project, env } = await projectFor('hotel')
+    const response = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', phone: '555 0100' },
+      date: day(-5),
+      checkOut: day(-2),
+      party: 1,
+      service: project.spec.menu[0].items[0].name,
+    })
+    expect(response.status).toBe(422)
+  })
+})
+
+describe('catalogue payload safety', () => {
+  test('keeps the 256 KB ceiling on routes that are not catalogue writers', async () => {
+    const { project, env, cookie } = await projectFor('shop')
+    const oversized = JSON.stringify({ doc: {}, filler: 'x'.repeat(300 * 1024) })
+    const response = await app.request(
+      `https://plattr.example/api/projects/${project.token}/doc`,
+      { method: 'PUT', headers: { ...JSON_HEADERS, cookie }, body: oversized },
+      env as never,
+    )
+    expect(response.status).toBe(413)
+  })
+
+  test('allows a large catalogue on both catalogue writers, and only there', async () => {
+    const { project, env, cookie } = await projectFor('shop')
+    const items = Array.from({ length: 1800 }, (_, index) => ({
+      name: `Item ${index} ${'x'.repeat(140)}`,
+      price: 100,
+    }))
+    const body = JSON.stringify({ menu: [{ name: 'Catalogue', items }], offers: [] })
+    expect(body.length).toBeGreaterThan(256 * 1024)
+    for (const path of ['catalog', 'dashboard/catalog']) {
+      const response = await app.request(
+        `https://plattr.example/api/projects/${project.token}/${path}`,
+        { method: 'PUT', headers: { ...JSON_HEADERS, cookie }, body },
+        env as never,
+      )
+      expect(response.status).toBe(200)
+    }
+  })
+
+  test('still rejects malformed JSON and caps the catalogue shape', async () => {
+    const { project, env, cookie } = await projectFor('shop')
+    const malformed = await app.request(
+      `https://plattr.example/api/projects/${project.token}/catalog`,
+      {
+        method: 'PUT',
+        headers: { ...JSON_HEADERS, cookie },
+        body: '{"menu":',
+      },
+      env as never,
+    )
+    expect(malformed.status).toBe(400)
+
+    const groups = Array.from({ length: 10 }, (_, group) => ({
+      name: `Group ${group}`,
+      options: Array.from({ length: 25 }, (_, option) => `Option ${option}`),
+    }))
+    const variants = Array.from({ length: 250 }, (_, index) => ({ name: `Variant ${index}`, price: 100 + index }))
+    const spec = buildSpec({
+      name: 'Bounded Shop',
+      vertical: 'shop',
+      accent: '',
+      logo: 'BS',
+      features: ['catalog'],
+      site: {
+        menu: [
+          {
+            name: 'Options',
+            items: [
+              {
+                name: 'Bounded product',
+                desc: '',
+                price: 100,
+                optionGroups: groups,
+                variants,
+              },
+            ],
+          },
+          ...Array.from({ length: 45 }, (_, section) => ({
+            name: `Section ${section}`,
+            items: [{ name: `Item ${section}`, desc: '', price: 100 }],
+          })),
+        ],
+      },
+    })
+    expect(spec.menu).toHaveLength(40)
+    const product = spec.menu[0].items[0]
+    expect(product.optionGroups).toHaveLength(8)
+    expect(product.optionGroups?.[0].options).toHaveLength(20)
+    expect(product.variants).toHaveLength(200)
   })
 })

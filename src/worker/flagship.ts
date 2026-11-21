@@ -292,8 +292,30 @@ function hotelHome(spec: AppSpec): string {
   </div>`
 }
 
+/** The practice's first step is a proposal, so a generated "book a
+ *  consultation" action becomes the quote request. An owner-authored label on
+ *  a different screen is left alone. */
+function professionalAction(
+  spec: AppSpec,
+  action?: { label: string; screen: string },
+): { label: string; screen: string } {
+  const vocab = verticalFor(spec.vertical).vocab
+  const fallback = {
+    label: spec.features.includes('booking') ? 'Book a consultation' : 'Send an enquiry',
+    screen: spec.features.includes('booking') ? 'book' : 'quote',
+  }
+  const current = action || fallback
+  const generated =
+    !action ||
+    ((current.screen === 'book' || current.screen === 'scr_book') &&
+      /^(book a consultation|book an intro call|send an enquiry)$/i.test(current.label))
+  if (vocab.detailAction === 'quote' && generated) return { label: vocab.quoteTitle, screen: 'quote' }
+  return current
+}
+
 function professionalHome(spec: AppSpec): string {
   const all = entries(spec)
+  const action = professionalAction(spec)
   return `<div class="fx-home fx-pro">
     <div class="fx-pro-head">
       <span class="fx-eyebrow">${esc(businessLabel(spec))}</span>
@@ -318,7 +340,7 @@ function professionalHome(spec: AppSpec): string {
         : `<div class="fx-empty"><b>Services are being added.</b><p>The owner can publish services from the dashboard.</p></div>`
     }
     <div class="fx-pro-actions">
-      <button class="fx-primary" type="button" data-go="${spec.features.includes('booking') ? 'book' : 'quote'}">${spec.features.includes('booking') ? 'Book a consultation' : 'Send an enquiry'}</button>
+      <button class="fx-primary" type="button" data-go="${esc(action.screen)}">${esc(action.label)}</button>
       ${spec.phone ? `<a class="fx-secondary" href="tel:${esc(spec.phone.replace(/\s/g, ''))}">Call</a>` : ''}
     </div>
     ${factline(spec)}
@@ -403,6 +425,18 @@ function fxWrap(ctx: FlagshipContext, node: DocNode, html: string): string {
   return `<div class="doc-section fx-block${hides ? ` ${hides}` : ''}" data-sec="${node.id}" data-variant="${node.variant || ''}"${node.layout ? ` data-layout="${node.layout}"` : ''}${style ? ` style="${style}"` : ''}>${html}</div>`
 }
 
+/** Where a section's photograph actually comes from. Generic image sections and
+ *  flagship blocks that render their own attachment use `node.media`; product,
+ *  room and service blocks use the catalogue item's photograph, so editing the
+ *  section's media there would change nothing in the app. */
+export function sectionImageSource(node: DocNode): 'section' | 'catalogue' {
+  if (node.kind === 'image') return 'section'
+  if (node.kind !== 'flagship') return 'catalogue'
+  if (node.variant === 'pro-intro') return 'section'
+  if (node.variant && !MEDIA_BLOCKS.has(node.variant)) return 'section'
+  return 'catalogue'
+}
+
 const MEDIA_BLOCKS = new Set([
   'dine-feature',
   'shop-products',
@@ -433,6 +467,11 @@ const MEDIA_BLOCKS = new Set([
   'finance-hero',
   'finance-advisers',
 ])
+
+/** The variants whose photograph comes from a catalogue record rather than the
+ *  section. The editor ships this list into its client script so the panel it
+ *  draws agrees with the server renderer. */
+export const CATALOGUE_MEDIA_VARIANTS = [...MEDIA_BLOCKS].filter((variant) => variant !== 'pro-intro')
 
 /** Four day chips used by café reservations and clinic appointments. */
 function nextDays(count = 4): { label: string; date: string }[] {
@@ -667,10 +706,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           )
           .join('')}</div>`
     case 'pro-actions': {
-      const action = node.cta || {
-        label: spec.features.includes('booking') ? 'Book a consultation' : 'Send an enquiry',
-        screen: spec.features.includes('booking') ? 'scr_book' : 'scr_quote',
-      }
+      const action = professionalAction(spec, node.cta ?? undefined)
       return `<div class="fx-pro-actions">
         <button class="fx-primary" type="button" data-go="${esc(targetFor(ctx, action.screen))}">${esc(action.label)}</button>
         ${spec.phone ? `<a class="fx-secondary" href="tel:${esc(spec.phone.replace(/\s/g, ''))}">Call</a>` : ''}

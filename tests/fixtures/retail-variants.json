@@ -1,0 +1,206 @@
+{
+  "name": "Northline Supply",
+  "kind": "Workwear shop",
+  "tagline": "Work clothes that survive the week.",
+  "phone": "555 0134",
+  "email": "hello@northline.example",
+  "features": ["catalog", "ordering", "delivery"],
+  "currency": "GBP",
+  "accent": "#2f4f3e",
+  "logo": "NS",
+  "menu": [
+    {
+      "name": "Shirts",
+      "items": [
+        {
+          "name": "Field Shirt",
+          "desc": "Heavy cotton twill, cut for movement.",
+          "price": 4200,
+          "meta": "Organic cotton",
+          "optionGroups": [
+            { "name": "Size", "options": ["S", "M", "L"] },
+            { "name": "Colour", "options": ["Ink", "Bone", "Clay"] }
+          ],
+          "variants": [
+            {
+              "name": "S / Ink",
+              "price": 4200,
+              "values": { "Size": "S", "Colour": "Ink" },
+              "selected": true,
+              "media": {
+                "id": "med_aaaaaaaaaaaaaaaa",
+                "alt": "Field Shirt in Ink",
+                "width": 900,
+                "height": 900
+              }
+            },
+            {
+              "name": "M / Ink",
+              "price": 4200,
+              "values": { "Size": "M", "Colour": "Ink" },
+              "media": {
+                "id": "med_aaaaaaaaaaaaaaaa",
+                "alt": "Field Shirt in Ink",
+                "width": 900,
+                "height": 900
+              }
+            },
+            {
+              "name": "L / Ink",
+              "price": 4400,
+              "values": { "Size": "L", "Colour": "Ink" },
+              "media": {
+                "id": "med_aaaaaaaaaaaaaaaa",
+                "alt": "Field Shirt in Ink",
+                "width": 900,
+                "height": 900
+              }
+            },
+            {
+              "name": "S / Bone",
+              "price": 4400,
+              "values": { "Size": "S", "Colour": "Bone" },
+              "media": {
+                "id": "med_bbbbbbbbbbbbbbbb",
+                "alt": "Field Shirt in Bone",
+                "width": 900,
+                "height": 900
+              }
+            },
+            {
+              "name": "M / Bone",
+              "price": 4600,
+              "values": { "Size": "M", "Colour": "Bone" },
+              "available": false,
+              "media": {
+                "id": "med_bbbbbbbbbbbbbbbb",
+                "alt": "Field Shirt in Bone",
+                "width": 900,
+                "height": 900
+              }
+            },
+            {
+              "name": "L / Bone",
+              "price": 4600,
+              "values": { "Size": "L", "Colour": "Bone" },
+              "media": {
+                "id": "med_bbbbbbbbbbbbbbbb",
+                "alt": "Field Shirt in Bone",
+                "width": 900,
+                "height": 900
+              }
+            },
+            {
+              "name": "S / Clay",
+              "price": 5000,
+              "values": { "Size": "S", "Colour": "Clay" },
+              "available": false,
+              "media": {
+                "id": "med_cccccccccccccccc",
+                "alt": "Field Shirt in Clay",
+                "width": 900,
+                "height": 900
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Trousers",
+      "items": [
+        {
+          "name": "Field Trouser",
+          "desc": "Double-knee work trouser with a straight leg.",
+          "price": 5200,
+          "meta": "Reinforced knee",
+          "optionGroups": [
+            { "name": "Waist", "options": ["30", "32", "34"] },
+            { "name": "Colour", "options": ["Olive", "Black"] }
+          ],
+          "variants": [
+            {
+              "name": "30 / Olive",
+              "price": 5200,
+              "values": { "Waist": "30", "Colour": "Olive" },
+              "media": {
+                "id": "med_dddddddddddddddd",
+                "alt": "Field Trouser in Olive",
+                "width": 900,
+                "height": 900
+              }
+            },
+            {
+              "name": "32 / Olive",
+              "price": 5200,
+              "values": { "Waist": "32", "Colour": "Olive" },
+              "media": {
+                "id": "med_dddddddddddddddd",
+                "alt": "Field Trouser in Olive",
+                "width": 900,
+                "height": 900
+              }
+            },
+            {
+              "name": "30 / Black",
+              "price": 5400,
+              "values": { "Waist": "30", "Colour": "Black" },
+              "media": {
+                "id": "med_eeeeeeeeeeeeeeee",
+                "alt": "Field Trouser in Black",
+                "width": 900,
+                "height": 900
+              }
+            },
+            {
+              "name": "34 / Black",
+              "price": 5400,
+              "values": { "Waist": "34", "Colour": "Black" },
+              "media": {
+                "id": "med_eeeeeeeeeeeeeeee",
+                "alt": "Field Trouser in Black",
+                "width": 900,
+                "height": 900
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bags",
+      "items": [
+        {
+          "name": "Canvas Tote",
+          "desc": "A flat-bottomed carry for the tools you need.",
+          "price": 1800,
+          "meta": "18 oz canvas",
+          "variants": [
+            {
+              "name": "Natural",
+              "price": 1800,
+              "selected": true,
+              "media": {
+                "id": "med_ffffffffffffffff",
+                "alt": "Canvas Tote in Natural",
+                "width": 900,
+                "height": 900
+              }
+            },
+            {
+              "name": "Black",
+              "price": 1900,
+              "available": false,
+              "media": {
+                "id": "med_eeeeeeeeeeeeeeee",
+                "alt": "Canvas Tote in Black",
+                "width": 900,
+                "height": 900
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

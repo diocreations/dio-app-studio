@@ -514,16 +514,29 @@ function sanitizeItemImage(value: unknown): MenuItem['image'] {
   }
 }
 
+/** Room capacity is persisted only when the catalogue record states it. A
+ *  figure in the trade's sample copy or a guess from the photograph is not
+ *  evidence that this room sleeps that many people. */
+function statedCapacity(value: unknown, meta: unknown, desc: unknown): number | undefined {
+  const direct = Number(value)
+  if (Number.isInteger(direct) && direct >= 1 && direct <= 20) return direct
+  const text = `${typeof meta === 'string' ? meta : ''} ${typeof desc === 'string' ? desc : ''}`
+  const sleeps = text.match(/\bsleeps(?:\s+up\s+to)?\s+(\d{1,2})\b/i)
+  const maximum = text.match(/\b(?:max(?:imum)?(?:\s+of)?|up\s+to)\s+(\d{1,2})\s+(?:guests?|people|persons?|adults?)\b/i)
+  const count = Number((sleeps ?? maximum)?.[1])
+  return Number.isInteger(count) && count >= 1 && count <= 20 ? count : undefined
+}
+
 function sanitizeOptionGroups(value: unknown): { name: string; options: string[] }[] {
   if (!Array.isArray(value)) return []
-  return value.slice(0, 8).flatMap((raw) => {
+  return value.slice(0, MAX_OPTION_GROUPS).flatMap((raw) => {
     const entry = (raw ?? {}) as Record<string, unknown>
     const name = typeof entry.name === 'string' ? entry.name.trim().slice(0, 24) : ''
     const options = Array.isArray(entry.options)
       ? entry.options
           .map((option) => String(option ?? '').trim().slice(0, 30))
           .filter(Boolean)
-          .slice(0, 20)
+          .slice(0, MAX_OPTIONS_PER_GROUP)
       : []
     return name && options.length ? [{ name, options }] : []
   })
@@ -556,6 +569,12 @@ function sanitizeItemMedia(value: unknown): MenuItem['media'] {
  *  the live shop this was built against had 706 products on one shelf. */
 const MAX_SECTIONS = 40
 const MAX_ITEMS_PER_SECTION = 2000
+/** A real option matrix is bounded; these caps stop a malformed payload from
+ *  turning into an unbounded response while leaving legitimate catalogues
+ *  (the 706-product shop included) untouched. */
+const MAX_OPTION_GROUPS = 8
+const MAX_OPTIONS_PER_GROUP = 20
+const MAX_VARIANTS_PER_ITEM = 200
 
 const MONEY_IN_COPY = /\$\s?\d/
 
@@ -607,6 +626,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               price?: unknown
               tag?: unknown
               meta?: unknown
+              capacity?: unknown
               vendor?: unknown
               sourceId?: unknown
               media?: unknown
@@ -631,6 +651,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
             const sourceId = /^[A-Za-z0-9_:/.-]{1,120}$/.test(rawSource) ? rawSource : undefined
             const optionGroups = sanitizeOptionGroups(entry.optionGroups)
             const variants = sanitizeVariants(entry.variants, optionGroups)
+            const capacity = statedCapacity(entry.capacity, entry.meta, entry.desc)
             return {
               id,
               ...(sourceId ? { sourceId } : {}),
@@ -639,6 +660,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               price,
               tag: String(entry.tag ?? '').trim().slice(0, 12) || undefined,
               meta: String(entry.meta ?? '').trim().slice(0, 30) || undefined,
+              ...(capacity ? { capacity } : {}),
               vendor: String(entry.vendor ?? '').trim().slice(0, 40) || undefined,
               ...(sanitizeItemMedia(entry.media) ? { media: sanitizeItemMedia(entry.media) } : {}),
               ...(sanitizeItemImage(entry.image) ? { image: sanitizeItemImage(entry.image) } : {}),
@@ -683,7 +705,7 @@ function sanitizeVariants(
   const selectedSeen = input.some(
     (entry) => entry && typeof entry === 'object' && (entry as Record<string, unknown>).selected === true,
   )
-  return input.slice(0, 200).flatMap((raw) => {
+  return input.slice(0, MAX_VARIANTS_PER_ITEM).flatMap((raw) => {
     const entry = (raw ?? {}) as Record<string, unknown>
     const name = typeof entry.name === 'string' ? entry.name.trim().slice(0, 40) : ''
     const price = Number(entry.price)

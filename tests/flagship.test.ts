@@ -10,7 +10,7 @@ import {
   normalizeDoc,
   updateSection,
 } from '../src/worker/doc'
-import { FLAGSHIP_TRADES } from '../src/worker/flagship'
+import { FLAGSHIP_TRADES, sectionImageSource } from '../src/worker/flagship'
 import app from '../src/worker/index'
 import { buildSpec } from '../src/worker/pricing'
 import type { VerticalId } from '../src/worker/types'
@@ -118,7 +118,10 @@ describe('flagship compositions', () => {
     expect(salon).toContain('data-book-name')
 
     const professional = renderFlagship('professional')
-    expect(professional).toMatch(/Book a consultation|Send an enquiry/)
+    // A practice's first step is a proposal; the intro-call screen stays
+    // available but is not advertised as already booked.
+    expect(professional).toContain('Request a proposal')
+    expect(professional).not.toContain('Book a consultation')
   })
 
   test('a saved document without flagship blocks keeps the document renderer', () => {
@@ -419,5 +422,20 @@ describe('flagship compositions', () => {
       expect(block, `${vertical} label`).toContain(`QA ${vertical} action`)
       expect(block, `${vertical} destination`).toContain('data-go="catalog"')
     }
+  })
+})
+
+describe('section photograph source', () => {
+  const node = (kind: string, variant?: string) => ({ kind, variant, media: undefined }) as never
+
+  test('edits section media only where the section renders it', () => {
+    expect(sectionImageSource(node('image'))).toBe('section')
+    expect(sectionImageSource(node('flagship', 'pro-intro'))).toBe('section')
+    expect(sectionImageSource(node('flagship', 'story'))).toBe('section')
+  })
+
+  test('sends product, room and service blocks to the catalogue', () => {
+    for (const variant of ['dine-feature', 'shop-products', 'salon-services', 'hotel-cover', 'hotel-rooms', 'ecom-products'])
+      expect(sectionImageSource(node('flagship', variant))).toBe('catalogue')
   })
 })

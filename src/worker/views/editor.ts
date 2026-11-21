@@ -1,6 +1,7 @@
 import type { Doc } from '../doc'
 import type { Project } from '../db'
 import { directionsFor } from '../directions'
+import { CATALOGUE_MEDIA_VARIANTS } from '../flagship'
 import { esc } from './shell'
 
 /*
@@ -479,6 +480,7 @@ const OFFERS = ${offersJson};
 const DIRECTIONS = ${directionsJson};
 const HAS_SAVED = ${project.doc ? 'true' : 'false'};
 const SECTION_LABELS = { hero:'Hero', featured:'Featured', offers:'Offers', loyalty:'Rewards', visit:'Visit', story:'Story', testimonials:'Testimonials', cta:'Call to action', heading:'Heading', text:'Text', button:'Button', image:'Image', banner:'Banner', productList:'Product list', search:'Search', form:'Contact form', gallery:'Gallery', flagship:'Feature block' };
+const CATALOGUE_MEDIA_VARIANTS = ${JSON.stringify(CATALOGUE_MEDIA_VARIANTS)};
 const VARIANT_LABELS = { 'dine-title':'Restaurant intro', 'dine-feature':'Featured dish', 'dine-actions':'Actions', 'dine-facts':'Visit details', 'dine-note':'Kitchen note', 'shop-search':'Search', 'shop-title':'Shop intro', 'shop-products':'Products', 'shop-all':'Browse link', 'salon-title':'Salon intro', 'salon-dates':'Date picker', 'salon-services':'Treatments', 'salon-staff':'Team', 'salon-action':'Book action', 'hotel-cover':'Stay cover', 'hotel-stay':'Stay card', 'hotel-rooms':'Rooms', 'hotel-facts':'Visit details', 'pro-title':'Practice intro', 'pro-intro':'Approach', 'pro-index':'Services index', 'pro-actions':'Consult action', 'pro-facts':'Visit details', 'cafe-hero':'Café intro', 'cafe-menu':'Counter menu', 'cafe-order':'Takeaway band', 'cafe-reserve':'Table reservation', 'gym-hero':'Gym intro', 'gym-plans':'Membership plans', 'gym-timetable':'Class timetable', 'gym-trainers':'Coach profiles', 'gym-join':'Membership enquiry', 'clinic-hero':'Clinic intro', 'clinic-specialities':'Specialities', 'clinic-doctors':'Doctor profiles', 'clinic-care':'Visit steps', 'clinic-privacy':'Privacy note', 'clinic-appointments':'Appointment card', 'property-hero':'Property intro', 'property-search':'Search and filters', 'property-listings':'Listings', 'property-viewing':'Viewing card', 'property-enquire':'Valuation enquiry', 'studio-hero':'Studio intro', 'studio-work':'Selected work', 'studio-services':'Services and prices', 'studio-team':'Studio team', 'studio-book':'Project enquiry', 'offers':'Offers' };
 const SCREEN_LABELS = { home:'Home', catalog:'Catalogue', search:'Search', saved:'Saved', detail:'Details', book:'Booking', quote:'Enquiry', more:'More', contact:'Contact', profile:'Profile', about:'About', custom:'Screen' };
 const SCREEN_ICONS = { home:'home', catalog:'catalog', search:'search', saved:'heart', detail:'chevron', book:'calendar', quote:'quote', more:'dots', contact:'phone', profile:'dots', about:'quote', custom:'dots' };
@@ -512,6 +514,12 @@ function esc(value) { return String(value ?? '').replace(/[&<>"']/g, (c) => ({'&
 function current() { return state.doc.screens.find((s) => s.id === state.screen) || state.doc.screens[0]; }
 function component() { return current().sections.find((s) => s.id === state.selected) || null; }
 function nodeLabel(node) { return node.title || VARIANT_LABELS[node.variant] || SECTION_LABELS[node.kind] || 'Component'; }
+/** Where this block's photograph actually comes from, matching the renderer. */
+function sectionPhotoSource(node) {
+  if (node.kind === 'image') return 'section';
+  if (node.kind !== 'flagship') return 'catalogue';
+  return node.variant === 'pro-intro' || !CATALOGUE_MEDIA_VARIANTS.includes(node.variant) ? 'section' : 'catalogue';
+}
 function appId(screen) { return ['contact','profile','about','custom'].includes(screen.kind) ? screen.id : screen.kind; }
 function historyPush(before) { state.history.push(before); if (state.history.length > 60) state.history.shift(); state.future = []; }
 function commit(mutate, reload) {
@@ -1136,7 +1144,11 @@ function renderInspector() {
           '<div class="field"><label>Component name</label><input id="pComponentName" type="text" maxlength="40" value="' + esc(nodeLabel(node)) + '" /></div>' +
           '<button class="btn" id="pComponentSave" style="width:100%">Save as reusable component</button>') +
     '</div>') +
-    (node.kind === 'image' || node.kind === 'flagship' ? '<div class="sec"><h3>Photograph</h3>' + mediaInspector(node) + '</div>' : '') +
+    (node.kind === 'image' || (node.kind === 'flagship' && sectionPhotoSource(node) === 'section')
+      ? '<div class="sec"><h3>Photograph</h3>' + mediaInspector(node) + '</div>'
+      : node.kind === 'flagship'
+        ? '<div class="sec"><h3>Photograph</h3><p class="hint">This block shows the photographs attached to its catalogue items. Change them in the catalogue, where the product, room or service identity is kept.</p><button class="btn" id="pCataloguePhotos" style="width:100%">Open catalogue photos</button></div>'
+        : '') +
     '<div class="sec"><h3>Design</h3>' +
       '<div class="field"><label>Alignment</label><div class="seg"><button data-align="left" class="' + (style.align !== 'center' ? 'on' : '') + '">Left</button><button data-align="center" class="' + (style.align === 'center' ? 'on' : '') + '">Centred</button></div></div>' +
       '<div class="field"><label>Background</label><div class="swatches">' +
@@ -1168,7 +1180,7 @@ function renderScreenInspector() {
           }).join('') + '</select></div>'
         : '<p class="hint">This is a built-in app screen; its role is fixed. Rename it or change its navigation here.</p>') +
       '<div class="field"><label>Navigation icon</label><select id="sIcon">' + NAV_ICONS.filter(([value]) => value !== 'none').map(([value, label]) => '<option value="' + value + '"' + (screen.icon === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
-      '<div class="checks"><label><input type="checkbox" id="sNav" ' + (screen.nav ? 'checked' : '') + (screen.kind === 'detail' ? ' disabled' : '') + '/> Show in bottom navigation</label>' +
+      '<div class="checks"><label><input type="checkbox" id="sNav" ' + (screen.nav ? 'checked' : '') + (screen.kind === 'detail' || (!screen.nav && state.doc.screens.filter((entry) => entry.nav && !entry.hidden && entry.kind !== 'detail').length >= 5) ? ' disabled' : '') + '/> Show in bottom navigation</label>' +
       '<label><input type="checkbox" id="sInitial" ' + (state.doc.initialScreen === screen.id ? 'checked' : '') + '/> Open the app on this screen</label>' +
       '<label><input type="checkbox" id="sHidden" ' + (screen.hidden ? 'checked' : '') + (!linked || state.doc.initialScreen === screen.id ? ' disabled' : '') + '/> Hide this screen</label></div>' +
       '<p class="hint">Up to five navigation items fit, in screen order. A hidden screen stays saved and editable; it is just not shown.</p>' +
@@ -1212,6 +1224,8 @@ function bindInspector(node) {
   $('pText').addEventListener('input', (event) => commit((doc) => patchNode(doc, node.id, { text: event.target.value }), true));
   const pick = $('pPick');
   if (pick) pick.addEventListener('click', () => openMedia(node.id));
+  const catalogPhotos = $('pCataloguePhotos');
+  if (catalogPhotos) catalogPhotos.addEventListener('click', openCatalog);
   const alt = $('pAlt');
   if (alt) alt.addEventListener('change', () => patchMedia(node.id, { alt: alt.value.trim().slice(0, 120) }));
   const fit = $('pFit');
@@ -1678,7 +1692,11 @@ function addScreen(kind) {
       used.add(sectionId);
       return Object.assign({}, section, { id: sectionId });
     });
-    doc.screens.push({ id, kind, name: kind === 'custom' ? 'New screen' : kind[0].toUpperCase() + kind.slice(1), icon: kind === 'contact' ? 'phone' : 'dots', nav: kind !== 'custom', hidden: false, sections });
+    // The app's bottom bar holds five visible screens. A sixth would be marked
+    // as navigation and then silently dropped by the renderer, so it is added
+    // off the bar and the owner chooses which tab to replace.
+    const onBar = doc.screens.filter((entry) => entry.nav && !entry.hidden && entry.kind !== 'detail').length;
+    doc.screens.push({ id, kind, name: kind === 'custom' ? 'New screen' : kind[0].toUpperCase() + kind.slice(1), icon: kind === 'contact' ? 'phone' : 'dots', nav: kind !== 'custom' && onBar < 5, hidden: false, sections });
     state.screen = id; state.selected = null;
     return doc;
   }, true);

@@ -262,14 +262,34 @@ export async function visitorBucket(ip: string | undefined): Promise<string> {
 }
 
 // Uploads stream to their own route with a larger ceiling; every other API
-// keeps the tight JSON limit.
+// keeps the tight JSON limit. Creating a build is the one JSON route that
+// carries a saved catalogue: the Present & Correct run recorded 706 products,
+// roughly 335 KB of JSON, and the 256 KB limit refused the whole build with a
+// 413. A catalogue gets a ceiling that fits a real shop; the route is still
+// rate-limited and every field is still sanitized.
+const CATALOGUE_BODY = 4 * 1024 * 1024
 app.use('/api/*', async (c, next) => {
   if (/\/media$/.test(c.req.path)) return next()
+  // A saved catalogue travels in the creation request and in the editor's
+  // catalogue save. The Present & Correct run recorded 706 products, roughly
+  // 335 KB of JSON, and the 256 KB limit refused it with a 413.
+  // Only the two catalogue writers (the editor and the owner dashboard) get
+  // the larger ceiling. Every other API route keeps 256 KB.
+  const catalogue =
+    (c.req.method === 'POST' && c.req.path === '/api/projects') ||
+    (c.req.method === 'PUT' && /(?:^|\/)catalog$/.test(c.req.path))
   return bodyLimit({
-    maxSize: 256 * 1024,
+    maxSize: catalogue ? CATALOGUE_BODY : 256 * 1024,
     onError: (c) =>
       c.json(
-        { error: { code: 'body_too_large', message: 'That payload is too large.' } },
+        {
+          error: {
+            code: 'body_too_large',
+            message: catalogue
+              ? 'That catalogue is too large to build in one request.'
+              : 'That payload is too large.',
+          },
+        },
         413,
       ),
   })(c, next)
@@ -1620,7 +1640,20 @@ app.post(
     try {
       const booking = await createBooking(c.env.DB, project, body)
       c.header('Cache-Control', 'private, no-store')
-      return c.json({ booking: { id: booking.id, number: booking.number, status: booking.status, date: booking.date, slot: booking.slot } }, 201)
+      return c.json({
+        booking: {
+          id: booking.id,
+          number: booking.number,
+          status: booking.status,
+          date: booking.date,
+          checkOut: booking.checkOut,
+          nights: booking.nights,
+          total: booking.total,
+          slot: booking.slot,
+          party: booking.party,
+          service: booking.service,
+        },
+      }, 201)
     } catch (error) {
       return businessFailure(c, error)
     }
@@ -1633,7 +1666,20 @@ app.get('/p/:token/bookings/:bookingId', async (c) => {
   const booking = await getBooking(c.env.DB, project.id, c.req.param('bookingId'))
   if (!booking) return c.json({ error: { code: 'not_found', message: 'That booking could not be found.' } }, 404)
   c.header('Cache-Control', 'private, no-store')
-  return c.json({ booking: { id: booking.id, number: booking.number, status: booking.status, date: booking.date, slot: booking.slot, party: booking.party, service: booking.service } })
+  return c.json({
+    booking: {
+      id: booking.id,
+      number: booking.number,
+      status: booking.status,
+      date: booking.date,
+      checkOut: booking.checkOut,
+      nights: booking.nights,
+      total: booking.total,
+      slot: booking.slot,
+      party: booking.party,
+      service: booking.service,
+    },
+  })
 })
 
 app.post(

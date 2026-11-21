@@ -1,0 +1,297 @@
+{
+  "generatedAt": "2026-11-21T11:45:58.639Z",
+  "report": [
+    {
+      "trade": "shop",
+      "direction": "editorial",
+      "token": "47e68871f1b8aaa0f6a5fb32",
+      "checks": {
+        "log": [
+          "PASS element edit autosaves",
+          "PASS edit reaches the customer app",
+          "PASS undo restores the original words",
+          "PASS redo reapplies the edit",
+          "PASS component can be added",
+          "PASS undo removes the added component",
+          "PASS hide persists",
+          "PASS hidden component leaves the customer app",
+          "PASS undo unhides",
+          "PASS screen can be added",
+          "PASS new screen never exceeds the five-tab bar — scr_contact nav=true",
+          "PASS screen can be deleted",
+          "PASS screen can be duplicated",
+          "PASS duplicated screen can be removed",
+          "PASS navigation can be changed",
+          "PASS undo restores the tab"
+        ],
+        "pass": 16,
+        "fail": 0,
+        "edited": "Office sundries for the modern workspace. · ED"
+      },
+      "checksError": null,
+      "reload": {
+        "nodes": 5,
+        "saved": "Saved"
+      },
+      "reloadError": null,
+      "catalogue": {
+        "log": [
+          "PASS catalogue price edit reaches the app — 7.50 -> 12.34",
+          "PASS variant price edit reaches the app — 3.00 -> 19.99",
+          "PASS sold-out option reaches the app"
+        ],
+        "pass": 3,
+        "fail": 0
+      },
+      "catalogueError": null,
+      "image": {
+        "kind": "image",
+        "before": null,
+        "after": "med_5a0f81fbe8054db7dcde8fc9",
+        "preview": true,
+        "app": true,
+        "undo": true
+      },
+      "sectionMedia": {
+        "catalogue": {
+          "variant": "shop-products",
+          "hasSectionPicker": false,
+          "hasCatalogueHint": true,
+          "hintText": "PHOTOGRAPH\n\nThi  block  how  the photograph  attached to it  catalogue item . Change them in the catalogue, where the product, room or  ervice identity i  kept.\n\nOpen catalogue photo",
+          "openedCatalogue": true
+        },
+        "own": {
+          "kind": "image",
+          "hasSectionPicker": true
+        }
+      },
+      "sectionMediaError": null
+    },
+    {
+      "trade": "restaurant",
+      "direction": "luxe",
+      "token": "90dd9e80f2d5b9f9ebed0a9f",
+      "checks": {
+        "log": [
+          "PASS element edit autosaves",
+          "PASS edit reaches the customer app",
+          "PASS undo restores the original words",
+          "PASS redo reapplies the edit",
+          "PASS component can be added",
+          "PASS undo removes the added component",
+          "PASS hide persists",
+          "PASS hidden component leaves the customer app",
+          "PASS undo unhides",
+          "PASS screen can be added",
+          "PASS new screen never exceeds the five-tab bar — scr_contact nav=false",
+          "PASS screen can be deleted",
+          "PASS screen can be duplicated",
+          "PASS duplicated screen can be removed",
+          "PASS navigation can be changed",
+          "PASS undo restores the tab"
+        ],
+        "pass": 16,
+        "fail": 0,
+        "edited": "Restaurant · ED"
+      },
+      "checksError": null,
+      "reload": {
+        "nodes": 5,
+        "saved": "Saved"
+      },
+      "reloadError": null,
+      "catalogue": {
+        "log": [
+          "PASS catalogue price edit reaches the app — 12.00 -> 12.34",
+          "SKIP variants — this saved catalogue has no option variants"
+        ],
+        "pass": 1,
+        "fail": 0
+      },
+      "catalogueError": null,
+      "image": null,
+      "sectionMedia": {
+        "catalogue": {
+          "variant": "dine-feature",
+          "hasSectionPicker": false,
+          "hasCatalogueHint": true,
+          "hintText": "PHOTOGRAPH\n\nThi  block  how  the photograph  attached to it  catalogue item . Change them in the catalogue, where the product, room or  ervice identity i  kept.\n\nOpen catalogue photo",
+          "openedCatalogue": true
+        },
+        "own": {
+          "kind": "image",
+          "hasSectionPicker": true
+        }
+      },
+      "sectionMediaError": null
+    },
+    {
+      "trade": "hotel",
+      "direction": "luxe",
+      "token": "9bf061b69dec2314d1fb3223",
+      "checks": {
+        "log": [
+          "PASS element edit autosaves",
+          "PASS edit reaches the customer app",
+          "PASS undo restores the original words",
+          "PASS redo reapplies the edit",
+          "PASS component can be added",
+          "PASS undo removes the added component",
+          "PASS hide persists",
+          "PASS hidden component leaves the customer app",
+          "PASS undo unhides",
+          "PASS screen can be added",
+          "PASS new screen never exceeds the five-tab bar — scr_contact nav=false",
+          "PASS screen can be deleted",
+          "PASS screen can be duplicated",
+          "PASS duplicated screen can be removed",
+          "PASS navigation can be changed",
+          "PASS undo restores the tab"
+        ],
+        "pass": 16,
+        "fail": 0,
+        "edited": "Rooms · ED"
+      },
+      "checksError": null,
+      "reload": {
+        "nodes": 6,
+        "saved": "Saved"
+      },
+      "reloadError": null,
+      "catalogue": {
+        "log": [
+          "PASS catalogue price edit reaches the app — 180.00 -> 12.34",
+          "SKIP variants — this saved catalogue has no option variants"
+        ],
+        "pass": 1,
+        "fail": 0
+      },
+      "catalogueError": null,
+      "image": null,
+      "sectionMedia": {
+        "catalogue": {
+          "variant": "hotel-cover",
+          "hasSectionPicker": false,
+          "hasCatalogueHint": true,
+          "hintText": "PHOTOGRAPH\n\nThi  block  how  the photograph  attached to it  catalogue item . Change them in the catalogue, where the product, room or  ervice identity i  kept.\n\nOpen catalogue photo",
+          "openedCatalogue": true
+        },
+        "own": {
+          "kind": "image",
+          "hasSectionPicker": true
+        }
+      },
+      "sectionMediaError": null
+    },
+    {
+      "trade": "salon",
+      "direction": "luxe",
+      "token": "58a7f58344d5ed8740b7b309",
+      "checks": {
+        "log": [
+          "PASS element edit autosaves",
+          "PASS edit reaches the customer app",
+          "PASS undo restores the original words",
+          "PASS redo reapplies the edit",
+          "PASS component can be added",
+          "PASS undo removes the added component",
+          "PASS hide persists",
+          "PASS hidden component leaves the customer app",
+          "PASS undo unhides",
+          "PASS screen can be added",
+          "PASS new screen never exceeds the five-tab bar — scr_contact nav=false",
+          "PASS screen can be deleted",
+          "PASS screen can be duplicated",
+          "PASS duplicated screen can be removed",
+          "PASS navigation can be changed",
+          "PASS undo restores the tab"
+        ],
+        "pass": 16,
+        "fail": 0,
+        "edited": "Time that belongs to you. · ED"
+      },
+      "checksError": null,
+      "reload": {
+        "nodes": 7,
+        "saved": "Saved"
+      },
+      "reloadError": null,
+      "catalogue": {
+        "log": [
+          "PASS catalogue price edit reaches the app — 55.00 -> 12.34",
+          "SKIP variants — this saved catalogue has no option variants"
+        ],
+        "pass": 1,
+        "fail": 0
+      },
+      "catalogueError": null,
+      "image": null,
+      "sectionMedia": {
+        "catalogue": {
+          "variant": "salon-services",
+          "hasSectionPicker": false,
+          "hasCatalogueHint": true,
+          "hintText": "PHOTOGRAPH\n\nThi  block  how  the photograph  attached to it  catalogue item . Change them in the catalogue, where the product, room or  ervice identity i  kept.\n\nOpen catalogue photo",
+          "openedCatalogue": true
+        },
+        "own": {
+          "kind": "image",
+          "hasSectionPicker": true
+        }
+      },
+      "sectionMediaError": null
+    },
+    {
+      "trade": "professional",
+      "direction": "classic",
+      "token": "2d01b7c730e3e4cef94f17ac",
+      "checks": {
+        "log": [
+          "PASS element edit autosaves",
+          "PASS edit reaches the customer app",
+          "PASS undo restores the original words",
+          "PASS redo reapplies the edit",
+          "PASS component can be added",
+          "PASS undo removes the added component",
+          "PASS hide persists",
+          "PASS hidden component leaves the customer app",
+          "PASS undo unhides",
+          "PASS screen can be added",
+          "PASS new screen never exceeds the five-tab bar — scr_contact nav=false",
+          "PASS screen can be deleted",
+          "PASS screen can be duplicated",
+          "PASS duplicated screen can be removed",
+          "PASS navigation can be changed",
+          "PASS undo restores the tab"
+        ],
+        "pass": 16,
+        "fail": 0,
+        "edited": "Professional services · ED"
+      },
+      "checksError": null,
+      "reload": {
+        "nodes": 7,
+        "saved": "Saved"
+      },
+      "reloadError": null,
+      "catalogue": {
+        "log": [
+          "PASS catalogue price edit reaches the app — 950.00 -> 12.34",
+          "SKIP variants — this saved catalogue has no option variants"
+        ],
+        "pass": 1,
+        "fail": 0
+      },
+      "catalogueError": null,
+      "image": null,
+      "sectionMedia": {
+        "catalogue": null,
+        "own": {
+          "kind": "image",
+          "hasSectionPicker": true
+        }
+      },
+      "sectionMediaError": null
+    }
+  ]
+}

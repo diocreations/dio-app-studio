@@ -1,0 +1,296 @@
+{
+ "generatedAt": "2026-11-21T11:42:23.289Z",
+ "retail": [
+  {
+   "direction": "minimal",
+   "token": "9ebeaa1f6feb4c827807d4e6",
+   "checks": [
+    {
+     "name": "shirt found",
+     "pass": true,
+     "detail": "results=1"
+    },
+    {
+     "name": "size and colour groups render",
+     "pass": true,
+     "detail": "Size,Size,Size,Colour,Colour,Colour"
+    },
+    {
+     "name": "all declared options render",
+     "pass": true,
+     "detail": "S,M,L,Ink,Bone,Clay"
+    },
+    {
+     "name": "sold-out option is disabled",
+     "pass": true
+    },
+    {
+     "name": "initial combination price",
+     "pass": true,
+     "detail": "£42"
+    },
+    {
+     "name": "variant photo changes with the colour",
+     "pass": true,
+     "detail": "/p/9ebeaa1f6feb4c827807d4e6/media/med_a9e2130952754cb989fb202a/640.webp -> /p/9ebeaa1f6feb4c827807d4e6/media/med_461be8ceba745a3389fb202a/640.webp"
+    },
+    {
+     "name": "variant combination price changes",
+     "pass": true,
+     "detail": "£42 -> £44"
+    },
+    {
+     "name": "each combination keeps its own price",
+     "pass": true,
+     "detail": "£46"
+    },
+    {
+     "name": "structured combination reaches the cart",
+     "pass": true,
+     "detail": "Field Shirt — L / Bone | £46 | − | 1 / Subtotal\n£46\nTotal\n£46"
+    },
+    {
+     "name": "the second option matrix renders",
+     "pass": true,
+     "detail": "Waist,Colour"
+    },
+    {
+     "name": "missing combination is not priced",
+     "pass": true
+    },
+    {
+     "name": "missing combination cannot be added",
+     "pass": true,
+     "detail": "{\"disabled\":true,\"visible\":{}}"
+    },
+    {
+     "name": "legacy flat variants render",
+     "pass": true,
+     "detail": "[{\"label\":\"Natural\\n£18\",\"disabled\":false,\"pressed\":\"true\"},{\"label\":\"Black\\nUnavailable\",\"disabled\":true,\"pressed\":\"false\"}]"
+    },
+    {
+     "name": "sold-out flat variant is disabled",
+     "pass": true
+    },
+    {
+     "name": "legacy flat price stays real",
+     "pass": true,
+     "detail": "£18"
+    }
+   ]
+  },
+  {
+   "direction": "editorial",
+   "token": "b2f9f7c3204aa9e1222bb028",
+   "checks": [
+    {
+     "name": "shirt found",
+     "pass": true,
+     "detail": "results=1"
+    },
+    {
+     "name": "size and colour groups render",
+     "pass": true,
+     "detail": "Size,Size,Size,Colour,Colour,Colour"
+    },
+    {
+     "name": "all declared options render",
+     "pass": true,
+     "detail": "S,M,L,Ink,Bone,Clay"
+    },
+    {
+     "name": "sold-out option is disabled",
+     "pass": true
+    },
+    {
+     "name": "initial combination price",
+     "pass": true,
+     "detail": "£42"
+    },
+    {
+     "name": "variant photo changes with the colour",
+     "pass": true,
+     "detail": "/p/b2f9f7c3204aa9e1222bb028/media/med_a9e2130952754cb911cf11be/640.webp -> /p/b2f9f7c3204aa9e1222bb028/media/med_461be8ceba745a3311cf11be/640.webp"
+    },
+    {
+     "name": "variant combination price changes",
+     "pass": true,
+     "detail": "£42 -> £44"
+    },
+    {
+     "name": "each combination keeps its own price",
+     "pass": true,
+     "detail": "£46"
+    },
+    {
+     "name": "structured combination reaches the cart",
+     "pass": true,
+     "detail": "Field Shirt — L / Bone | £46 | − | 1 / Subtotal\n£46\nTotal\n£46"
+    },
+    {
+     "name": "the second option matrix renders",
+     "pass": true,
+     "detail": "Waist,Colour"
+    },
+    {
+     "name": "missing combination is not priced",
+     "pass": true
+    },
+    {
+     "name": "missing combination cannot be added",
+     "pass": true,
+     "detail": "{\"disabled\":true,\"visible\":{}}"
+    },
+    {
+     "name": "legacy flat variants render",
+     "pass": true,
+     "detail": "[{\"label\":\"Natural\\n£18\",\"disabled\":false,\"pressed\":\"true\"},{\"label\":\"Black\\nUnavailable\",\"disabled\":true,\"pressed\":\"false\"}]"
+    },
+    {
+     "name": "sold-out flat variant is disabled",
+     "pass": true
+    },
+    {
+     "name": "legacy flat price stays real",
+     "pass": true,
+     "detail": "£18"
+    }
+   ]
+  },
+  {
+   "direction": "lifestyle",
+   "token": "cb949e0c34daa7f1ed9f04a1",
+   "checks": [
+    {
+     "name": "shirt found",
+     "pass": true,
+     "detail": "results=1"
+    },
+    {
+     "name": "size and colour groups render",
+     "pass": true,
+     "detail": "Size,Size,Size,Colour,Colour,Colour"
+    },
+    {
+     "name": "all declared options render",
+     "pass": true,
+     "detail": "S,M,L,Ink,Bone,Clay"
+    },
+    {
+     "name": "sold-out option is disabled",
+     "pass": true
+    },
+    {
+     "name": "initial combination price",
+     "pass": true,
+     "detail": "£42"
+    },
+    {
+     "name": "variant photo changes with the colour",
+     "pass": true,
+     "detail": "/p/cb949e0c34daa7f1ed9f04a1/media/med_a9e2130952754cb942075843/640.webp -> /p/cb949e0c34daa7f1ed9f04a1/media/med_461be8ceba745a3342075843/640.webp"
+    },
+    {
+     "name": "variant combination price changes",
+     "pass": true,
+     "detail": "£42 -> £44"
+    },
+    {
+     "name": "each combination keeps its own price",
+     "pass": true,
+     "detail": "£46"
+    },
+    {
+     "name": "structured combination reaches the cart",
+     "pass": true,
+     "detail": "Field Shirt — L / Bone | £46 | − | 1 / Subtotal\n£46\nTotal\n£46"
+    },
+    {
+     "name": "the second option matrix renders",
+     "pass": true,
+     "detail": "Waist,Colour"
+    },
+    {
+     "name": "missing combination is not priced",
+     "pass": true
+    },
+    {
+     "name": "missing combination cannot be added",
+     "pass": true,
+     "detail": "{\"disabled\":true,\"visible\":{}}"
+    },
+    {
+     "name": "legacy flat variants render",
+     "pass": true,
+     "detail": "[{\"label\":\"Natural\\n£18\",\"disabled\":false,\"pressed\":\"true\"},{\"label\":\"Black\\nUnavailable\",\"disabled\":true,\"pressed\":\"false\"}]"
+    },
+    {
+     "name": "sold-out flat variant is disabled",
+     "pass": true
+    },
+    {
+     "name": "legacy flat price stays real",
+     "pass": true,
+     "detail": "£18"
+    }
+   ]
+  }
+ ],
+ "hotel": {
+  "token": "5a44208970c93ce1d6c7aded",
+  "checks": [
+   {
+    "name": "room detail opens",
+    "pass": true
+   },
+   {
+    "name": "booking form discloses the availability limit",
+    "pass": true,
+    "detail": "GUESTS 2 CHECK IN CHECK OUT 2 nights · £360 No live availability is shown. This sends a request; the business confirms the room is free. SERVICE Cabin Loft YOUR NAME PHONE OR EMAIL"
+   },
+   {
+    "name": "room party starts at two",
+    "pass": true,
+    "detail": "2"
+   },
+   {
+    "name": "party above the stated capacity is refused",
+    "pass": true,
+    "detail": "That room sleeps 2. Choose fewer guests or another room."
+   },
+   {
+    "name": "refused party writes no booking",
+    "pass": true,
+    "detail": "0"
+   },
+   {
+    "name": "booking is described as a request",
+    "pass": true,
+    "detail": "✓ Request sent 2026-11-23 → 2026-11-25 · 2 nights · 2 guests · £360 This is a request, not a confirmed reservation. The business will confirm it. You can check "
+   },
+   {
+    "name": "accepted booking is recorded once",
+    "pass": true,
+    "detail": "1"
+   },
+   {
+    "name": "dashboard records the request",
+    "pass": true,
+    "detail": "1"
+   },
+   {
+    "name": "stay total uses server nights",
+    "pass": true,
+    "detail": "✓\nRequest sent\n\n2026-11-23 → 2026-11-25 · 2 nights · 2 guests · £360\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone"
+   },
+   {
+    "name": "no availability promise is made",
+    "pass": true,
+    "detail": "✓\nRequest sent\n\n2026-11-23 → 2026-11-25 · 2 nights · 2 guests · £360\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone"
+   }
+  ]
+ },
+ "failures": [],
+ "consoleErrors": [],
+ "networkFailures": []
+}

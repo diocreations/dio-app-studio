@@ -208,6 +208,9 @@ const SCHEMA = [
     number TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'requested',
     date TEXT NOT NULL,
+    check_out TEXT NOT NULL DEFAULT '',
+    nights INTEGER NOT NULL DEFAULT 0,
+    total INTEGER NOT NULL DEFAULT 0,
     slot TEXT NOT NULL DEFAULT '',
     party INTEGER NOT NULL DEFAULT 1,
     service TEXT NOT NULL DEFAULT '',
@@ -357,6 +360,11 @@ const MIGRATIONS = [
   `ALTER TABLE order_items ADD COLUMN variant_id TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE bookings ADD COLUMN payment_status TEXT NOT NULL DEFAULT 'unpaid'`,
   `ALTER TABLE bookings ADD COLUMN paid_amount INTEGER NOT NULL DEFAULT 0`,
+  // A hotel stay is a range, not a moment. Nights and the room total are
+  // derived on the server from the two dates and the saved room rate.
+  `ALTER TABLE bookings ADD COLUMN check_out TEXT NOT NULL DEFAULT ''`,
+  `ALTER TABLE bookings ADD COLUMN nights INTEGER NOT NULL DEFAULT 0`,
+  `ALTER TABLE bookings ADD COLUMN total INTEGER NOT NULL DEFAULT 0`,
   // A checkout names the attempt it came from, so a retried send finds the
   // order it already made instead of charging the customer twice.
   `ALTER TABLE orders ADD COLUMN client_ref TEXT NOT NULL DEFAULT ''`,
