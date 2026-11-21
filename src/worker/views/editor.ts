@@ -363,6 +363,11 @@ button { cursor: pointer; }
       <div class="tiles" id="screenLibrary" style="margin-top:8px"></div>
     </div>
     <div class="sec">
+      <h3>Reusable components</h3>
+      <div class="list" id="componentLibrary"></div>
+      <p class="hint">Switch screen, then insert a saved section. Linked copies keep the same product, photo and action references.</p>
+    </div>
+    <div class="sec">
       <h3>Elements</h3>
       <div class="list" id="elements"></div>
       <p class="hint">Click any text, photo, button or container in the preview. Nested elements can be selected here.</p>
@@ -372,9 +377,9 @@ button { cursor: pointer; }
       <div class="tiles" id="library"></div>
     </div>
     <div class="sec">
-      <h3>This screen</h3>
+      <h3>Layers on this screen</h3>
       <div class="list" id="structure"></div>
-      <p class="hint">Drag to reorder. Select a component to edit it.</p>
+      <p class="hint">Drag to reorder, or use Properties to move the selected component up or down.</p>
     </div>
   </aside>
   <main class="stage">
@@ -476,6 +481,7 @@ const HAS_SAVED = ${project.doc ? 'true' : 'false'};
 const SECTION_LABELS = { hero:'Hero', featured:'Featured', offers:'Offers', loyalty:'Rewards', visit:'Visit', story:'Story', testimonials:'Testimonials', cta:'Call to action', heading:'Heading', text:'Text', button:'Button', image:'Image', banner:'Banner', productList:'Product list', search:'Search', form:'Contact form', gallery:'Gallery', flagship:'Feature block' };
 const VARIANT_LABELS = { 'dine-title':'Restaurant intro', 'dine-feature':'Featured dish', 'dine-actions':'Actions', 'dine-facts':'Visit details', 'dine-note':'Kitchen note', 'shop-search':'Search', 'shop-title':'Shop intro', 'shop-products':'Products', 'shop-all':'Browse link', 'salon-title':'Salon intro', 'salon-dates':'Date picker', 'salon-services':'Treatments', 'salon-staff':'Team', 'salon-action':'Book action', 'hotel-cover':'Stay cover', 'hotel-stay':'Stay card', 'hotel-rooms':'Rooms', 'hotel-facts':'Visit details', 'pro-title':'Practice intro', 'pro-intro':'Approach', 'pro-index':'Services index', 'pro-actions':'Consult action', 'pro-facts':'Visit details', 'cafe-hero':'Café intro', 'cafe-menu':'Counter menu', 'cafe-order':'Takeaway band', 'cafe-reserve':'Table reservation', 'gym-hero':'Gym intro', 'gym-plans':'Membership plans', 'gym-timetable':'Class timetable', 'gym-trainers':'Coach profiles', 'gym-join':'Membership enquiry', 'clinic-hero':'Clinic intro', 'clinic-specialities':'Specialities', 'clinic-doctors':'Doctor profiles', 'clinic-care':'Visit steps', 'clinic-privacy':'Privacy note', 'clinic-appointments':'Appointment card', 'property-hero':'Property intro', 'property-search':'Search and filters', 'property-listings':'Listings', 'property-viewing':'Viewing card', 'property-enquire':'Valuation enquiry', 'studio-hero':'Studio intro', 'studio-work':'Selected work', 'studio-services':'Services and prices', 'studio-team':'Studio team', 'studio-book':'Project enquiry', 'offers':'Offers' };
 const SCREEN_LABELS = { home:'Home', catalog:'Catalogue', search:'Search', saved:'Saved', detail:'Details', book:'Booking', quote:'Enquiry', more:'More', contact:'Contact', profile:'Profile', about:'About', custom:'Screen' };
+const SCREEN_ICONS = { home:'home', catalog:'catalog', search:'search', saved:'heart', detail:'chevron', book:'calendar', quote:'quote', more:'dots', contact:'phone', profile:'dots', about:'quote', custom:'dots' };
 const COMPONENTS = ['heading','text','button','image','banner','gallery','productList','search','form','testimonials','cta','offers','loyalty','visit','story','featured'];
 const SINGLE = ['hero','featured','offers','loyalty','visit','story','testimonials','cta','search','form','productList'];
 const SCREENS = [['contact','Contact','Address, hours and a message'],['about','About','Your story and a photo'],['profile','Profile','Account and shortcuts'],['custom','Blank','A new screen']];
@@ -575,7 +581,7 @@ function reloadFrame() {
     });
   }, 240);
 }
-function render() { renderScreens(); renderScreenLibrary(); renderLibrary(); renderStructure(); renderElements(); renderInspector(); renderQuick(); renderToolbar(); }
+function render() { renderScreens(); renderScreenLibrary(); renderComponentLibrary(); renderLibrary(); renderStructure(); renderElements(); renderInspector(); renderQuick(); renderToolbar(); }
 let quickShown = null;
 const CATALOG_VARIANTS = ['shop-products', 'salon-services', 'hotel-rooms', 'pro-index', 'cafe-menu', 'gym-plans', 'clinic-specialities', 'property-listings', 'studio-services', 'offers'];
 function renderQuick() {
@@ -605,7 +611,7 @@ function renderToolbar() { $('undo').disabled = !state.history.length; $('redo')
 function renderScreens() {
   $('screens').innerHTML = state.doc.screens.map((s) => '<div class="node' + (state.screen === s.id ? ' on' : '') + (s.hidden ? ' off' : '') + '" draggable="true" data-screen="' + s.id + '">' +
     '<span class="grip">⠿</span>' +
-    '<button class="name" data-open="' + s.id + '">' + esc(s.name) + '<small>' + SCREEN_LABELS[s.kind] + (s.nav ? ' · in nav' : '') + '</small></button>' +
+    '<button class="name" data-open="' + s.id + '">' + esc(s.name) + '<small>' + SCREEN_LABELS[s.kind] + (s.nav ? ' · in nav' : '') + (s.hidden ? ' · hidden' : '') + '</small></button>' +
     (state.doc.initialScreen === s.id ? '<span class="init" title="Initial screen">★</span>' : '') +
     (s.kind === 'home' ? '' : '<button class="act" data-screen-delete="' + s.id + '" title="Delete screen">✕</button>') +
     '</div>').join('');
@@ -636,6 +642,16 @@ function renderScreenLibrary() {
     return '<button class="tile-add" data-add-screen="' + kind + '"' + (present ? ' disabled' : '') + '><b>' + label + '</b><span>' + hint + '</span></button>';
   }).join('');
 }
+function libraryEntry(id) { return (state.doc.library || []).find((entry) => entry.id === id) || null; }
+function componentUseCount(id) { return state.doc.screens.reduce((total, screen) => total + screen.sections.filter((section) => section.componentId === id).length, 0); }
+function renderComponentLibrary() {
+  const entries = state.doc.library || [];
+  $('componentLibrary').innerHTML = entries.length ? entries.map((entry) =>
+    '<div class="node"><button class="name" data-insert-component="' + esc(entry.id) + '" title="Insert on this screen">' + esc(entry.name) +
+    '<small>' + SECTION_LABELS[entry.section.kind] + ' · ' + componentUseCount(entry.id) + ' linked</small></button>' +
+    '<button class="act" data-insert-component="' + esc(entry.id) + '" title="Insert on this screen">＋</button></div>'
+  ).join('') : '<p class="empty">No saved components yet. Select a section and save it from Properties.</p>';
+}
 function renderLibrary() {
   $('library').innerHTML = (state.clipboard ? '<button class="btn" data-paste-component="1" style="grid-column:1/-1">Paste ' + esc(nodeLabel(state.clipboard)) + '</button>' : '') + COMPONENTS.map((kind) => {
     const present = SINGLE.includes(kind) && current().sections.some((s) => s.kind === kind);
@@ -645,7 +661,7 @@ function renderLibrary() {
 function renderStructure() {
   $('structure').innerHTML = current().sections.map((s) => '<div class="node' + (state.selected === s.id ? ' on' : '') + (s.hidden ? ' off' : '') + '" draggable="true" data-node="' + s.id + '"' + (s.hidden && s.hiddenBecause === 'empty' ? ' title="Hidden automatically: nothing to show yet"' : '') + '>' +
     '<span class="grip">⠿</span>' +
-    '<button class="name" data-select="' + s.id + '">' + esc(nodeLabel(s)) + '<small>' + (VARIANT_LABELS[s.variant] || SECTION_LABELS[s.kind]) + (s.hidden && s.hiddenBecause === 'empty' ? ' · auto-hidden' : '') + '</small></button>' +
+    '<button class="name" data-select="' + s.id + '">' + esc(nodeLabel(s)) + '<small>' + (VARIANT_LABELS[s.variant] || SECTION_LABELS[s.kind]) + (s.componentId ? ' · linked' : '') + (s.hidden && s.hiddenBecause === 'empty' ? ' · auto-hidden' : '') + '</small></button>' +
     '<button class="act" data-hide="' + s.id + '" title="' + (s.hidden ? 'Show' : 'Hide') + '">' + (s.hidden ? '◌' : '◉') + '</button>' +
     '<button class="act" data-copy-component="' + s.id + '" title="Copy">⧉</button>' +
     '<button class="act" data-duplicate="' + s.id + '" title="Duplicate">＋</button>' +
@@ -874,10 +890,113 @@ function remapSectionElements(doc, fromId, toId) {
   });
   doc.elements = Object.assign({}, doc.elements, copied);
 }
-function uniqueSectionId(screen, base) {
+function uniqueSectionIdEverywhere(doc, base) {
+  const used = new Set([
+    ...doc.screens.flatMap((screen) => screen.sections.map((section) => section.id)),
+    ...(doc.library || []).map((entry) => entry.section.id),
+  ]);
   let id = base; let index = 2;
-  while (screen.sections.some((section) => section.id === id)) { id = base + '_' + index; index += 1; }
+  while (used.has(id)) { id = base + '_' + index; index += 1; }
   return id;
+}
+function remapRecords(records, fromId, toId) {
+  const out = {};
+  const move = (key) => String(key).startsWith(fromId + '~') ? toId + String(key).slice(fromId.length) : key;
+  Object.keys(records || {}).forEach((key) => {
+    if (!String(key).startsWith(fromId + '~')) return;
+    const next = clone(records[key]);
+    if (next.duplicateOf) next.duplicateOf = move(next.duplicateOf);
+    if (next.copyParent) next.copyParent = move(next.copyParent);
+    if (next.copyTree) next.copyTree = Object.fromEntries(Object.entries(next.copyTree).map(([from, to]) => [move(from), move(to)]));
+    out[move(key)] = next;
+  });
+  return out;
+}
+function saveSectionComponent(id, name) {
+  commit((doc) => {
+    const screen = doc.screens.find((entry) => entry.id === state.screen); if (!screen) return doc;
+    const source = screen.sections.find((entry) => entry.id === id); if (!source || source.kind === 'hero' || source.componentId) return doc;
+    doc.library = doc.library || [];
+    const slug = source.kind.toLowerCase();
+    let componentId = 'cmp_' + slug; let suffix = 2;
+    while (doc.library.some((entry) => entry.id === componentId)) { componentId = 'cmp_' + slug + '_' + suffix; suffix += 1; }
+    const definitionId = uniqueSectionIdEverywhere(doc, 'sec_' + componentId);
+    const definition = clone(source); definition.id = definitionId; delete definition.componentId;
+    const records = remapRecords(doc.elements, source.id, definitionId);
+    doc.elements = Object.assign({}, doc.elements, records);
+    doc.library.push(Object.assign({ id: componentId, name: String(name || nodeLabel(source)).slice(0, 40), section: definition }, Object.keys(records).length ? { elements: records } : {}));
+    source.componentId = componentId;
+    return doc;
+  }, true);
+  toast('Saved as a reusable component');
+}
+function insertComponent(componentId) {
+  commit((doc) => {
+    const screen = doc.screens.find((entry) => entry.id === state.screen); if (!screen) return doc;
+    const entry = (doc.library || []).find((item) => item.id === componentId); if (!entry) return doc;
+    const id = uniqueSectionIdEverywhere(doc, 'sec_' + entry.id);
+    const instance = clone(entry.section); instance.id = id; instance.componentId = entry.id;
+    screen.sections.push(instance);
+    doc.elements = Object.assign({}, doc.elements, remapRecords(entry.elements, entry.section.id, id));
+    state.selected = id; state.element = null;
+    return doc;
+  }, true);
+  toast('Component inserted and linked');
+}
+function syncComponent(id) {
+  commit((doc) => {
+    const screen = doc.screens.find((entry) => entry.id === state.screen); if (!screen) return doc;
+    const source = screen.sections.find((entry) => entry.id === id); if (!source || !source.componentId) return doc;
+    const entry = (doc.library || []).find((item) => item.id === source.componentId); if (!entry) return doc;
+    const linked = doc.screens.flatMap((item) => item.sections.filter((section) => section.componentId === entry.id).map((section) => section.id));
+    // Take the source's overrides before replacing any target, including itself.
+    const sourceRecords = remapRecords(doc.elements, source.id, source.id);
+    linked.forEach((sectionId) => {
+      Object.keys(doc.elements || {}).forEach((key) => { if (String(key).startsWith(sectionId + '~')) delete doc.elements[key]; });
+      doc.elements = Object.assign({}, doc.elements, remapRecords(sourceRecords, source.id, sectionId));
+    });
+    const definition = clone(source); definition.id = entry.section.id; delete definition.componentId;
+    const records = remapRecords(sourceRecords, source.id, entry.section.id);
+    Object.keys(doc.elements || {}).forEach((key) => { if (String(key).startsWith(entry.section.id + '~')) delete doc.elements[key]; });
+    doc.elements = Object.assign({}, doc.elements, records);
+    entry.section = definition;
+    if (Object.keys(records).length) entry.elements = records; else delete entry.elements;
+    doc.screens.forEach((item) => item.sections.forEach((section) => {
+      if (section.componentId !== entry.id) return;
+      const next = clone(source); next.id = section.id; next.componentId = entry.id;
+      Object.assign(section, next);
+    }));
+    return doc;
+  }, true);
+  toast('Applied to every linked instance');
+}
+function detachComponent(id) {
+  commit((doc) => {
+    const screen = doc.screens.find((entry) => entry.id === state.screen); if (!screen) return doc;
+    const node = screen.sections.find((entry) => entry.id === id); if (!node || !node.componentId) return doc;
+    delete node.componentId;
+    return doc;
+  }, true);
+  toast('Detached — this copy is independent');
+}
+function changeScreenKind(id, kind) {
+  commit((doc) => {
+    const screen = doc.screens.find((entry) => entry.id === id); if (!screen) return doc;
+    if (!['custom','contact','profile','about'].includes(screen.kind) || !['custom','contact','profile','about'].includes(kind)) return doc;
+    if (kind !== 'custom' && doc.screens.some((entry) => entry.id !== id && entry.kind === kind)) return doc;
+    if (screen.icon === SCREEN_ICONS[screen.kind]) screen.icon = SCREEN_ICONS[kind];
+    screen.kind = kind;
+    return doc;
+  }, true);
+}
+function moveScreenBy(id, delta) {
+  commit((doc) => {
+    const from = doc.screens.findIndex((entry) => entry.id === id);
+    const to = from + delta;
+    if (from <= 0 || to < 1 || to >= doc.screens.length) return doc;
+    [doc.screens[from], doc.screens[to]] = [doc.screens[to], doc.screens[from]];
+    return doc;
+  }, true);
 }
 function copyComponent(id) {
   const node = current().sections.find((section) => section.id === id); if (!node) return;
@@ -887,8 +1006,9 @@ function pasteComponent() {
   if (!state.clipboard) return;
   commit((doc) => {
     const screen = doc.screens.find((entry) => entry.id === state.screen); if (!screen) return doc;
-    const id = uniqueSectionId(screen, state.clipboard.id);
+    const id = uniqueSectionIdEverywhere(doc, state.clipboard.id);
     const pasted = Object.assign(clone(state.clipboard), { id });
+    delete pasted.componentId;
     const at = screen.sections.findIndex((section) => section.id === state.selected);
     screen.sections.splice(at < 0 ? screen.sections.length : at + 1, 0, pasted);
     remapSectionElements(doc, state.clipboard.id, id);
@@ -1006,6 +1126,16 @@ function renderInspector() {
       (node.kind === 'button' || node.kind === 'banner' || node.kind === 'cta' ? '<div class="field"><label>Button label</label><input id="pCta" type="text" maxlength="28" value="' + esc((node.cta && node.cta.label) || '') + '" /></div><div class="field"><label>Button opens</label><select id="pTarget">' + state.doc.screens.map((s) => '<option value="' + s.id + '"' + (node.cta && node.cta.screen === s.id ? ' selected' : '') + '>' + esc(s.name) + '</option>').join('') + '</select></div>' : '') +
     (node.kind === 'hero' ? '' : '<div class="field"><label>Move to another screen</label><select id="pMoveTo"><option value="">Choose a screen…</option>' + state.doc.screens.filter((s) => s.id !== state.screen).map((s) => '<option value="' + s.id + '">' + esc(s.name) + '</option>').join('') + '</select></div>') +
     '</div>' +
+    (node.kind === 'hero' ? '' : '<div class="sec"><h3>Reusable component</h3>' +
+      (node.componentId && libraryEntry(node.componentId)
+        ? '<p class="hint">Linked to <b>' + esc(libraryEntry(node.componentId).name) + '</b>. Edits stay on this copy until you apply them to every linked instance.</p>' +
+          '<div class="field"><label>Shared component name</label><input id="pComponentName" type="text" maxlength="40" value="' + esc(libraryEntry(node.componentId).name) + '" /></div>' +
+          '<button class="btn" id="pComponentAll" style="width:100%">Apply to all ' + componentUseCount(node.componentId) + ' linked instances</button>' +
+          '<button class="btn" id="pComponentDetach" style="width:100%;margin-top:6px">Detach this copy</button>'
+        : '<p class="hint">Save this section once, then insert it on another screen. Product, photo and action references stay linked to the same identities.</p>' +
+          '<div class="field"><label>Component name</label><input id="pComponentName" type="text" maxlength="40" value="' + esc(nodeLabel(node)) + '" /></div>' +
+          '<button class="btn" id="pComponentSave" style="width:100%">Save as reusable component</button>') +
+    '</div>') +
     (node.kind === 'image' || node.kind === 'flagship' ? '<div class="sec"><h3>Photograph</h3>' + mediaInspector(node) + '</div>' : '') +
     '<div class="sec"><h3>Design</h3>' +
       '<div class="field"><label>Alignment</label><div class="seg"><button data-align="left" class="' + (style.align !== 'center' ? 'on' : '') + '">Left</button><button data-align="center" class="' + (style.align === 'center' ? 'on' : '') + '">Centred</button></div></div>' +
@@ -1024,12 +1154,25 @@ function renderInspector() {
 function renderScreenInspector() {
   const screen = current();
   const design = state.doc.design || {};
+  const contentScreens = [['custom','Blank screen'],['contact','Contact'],['profile','Profile'],['about','About']];
+  const linked = ['custom','contact','profile','about'].includes(screen.kind);
+  const at = state.doc.screens.findIndex((entry) => entry.id === screen.id);
+  const last = state.doc.screens.length - 1;
   $('inspector').innerHTML =
     '<div class="sec">' +
       '<div class="field"><label>Screen name</label><input id="sName" type="text" maxlength="24" value="' + esc(screen.name) + '" /></div>' +
-      '<div class="checks"><label><input type="checkbox" id="sNav" ' + (screen.nav ? 'checked' : '') + '/> Show in bottom navigation</label>' +
-      '<label><input type="checkbox" id="sInitial" ' + (state.doc.initialScreen === screen.id ? 'checked' : '') + '/> Open the app on this screen</label></div>' +
-      '<p class="hint">Up to five navigation items fit. The first five selected are used.</p>' +
+      (linked
+        ? '<div class="field"><label>Screen type</label><select id="sKind">' + contentScreens.map(([kind, label]) => {
+            const used = kind !== 'custom' && state.doc.screens.some((entry) => entry.id !== screen.id && entry.kind === kind);
+            return '<option value="' + kind + '"' + (screen.kind === kind ? ' selected' : '') + (used ? ' disabled' : '') + '>' + label + (used ? ' · already used' : '') + '</option>';
+          }).join('') + '</select></div>'
+        : '<p class="hint">This is a built-in app screen; its role is fixed. Rename it or change its navigation here.</p>') +
+      '<div class="field"><label>Navigation icon</label><select id="sIcon">' + NAV_ICONS.filter(([value]) => value !== 'none').map(([value, label]) => '<option value="' + value + '"' + (screen.icon === value ? ' selected' : '') + '>' + label + '</option>').join('') + '</select></div>' +
+      '<div class="checks"><label><input type="checkbox" id="sNav" ' + (screen.nav ? 'checked' : '') + (screen.kind === 'detail' ? ' disabled' : '') + '/> Show in bottom navigation</label>' +
+      '<label><input type="checkbox" id="sInitial" ' + (state.doc.initialScreen === screen.id ? 'checked' : '') + '/> Open the app on this screen</label>' +
+      '<label><input type="checkbox" id="sHidden" ' + (screen.hidden ? 'checked' : '') + (!linked || state.doc.initialScreen === screen.id ? ' disabled' : '') + '/> Hide this screen</label></div>' +
+      '<p class="hint">Up to five navigation items fit, in screen order. A hidden screen stays saved and editable; it is just not shown.</p>' +
+      '<div class="actions" style="display:flex;gap:6px"><button class="btn" id="sEarlier" ' + (at <= 1 ? 'disabled' : '') + '>↑ Earlier</button><button class="btn" id="sLater" ' + (at === last || at === 0 ? 'disabled' : '') + '>↓ Later</button></div>' +
     '</div>' +
     '<div class="sec"><h3>Design direction</h3><div class="dir-grid">' +
       DIRECTIONS.map((entry) => '<button class="dir ' + (design.direction === entry.id ? 'on' : '') + '" data-direction-value="' + entry.id + '"><b>' + esc(entry.label) + '</b><span>' + esc(entry.blurb) + '</span></button>').join('') +
@@ -1055,7 +1198,12 @@ function renderScreenInspector() {
   });
   $('sName').addEventListener('input', (event) => commit((doc) => { const s = doc.screens.find((x) => x.id === screen.id); if (s) s.name = event.target.value.slice(0,24); return doc; }));
   $('sNav').addEventListener('change', (event) => commit((doc) => { const s = doc.screens.find((x) => x.id === screen.id); if (s) s.nav = event.target.checked; return doc; }, true));
-  $('sInitial').addEventListener('change', (event) => { if (event.target.checked) commit((doc) => { doc.initialScreen = screen.id; return doc; }, true); });
+  $('sInitial').addEventListener('change', (event) => { if (event.target.checked) commit((doc) => { doc.initialScreen = screen.id; const s = doc.screens.find((x) => x.id === screen.id); if (s) s.hidden = false; return doc; }, true); });
+  const kind = $('sKind'); if (kind) kind.addEventListener('change', () => changeScreenKind(screen.id, kind.value));
+  $('sIcon').addEventListener('change', (event) => commit((doc) => { const s = doc.screens.find((x) => x.id === screen.id); if (s) s.icon = event.target.value; return doc; }, true));
+  const hidden = $('sHidden'); if (hidden) hidden.addEventListener('change', (event) => commit((doc) => { const s = doc.screens.find((x) => x.id === screen.id); if (s && ['custom','contact','profile','about'].includes(s.kind) && doc.initialScreen !== s.id) s.hidden = event.target.checked; return doc; }, true));
+  $('sEarlier').addEventListener('click', () => moveScreenBy(screen.id, -1));
+  $('sLater').addEventListener('click', () => moveScreenBy(screen.id, 1));
   const dup = $('sDuplicate'); if (dup) dup.addEventListener('click', () => duplicateScreen(screen.id));
   const del = $('sDelete'); if (del) del.addEventListener('click', () => { if (confirm('Delete this screen?')) removeScreen(screen.id); });
 }
@@ -1107,6 +1255,18 @@ function bindInspector(node) {
     node.responsive.hideOn = ['desktop','tablet','mobile'].filter((point) => set.has(point));
     return doc;
   })));
+  const componentName = $('pComponentName');
+  if (componentName) componentName.addEventListener('input', (event) => commit((doc) => {
+    const entry = node.componentId && (doc.library || []).find((item) => item.id === node.componentId);
+    if (entry) entry.name = event.target.value.trim().slice(0, 40) || entry.name;
+    return doc;
+  }));
+  const componentSave = $('pComponentSave');
+  if (componentSave) componentSave.addEventListener('click', () => saveSectionComponent(node.id, ($('pComponentName') && $('pComponentName').value) || nodeLabel(node)));
+  const componentAll = $('pComponentAll');
+  if (componentAll) componentAll.addEventListener('click', () => syncComponent(node.id));
+  const componentDetach = $('pComponentDetach');
+  if (componentDetach) componentDetach.addEventListener('click', () => detachComponent(node.id));
   const remove = $('pDelete'); if (remove) remove.addEventListener('click', () => {
     if (!confirm('Delete this component?')) return;
     commit((doc) => { const screen = doc.screens.find((s) => s.id === state.screen); if (screen) { screen.sections = screen.sections.filter((s) => s.id !== node.id); dropSectionElements(doc, node.id); } return doc; }, true);
@@ -1174,6 +1334,10 @@ function mediaUsed(id) {
   let used = 0;
   state.doc.screens.forEach((screen) => screen.sections.forEach((node) => { if (node.media && node.media.id === id) used += 1; }));
   Object.values(state.doc.elements || {}).forEach((entry) => { if (entry.media && entry.media.id === id) used += 1; });
+  (state.doc.library || []).forEach((entry) => {
+    if (entry.section.media && entry.section.media.id === id) used += 1;
+    Object.values(entry.elements || {}).forEach((config) => { if (config.media && config.media.id === id) used += 1; });
+  });
   CATALOG.forEach((section) => (section.items || []).forEach((item) => { if (item.media && item.media.id === id) used += 1; }));
   return used;
 }
@@ -1487,7 +1651,7 @@ function addComponent(kind) {
   commit((doc) => {
     const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc;
     if (screen.sections.some((s) => s.kind === kind)) return doc;
-    const id = 'sec_' + kind + '_' + Date.now().toString(36);
+    const id = uniqueSectionIdEverywhere(doc, 'sec_' + kind + '_' + Date.now().toString(36));
     const preset = kind === 'heading' ? { title: 'A new heading' } : kind === 'text' ? { text: 'A short paragraph that explains this screen.' } : kind === 'button' ? { title: 'Continue', cta: { label: 'Continue', screen: 'scr_home' } } : {};
     screen.sections.push({ id, kind, style: {}, responsive: { hideOn: [] }, hidden: false, ...preset });
     state.selected = id;
@@ -1506,12 +1670,11 @@ function addScreen(kind) {
     };
     const used = new Set(doc.screens.flatMap((s) => s.sections.map((section) => section.id)));
     const sections = (defaults[kind] || []).map((section) => {
-      let sectionId = section.id;
-      if (used.has(sectionId)) {
-        sectionId = id + '_' + section.id;
-        let suffix = 2;
-        while (used.has(sectionId)) { sectionId = id + '_' + section.id + '_' + suffix; suffix += 1; }
-      }
+      // The server normalises section ids to sec_...; generate valid ones now
+      // so a new screen keeps stable keys before its first save.
+      let sectionId = 'sec_' + section.kind;
+      let suffix = 2;
+      while (used.has(sectionId)) { sectionId = 'sec_' + section.kind + '_' + suffix; suffix += 1; }
       used.add(sectionId);
       return Object.assign({}, section, { id: sectionId });
     });
@@ -1532,15 +1695,18 @@ function duplicateScreen(id) {
       let next = section.id + '_copy'; let suffix = 2;
       while (used.has(next)) { next = section.id + '_copy_' + suffix; suffix += 1; }
       used.add(next); sectionMap.set(section.id, next);
-      return Object.assign(clone(section), { id: next });
+      const copy = Object.assign(clone(section), { id: next });
+      delete copy.componentId;
+      return copy;
     });
-    doc.screens.splice(index + 1, 0, Object.assign(clone(source), { id: newId, kind: 'custom', name: (source.name + ' copy').slice(0,24), nav: false, sections }));
+    doc.screens.splice(index + 1, 0, Object.assign(clone(source), { id: newId, kind: 'custom', name: (source.name + ' copy').slice(0,24), nav: false, hidden: false, sections }));
     sectionMap.forEach((to, from) => { if (!shared.has(from)) remapSectionElements(doc, from, to); });
     state.screen = newId; state.selected = null;
     return doc;
   }, true);
 }
 function removeScreen(id) {
+  const existed = Boolean(state.doc.screens.find((screen) => screen.id === id && screen.kind !== 'home'));
   commit((doc) => {
     const screen = doc.screens.find((s) => s.id === id); if (!screen || screen.kind === 'home') return doc;
     const remaining = new Set(doc.screens.filter((s) => s.id !== id).flatMap((s) => s.sections.map((section) => section.id)));
@@ -1550,12 +1716,14 @@ function removeScreen(id) {
     if (state.screen === id) { state.screen = doc.screens[0].id; state.selected = null; }
     return doc;
   }, true);
+  if (existed) toast('Screen deleted — undo restores it');
 }
 document.addEventListener('click', (event) => {
   const mediaUse = event.target.closest('[data-media-use]'); if (mediaUse) { const record = state.media.find((item) => item.id === mediaUse.dataset.mediaUse); if (record) applyMedia(record, state.mediaTarget); return; }
   const mediaReplace = event.target.closest('[data-media-replace]'); if (mediaReplace) { state.mediaReplaceId = mediaReplace.dataset.mediaReplace; $('mediaReplaceFile').click(); return; }
   const mediaDelete = event.target.closest('[data-media-delete]'); if (mediaDelete) { deleteMediaItem(mediaDelete.dataset.mediaDelete); return; }
   const screenAdd = event.target.closest('[data-add-screen]'); if (screenAdd) { addScreen(screenAdd.dataset.addScreen); return; }
+  const componentInsert = event.target.closest('[data-insert-component]'); if (componentInsert) { insertComponent(componentInsert.dataset.insertComponent); return; }
   const componentAdd = event.target.closest('[data-add-component]'); if (componentAdd) { addComponent(componentAdd.dataset.addComponent); return; }
   const open = event.target.closest('[data-open]'); if (open) { state.screen = open.dataset.open; state.selected = null; state.element = null; state.elementMeta = null; render(); reloadFrame(); return; }
   const del = event.target.closest('[data-screen-delete]'); if (del) { if (confirm('Delete this screen?')) removeScreen(del.dataset.screenDelete); return; }
@@ -1568,11 +1736,12 @@ document.addEventListener('click', (event) => {
     const screen = current(); const index = screen.sections.findIndex((s) => s.id === dup.dataset.duplicate);
     const source = screen.sections[index];
     if (!source || source.kind === 'hero') return;
-    const id = uniqueSectionId(screen, source.id + '_' + Date.now().toString(36));
     commit((doc) => {
+      const id = uniqueSectionIdEverywhere(doc, source.id + '_' + Date.now().toString(36));
       const target = doc.screens.find((s) => s.id === state.screen); if (!target) return doc;
       const at = target.sections.findIndex((s) => s.id === source.id); if (at < 0) return doc;
       const cloneNode = Object.assign(clone(source), { id });
+      delete cloneNode.componentId;
       target.sections.splice(at + 1, 0, cloneNode);
       remapSectionElements(doc, source.id, id);
       state.selected = id; state.element = null;
@@ -1623,15 +1792,17 @@ document.addEventListener('click', (event) => {
   if (kind === 'catalog') { openCatalog(); return; }
   if (kind === 'more') { $('right').classList.add('open'); return; }
   if (kind === 'duplicate') {
-    const id = uniqueSectionId(current(), node.id + '_' + Date.now().toString(36));
+    let duplicated = null;
     commit((doc) => {
+      const id = uniqueSectionIdEverywhere(doc, node.id + '_' + Date.now().toString(36));
       const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc;
       const index = screen.sections.findIndex((s) => s.id === node.id); if (index < 0) return doc;
-      const copy = clone(screen.sections[index]); copy.id = id; screen.sections.splice(index + 1, 0, copy);
+      const copy = clone(screen.sections[index]); copy.id = id; delete copy.componentId; screen.sections.splice(index + 1, 0, copy);
       remapSectionElements(doc, node.id, id);
+      duplicated = id;
       return doc;
     }, true);
-    state.selected = id; quickShown = null; render(); toast('Component duplicated'); return;
+    state.selected = duplicated; quickShown = null; render(); toast('Component duplicated'); return;
   }
   if (kind === 'delete') {
     if (!confirm('Delete this component?')) return;

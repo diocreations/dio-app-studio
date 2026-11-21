@@ -6,8 +6,12 @@ import {
   addSection,
   applyCommand,
   docFromSpec,
+  detachComponent,
   duplicateScreen,
+  duplicateSection,
   homeScreen,
+  insertComponent,
+  saveSectionAsComponent,
   homeSections,
   moveComponentToScreen,
   moveScreen,
@@ -17,7 +21,10 @@ import {
   renameScreen,
   screenFor,
   setInitialScreen,
+  setScreenHidden,
+  setScreenKind,
   setScreenNav,
+  syncComponentInstances,
   updateSection,
 } from '../src/worker/doc'
 import app from '../src/worker/index'
@@ -139,6 +146,40 @@ describe('screens and navigation', () => {
     expect(removeScreen(removed, 'scr_home')).toEqual(removed)
   })
 
+  test('a screen can change type, hide and reopen without losing its content', () => {
+    let doc = docFromSpec(spec())
+    doc = addScreen(doc, 'custom', spec())
+    const custom = screenFor(doc, 'custom')!
+    // Every section starts with a stable, valid id — even before a save.
+    const ids = doc.screens.flatMap((screen) => screen.sections.map((node) => node.id))
+    expect(ids.every((id) => /^sec_[a-z0-9_-]{1,40}$/.test(id))).toBe(true)
+    expect(new Set(ids).size).toBe(ids.length)
+    expect(normalizeDoc(doc, spec()).screens.flatMap((screen) => screen.sections.map((node) => node.id))).toEqual(ids)
+    doc = renameScreen(doc, custom.id, 'Field notes')
+    doc = setScreenKind(doc, custom.id, 'about')
+    expect(screenFor(doc, 'about')).toMatchObject({ id: custom.id, name: 'Field notes' })
+    // A built-in role cannot be duplicated by a second screen.
+    doc = addScreen(doc, 'profile', spec())
+    const profile = screenFor(doc, 'profile')!
+    expect(setScreenKind(doc, custom.id, 'profile')).toEqual(doc)
+    // Built-in app screens keep their role and cannot be withdrawn.
+    expect(setScreenKind(doc, 'scr_catalog', 'about')).toEqual(doc)
+    expect(setScreenHidden(doc, 'scr_catalog', true)).toEqual(doc)
+
+    doc = setScreenNav(doc, custom.id, true)
+    expect(renderApp(spec(), { token: 'screen-kind', doc })).toContain('data-screen="' + custom.id + '"')
+    doc = setScreenHidden(doc, custom.id, true)
+    const hidden = renderApp(spec(), { token: 'screen-kind', doc })
+    expect(hidden).not.toContain('data-screen="' + custom.id + '"')
+    expect(hidden).not.toContain('<span>Field notes</span>')
+
+    // The opening screen is always visible; choosing it clears a hide.
+    expect(setScreenHidden(doc, profile.id, true).screens.find((entry) => entry.id === profile.id)?.hidden).toBe(true)
+    doc = setInitialScreen(doc, custom.id)
+    expect(screenFor(doc, 'about')?.hidden).toBe(false)
+    expect(setScreenHidden(doc, custom.id, true)).toEqual(doc)
+  })
+
   test('the rendered app follows screen order, navigation and initial screen', () => {
     let doc = docFromSpec(spec())
     doc = addScreen(doc, 'contact', spec())
@@ -223,6 +264,115 @@ describe('screens and navigation', () => {
     expect(removed.elements?.[sourceKey]?.text).toBe('A copied welcome')
   })
 
+  test('a section can be reused, updated everywhere and detached as an independent copy', () => {
+    const business = spec()
+    const itemId = 'itm_0123456789abcdef'
+    const homeId = homeScreen(docFromSpec(business)).id
+    const listId = 'sec_product_list'
+    const media = {
+      id: 'med_0123456789abcdef01234567',
+      alt: 'Shared photo',
+      width: 1200,
+      height: 800,
+    }
+    let doc = normalizeDoc(
+      {
+        ...docFromSpec(business),
+        screens: docFromSpec(business).screens.map((screen) =>
+          screen.id === homeId
+            ? {
+                ...screen,
+                sections: [
+                  ...screen.sections,
+                  {
+                    id: listId,
+                    kind: 'productList',
+                    itemRef: itemId,
+                    cta: { label: 'View', screen: 'scr_catalog' },
+                    style: {},
+                    responsive: { hideOn: [] },
+                    hidden: false,
+                  },
+                ],
+              }
+            : screen,
+        ),
+        elements: {
+          [`${listId}~h3~0`]: {
+            text: 'Shared heading',
+            media,
+            action: { screen: 'scr_catalog' },
+          },
+        },
+      },
+      business,
+    )
+    doc = saveSectionAsComponent(doc, homeId, listId, 'Product row')
+    expect(doc.library).toHaveLength(1)
+    const component = doc.library![0]
+    expect(component.id).toBe('cmp_productlist')
+    expect(component.section.itemRef).toBe(itemId)
+    expect(component.elements?.[`${component.section.id}~h3~0`]?.media?.id).toBe(media.id)
+    expect(doc.elements?.[`${listId}~h3~0`]?.media?.id).toBe(media.id)
+    expect(homeSections(doc).find((node) => node.id === listId)?.componentId).toBe(component.id)
+
+    doc = addScreen(doc, 'custom', business)
+    const target = screenFor(doc, 'custom')!
+    doc = insertComponent(doc, target.id, component.id)
+    const instance = screenFor(doc, 'custom')!.sections.at(-1)!
+    expect(instance.id).not.toBe(listId)
+    expect(instance.id).not.toBe(component.section.id)
+    expect(instance.componentId).toBe(component.id)
+    // A second screen gets its own instance id, never the definition's.
+    doc = addScreen(doc, 'custom', business)
+    const secondTargetId = doc.screens.at(-1)!.id
+    doc = insertComponent(doc, secondTargetId, component.id)
+    const secondInstance = doc.screens.find((screen) => screen.id === secondTargetId)!.sections.at(-1)!
+    expect(secondInstance.id).not.toBe(instance.id)
+    expect(secondInstance.id).not.toBe(component.section.id)
+    expect(secondInstance.componentId).toBe(component.id)
+    // The same product, photo and action, with no second product identity.
+    expect(instance.itemRef).toBe(itemId)
+    expect(doc.elements?.[`${instance.id}~h3~0`]).toMatchObject({
+      text: 'Shared heading',
+      media: { id: media.id },
+      action: { screen: 'scr_catalog' },
+    })
+    // One identity, shared by every copy — not a second catalogue product.
+    expect(
+      new Set([
+        instance.itemRef,
+        component.section.itemRef,
+        homeSections(doc).find((node) => node.id === listId)?.itemRef,
+      ]).size,
+    ).toBe(1)
+
+    doc = updateSection(doc, target.id, instance.id, { title: 'Reused row' })
+    doc = syncComponentInstances(doc, target.id, instance.id)
+    expect(homeSections(doc).find((node) => node.id === listId)?.title).toBe('Reused row')
+    expect(doc.library![0].section.title).toBe('Reused row')
+
+    doc = detachComponent(doc, target.id, instance.id)
+    expect(screenFor(doc, 'custom')!.sections.at(-1)?.componentId).toBeUndefined()
+    doc = updateSection(doc, target.id, instance.id, { title: 'Local row' })
+    expect(doc.library![0].section.title).toBe('Reused row')
+    expect(homeSections(doc).find((node) => node.id === listId)?.title).toBe('Reused row')
+
+    // Duplicating a component is independent, not another linked instance.
+    doc = duplicateSection(doc, target.id, instance.id)
+    const copy = screenFor(doc, 'custom')!.sections.at(-1)!
+    expect(copy.id).not.toBe(instance.id)
+    expect(copy.componentId).toBeUndefined()
+    expect(doc.elements?.[`${copy.id}~h3~0`]?.media?.id).toBe(media.id)
+
+    const clean = normalizeDoc(doc, business)
+    expect(clean.library?.[0]).toMatchObject({ id: component.id, name: 'Product row' })
+    expect(clean.library?.[0].section.itemRef).toBe(itemId)
+    expect(clean.library?.[0].elements?.[`${component.section.id}~h3~0`]?.action).toEqual({
+      screen: 'scr_catalog',
+    })
+  })
+
   test('mobile component kinds render as real controls', () => {
     let doc = docFromSpec(spec())
     doc = addScreen(doc, 'custom', spec())
@@ -302,6 +452,8 @@ describe('the editor and its API', () => {
     expect(response.headers.get('x-robots-tag')).toBe('noindex, nofollow')
     const html = await response.text()
     expect(html).toContain('Screens')
+    expect(html).toContain('Reusable components')
+    expect(html).toContain('Layers on this screen')
     expect(html).toContain('Add component')
     expect(html).toContain('Properties')
     expect(html).toContain('class="phone mobile"')

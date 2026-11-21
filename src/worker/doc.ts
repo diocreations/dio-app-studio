@@ -336,6 +336,8 @@ export type Follows = { title?: CopiedField; text?: CopiedField }
 export type DocNode = {
   id: string
   kind: SectionKind
+  /** The reusable component this section is an instance of, when linked. */
+  componentId?: string
   title?: string
   text?: string
   /** Set when the heading or words are a copy of a specification value rather
@@ -395,6 +397,20 @@ export type Doc = {
   initialScreen: string
   screens: ScreenNode[]
   /** Element overrides, keyed by the stable slot the renderer tags. */
+  elements?: Record<string, ElementConfig>
+  /** Sections the owner saved to insert on more than one screen. */
+  library?: ComponentLibraryEntry[]
+}
+
+/**
+ * A reusable section. Instances carry `componentId`; the definition keeps the
+ * same content and element overrides under a stable library id, so inserting
+ * it never duplicates a product or a business identity.
+ */
+export type ComponentLibraryEntry = {
+  id: string
+  name: string
+  section: DocNode
   elements?: Record<string, ElementConfig>
 }
 
@@ -1188,6 +1204,9 @@ function sanitizeSection(value: unknown, fallbackId: string): DocNode | null {
     responsive: { hideOn },
     hidden: raw.hidden === true,
     ...(raw.hiddenBecause === 'empty' ? { hiddenBecause: 'empty' as const } : {}),
+    ...(typeof raw.componentId === 'string' && /^cmp_[a-z0-9_-]{1,40}$/.test(raw.componentId)
+      ? { componentId: raw.componentId }
+      : {}),
   }
 }
 
@@ -1326,6 +1345,38 @@ function sanitizeElements(value: unknown): Record<string, ElementConfig> | undef
   return Object.keys(out).length ? out : undefined
 }
 
+const COMPONENT_ID = /^cmp_[a-z0-9_-]{1,30}$/
+
+/** Reusable definitions, bounded and stripped of any nested link. */
+function sanitizeLibrary(value: unknown): ComponentLibraryEntry[] {
+  if (!Array.isArray(value)) return []
+  const entries: ComponentLibraryEntry[] = []
+  const ids = new Set<string>()
+  for (const entry of value.slice(0, 40)) {
+    if (!entry || typeof entry !== 'object') continue
+    const raw = entry as Record<string, unknown>
+    const id = typeof raw.id === 'string' && COMPONENT_ID.test(raw.id) ? raw.id : ''
+    if (!id || ids.has(id)) continue
+    const section = sanitizeSection(raw.section, `sec_${id}`)
+    if (!section || section.kind === 'hero') continue
+    delete section.componentId
+    const elements = sanitizeElements(raw.elements)
+    const scoped = elements
+      ? Object.fromEntries(
+          Object.entries(elements).filter(([key]) => key.startsWith(section.id + '~')),
+        )
+      : {}
+    ids.add(id)
+    entries.push({
+      id,
+      name: CLAMP(raw.name, 40) || KIND_LABEL[section.kind],
+      section,
+      ...(Object.keys(scoped).length ? { elements: scoped } : {}),
+    })
+  }
+  return entries
+}
+
 function sanitizeSections(value: unknown): DocNode[] {
   if (!Array.isArray(value)) return []
   const sections: DocNode[] = []
@@ -1385,7 +1436,17 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
     const home = screens.find((entry) => entry.kind === 'home')
     if (!home) screens.unshift(fallback.screens.find((entry) => entry.kind === 'home')!)
     else home.hidden = false
-    const initial = screens.find((entry) => entry.id === raw.initialScreen) ?? screens[0]!
+    const initial =
+      screens.find((entry) => entry.id === raw.initialScreen && !entry.hidden) ??
+      screens.find((entry) => entry.kind === 'home') ??
+      screens[0]!
+    const library = sanitizeLibrary(raw.library)
+    const linked = new Set(library.map((entry) => entry.id))
+    for (const screen of screens) {
+      for (const node of screen.sections) {
+        if (node.componentId && !linked.has(node.componentId)) delete node.componentId
+      }
+    }
     return followCopies(
       bindItemRefs(
         {
@@ -1395,6 +1456,7 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
           initialScreen: initial.id,
           screens,
           elements: sanitizeElements(raw.elements),
+          ...(library.length ? { library } : {}),
         },
         spec,
       ),
@@ -1407,6 +1469,7 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
   const screens = fallback.screens.map((entry) =>
     entry.kind === 'home' && legacySections.length ? { ...entry, sections: legacySections } : entry,
   )
+  const library = sanitizeLibrary(raw.library)
   return followCopies(
     bindItemRefs(
       {
@@ -1416,6 +1479,7 @@ export function normalizeDoc(value: unknown, spec: AppSpec): Doc {
         initialScreen: fallback.initialScreen,
         screens,
         elements: sanitizeElements(raw.elements),
+        ...(library.length ? { library } : {}),
       },
       spec,
     ),
@@ -1505,15 +1569,6 @@ function nextScreenId(doc: Doc, kind: ScreenKind): string {
   return `${base}_${index}`
 }
 
-/** A node id that is not in use on a screen, so additions stay addressable. */
-function nextSectionId(screenNode: ScreenNode, kind: SectionKind): string {
-  const base = `sec_${kind}`
-  if (!screenNode.sections.some((entry) => entry.id === base)) return base
-  let index = 2
-  while (screenNode.sections.some((entry) => entry.id === `${base}_${index}`)) index += 1
-  return `${base}_${index}`
-}
-
 const SCREEN_DEFAULT_SECTIONS: Partial<Record<ScreenKind, (spec: AppSpec) => DocNode[]>> = {
   contact: (spec) => [
     section('heading', { title: 'Get in touch' }),
@@ -1542,11 +1597,13 @@ export function addScreen(doc: Doc, kind: ScreenKind, spec: AppSpec): Doc {
   const screenId = nextScreenId(doc, kind)
   const used = new Set(doc.screens.flatMap((entry) => entry.sections.map((sectionNode) => sectionNode.id)))
   const defaults = (SCREEN_DEFAULT_SECTIONS[kind]?.(spec) ?? []).map((sectionNode) => {
-    let id = sectionNode.id
-    if (used.has(id)) {
-      id = `${screenId}_${sectionNode.id}`
-      let suffix = 2
-      while (used.has(id)) { id = `${screenId}_${sectionNode.id}_${suffix}`; suffix += 1 }
+    // Section ids are global keys for element overrides and must look like
+    // `sec_…`; a screen id is not a valid prefix.
+    let id = `sec_${sectionNode.kind}`
+    let suffix = 2
+    while (used.has(id)) {
+      id = `sec_${sectionNode.kind}_${suffix}`
+      suffix += 1
     }
     used.add(id)
     return { ...sectionNode, id }
@@ -1610,7 +1667,11 @@ export function duplicateScreen(doc: Doc, id: string): Doc {
     kind: 'custom',
     name: `${source.name} copy`.slice(0, 24),
     nav: false,
-    sections: source.sections.map((entry) => ({ ...entry, id: sectionMap.get(entry.id)! })),
+    sections: source.sections.map((entry) => {
+      const next = { ...entry, id: sectionMap.get(entry.id)! }
+      delete next.componentId
+      return next
+    }),
   }
   const screens = [...doc.screens]
   screens.splice(index + 1, 0, clone)
@@ -1673,8 +1734,44 @@ export function setScreenNav(doc: Doc, id: string, nav: boolean): Doc {
 }
 
 export function setInitialScreen(doc: Doc, id: string): Doc {
-  if (!screenById(doc, id)) return doc
-  return { ...doc, initialScreen: id }
+  const target = screenById(doc, id)
+  if (!target) return doc
+  return {
+    ...doc,
+    initialScreen: id,
+    screens: doc.screens.map((entry) =>
+      entry.id === id ? { ...entry, hidden: false } : entry,
+    ),
+  }
+}
+
+/** Content screens share their DOM id, so changing type never breaks a link. */
+const CONTENT_SCREENS: ScreenKind[] = ['custom', 'contact', 'profile', 'about']
+
+export function setScreenKind(doc: Doc, id: string, kind: ScreenKind): Doc {
+  const target = screenById(doc, id)
+  if (!target || !CONTENT_SCREENS.includes(kind) || target.kind === kind) return doc
+  if (!CONTENT_SCREENS.includes(target.kind)) return doc
+  if (kind !== 'custom' && doc.screens.some((entry) => entry.id !== id && entry.kind === kind)) return doc
+  const defaultIcon = screenIconFor(target.kind)
+  const icon = target.icon === defaultIcon ? screenIconFor(kind) : target.icon
+  return {
+    ...doc,
+    screens: doc.screens.map((entry) => (entry.id === id ? { ...entry, kind, icon } : entry)),
+  }
+}
+
+/** A hidden screen is kept, undoable and still editable, but never rendered. */
+export function setScreenHidden(doc: Doc, id: string, hidden: boolean): Doc {
+  const target = screenById(doc, id)
+  // Only screens the document renderer owns can be withdrawn; built-in app
+  // screens are part of the shell and would still be rendered.
+  if (!target || !CONTENT_SCREENS.includes(target.kind)) return doc
+  if (hidden && doc.initialScreen === id) return doc
+  return {
+    ...doc,
+    screens: doc.screens.map((entry) => (entry.id === id ? { ...entry, hidden } : entry)),
+  }
 }
 
 export function addSection(doc: Doc, screenId: string, kind: SectionKind, spec: AppSpec): Doc {
@@ -1699,7 +1796,7 @@ export function addSection(doc: Doc, screenId: string, kind: SectionKind, spec: 
             ...entry,
             sections: [
               ...entry.sections,
-              section(kind, { id: nextSectionId(entry, kind), ...defaults[kind] }),
+              section(kind, { id: uniqueDocSectionId(doc, `sec_${kind}`), ...defaults[kind] }),
             ],
           }
         : entry,
@@ -1754,8 +1851,18 @@ export function moveComponentToScreen(
     nextId = `${node.id}_${index}`
     index += 1
   }
+  let elements = doc.elements
+  if (nextId !== node.id && elements) {
+    elements = { ...elements }
+    for (const key of Object.keys(elements)) {
+      if (key.startsWith(node.id + '~')) delete elements[key]
+    }
+    Object.assign(elements, remapElementRecords(doc.elements, node.id, nextId))
+  }
   return {
     ...doc,
+    // A moved component keeps its element overrides and its component link.
+    ...(elements ? { elements } : {}),
     screens: doc.screens.map((entry) => {
       if (entry.id === fromScreenId)
         return { ...entry, sections: entry.sections.filter((section) => section.id !== id) }
@@ -1766,6 +1873,199 @@ export function moveComponentToScreen(
   }
 }
 
+const cloneJSON = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T
+
+/** Copy a section's element overrides under a new section id. */
+function remapElementRecords(
+  source: Record<string, ElementConfig> | undefined,
+  fromId: string,
+  toId: string,
+): Record<string, ElementConfig> {
+  const out: Record<string, ElementConfig> = {}
+  if (!source) return out
+  const move = (key: string) =>
+    key.startsWith(fromId + '~') ? toId + key.slice(fromId.length) : key
+  for (const [key, entry] of Object.entries(source)) {
+    if (!key.startsWith(fromId + '~')) continue
+    const next = cloneJSON(entry)
+    if (next.duplicateOf) next.duplicateOf = move(next.duplicateOf)
+    if (next.copyParent) next.copyParent = move(next.copyParent)
+    if (next.copyTree) {
+      next.copyTree = Object.fromEntries(
+        Object.entries(next.copyTree).map(([from, to]) => [move(from), move(to)]),
+      )
+    }
+    out[move(key)] = next
+  }
+  return out
+}
+
+function uniqueDocSectionId(doc: Doc, base: string): string {
+  const used = new Set([
+    ...doc.screens.flatMap((entry) => entry.sections.map((section) => section.id)),
+    ...(doc.library ?? []).map((entry) => entry.section.id),
+  ])
+  let id = base
+  let index = 2
+  while (used.has(id)) {
+    id = `${base}_${index}`
+    index += 1
+  }
+  return id
+}
+
+/**
+ * Saves the selected section as a reusable definition and links the source as
+ * its first instance. Product refs, media ids and actions are copied verbatim;
+ * a reusable section never creates a second catalogue item.
+ */
+export function saveSectionAsComponent(
+  doc: Doc,
+  screenId: string,
+  sectionId: string,
+  name?: string,
+): Doc {
+  const screen = screenById(doc, screenId)
+  const source = screen?.sections.find((entry) => entry.id === sectionId)
+  if (!source || source.kind === 'hero' || source.componentId) return doc
+  const library = [...(doc.library ?? [])]
+  const slug = source.kind.toLowerCase()
+  let componentId = `cmp_${slug}`
+  let suffix = 2
+  while (library.some((entry) => entry.id === componentId)) {
+    componentId = `cmp_${slug}_${suffix}`
+    suffix += 1
+  }
+  const definitionId = uniqueDocSectionId(doc, `sec_${componentId}`)
+  const definition = { ...cloneJSON(source), id: definitionId }
+  delete definition.componentId
+  const definitionElements = remapElementRecords(doc.elements, source.id, definitionId)
+  const elements = { ...(doc.elements ?? {}), ...definitionElements }
+  library.push({
+    id: componentId,
+    name: CLAMP(name, 40) || source.title || KIND_LABEL[source.kind],
+    section: definition,
+    ...(Object.keys(definitionElements).length ? { elements: definitionElements } : {}),
+  })
+  return {
+    ...doc,
+    library,
+    elements,
+    screens: doc.screens.map((entry) =>
+      entry.id === screenId
+        ? {
+            ...entry,
+            sections: entry.sections.map((section) =>
+              section.id === sectionId ? { ...section, componentId } : section,
+            ),
+          }
+        : entry,
+    ),
+  }
+}
+
+/** Inserts a linked instance of a saved component on another screen. */
+export function insertComponent(
+  doc: Doc,
+  screenId: string,
+  componentId: string,
+  beforeId?: string,
+): Doc {
+  const target = screenById(doc, screenId)
+  const entry = doc.library?.find((component) => component.id === componentId)
+  if (!target || !entry) return doc
+  const id = uniqueDocSectionId(doc, `sec_${entry.id}`)
+  const instance = { ...cloneJSON(entry.section), id, componentId: entry.id }
+  const sections = [...target.sections]
+  const at = beforeId ? sections.findIndex((section) => section.id === beforeId) : -1
+  sections.splice(at < 0 ? sections.length : at, 0, instance)
+  const elements = {
+    ...(doc.elements ?? {}),
+    ...remapElementRecords(entry.elements, entry.section.id, id),
+  }
+  return {
+    ...doc,
+    elements,
+    screens: doc.screens.map((screen) =>
+      screen.id === screenId ? { ...screen, sections } : screen,
+    ),
+  }
+}
+
+/**
+ * Applies the selected instance to the saved definition and to every linked
+ * instance. Each instance keeps its own section id and element slots.
+ */
+export function syncComponentInstances(doc: Doc, screenId: string, sectionId: string): Doc {
+  const source = screenById(doc, screenId)?.sections.find((section) => section.id === sectionId)
+  const componentId = source?.componentId
+  const entry = componentId
+    ? doc.library?.find((component) => component.id === componentId)
+    : undefined
+  if (!source || !entry) return doc
+  const linked = doc.screens.flatMap((screen) =>
+    screen.sections.filter((section) => section.componentId === entry.id).map((section) => section.id),
+  )
+  const elements = { ...(doc.elements ?? {}) }
+  for (const id of linked) {
+    for (const key of Object.keys(elements)) {
+      if (key.startsWith(id + '~')) delete elements[key]
+    }
+    Object.assign(elements, remapElementRecords(doc.elements, source.id, id))
+  }
+  const definitionId = entry.section.id
+  const definitionElements = remapElementRecords(doc.elements, source.id, definitionId)
+  for (const key of Object.keys(elements)) {
+    if (key.startsWith(definitionId + '~')) delete elements[key]
+  }
+  Object.assign(elements, definitionElements)
+  const definition = { ...cloneJSON(source), id: definitionId }
+  delete definition.componentId
+  return {
+    ...doc,
+    elements,
+    library: (doc.library ?? []).map((component) =>
+      component.id === entry.id
+        ? {
+            ...component,
+            section: definition,
+            ...(Object.keys(definitionElements).length ? { elements: definitionElements } : {}),
+          }
+        : component,
+    ),
+    screens: doc.screens.map((screen) => ({
+      ...screen,
+      sections: screen.sections.map((section) =>
+        section.componentId === entry.id
+          ? { ...cloneJSON(source), id: section.id, componentId: entry.id }
+          : section,
+      ),
+    })),
+  }
+}
+
+/** Keeps this copy's content and overrides, but stops it following the shared one. */
+export function detachComponent(doc: Doc, screenId: string, sectionId: string): Doc {
+  const target = screenById(doc, screenId)?.sections.find((section) => section.id === sectionId)
+  if (!target?.componentId) return doc
+  return {
+    ...doc,
+    screens: doc.screens.map((screen) =>
+      screen.id === screenId
+        ? {
+            ...screen,
+            sections: screen.sections.map((section) => {
+              if (section.id !== sectionId) return section
+              const next = { ...section }
+              delete next.componentId
+              return next
+            }),
+          }
+        : screen,
+    ),
+  }
+}
+
 export function duplicateSection(doc: Doc, screenId: string, id: string): Doc {
   const target = screenById(doc, screenId)
   if (!target) return doc
@@ -1773,15 +2073,22 @@ export function duplicateSection(doc: Doc, screenId: string, id: string): Doc {
   if (index < 0) return doc
   const source = target.sections[index]
   if (source.kind === 'hero') return doc
-  const clone: DocNode = {
+  const nextId = uniqueDocSectionId(doc, `sec_${source.kind}`)
+  const copy: DocNode = {
     ...source,
-    id: nextSectionId(target, source.kind),
+    id: nextId,
     title: source.title ? `${source.title} (copy)` : source.title,
   }
+  // A duplicate is independent: it must not silently follow the original.
+  delete copy.componentId
   const sections = [...target.sections]
-  sections.splice(index + 1, 0, clone)
+  sections.splice(index + 1, 0, copy)
   return {
     ...doc,
+    elements: {
+      ...(doc.elements ?? {}),
+      ...remapElementRecords(doc.elements, source.id, nextId),
+    },
     screens: doc.screens.map((entry) => (entry.id === screenId ? { ...entry, sections } : entry)),
   }
 }

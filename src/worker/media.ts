@@ -620,13 +620,44 @@ export function pruneMissingMedia(doc: Doc, owned: Set<string>): { doc: Doc; rem
       return next
     }),
   }))
-  return removed ? { doc: { ...doc, screens }, removed } : { doc, removed }
+  const library = doc.library?.map((entry) => {
+    let section = entry.section
+    if (section.media && !owned.has(section.media.id)) {
+      removed += 1
+      section = { ...section }
+      delete section.media
+    }
+    let elements = entry.elements
+    if (elements) {
+      let changed = false
+      const next = { ...elements }
+      for (const [key, config] of Object.entries(next)) {
+        if (!config.media || owned.has(config.media.id)) continue
+        removed += 1
+        changed = true
+        const copy = { ...config }
+        delete copy.media
+        next[key] = copy
+      }
+      if (changed) elements = next
+    }
+    return { ...entry, section, ...(elements ? { elements } : {}) }
+  })
+  return removed
+    ? { doc: { ...doc, screens, ...(library ? { library } : {}) }, removed }
+    : { doc, removed }
 }
 
 /** The current document is the reference that protects an image from deletion. */
 export function mediaInDoc(doc: Doc | null, id: string): boolean {
   if (!doc) return false
-  return doc.screens.some((screen) => screen.sections.some((node) => node.media?.id === id))
+  if (doc.screens.some((screen) => screen.sections.some((node) => node.media?.id === id))) return true
+  // An image can be held only by the reusable library; it is still in use.
+  return (doc.library ?? []).some(
+    (entry) =>
+      entry.section.media?.id === id ||
+      Object.values(entry.elements ?? {}).some((config) => config.media?.id === id),
+  )
 }
 
 /** A catalogue item's photograph is a first-class reference too. */
