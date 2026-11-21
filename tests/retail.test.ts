@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 import { renderApp } from '../src/worker/app'
 import { DIRECTIONS, directionFor, themeForDirection } from '../src/worker/directions'
-import { docFromSpec } from '../src/worker/doc'
+import { docFromSpec, flagshipDocFromSpec } from '../src/worker/doc'
 import { buildSpec } from '../src/worker/pricing'
 import { VERTICAL_IDS } from '../src/worker/verticals'
 import { sampleNotice } from '../src/worker/views/editor'
@@ -169,6 +169,55 @@ describe('the Shop destination', () => {
     expect(html).toContain('data-cart-open')
     // The retail detail is wired from the same product and variant data.
     expect(html).toContain('chosenVariant')
+  })
+})
+
+describe('the shop product shelf at every width', () => {
+  const html = render(retailSpec())
+
+  test('one complete piece per row on a phone, two from tablet up', () => {
+    // The plain shop shell carries the base flagship shelf; the retail
+    // direction supplies its own four-column desktop grid after it.
+    const spec = retailSpec()
+    const flagship = flagshipDocFromSpec(spec)
+    const plain = renderApp(spec, {
+      token: 'retail-probe',
+      live: false,
+      flagship: true,
+      doc: { ...flagship, design: { ...flagship.design, direction: 'minimal' } },
+    })
+    expect(plain).toContain(
+      'body[data-trade="shop"][data-flagship="1"] .fx-products { display: grid; grid-template-columns: minmax(0, 1fr); gap: 34px; align-items: start; }',
+    )
+    expect(plain).toContain(
+      'body[data-trade="shop"][data-flagship="1"] .fx-products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 22px; }',
+    )
+  })
+
+  test('the owner layouts are phone-first and scoped inside the shop family', () => {
+    expect(html).toContain(
+      'body[data-trade="shop"] .doc-section[data-layout="grid"] .fx-products { grid-template-columns: minmax(0, 1fr) !important;',
+    )
+    expect(html).toContain(
+      'body[data-trade="shop"] .doc-section[data-layout="strip"] .fx-products { display: grid !important; grid-template-columns: minmax(0, 1fr) !important;',
+    )
+    expect(html).toContain(
+      'body[data-trade="shop"] .doc-section[data-layout="strip"] .fx-products { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important;',
+    )
+    expect(html).toContain(
+      'body[data-trade="shop"] .doc-section[data-layout="strip"] .fx-products { grid-template-columns: repeat(4, minmax(0, 1fr)) !important;',
+    )
+    // The family parser reads the shop block from its first plain selector to
+    // the next trade. These rules have to live between the two.
+    const shop = html.indexOf('body[data-trade="shop"] .app::before')
+    const salon = html.indexOf('body[data-trade="salon"] .appbar')
+    expect(shop).toBeGreaterThan(-1)
+    expect(salon).toBeGreaterThan(shop)
+    const shopFamily = html.slice(shop, salon)
+    expect(shopFamily).toContain('.doc-section[data-layout="grid"] .fx-products')
+    expect(shopFamily).toContain('.doc-section[data-layout="strip"] .fx-products')
+    // No :where() escape hatch hiding the scope from the parser.
+    expect(html).not.toContain('body:where([data-trade="shop"])')
   })
 })
 

@@ -1517,6 +1517,18 @@ body[data-trade="shop"] .rec { grid-template-columns: 92px minmax(0, 1fr); align
 body[data-trade="shop"] .rec-art { aspect-ratio: 1 / 1; }
 body[data-trade="shop"] .rec-copy b { font-size: 13px; }
 @media (min-width: 720px) { body[data-trade="shop"] .rec-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; } }
+/* The document layer's shelf layouts are the shop's too: one complete piece
+   per row on a phone, then the owner's grid from the tablet width up. */
+@media (max-width: 719px) {
+  body[data-trade="shop"] .doc-section[data-layout="grid"] .fx-products { grid-template-columns: minmax(0, 1fr) !important; gap: 28px !important; }
+  body[data-trade="shop"] .doc-section[data-layout="strip"] .fx-products { display: grid !important; grid-template-columns: minmax(0, 1fr) !important; gap: 34px !important; overflow: visible !important; }
+}
+@media (min-width: 720px) {
+  body[data-trade="shop"] .doc-section[data-layout="strip"] .fx-products { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 40px 22px !important; overflow: visible !important; }
+}
+@media (min-width: 1080px) {
+  body[data-trade="shop"] .doc-section[data-layout="strip"] .fx-products { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 44px 26px !important; }
+}
 
 /* Salon: a lookbook. Arched portraits, hairline service lines and a serif
    scale that reads like a printed price list. */
