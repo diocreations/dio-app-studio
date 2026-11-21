@@ -190,7 +190,7 @@ describe('screens and navigation', () => {
     expect(html).toContain('data-screen="scr_contact"')
     expect(html).toContain('Come say hello')
     expect(html).toContain('data-go="scr_contact"')
-    expect(html).toContain('class="screen on" data-screen="scr_contact"')
+    expect(html).toMatch(/class="screen screen-contact on" data-screen="scr_contact"/)
     // The contact screen rides the app's bottom navigation.
     expect(html).toContain('<span>Contact</span>')
 

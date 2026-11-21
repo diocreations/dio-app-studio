@@ -25,6 +25,24 @@ export type BlueprintId = 'lead' | 'index' | 'immersive'
 /** What a block does for the customer, independent of what it is called. */
 export type BlockRole = 'lead' | 'discovery' | 'proof' | 'action' | 'visit' | 'utility' | 'note'
 
+/** The parts of a concept that must differ across all three applications,
+ *  not just the landing screen. The renderer exposes these as body attributes
+ *  and the validator reads the saved document through the same table. */
+export type ConceptArchitecture = {
+  /** Corporate masthead, compact utility bar, or image-overlaid navigation. */
+  header: 'masthead' | 'utility' | 'overlay'
+  /** How catalogue entries are read: a journal, an index, or story cards. */
+  catalog: 'journal' | 'index' | 'stories'
+  /** Card grammar used for products, rooms, services and dishes. */
+  cards: 'editorial' | 'compact' | 'campaign'
+  /** Dedicated detail-page composition. */
+  detail: 'feature' | 'spec' | 'story'
+  /** Display typography family for the architecture. */
+  type: 'serif' | 'grotesk' | 'display'
+  /** Dominant image proportion. */
+  imagery: 'portrait' | 'square' | 'wide'
+}
+
 export type Blueprint = {
   id: BlueprintId
   label: string
@@ -37,6 +55,7 @@ export type Blueprint = {
   density: 'roomy' | 'standard' | 'compact'
   /** Where the first photograph sits on the landing screen. */
   hero: 'title-first' | 'catalogue-first' | 'image-first'
+  architecture: ConceptArchitecture
 }
 
 const BLUEPRINTS: Record<BlueprintId, Blueprint> = {
@@ -49,6 +68,14 @@ const BLUEPRINTS: Record<BlueprintId, Blueprint> = {
     initial: 'home',
     density: 'roomy',
     hero: 'title-first',
+    architecture: {
+      header: 'masthead',
+      catalog: 'journal',
+      cards: 'editorial',
+      detail: 'feature',
+      type: 'serif',
+      imagery: 'portrait',
+    },
   },
   index: {
     id: 'index',
@@ -59,6 +86,14 @@ const BLUEPRINTS: Record<BlueprintId, Blueprint> = {
     initial: 'catalog',
     density: 'standard',
     hero: 'catalogue-first',
+    architecture: {
+      header: 'utility',
+      catalog: 'index',
+      cards: 'compact',
+      detail: 'spec',
+      type: 'grotesk',
+      imagery: 'square',
+    },
   },
   immersive: {
     id: 'immersive',
@@ -69,6 +104,14 @@ const BLUEPRINTS: Record<BlueprintId, Blueprint> = {
     initial: 'home',
     density: 'roomy',
     hero: 'image-first',
+    architecture: {
+      header: 'overlay',
+      catalog: 'stories',
+      cards: 'campaign',
+      detail: 'story',
+      type: 'display',
+      imagery: 'wide',
+    },
   },
 }
 
@@ -304,10 +347,13 @@ export function composeDoc(spec: AppSpec, doc: Doc): Doc {
 export type Structure = {
   initial: string
   nav: string[]
+  navModel: string
   sections: string[]
   roles: BlockRole[]
   /** How each home component arranges its own children. */
   layouts: string[]
+  concept: BlueprintId
+  architecture: ConceptArchitecture
   count: number
 }
 
@@ -321,12 +367,22 @@ function roleList(spec: AppSpec, nodes: DocNode[]): BlockRole[] {
 export function structureOf(spec: AppSpec, doc: Doc): Structure {
   const home = doc.screens.find((screen) => screen.kind === 'home')
   const nodes = (home?.sections ?? []).filter((node) => !node.hidden)
+  // Read the architecture from the saved document, not from whichever spec
+  // happened to build the first concept. A review link, editor and validator
+  // must all see the same direction the app renders.
+  const blueprint = blueprintFor({
+    ...spec,
+    direction: doc.design?.direction ?? spec.direction,
+  })
   return {
     initial: doc.screens.find((screen) => screen.id === doc.initialScreen)?.kind ?? 'home',
     nav: doc.screens.filter((screen) => screen.nav).map((screen) => screen.kind),
+    navModel: doc.design?.nav ?? blueprint.id,
     sections: nodes.map((node) => node.variant ?? node.kind),
     roles: roleList(spec, nodes),
     layouts: nodes.map((node) => node.layout ?? 'default'),
+    concept: blueprint.id,
+    architecture: blueprint.architecture,
     count: nodes.length,
   }
 }
@@ -346,6 +402,8 @@ export type PairVerdict = {
   score: number
   sameInitial: boolean
   sameOrder: boolean
+  /** How many of the seven architectural axes are genuinely different. */
+  axesDifferent: number
   reasons: string[]
 }
 
@@ -370,27 +428,44 @@ export function validateConcepts(
       const sectionScore = jaccard(left.sections, right.sections)
       const navScore = jaccard(left.nav, right.nav)
       const sameLayout = left.layouts.join('>') === right.layouts.join('>')
+      // An architecture is more than a section order. The same app can reorder
+      // its home and still present one catalogue, one card and one detail page
+      // in both concepts; those are the parts an owner compares.
+      const axes: [string, boolean][] = [
+        ['navigation model', left.navModel === right.navModel],
+        ['header', left.architecture.header === right.architecture.header],
+        ['catalogue', left.architecture.catalog === right.architecture.catalog],
+        ['cards', left.architecture.cards === right.architecture.cards],
+        ['detail page', left.architecture.detail === right.architecture.detail],
+        ['type system', left.architecture.type === right.architecture.type],
+        ['image treatment', left.architecture.imagery === right.architecture.imagery],
+      ]
+      const axesDifferent = axes.filter(([, same]) => !same).length
       // Hierarchy and chrome are what an owner experiences, so they carry the
       // weight. A shared block vocabulary is expected within one trade; the
       // same order, opening screen and tabs are what make it one design.
       const score =
-        (sameOrder ? 0.35 : 0) +
-        (sameInitial ? 0.2 : 0) +
-        (navScore === 1 ? 0.2 : 0) +
-        (sameLayout ? 0.15 : 0) +
-        (sectionScore === 1 ? 0.1 : 0)
+        (sameOrder ? 0.3 : 0) +
+        (sameInitial ? 0.15 : 0) +
+        (navScore === 1 ? 0.15 : 0) +
+        (sameLayout ? 0.1 : 0) +
+        (sectionScore === 1 ? 0.1 : 0) +
+        (axesDifferent <= 2 ? 0.2 : 0)
       const reasons: string[] = []
       if (sameOrder) reasons.push('same sections in the same order')
       if (sameInitial) reasons.push('same opening screen')
       if (navScore === 1) reasons.push('same tabs')
       if (sameLayout) reasons.push('same component arrangement')
       if (sectionScore >= 0.8) reasons.push('same block set')
+      for (const [name, same] of axes) if (same) reasons.push(`same ${name}`)
+      if (axesDifferent < 5) reasons.push('fewer than five architectural axes differ')
       pairs.push({
         a: docs[i].id,
         b: docs[j].id,
         score: Math.round(score * 100) / 100,
         sameInitial,
         sameOrder,
+        axesDifferent,
         reasons,
       })
     }
@@ -404,6 +479,7 @@ export function validateConcepts(
     ok: pairs.every(
       (pair) =>
         !pair.sameOrder &&
+        pair.axesDifferent >= 5 &&
         !(pair.sameInitial && pair.reasons.includes('same tabs')),
     ),
     pairs,

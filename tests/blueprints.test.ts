@@ -43,8 +43,9 @@ function docsFor(vertical: (typeof TRADES)[number], name?: string) {
 /** The order the real renderer emits home blocks in. */
 function renderedOrder(spec: Parameters<typeof flagshipDocFromSpec>[0], doc: ReturnType<typeof flagshipDocFromSpec>) {
   const html = renderApp(spec, { token: 'blueprint-probe', live: false, flagship: true, doc })
-  const start = html.indexOf('data-screen="home"')
-  const next = html.indexOf('data-screen="', start + 'data-screen="home"'.length)
+  const match = /<section[^>]*data-screen="home"/.exec(html)
+  const start = match?.index ?? -1
+  const next = start < 0 ? -1 : html.indexOf('<section', start + 8)
   const home = start < 0 || next < 0 ? '' : html.slice(start, next)
   return [...home.matchAll(/data-sec="(sec_[^"]+)"/g)].map((match) => match[1])
 }
@@ -135,6 +136,37 @@ describe('structural blueprints', () => {
       // A catalogue cannot lose its product grid or become a different data set
       // just because the arrangement changed.
       for (const entry of entries) expect(entry.doc.screens.map((screen) => screen.kind)).toContain('catalog')
+    }
+  })
+
+  test('every concept exposes its own architecture on the document body', () => {
+    for (const vertical of TRADES) {
+      for (const entry of docsFor(vertical)) {
+        const blueprint = blueprintFor(entry.spec)
+        const html = renderApp(entry.spec, {
+          token: 'architecture-probe',
+          live: false,
+          flagship: true,
+          doc: entry.doc,
+        })
+        expect(html).toContain(`data-concept="${blueprint.id}"`)
+        expect(html).toContain(`data-header="${blueprint.architecture.header}"`)
+        expect(html).toContain(`data-catalog="${blueprint.architecture.catalog}"`)
+        expect(html).toContain(`data-detail="${blueprint.architecture.detail}"`)
+        expect(html).toContain(`[data-concept="${blueprint.id}"]`)
+        expect(html).not.toContain('Photograph to come')
+      }
+    }
+  })
+
+  test('the validator counts architecture, not palette, as differentiation', () => {
+    for (const vertical of TRADES) {
+      const docs = docsFor(vertical)
+      const verdict = validateConcepts(docs[0].spec, docs)
+      expect(verdict.ok).toBe(true)
+      for (const pair of verdict.pairs) {
+        expect(pair.axesDifferent).toBeGreaterThanOrEqual(5)
+      }
     }
   })
 

@@ -1,4 +1,5 @@
 import { compositionBlock, compositionCss, isCompositionVariant } from './compositions'
+import { conceptCss } from './conceptCss'
 import { appScreenId, flagshipDocFromSpec, homeSections, type Doc, type DocNode } from './doc'
 import { stockImageTag } from './flagshipImages'
 import { moneyForSpec } from './pricing'
@@ -93,21 +94,33 @@ function art(index: number, shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' 
   return `<span class="fx-art is-${shape}" style="--fx-i:${index % 6}" aria-hidden="true"><i></i><i></i><i></i></span>`
 }
 
-/** One quiet absence state for a product image, never generated product art. */
-function missingArt(shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' = 'card'): string {
-  return `<span class="fx-art is-${shape} is-missing" aria-hidden="true"><span class="media-missing"><svg class="media-missing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg></span></span>`
+/**
+ * A missing photograph is an editorial absence, not a broken image: a compact
+ * brand-colour field carrying the name it belongs to. It is never a stock
+ * photograph and never a monogram pretending to be the product.
+ */
+function missingArt(shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' = 'card', label = ''): string {
+  // No extra elements: the field is drawn entirely in CSS so saved element
+  // slot ordinals do not shift when a photograph is missing.
+  const text = label.trim().replace(/\s+/g, ' ').slice(0, 32)
+  return `<span class="fx-art is-${shape} is-missing" data-label="${esc(text)}" aria-hidden="true"></span>`
 }
 
 /** Real photography where the trade has a local set, a neutral frame otherwise. */
-function still(spec: AppSpec, index: number, shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' = 'card'): string {
-  // Imported businesses get a neutral frame, not this trade's stock photography.
-  if (spec.website) return missingArt(shape)
+function still(
+  spec: AppSpec,
+  index: number,
+  shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' = 'card',
+  label = '',
+): string {
+  // Imported businesses get a typographic field, not this trade's stock photography.
+  if (spec.website) return missingArt(shape, label)
   const sizes =
     shape === 'room' ? '100vw' : shape === 'plate' ? '(max-width: 620px) 30vw, 140px' : shape === 'quiet' ? '54px' : '(max-width: 620px) 45vw, 220px'
   const photo = stockImageTag(spec.vertical, index, { sizes })
   return photo
     ? `<span class="fx-art is-${shape} has-photo">${photo}</span>`
-    : missingArt(shape)
+    : missingArt(shape, label)
 }
 
 function entryPhotoIndex(spec: AppSpec, key: string): number {
@@ -160,7 +173,7 @@ function restaurantHome(spec: AppSpec): string {
     ${
       feature
         ? `<div class="fx-feature" data-item="${feature.key}" role="button" tabindex="0">
-            ${still(spec, 0, 'plate')}
+            ${still(spec, 0, 'plate', feature.item.name)}
             <div class="fx-feature-copy">
               <span class="fx-eyebrow">From the kitchen</span>
               <b>${esc(feature.item.name)}</b>
@@ -204,7 +217,7 @@ function shopHome(spec: AppSpec): string {
            <div class="fx-products">${selected
              .map(
                (entry, index) => `<div class="fx-product" data-item="${entry.key}" role="button" tabindex="0">
-                 ${still(spec, index)}
+                 ${still(spec, index, 'card', entry.item.name)}
                                    <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec)}</span></div>
                </div>`,
              )
@@ -256,7 +269,7 @@ function salonHome(spec: AppSpec): string {
 function hotelHome(spec: AppSpec): string {
   const rooms = entries(spec).slice(0, 3)
   return `<div class="fx-home fx-hotel">
-    <div class="fx-hotel-image">${still(spec, 6, 'room')}<span class="fx-eyebrow">${esc(spec.address || verticalFor(spec.vertical).label)}</span>${rooms[0] ? `<div class="fx-stay-tag"><span>${esc(rooms[0].section)}</span><b>${esc(rooms[0].item.name)}</b><em>${price(rooms[0].item, spec)}${rooms[0].item.meta ? ` · ${esc(rooms[0].item.meta)}` : ''}</em></div>` : ''}</div>
+    <div class="fx-hotel-image">${still(spec, 6, 'room', spec.name)}<span class="fx-eyebrow">${esc(spec.address || verticalFor(spec.vertical).label)}</span>${rooms[0] ? `<div class="fx-stay-tag"><span>${esc(rooms[0].section)}</span><b>${esc(rooms[0].item.name)}</b><em>${price(rooms[0].item, spec)}${rooms[0].item.meta ? ` · ${esc(rooms[0].item.meta)}` : ''}</em></div>` : ''}</div>
     <div class="fx-hotel-title"><span class="fx-eyebrow">Stay</span><h1>${esc(spec.name)}</h1><p>${esc(spec.tagline)}</p></div>
     <div class="fx-stay-card">
       <div class="fx-stay-dates"><label>Arrive<input type="date" aria-label="Arrival date" /></label><span></span><label>Leave<input type="date" aria-label="Departure date" /></label></div>
@@ -268,7 +281,7 @@ function hotelHome(spec: AppSpec): string {
         ? `<div class="fx-room-stack">${rooms
             .map(
               (entry, index) => `<div class="fx-room" data-item="${entry.key}" role="button" tabindex="0">
-                ${still(spec, index, 'room')}
+                ${still(spec, index, 'room', entry.item.name)}
                 <div class="fx-room-copy"><span class="fx-eyebrow">${esc(entry.section)}</span><b>${esc(entry.item.name)}</b><p>${esc(entry.item.desc)}</p><span class="fx-price">${price(entry.item, spec)}${entry.item.meta ? ` · ${esc(entry.item.meta)}` : ''}</span></div>
               </div>`,
             )
@@ -351,6 +364,8 @@ function visual(
   priority = false,
   /** The exact image the source site published for this item. */
   itemImage?: MenuItem['image'],
+  /** The words a typographic fallback carries when no photograph exists. */
+  label = node.title || '',
 ): string {
   if (itemMedia)
     return `<span class="fx-art is-${shape} has-photo">${photoFor(ctx, itemMedia, node.title || '', undefined, priority)}</span>`
@@ -365,12 +380,12 @@ function visual(
   // An imported business never gets this trade's stock photography as if it
   // were its own. The owner's uploads or the source image above are the only
   // photographs; everything else gets the same quiet missing-image frame.
-  if (ctx.spec.website) return missingArt(shape)
+  if (ctx.spec.website) return missingArt(shape, label)
   const sizes =
     shape === 'room' ? '100vw' : shape === 'plate' ? '(max-width: 620px) 30vw, 140px' : shape === 'quiet' ? '54px' : '(max-width: 620px) 45vw, 220px'
   const shot = stockImageTag(ctx.spec.vertical, photoIndex, { sizes, priority })
   if (shot) return `<span class="fx-art is-${shape} has-photo">${shot}</span>`
-  return missingArt(shape)
+  return missingArt(shape, label)
 }
 
 function fxWrap(ctx: FlagshipContext, node: DocNode, html: string): string {
@@ -469,7 +484,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
       // the kitchen never wrote.
       const description = words || feature?.item.desc || ''
       return `<div class="fx-feature${feature ? '' : ' is-empty'}"${feature ? ` data-item="${feature.key}" role="button" tabindex="0"` : ''}>
-        ${visual(ctx, node, 0, 'plate', true, 0, feature?.item.media, false, feature?.item.image)}
+        ${visual(ctx, node, 0, 'plate', true, 0, feature?.item.media, false, feature?.item.image, feature?.item.name || label)}
         <div class="fx-feature-copy">
           <span class="fx-eyebrow">From the kitchen</span>
           <b>${esc(label)}</b>
@@ -509,7 +524,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           ? `<div class="fx-products">${selected
               .map(
                 (entry, index) => `<div class="fx-product" data-item="${entry.key}" role="button" tabindex="0">
-                  ${visual(ctx, node, index, 'card', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, false, entry.item.image)}
+                  ${visual(ctx, node, index, 'card', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, false, entry.item.image, entry.item.name)}
                   <div class="fx-product-copy"><b>${esc(entry.item.name)}</b><span>${shelfPrice(entry.item, spec)}</span></div>
                 </div>`,
               )
@@ -546,7 +561,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           ? `<div class="fx-services">${services
               .map(
                 (entry, index) => `<div class="fx-service" data-item="${entry.key}" role="button" tabindex="0">
-                  ${visual(ctx, node, index, 'quiet', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, false, entry.item.image)}
+                  ${visual(ctx, node, index, 'quiet', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, false, entry.item.image, entry.item.name)}
                   <div><b>${esc(entry.item.name)}</b><span>${esc(entry.item.meta || entry.item.desc)}</span></div>
                   <div class="fx-service-tail"><b>${price(entry.item, spec)}</b><span>${esc(entry.section)}</span></div>
                 </div>`,
@@ -562,8 +577,20 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     }
     case 'hotel-cover': {
       const room = all[0]
+      const image = visual(ctx, node, 6, 'room', true, 6, room?.item.media, true)
+      // Without a photograph, a hotel gets a typographic front desk rather than
+      // a tall empty frame. The rooms, prices and dates stay visible below it.
+      if (!image.includes('has-photo')) {
+        return `<div class="fx-hotel-type">
+          <span class="fx-eyebrow">${esc(spec.address || verticalFor(spec.vertical).label)}</span>
+          <h1>${esc(heading || spec.name)}</h1>
+          <p>${esc(words || spec.tagline)}</p>
+          <div class="fx-hotel-type-meta">${[hoursLine(spec), spec.address].filter(Boolean).map((fact) => `<span>${esc(fact)}</span>`).join('')}</div>
+          ${room ? `<button type="button" data-go="catalog"><span>${esc(room.section)}</span><b>${esc(room.item.name)}</b><em>${price(room.item, spec)}</em></button>` : ''}
+        </div>`
+      }
       return `<div class="fx-hotel-image">
-        ${visual(ctx, node, 6, 'room', true, 6, room?.item.media, true)}
+        ${image}
         <span class="fx-eyebrow">${esc(spec.address || verticalFor(spec.vertical).label)}</span>
         ${room ? `<div class="fx-stay-tag"><span>${esc(room.section)}</span><b>${esc(room.item.name)}</b><em>${price(room.item, spec)}${room.item.meta ? ` · ${esc(room.item.meta)}` : ''}</em></div>` : ''}
       </div>
@@ -582,7 +609,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
           ? `<div class="fx-room-stack">${rooms
               .map(
                 (entry, index) => `<div class="fx-room" data-item="${entry.key}" role="button" tabindex="0">
-                  ${visual(ctx, node, index, 'room', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, index === 0)}
+                  ${visual(ctx, node, index, 'room', index === 0, entryPhotoIndex(spec, entry.key), entry.item.media, index === 0, undefined, entry.item.name)}
                   <div class="fx-room-copy"><span class="fx-eyebrow">${esc(entry.section)}</span><b>${esc(entry.item.name)}</b><p>${esc(entry.item.desc)}</p><span class="fx-price">${price(entry.item, spec)}${entry.item.meta ? ` · ${esc(entry.item.meta)}` : ''}</span></div>
                 </div>`,
               )
@@ -594,10 +621,16 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
       return `<div class="fx-facts"><span>${esc(heading || hoursLine(spec) || 'Hours')}</span><span>${esc(words || spec.address || '')}</span></div>`
     case 'pro-title':
       return `<div class="fx-pro-head"><span class="fx-eyebrow">${esc(businessLabel(spec))}</span><h1>${esc(heading || spec.name)}</h1><p>${esc(words || spec.tagline)}</p></div>`
-    case 'pro-intro':
+    case 'pro-intro': {
+      const shot = node.media
+        ? photoFor(ctx, node.media, heading)
+        : ctx.spec.website
+          ? ''
+          : stockImageTag('professional', 0, { sizes: '100vw' })
       return `<div class="fx-pro-rule"></div>
-        <figure class="fx-pro-photo">${node.media ? photoFor(ctx, node.media, heading) : stockImageTag('professional', 0, { sizes: '100vw' })}</figure>
+        ${shot ? `<figure class="fx-pro-photo">${shot}</figure>` : ''}
         <div class="fx-pro-intro"><span>${esc(heading || 'How we can help')}</span><p>${esc(words || spec.story)}</p></div>`
+    }
     case 'pro-team': {
       const team = spec.team?.slice(0, 2) ?? []
       if (!team.length) return ''
@@ -2728,5 +2761,9 @@ body[data-trade="professional"][data-direction="editorial"] .fx-pro-intro { disp
 body[data-trade="professional"][data-direction="editorial"] .fx-pro-index { display: grid !important; grid-template-columns: 1fr 1fr; gap: 18px 16px; }
 body[data-trade="professional"][data-direction="editorial"] .fx-pro-row { display: block !important; }
 body[data-trade="professional"][data-direction="editorial"] .fx-pro-num { display: block !important; }
+
+/* The structural layer is last so it can compose over a trade's own styling
+   without replacing the trade's workflow or its editable document. */
+${conceptCss()}
 `
 }

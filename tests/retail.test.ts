@@ -104,10 +104,13 @@ describe('the retail catalogue', () => {
     expect(html).toContain('height: auto')
   })
 
-  test('a product with no photograph gets a quiet blank frame, never artwork', () => {
-    expect(html).toContain('Photograph to come')
+  test('a product with no photograph gets a quiet labelled frame, never artwork', () => {
+    // The fallback is a typographic field named for the item, not a stock
+    // photograph and not an empty grey rectangle.
+    expect(html).toContain('data-label="' + spec.menu[0].items[1].name + '"')
     expect(html).toContain('media-missing-icon')
     expect(html).toContain('media-missing-label')
+    expect(html).not.toContain('Photograph to come')
     const second = html.slice(html.indexOf('data-item="0-1"'), html.indexOf('data-item="0-2"'))
     expect(second).not.toContain('<img')
     expect(second).not.toContain('class="mono"')
