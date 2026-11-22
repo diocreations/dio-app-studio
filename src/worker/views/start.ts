@@ -36,6 +36,24 @@ export function startPage(): string {
     .profile-facts div { display: flex; justify-content: space-between; gap: 14px; border-bottom: 1px dashed var(--line-soft); padding-bottom: 8px; font-size: 13px; }
     .profile-facts span { color: var(--muted); }
     .profile-facts strong { text-align: right; }
+    .profile-facts .prov { display: block; font-size: 11px; color: var(--muted); text-align: right; margin-top: 2px; }
+    .profile-facts .prov[data-needs="1"] { color: #8a4b1f; }
+    .field-evidence { margin-top: 14px; border-top: 1px solid var(--line-soft); padding-top: 12px; }
+    .field-evidence summary { cursor: pointer; font-size: 13px; font-weight: 600; }
+    .field-evidence summary span { color: var(--muted); font-weight: 400; }
+    .evidence-table { display: grid; gap: 10px; margin-top: 10px; }
+    .evidence-row { border: 1px solid var(--line-soft); border-radius: 10px; padding: 9px 11px; background: var(--paper-2); font-size: 12px; }
+    .evidence-row b { display: block; font-size: 12.5px; }
+    .evidence-row .ev-meta { color: var(--muted); margin-top: 3px; overflow-wrap: anywhere; }
+    .evidence-row .ev-value { margin-top: 2px; }
+    .evidence-row .ev-conflict { margin-top: 4px; color: #8a4b1f; }
+    .evidence-row .ev-conflict span { display: block; }
+    .evidence-row a { color: var(--accent); text-decoration: underline; }
+    .evidence-counts { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 11.5px; color: var(--muted); }
+    .catalogue-evidence { margin-top: 10px; }
+    .item-evidence { border-top: 1px solid var(--line-soft); padding: 7px 0; font-size: 11.5px; }
+    .item-evidence b { display: block; font-size: 12px; }
+    .item-evidence .ev-meta { color: var(--muted); overflow-wrap: anywhere; }
     .catalogue-mini { display: grid; gap: 8px; margin-top: 12px; max-height: 305px; overflow: auto; padding-right: 3px; }
     .catalogue-mini div { display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: 10px; font-size: 12.5px; border-bottom: 1px solid var(--line-soft); padding-bottom: 8px; }
     .catalogue-mini img { width: 42px; height: 42px; object-fit: cover; border-radius: 8px; background: var(--paper-2); }
@@ -116,12 +134,21 @@ export function startPage(): string {
             <div class="field"><label for="profile-accent">Brand colour</label><input id="profile-accent" type="color" style="width:100%;height:43px;padding:3px" /></div>
           </div>
           <div class="profile-facts" id="profile-facts"></div>
+          <details class="field-evidence" id="field-evidence">
+            <summary>Where each fact came from <span>· source, method, confidence</span></summary>
+            <div class="evidence-table" id="field-evidence-body"></div>
+          </details>
           <div class="questions" id="questions" hidden><h3>Only what the source could not settle</h3><ul></ul></div>
         </div>
         <div class="profile-side">
           <div class="card-head" style="margin-bottom:4px"><strong>Catalogue read</strong><span class="pill" id="catalogue-count"></span></div>
           <p class="small" style="margin-top:0">The source's own rows, names, prices and photographs. Missing prices stay missing rather than becoming invented ones.</p>
           <div class="catalogue-mini" id="catalogue-mini"></div>
+          <div class="evidence-counts" id="catalogue-evidence-counts"></div>
+          <details class="field-evidence catalogue-evidence" id="catalogue-evidence">
+            <summary>Product evidence <span>· one row per item</span></summary>
+            <div class="evidence-table" id="catalogue-evidence-body"></div>
+          </details>
           <a class="tiny" id="source-link" href="#" target="_blank" rel="noopener" style="display:inline-block;margin-top:12px">Open the source site ↗</a>
         </div>
       </div>
@@ -174,9 +201,41 @@ const START_SCRIPT = `
   const money = (cents, currency) => cents > 0
     ? (currency ? currency + ' ' : '') + (cents / 100).toFixed(2)
     : 'Price not listed'
+  const METHOD_WORD = { 'structured-data': 'structured data', metadata: 'metadata', 'visible-text': 'visible text', inferred: 'inferred' }
+  const CONFIDENCE_WORD = { verified: 'verified', likely: 'likely', guess: 'unconfirmed' }
+  const fieldValue = (field) => field && typeof field === 'object' ? field.value : field
+  const provLine = (field) => {
+    if (!field || typeof field !== 'object' || !field.confidence) return ''
+    const bits = [CONFIDENCE_WORD[field.confidence] || field.confidence, METHOD_WORD[field.method] || field.method]
+    if (field.reference) bits.push(field.reference)
+    if (field.conflicts && field.conflicts.length) bits.push(field.conflicts.length + ' conflicting reading' + (field.conflicts.length === 1 ? '' : 's'))
+    if (field.needsConfirmation) bits.push('needs your confirmation')
+    return bits.join(' · ')
+  }
   const fact = (label, value) => value
     ? '<div><span>' + esc(label) + '</span><strong>' + esc(value) + '</strong></div>'
     : ''
+  const factField = (label, field, display) => {
+    const value = display !== undefined ? display : fieldValue(field)
+    if (!value) return ''
+    const line = provLine(field)
+    return '<div><span>' + esc(label) + '</span><div><strong>' + esc(value) + '</strong>' +
+      (line ? '<em class="prov" data-needs="' + (field && field.needsConfirmation ? '1' : '0') + '">' + esc(line) + '</em>' : '') +
+      '</div></div>'
+  }
+  const evidenceRow = (label, field) => {
+    if (!field || typeof field !== 'object' || !('value' in field)) return ''
+    const raw = field.value && typeof field.value === 'object' ? (field.value.url || '') : field.value
+    return '<div class="evidence-row"><b>' + esc(label) + '</b>' +
+      (raw ? '<div class="ev-value">' + esc(raw) + '</div>' : '<div class="ev-meta">Not found on the source.</div>') +
+      '<div class="ev-meta">' + esc(provLine(field)) +
+        (field.source ? ' · <a href="' + esc(field.source) + '" target="_blank" rel="noopener noreferrer">open source</a>' : '') +
+      '</div>' +
+      (field.conflicts || []).map((conflict) =>
+        '<div class="ev-conflict"><span>Also read: ' + esc(conflict.value) + ' — ' + esc(conflict.source) + '</span></div>'
+      ).join('') +
+      '</div>'
+  }
 
   function say(message, busy) {
     status.textContent = message || ''
@@ -223,15 +282,39 @@ const START_SCRIPT = `
 
     document.getElementById('profile-facts').innerHTML = [
       fact('Website', data.host),
-      fact('Category source', business.category && business.category.method),
+      factField('Name read', business.name),
+      factField('Category', business.category),
       fact('Pages read', String(data.pages || 1)),
       fact('Products', String(items.length)),
       fact('Priced', priced + ' of ' + items.length),
-      fact('Currency', currency || 'Not stated — amounts stay unlabelled'),
-      fact('Phone', business.phone && business.phone.value),
-      fact('Email', business.email && business.email.value),
-      fact('Address', business.address && business.address.value),
+      factField('Currency', commerce.currency, currency || 'Not stated — amounts stay unlabelled'),
+      factField('Phone', business.phone),
+      factField('Email', business.email),
+      factField('Address', business.address),
     ].join('')
+
+    const fields = [
+      ['Business name', business.name],
+      ['Category', business.category],
+      ['One-line description', business.tagline],
+      ['Story', business.story],
+      ['Trade', business.trade],
+      ['Brand colour', business.accent],
+      ['Logo', business.logo],
+      ['Opening hours', business.hours],
+      ['Phone', business.phone],
+      ['Email', business.email],
+      ['Address', business.address],
+      ['Currency', commerce.currency],
+    ]
+    const policies = Array.isArray(data.policies) ? data.policies : []
+    document.getElementById('field-evidence-body').innerHTML = fields.map((entry) => evidenceRow(entry[0], entry[1])).join('') +
+      policies.map((policy) =>
+        '<div class="evidence-row"><b>' + esc(policy.kind) + ' policy</b>' +
+          '<div class="ev-value">' + esc((policy.label && policy.label.value) || 'Linked page') + '</div>' +
+          '<div class="ev-meta">' + esc(provLine(policy.label)) + ' · <a href="' + esc(policy.url) + '" target="_blank" rel="noopener noreferrer">open policy</a></div>' +
+        '</div>'
+      ).join('')
 
     const questions = (data.blockers || []).concat(data.confirmations || [])
     const questionBox = document.getElementById('questions')
@@ -249,12 +332,29 @@ const START_SCRIPT = `
             (item.image
               ? '<img src="' + esc(item.image) + '" alt="" loading="lazy" referrerpolicy="no-referrer" />'
               : '<span class="noimg">no image</span>') +
-            '<b>' + esc(item.name) + '</b>' +
-            '<em>' + esc(money(item.price, currency)) + '</em>' +
+            '<b title="' + esc(provLine(item.fields && item.fields.name)) + '">' + esc(item.name) + '</b>' +
+            '<em title="' + esc(provLine(item.fields && item.fields.price)) + '">' + esc(money(item.price, currency)) + '</em>' +
           '</div>'
         ).join('')
       : '<p class="small" style="margin:0">No commercial catalogue was read. Nothing was invented; the owner can add products in the editor or use the text brief.</p>'
     document.getElementById('catalogue-count').textContent = items.length + ' items'
+    const CATALOGUE_FIELDS = [['name', 'Name'], ['desc', 'Description'], ['price', 'Price'], ['currency', 'Currency'], ['image', 'Photograph'], ['category', 'Category']]
+    document.getElementById('catalogue-evidence-body').innerHTML = items.slice(0, 8).map((item) => {
+      const row = item.fields || {}
+      return '<div class="item-evidence"><b>' + esc(item.name) + '</b>' +
+        CATALOGUE_FIELDS.map((entry) => {
+          const field = row[entry[0]]
+          if (!field) return ''
+          const value = entry[0] === 'image' ? (field.value ? 'source photograph' : 'not found') : (field.value || 'not found')
+          return '<div class="ev-meta">' + esc(entry[1]) + ': ' + esc(value) + ' · ' + esc(provLine(field)) +
+            (field.range ? ' · range ' + esc(field.range.raw) : '') + '</div>'
+        }).join('') +
+        '</div>'
+    }).join('') || '<p class="small" style="margin:0">No catalogue was read, so there is no row to show.</p>'
+    const needConfirm = items.filter((item) => item.fields && Object.keys(item.fields).some((key) => item.fields[key].needsConfirmation)).length
+    const noPhoto = items.filter((item) => item.fields && !item.fields.image.value).length
+    const noDesc = items.filter((item) => !item.desc).length
+    document.getElementById('catalogue-evidence-counts').textContent = items.length + ' items · ' + needConfirm + ' need confirmation · ' + noDesc + ' without a description · ' + noPhoto + ' without a photograph'
     const link = document.getElementById('source-link')
     link.href = data.source
     document.getElementById('discovery-title').setAttribute('title', business.name && business.name.value || '')

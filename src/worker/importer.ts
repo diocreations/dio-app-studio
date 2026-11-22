@@ -1676,6 +1676,20 @@ function imageInCard(chunk: string, base: string | undefined, name: string): Ite
   return undefined
 }
 
+/** A written range such as “£10–£20”. Kept as one reading, never split into a
+ *  single invented price. */
+const PRICE_RANGE = /[£$€₹¥]\s?\d[\d.,]*\s*(?:–|—|-|‒|to|until)\s*(?:[£$€₹¥]\s?)?\d[\d.,]*/i
+
+/** The price text of one card: the exact span when the source wrote a range,
+ *  otherwise the single figure. `ranged` means the lower bound is a starting
+ *  point, so the app must not present it as the item's only price. */
+function priceReading(text: string): { price: string; raw: string; ranged: boolean } | null {
+  const price = text.match(PRICE_PATTERN)?.[0]
+  if (!price) return null
+  const span = PRICE_RANGE.exec(text)?.[0]
+  return { price, raw: span?.replace(/\s+/g, ' ').trim() || price, ranged: Boolean(span) }
+}
+
 /** Products from plain markup: cards whose class says “product”, with the name
  *  and price read out of the card itself. */
 export function cardProducts(html: string, source = ''): Item[] {
@@ -1693,28 +1707,29 @@ export function cardProducts(html: string, source = ''): Item[] {
   for (let index = 0; index < starts.length; index += 1) {
     const start = starts[index]
     const chunk = html.slice(start, Math.min(starts[index + 1] ?? html.length, start + 4200))
-    const price = visibleMarkup(chunk).match(PRICE_PATTERN)?.[0]
-    if (!price) continue
+    const reading = priceReading(visibleMarkup(chunk))
+    if (!reading) continue
     const titleAttr = /<a\b[^>]*title=["']([^"']{2,90})["']/i.exec(chunk)?.[1]
     const heading = /<h[1-4][^>]*>([\s\S]{1,220}?)<\/h[1-4]>/i.exec(chunk)?.[1]
     const link = /<a\b[^>]*>([\s\S]{2,120}?)<\/a>/i.exec(chunk)?.[1]
     const name = collapse(titleAttr || heading || link || '', 60)
     if (name.length < 2) continue
     if (out.some((item) => item.name.toLowerCase() === name.toLowerCase())) continue
-    const cents = toCents(price)
+    const cents = toCents(reading.price)
     const image = imageInCard(chunk, source || undefined, name)
     out.push({
       name,
       desc: '',
       price: cents,
+      ...(reading.ranged ? { meta: 'from' } : {}),
       ...(source ? { sourceUrl: source, sourceMethod: 'visible-text' as const } : {}),
       ...(cents > 0
         ? {
             priceEvidence: {
               method: 'text' as const,
               source,
-              raw: price,
-              currency: CURRENCIES[price.trim().charAt(0)] ?? '',
+              raw: reading.raw,
+              currency: CURRENCIES[reading.price.trim().charAt(0)] ?? '',
               // The figure sat inside this card, beside this name.
               validated: true,
             },
@@ -1783,21 +1798,25 @@ export function linkedProducts(html: string, base: URL): Item[] {
     seen.add(key)
 
     // The price may sit inside the link or beside it, inside this card only.
-    const priced = card.match(PRICE_PATTERN)?.[0] ?? ''
-    const cents = toCents(priced)
+    // A range's lower bound is not a price for this item on its own. Keep both
+    // bounds in `raw` and mark the row as "from" so the app never prints one
+    // figure as if the source had published exactly that.
+    const reading = priceReading(card)
+    const cents = reading ? toCents(reading.price) : 0
     const image = imageInCard(card, source, name)
     out.push({
       name,
       desc: '',
       price: cents,
+      ...(reading?.ranged ? { meta: 'from' } : {}),
       ...(source ? { sourceUrl: source, sourceMethod: 'visible-text' as const } : {}),
-      ...(cents > 0
+      ...(reading && cents > 0
         ? {
             priceEvidence: {
               method: 'text' as const,
               source,
-              raw: priced,
-              currency: CURRENCIES[priced.trim().charAt(0)] ?? '',
+              raw: reading.raw,
+              currency: CURRENCIES[reading.price.trim().charAt(0)] ?? '',
               validated: true,
             },
           }

@@ -5,6 +5,14 @@ import { buildSpec } from './pricing'
 import { flagshipDocFromSpec, type Doc } from './doc'
 import type { AppSpec, MenuItem, VerticalId } from './types'
 import { assessItem, payloadFor, ruleFor, type Payload } from './catalogue'
+import {
+  priceRange,
+  provenance,
+  type Confidence,
+  type Method,
+  type Provenance,
+  type ProvenanceConflict,
+} from './provenance'
 
 /**
  * What a website read actually established, and how well.
@@ -15,15 +23,18 @@ import { assessItem, payloadFor, ruleFor, type Payload } from './catalogue'
  * a value without a confidence cannot be asked about correctly.
  */
 
-export type Method = 'structured-data' | 'metadata' | 'visible-text' | 'inferred'
-export type Confidence = 'verified' | 'likely' | 'guess'
+export type { Confidence, Method, Provenance, ProvenanceConflict }
 
-export type Field<T> = {
-  value: T
-  /** Exact page the value came from. */
-  source: string
-  method: Method
-  confidence: Confidence
+/** One field, with its source, method, reference and confidence. */
+export type Field<T> = Provenance<T>
+
+/** A policy page the site links to. Its content is not verified here: the
+ *  record says plainly what was read (a link and its label), not what the page
+ *  says. */
+export type DiscoveryPolicy = {
+  kind: 'shipping' | 'returns' | 'privacy' | 'terms' | 'other'
+  label: Field<string>
+  url: string
 }
 
 export type DiscoveryItem = {
@@ -50,6 +61,16 @@ export type DiscoveryItem = {
   /** The business's own photograph for this exact item, when the read tied one to it. */
   image?: string
   imageMethod?: 'structured-data' | 'embedded-json' | 'og-image' | 'public-data' | 'visible-markup'
+  /** Field-by-field provenance. A row is not one claim: the name, description,
+   *  price, currency, photograph and category each have their own evidence. */
+  fields: {
+    name: Field<string>
+    desc: Field<string>
+    price: Field<string>
+    currency: Field<string>
+    image: Field<string>
+    category: Field<string>
+  }
 }
 
 export type DiscoverySection = {
@@ -88,6 +109,8 @@ export type Discovery = {
     email: Field<string>
     address: Field<string>
   }
+  /** Policy pages the site links to, read as links rather than as copy. */
+  policies: DiscoveryPolicy[]
   commerce: {
     currency: Field<string>
     sections: DiscoverySection[]
@@ -135,10 +158,71 @@ export type DiscoveryPlan = {
   confirmations: DiscoveryQuestion[]
 }
 
-const EMPTY = { value: '', source: '', method: 'visible-text' as Method, confidence: 'guess' as Confidence }
+function field<T>(
+  value: T,
+  source: string,
+  method: Method,
+  confidence: Confidence,
+  extra: { reference?: string; conflicts?: ProvenanceConflict[]; needsConfirmation?: boolean; range?: Provenance['range'] } = {},
+): Field<T> {
+  return provenance<T>({ value, source, method, confidence, ...extra })
+}
 
-function field<T>(value: T, source: string, method: Method, confidence: Confidence): Field<T> {
-  return { value, source, method, confidence }
+/** The reference for a value read from structured data, named the way a
+ *  reviewer can find it in the page source. */
+const METHOD_REFERENCE: Record<string, string> = {
+  'json-ld': 'json-ld:offers.price',
+  microdata: '[itemprop="price"]',
+  'shopify-variant': 'embedded-json:variants[].price',
+  meta: 'meta[product:price:amount]',
+  text: 'visible-text:card price',
+}
+
+const POLICY_LINK: { kind: DiscoveryPolicy['kind']; pattern: RegExp }[] = [
+  { kind: 'shipping', pattern: /shipping|delivery|dispatch/i },
+  { kind: 'returns', pattern: /returns?|refunds?/i },
+  { kind: 'privacy', pattern: /privacy|gdpr|cookies?/i },
+  { kind: 'terms', pattern: /terms|conditions|legal/i },
+  { kind: 'other', pattern: /polic|faq|accessibility|complaints?/i },
+]
+
+/**
+ * Policy pages the entry page links to. This records a link, its label and the
+ * page it came from — never a summary of a page that was not read. A policy the
+ * crawl did not open is evidence that the policy exists, not evidence of what
+ * it says.
+ */
+function policyLinks(html: string, source: string): DiscoveryPolicy[] {
+  const out: DiscoveryPolicy[] = []
+  const seen = new Set<string>()
+  const anchors = html.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]{1,160}?)<\/a>/gi)
+  for (const match of anchors) {
+    const href = match[1] ?? ''
+    const label = trim((match[2] ?? '').replace(/<[^>]+>/g, ''))
+    let url: URL
+    try {
+      url = new URL(href, source)
+    } catch {
+      continue
+    }
+    if (url.origin !== new URL(source).origin) continue
+    const kind = POLICY_LINK.find((entry) => entry.pattern.test(url.pathname) || entry.pattern.test(label))?.kind
+    if (!kind) continue
+    const key = `${kind}:${url.pathname}`
+    if (seen.has(key)) continue
+    seen.add(key)
+    out.push({
+      kind,
+      url: url.toString(),
+      label: field(label || url.pathname, source, 'visible-text', 'likely', {
+        reference: `a[href="${url.pathname}"]`,
+        // The link is real; what the policy says has not been read. The owner
+        // confirms the policy is theirs rather than being shown invented copy.
+        needsConfirmation: true,
+      }),
+    })
+  }
+  return out.slice(0, 6)
 }
 
 /**
@@ -204,6 +288,12 @@ function trim(value: string): string {
   return value.replace(/\s+/g, ' ').trim()
 }
 
+/** A cents amount as a bare figure. Currency is never attached here: the
+ *  amount and the code are separate fields with separate evidence. */
+function moneyText(cents: number): string {
+  return (cents / 100).toFixed(2)
+}
+
 const CURRENCY_SYMBOL: Record<string, string> = {
   '£': 'GBP',
   $: 'USD',
@@ -215,7 +305,7 @@ const CURRENCY_SYMBOL: Record<string, string> = {
 }
 
 /** Which fields the page backed with structured data rather than prose. */
-function provenance(html: string, site: ImportedSite) {
+function pageSignals(html: string, site: ImportedSite) {
   const blocks = jsonLd(html)
   const names = blocks.map((block) => trim(strings(block.name)[0] ?? '')).filter(Boolean)
   const hours = blocks.flatMap((block) => strings(block.openingHours ?? block.openingHoursSpecification)).map(trim).filter(Boolean)
@@ -248,7 +338,7 @@ export function buildDiscovery(input: {
 }): Discovery {
   const { site, source } = input
   const html = input.html ?? ''
-  const proof = provenance(html, site)
+  const proof = pageSignals(html, site)
   const sourceOf = (section: { name: string } | undefined) => (section ? source : source)
 
   const nameMethod: Method = proof.names.length ? 'structured-data' : proof.ogName || site.name ? 'metadata' : 'visible-text'
@@ -257,11 +347,20 @@ export function buildDiscovery(input: {
   // A name read three ways that disagrees three ways is a conflict, not a pick.
   const nameValues = distinctNames([proof.names[0], proof.ogName, proof.h1].filter(Boolean) as string[])
   const conflicts: DiscoveryConflict[] = []
+  const nameReadings: ProvenanceConflict[] = []
+  if (proof.names[0]) nameReadings.push({ value: proof.names[0], source, method: 'structured-data', reference: 'json-ld:name' })
+  if (proof.ogName) nameReadings.push({ value: proof.ogName, source, method: 'metadata', reference: 'meta[property="og:site_name"]' })
+  if (proof.h1) nameReadings.push({ value: proof.h1, source, method: 'visible-text', reference: 'h1' })
+  const nameConflictReadings = nameValues.length > 1
+    ? nameReadings.filter((reading) => nameValues.some((value) => nameKey(value) === nameKey(reading.value)))
+    : []
   if (nameValues.length > 1) {
     conflicts.push({ field: 'name', values: nameValues.map((value) => ({ value, source })) })
   }
 
   const items = site.menu.flatMap((section) => section.items)
+  const missingDescriptions = items.filter((item) => !item.desc.trim()).length
+  const policies = policyLinks(html, source)
   const priced = items.filter((item) => item.price > 0)
   const withImage = items.filter((item) => item.image?.url)
   const payload = payloadFor(site.vertical)
@@ -328,6 +427,34 @@ export function buildDiscovery(input: {
       ],
     })
   }
+  const currencyReadings: ProvenanceConflict[] = (site.currencyCandidates ?? [])
+    .filter((candidate) => candidate.code)
+    .map((candidate) => ({
+      value: candidate.code,
+      source: candidate.source || source,
+      method: candidate.method === 'meta' ? 'metadata' : candidate.method === 'json-ld' ? 'structured-data' : 'visible-text',
+      reference:
+        candidate.method === 'meta'
+          ? 'meta[product:price:currency]'
+          : candidate.method === 'json-ld'
+            ? 'json-ld:offers.priceCurrency'
+            : 'visible-text:currency beside prices',
+    }))
+  const currencyConflictReadings = [...new Map(currencyReadings.map((entry) => [entry.value, entry])).values()]
+  const currencyConflicted = currencyConflictReadings.length > 1 || Boolean(site.currencyConflict)
+  if (currencyConflicted && currencyConflictReadings.length > 1) {
+    conflicts.push({ field: 'currency', values: currencyConflictReadings.map((entry) => ({ value: entry.value, source: entry.source })) })
+  }
+  const priceConflicts = site.priceConflicts ?? []
+  for (const conflict of priceConflicts) {
+    conflicts.push({
+      field: `price:${conflict.name}`,
+      values: [
+        { value: moneyText(conflict.page), source: conflict.pageSource },
+        { value: moneyText(conflict.feed), source: conflict.feedSource },
+      ],
+    })
+  }
 
   const priceMethod: Method = proof.prices.length && priced.length ? 'structured-data' : priced.length ? 'visible-text' : 'inferred'
   const hoursMethod: Method = proof.hours.length ? 'structured-data' : site.hours ? 'visible-text' : 'inferred'
@@ -348,6 +475,8 @@ export function buildDiscovery(input: {
   if (pricingBasis === 'published' && !currencyBasis) missing.push('currency')
   if (items.length && payload === 'room' && !priced.length) missing.push('room rates')
   if (items.length && !withImage.length) missing.push(`${rule.label} photographs`)
+  if (missingDescriptions) missing.push(`${rule.label} descriptions`)
+  if (items.length && !policies.length) missing.push('business policies')
   if (requirementMissing.length) missing.push(`${rule.label} ${requirementMissing.join(', ')}`)
 
   const evidenceOf = (item: MenuItem): DiscoveryItem['evidence'] => {
@@ -383,8 +512,149 @@ export function buildDiscovery(input: {
     }
   }
 
+  const conflictingPrices = new Map(priceConflicts.map((entry) => [entry.name.toLowerCase(), entry]))
+  const currencyMethod: Method = site.currencyEvidence
+    ? site.currencyEvidence.method === 'meta'
+      ? 'metadata'
+      : site.currencyEvidence.method === 'json-ld' || site.currencyEvidence.method.startsWith('shopify')
+        ? 'structured-data'
+        : 'visible-text'
+    : site.currency
+      ? 'metadata'
+      : symbolCodes.length
+        ? 'visible-text'
+        : 'inferred'
+  const currencyReference = site.currencyEvidence
+    ? site.currencyEvidence.method === 'meta'
+      ? 'meta[product:price:currency]'
+      : site.currencyEvidence.method === 'json-ld'
+        ? 'json-ld:offers.priceCurrency'
+        : site.currencyEvidence.method.startsWith('shopify')
+          ? 'embedded-json:shop.currency'
+          : 'visible-text:currency beside prices'
+    : symbolCodes.length
+      ? 'visible-text:currency beside prices'
+      : undefined
+  const currencyField: DiscoveryItem['fields']['currency'] = field(
+    currencyBasis,
+    site.currencyEvidence?.source || source,
+    currencyMethod,
+    currencyBasis ? (currencyConflicted ? 'guess' : 'likely') : 'guess',
+    {
+      ...(currencyReference ? { reference: currencyReference } : {}),
+      conflicts: currencyConflictReadings.length > 1 ? currencyConflictReadings : [],
+      needsConfirmation: !currencyBasis || currencyConflicted,
+    },
+  )
+
+  /** Each catalogue row's own evidence. A row is not one claim: six fields,
+   *  six origins, and any disagreement kept beside the value it disagrees with. */
+  const fieldsOf = (item: MenuItem, sectionName: string): DiscoveryItem['fields'] => {
+    const nameStructured = item.sourceMethod === 'structured-data' || item.sourceMethod === 'embedded-json'
+    const sourceOfItem = item.sourceUrl || source
+    const priceConflict = conflictingPrices.get(item.name.toLowerCase())
+    const raw = item.priceEvidence?.raw || (item.price > 0 ? moneyText(item.price) : '')
+    const range = priceRange(raw)
+    const priceConfidence: Confidence = priceConflict || range ? 'guess' : item.priceEvidence?.validated ? 'verified' : item.price > 0 ? 'likely' : 'guess'
+    const priceReadings: ProvenanceConflict[] = priceConflict
+      ? [
+          { value: moneyText(priceConflict.page), source: priceConflict.pageSource, method: 'visible-text', reference: 'visible-text:page price' },
+          { value: moneyText(priceConflict.feed), source: priceConflict.feedSource, method: 'structured-data', reference: 'embedded-json:variants[].price' },
+        ]
+      : []
+    const imageMethod = item.image?.method
+    return {
+      name: field(item.name, sourceOfItem, nameStructured ? 'structured-data' : 'visible-text', nameStructured ? 'verified' : 'likely', {
+        reference: nameStructured ? 'json-ld:name' : 'visible-text:card title',
+      }),
+      desc: field(item.desc, sourceOfItem, nameStructured ? 'structured-data' : 'visible-text', item.desc ? (nameStructured ? 'verified' : 'likely') : 'guess', {
+        reference: nameStructured ? 'json-ld:description' : 'visible-text:item description',
+        // A missing description is genuinely missing information, not a
+        // stylistic choice the read is allowed to make for the owner.
+        needsConfirmation: !item.desc.trim(),
+      }),
+      price: field(raw, sourceOfItem, item.priceEvidence?.method === 'json-ld' ? 'structured-data' : 'visible-text', priceConfidence, {
+        reference: METHOD_REFERENCE[item.priceEvidence?.method ?? ''] ?? (item.priceEvidence ? 'visible-text:card price' : undefined),
+        conflicts: priceReadings,
+        needsConfirmation: Boolean(priceConflict) || Boolean(range),
+        ...(range ? { range } : {}),
+      }),
+      currency: currencyField,
+      image: field(item.image?.url ?? '', item.image?.sourceUrl ?? sourceOfItem, imageMethod === 'structured-data' ? 'structured-data' : imageMethod ? 'visible-text' : 'inferred', item.image?.url ? (imageMethod === 'structured-data' ? 'verified' : 'likely') : 'guess', {
+        needsConfirmation: !item.image?.url,
+        reference:
+          imageMethod === 'structured-data'
+            ? 'json-ld:image'
+            : imageMethod === 'embedded-json'
+              ? 'embedded-json:product.image'
+              : imageMethod === 'og-image'
+                ? 'meta[property="og:image"]'
+                : imageMethod
+                  ? 'visible-text:img in product card'
+                  : undefined,
+      }),
+      category: field(sectionName, sourceOfItem, 'visible-text', sectionName && !/^(?:catalogue|products?|featured|items?|the collection)$/i.test(sectionName) ? 'likely' : 'guess', {
+        reference: 'visible-text:section heading',
+        needsConfirmation: !sectionName,
+      }),
+    }
+  }
+
+  const ranged = items
+    .map((item) => ({ name: item.name, range: priceRange(item.priceEvidence?.raw ?? '') }))
+    .filter((entry): entry is { name: string; range: NonNullable<Provenance['range']> } => Boolean(entry.range))
+
   const questions: DiscoveryQuestion[] = []
   if (!site.name.trim()) questions.push({ field: 'name', why: 'Nothing on the site named the business.', kind: 'blocker' })
+  for (const conflict of priceConflicts) {
+    questions.push({
+      field: `price:${conflict.name}`,
+      why: `The page prices “${conflict.name}” at ${moneyText(conflict.page)} and the product feed at ${moneyText(conflict.feed)}. Nothing is published until you choose, and neither figure is guessed at.`,
+      kind: 'confirm',
+    })
+  }
+  if (ranged.length) {
+    const example = ranged[0]
+    questions.push({
+      field: 'price-ranges',
+      why: `${ranged.length} ${rule.label}${ranged.length === 1 ? ' is' : 's are'} priced as a range (for example “${example.range.raw}” for ${example.name}). The app reads the lower bound as a starting price and says “from”; confirm the range or give us one price.`,
+      kind: 'confirm',
+    })
+  }
+  if (missingDescriptions) {
+    questions.push({
+      field: 'descriptions',
+      why: `${missingDescriptions} of ${items.length} ${rule.label}${items.length === 1 ? '' : 's'} ${missingDescriptions === 1 ? 'has' : 'have'} no description on the site. Nothing was written for them; add your own words in the editor.`,
+      kind: 'confirm',
+    })
+  }
+  if (site.verticalConfidence === 'guessed') {
+    questions.push({
+      field: 'category',
+      why: `The trade was inferred${site.category ? ` as “${site.category}”` : ''} from the pages read rather than stated by the business. Is that how you describe it?`,
+      kind: 'confirm',
+    })
+  }
+  if (items.length && !policies.length) {
+    questions.push({
+      field: 'policies',
+      why: 'No shipping, returns, privacy or terms page was linked from the pages read. The app does not write a policy: add yours before publishing.',
+      kind: 'confirm',
+    })
+  }
+  if (items.length && !withImage.length) {
+    questions.push({
+      field: 'photographs',
+      why: `No ${rule.label} photograph was published on the pages read. The app uses its own typographic field rather than a stock photo or another product's image.`,
+      kind: 'confirm',
+    })
+  } else if (items.length && withImage.length < items.length) {
+    questions.push({
+      field: 'photographs',
+      why: `${items.length - withImage.length} of ${items.length} ${rule.label}s have no photograph on the site. They keep a typographic field; no stock image is substituted.`,
+      kind: 'confirm',
+    })
+  }
   // A name taken from the domain is a guess about the brand, and the site may
   // write it with spaces, capitals or punctuation that a hostname cannot hold.
   if (site.nameSource === 'host' || (site.nameSource === undefined && /^[a-z0-9]+$/.test(site.name.trim()))) {
@@ -475,39 +745,78 @@ export function buildDiscovery(input: {
       usedSitemap: Boolean(input.usedSitemap),
     },
     business: {
-      name: field(site.name.trim(), source, nameMethod, nameConfidence),
+      name: field(site.name.trim(), source, nameMethod, nameConfidence, {
+        reference: proof.names.length
+          ? 'json-ld:name'
+          : proof.ogName
+            ? 'meta[property="og:site_name"]'
+            : site.nameSource === 'title'
+              ? 'title'
+              : site.nameSource === 'host'
+                ? 'website hostname'
+                : 'h1',
+        conflicts: nameConflictReadings,
+        needsConfirmation: site.nameSource === 'host' || nameConfidence !== 'verified',
+      }),
       category: field(
         site.category.trim(),
         source,
         site.categoryBasis && /structured|schema/i.test(site.categoryBasis) ? 'structured-data' : 'visible-text',
         site.categoryBasis && /structured|schema/i.test(site.categoryBasis) ? 'verified' : site.category ? 'likely' : 'guess',
+        {
+          reference: site.categoryBasis && /structured|schema/i.test(site.categoryBasis) ? 'json-ld:@type' : 'visible-text:business category',
+          needsConfirmation: !site.category.trim() || site.verticalConfidence === 'guessed',
+        },
       ),
-      tagline: field(site.tagline.trim(), source, 'visible-text', site.tagline ? 'likely' : 'guess'),
-      story: field(site.story.trim(), source, 'visible-text', site.story ? 'likely' : 'guess'),
-      trade: field(site.vertical, source, 'inferred', site.verticalConfidence === 'detected' ? 'verified' : 'guess'),
+      tagline: field(site.tagline.trim(), source, 'visible-text', site.tagline ? 'likely' : 'guess', {
+        reference: 'meta[property="og:description"] or visible introduction',
+      }),
+      story: field(site.story.trim(), source, 'visible-text', site.story ? 'likely' : 'guess', {
+        reference: 'visible-text:about copy',
+      }),
+      trade: field(site.vertical, source, 'inferred', site.verticalConfidence === 'detected' ? 'verified' : 'guess', {
+        reference: site.categoryBasis || 'trade signals on the pages read',
+        needsConfirmation: site.verticalConfidence !== 'detected',
+      }),
       accent: field(
         site.accent,
         site.accent ? source : '',
         site.design?.palette ? 'visible-text' : 'inferred',
         site.accent ? 'likely' : 'guess',
+        { reference: site.design?.palette ? 'stylesheet palette' : 'theme-color or design tokens' },
       ),
-      logo: field(site.logoImage ?? null, source, 'metadata', site.logoImage ? 'likely' : 'guess'),
-      hours: field(site.hours.trim(), source, hoursMethod, site.hours ? (proof.hours.length ? 'verified' : 'likely') : 'guess'),
-      phone: field(site.phone.trim(), source, contactMethod, site.phone ? (proof.phone.length ? 'verified' : 'likely') : 'guess'),
-      email: field(site.email.trim(), source, 'visible-text', site.email ? 'likely' : 'guess'),
+      logo: field(site.logoImage ?? null, source, 'metadata', site.logoImage ? 'likely' : 'guess', {
+        reference: 'structured data logo, og:logo or link[rel=icon]',
+      }),
+      hours: field(site.hours.trim(), site.contactEvidence?.hours || source, hoursMethod, site.hours ? (proof.hours.length ? 'verified' : 'likely') : 'guess', {
+        reference: proof.hours.length ? 'json-ld:openingHours' : 'visible-text:opening hours',
+      }),
+      phone: field(site.phone.trim(), site.contactEvidence?.phone || source, contactMethod, site.phone ? (proof.phone.length ? 'verified' : 'likely') : 'guess', {
+        reference: proof.phone.length ? 'json-ld:telephone' : 'a[href^="tel:"]',
+      }),
+      email: field(site.email.trim(), site.contactEvidence?.email || source, 'visible-text', site.email ? 'likely' : 'guess', {
+        reference: 'a[href^="mailto:"]',
+      }),
       address: field(
         site.address.trim(),
-        source,
+        site.contactEvidence?.address || source,
         proof.addressBlocks.length ? 'structured-data' : 'visible-text',
         site.address ? (proof.addressBlocks.length ? 'verified' : 'likely') : 'guess',
+        { reference: proof.addressBlocks.length ? 'json-ld:address' : 'visible-text:address' },
       ),
     },
+    policies,
     commerce: {
       currency: field(
         currencyBasis,
-        source,
-        site.currency ? 'metadata' : symbolCodes.length ? 'visible-text' : 'inferred',
-        currencyBasis ? 'likely' : 'guess',
+        site.currencyEvidence?.source || source,
+        currencyMethod,
+        currencyBasis ? (currencyConflicted ? 'guess' : 'likely') : 'guess',
+        {
+          ...(currencyReference ? { reference: currencyReference } : {}),
+          conflicts: currencyConflictReadings.length > 1 ? currencyConflictReadings : [],
+          needsConfirmation: !currencyBasis || currencyConflicted,
+        },
       ),
       sections: site.menu.map((section) => ({
         name: section.name,
@@ -523,6 +832,7 @@ export function buildDiscovery(input: {
           image: item.image?.url,
           imageMethod: item.image?.method,
           evidence: evidenceOf(item),
+          fields: fieldsOf(item, section.name),
         })),
       })),
       products: items.length,

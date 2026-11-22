@@ -400,7 +400,7 @@ function visual(
     // without the shared class it renders at its own pixel size and the box
     // shows one arbitrary slice of it. It fits whole by default, because a
     // tall product shot cropped to a card can show nothing but background.
-    return `<span class="fx-art is-${shape} has-photo"><img class="fx-photo is-source" src="${esc(itemImage.url)}" alt="${esc(itemImage.alt || '')}" loading="${priority ? 'eager' : 'lazy'}" decoding="async" referrerpolicy="no-referrer" style="object-fit:${itemImage.fit === 'cover' ? 'cover' : 'contain'};object-position:${itemImage.positionX ?? 50}% ${itemImage.positionY ?? 50}%" onerror="this.style.display='none'" /></span>`
+    return `<span class="fx-art is-${shape} has-photo"><img class="fx-photo is-source" src="${esc(itemImage.url)}" alt="${esc(itemImage.alt || label)}" loading="${priority ? 'eager' : 'lazy'}" decoding="async" referrerpolicy="no-referrer" style="object-fit:${itemImage.fit === 'cover' ? 'cover' : 'contain'};object-position:${itemImage.positionX ?? 50}% ${itemImage.positionY ?? 50}%" onerror="this.style.display='none'" /></span>`
   if (useMedia && node.media)
     return `<span class="fx-art is-${shape} has-photo">${photoFor(ctx, node.media, node.title || '', undefined, priority)}</span>`
   // An imported business never gets this trade's stock photography as if it

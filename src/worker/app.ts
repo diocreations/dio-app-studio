@@ -2140,7 +2140,7 @@ export function renderApp(
   const markHtml = spec.logoImage
     // No width/height attributes: they would impose a square ratio on a wide
     // wordmark and crop it to the first few letters at 26px tall.
-    ? `<img src="${esc(spec.logoImage.url)}" alt="" decoding="async" referrerpolicy="no-referrer" />`
+    ? `<img src="${esc(spec.logoImage.url)}" alt="" aria-hidden="true" decoding="async" referrerpolicy="no-referrer" />`
     : esc(spec.logo)
 
   return `<!doctype html>
@@ -2523,7 +2523,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           // fact; the price alone still identifies the option.
           const priceOnly = /^[£$€₹¥][ ]?[0-9][0-9.,]*$/.test(String(variant.name).trim())
           return '<button class="variant' + (on ? ' on' : '') + (soldOut ? ' is-sold-out' : '') + '" type="button" data-variant="' + esc(variantRef(variant)) + '" data-variant-key="' + key + '" aria-pressed="' + (on ? 'true' : 'false') + '"' + (soldOut ? ' disabled' : '') + '>' +
-            (variant.media ? '<img src="/p/' + esc(DATA.token) + '/media/' + esc(variant.media.id) + '/320.webp" alt="" style="width:18px;height:18px;object-fit:cover;border-radius:50%;margin-right:5px" />' : '') +
+            (variant.media ? '<img src="/p/' + esc(DATA.token) + '/media/' + esc(variant.media.id) + '/320.webp" alt="' + esc(item.name + (variant.name ? ' — ' + variant.name : '')) + '" style="width:18px;height:18px;object-fit:cover;border-radius:50%;margin-right:5px" />' : '') +
             (priceOnly
               ? '<b>' + (soldOut ? 'Unavailable' : money(variant.price)) + '</b>'
               : '<span>' + esc(variant.name) + '</span><b>' + (soldOut ? 'Unavailable' : money(variant.price)) + '</b>') +
