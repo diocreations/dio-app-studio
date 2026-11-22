@@ -1,0 +1,115 @@
+{
+  "name": "Restaurant",
+  "kind": "Seasonal neighbourhood restaurant",
+  "tagline": "Seasonal plates, cooked to order.",
+  "story": "A forty-seat room, one short menu and a kitchen that changes it whenever the market does.",
+  "accent": "#c8452b",
+  "logo": "RE",
+  "hours": "Tue–Sun 17:00–23:00",
+  "phone": "+1 555 0142",
+  "address": "8 Furnace Yard, Old Town",
+  "vertical": "restaurant",
+  "actions": {
+    "home": "View menu",
+    "view": "View menu",
+    "add": "Add to order",
+    "book": "Request a table",
+    "quote": "Ask us anything"
+  },
+  "features": [
+    "catalog",
+    "ordering",
+    "booking",
+    "loyalty",
+    "offers",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Starters",
+      "items": [
+        {
+          "name": "Burrata, heirloom tomatoes",
+          "desc": "Basil, olive oil",
+          "price": 1200
+        },
+        {
+          "name": "Warm sourdough",
+          "desc": "Cultured butter, sea salt",
+          "price": 600
+        }
+      ]
+    },
+    {
+      "name": "Mains",
+      "items": [
+        {
+          "name": "Sea bass",
+          "desc": "Fennel, brown butter",
+          "price": 2400,
+          "tag": "Popular"
+        },
+        {
+          "name": "Lamb ragu",
+          "desc": "Pappardelle, pecorino",
+          "price": 2100
+        },
+        {
+          "name": "Mushroom risotto",
+          "desc": "Aged parmesan",
+          "price": 1800,
+          "tag": "Veg"
+        }
+      ]
+    },
+    {
+      "name": "Puddings & drinks",
+      "items": [
+        {
+          "name": "Tiramisu",
+          "desc": "Made each morning",
+          "price": 800
+        },
+        {
+          "name": "House spritz",
+          "desc": "Aperitivo, olive",
+          "price": 900
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Two courses, $24",
+      "body": "Midweek lunch, Tuesday to Thursday until 3pm."
+    },
+    {
+      "title": "Counter seats",
+      "body": "Walk-ins only, from 6pm."
+    }
+  ],
+  "loyalty": {
+    "goal": 6,
+    "reward": "A main on the house"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "editorial",
+  "fulfilment": {
+    "options": [
+      "Pickup",
+      "Delivery",
+      "At a table"
+    ],
+    "source": "default"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "name": "Personal portfolio",
+  "kind": "Designer and art director",
+  "tagline": "Quiet work, made carefully.",
+  "story": "Identity and editorial design for small presses, studios and the odd museum. One person, no account managers.",
+  "accent": "#2b2b2b",
+  "logo": "PE",
+  "hours": "Studio Mon–Fri 10:00–18:00",
+  "phone": "+1 555 0103",
+  "address": "Studio 3, Old Bakery Yard",
+  "vertical": "portfolio",
+  "actions": {
+    "home": "Start a project",
+    "view": "View project",
+    "add": "Add to order",
+    "book": "Book an intro call",
+    "quote": "Start a project"
+  },
+  "features": [
+    "catalog",
+    "quote",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Identity",
+      "items": [
+        {
+          "name": "Field Notes Press",
+          "desc": "Wordmark, covers, series system",
+          "price": 0,
+          "meta": "2024"
+        },
+        {
+          "name": "Kelvin Coffee",
+          "desc": "Identity and packaging",
+          "price": 0,
+          "meta": "2023",
+          "tag": "Selected"
+        }
+      ]
+    },
+    {
+      "name": "Editorial",
+      "items": [
+        {
+          "name": "The Long Room, issue 4",
+          "desc": "Art direction, 96 pages",
+          "price": 0,
+          "meta": "2024"
+        },
+        {
+          "name": "Museum quarterly",
+          "desc": "Grid and type system",
+          "price": 0,
+          "meta": "2022"
+        }
+      ]
+    },
+    {
+      "name": "Digital",
+      "items": [
+        {
+          "name": "Studio archive",
+          "desc": "Site and image system",
+          "price": 0,
+          "meta": "2023"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Two project slots",
+      "body": "Autumn, identity or editorial."
+    },
+    {
+      "title": "Portfolio reviews",
+      "body": "Thirty minutes, free, Thursdays."
+    }
+  ],
+  "loyalty": {
+    "goal": 2,
+    "reward": "A free type workshop"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "gallery",
+  "fulfilment": {
+    "options": [
+      "Online",
+      "In studio"
+    ],
+    "source": "default"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "v": 2,
+  "accent": "#3f4bd8",
+  "design": {
+    "direction": "modern",
+    "nav": "dock"
+  },
+  "initialScreen": "scr_catalog",
+  "screens": [
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Courses",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Learn",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_courses_enrol",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "courses-enrol",
+          "title": "Start with the free lesson",
+          "text": "Every course opens with a full lesson you can watch before you pay. No card, no sign-up.",
+          "cta": {
+            "label": "Choose a course",
+            "screen": "scr_catalog"
+          },
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_courses_list",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "courses-list",
+          "title": "Courses open now",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_courses_path",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "courses-path",
+          "title": "How a course runs",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_courses_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "courses-hero",
+          "title": "Online courses",
+          "text": "Learn it properly, at your own pace.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_courses_included",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "courses-included",
+          "title": "What's included"
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "More",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

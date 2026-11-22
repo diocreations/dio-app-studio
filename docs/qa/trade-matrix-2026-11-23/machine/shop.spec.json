@@ -1,0 +1,114 @@
+{
+  "name": "Shop & retail",
+  "kind": "Independent homeware shop",
+  "tagline": "Things worth keeping.",
+  "story": "A small shop of makers we know by name: stoneware from a two-person studio, linen woven a county over.",
+  "accent": "#2a5a8f",
+  "logo": "SH",
+  "hours": "Tue–Sat 10:00–18:00",
+  "phone": "+1 555 0163",
+  "address": "3 Lantern Court, East Side",
+  "vertical": "shop",
+  "actions": {
+    "home": "Shop the collection",
+    "view": "View product",
+    "add": "Add to cart",
+    "book": "Visit the shop",
+    "quote": "Ask about a piece"
+  },
+  "features": [
+    "catalog",
+    "ordering",
+    "delivery",
+    "loyalty",
+    "offers",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Ceramics",
+      "items": [
+        {
+          "name": "Stoneware mug",
+          "desc": "Speckled glaze, 300ml",
+          "price": 2800,
+          "tag": "Bestseller"
+        },
+        {
+          "name": "Serving bowl",
+          "desc": "Hand-thrown, 28cm",
+          "price": 4600
+        },
+        {
+          "name": "Bud vase",
+          "desc": "Matte ash glaze",
+          "price": 3200
+        }
+      ]
+    },
+    {
+      "name": "Textiles",
+      "items": [
+        {
+          "name": "Linen throw",
+          "desc": "Stonewashed, 130×180cm",
+          "price": 12000
+        },
+        {
+          "name": "Cushion cover",
+          "desc": "Woad-dyed linen",
+          "price": 4800
+        }
+      ]
+    },
+    {
+      "name": "Furniture",
+      "items": [
+        {
+          "name": "Sculptural chair",
+          "desc": "Solid ash, pale finish",
+          "price": 24000
+        },
+        {
+          "name": "Oak stool",
+          "desc": "Hand-turned, 45cm",
+          "price": 9500,
+          "tag": "Limited"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Local delivery, $2.99",
+      "body": "Within five miles, next day."
+    },
+    {
+      "title": "First look: new ceramics",
+      "body": "Friday evening, in the shop."
+    }
+  ],
+  "loyalty": {
+    "goal": 5,
+    "reward": "10% off your next order"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "minimal",
+  "fulfilment": {
+    "options": [
+      "Pickup",
+      "Delivery"
+    ],
+    "source": "default"
+  }
+}

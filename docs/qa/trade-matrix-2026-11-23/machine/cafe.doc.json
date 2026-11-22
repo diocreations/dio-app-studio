@@ -1,0 +1,147 @@
+{
+  "v": 2,
+  "accent": "#8a5a2b",
+  "design": {
+    "direction": "editorial",
+    "nav": "floating"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Café",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_cafe_menu",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "cafe-menu",
+          "title": "From the counter",
+          "layout": "strip"
+        },
+        {
+          "id": "sec_fx_cafe_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "cafe-hero",
+          "title": "Café & bakery",
+          "text": "Slow mornings, fast coffee.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          },
+          "layout": "list"
+        },
+        {
+          "id": "sec_fx_cafe_order",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "cafe-order",
+          "title": "Takeaway, ready when you are",
+          "text": "Order ahead and collect at the bar.",
+          "cta": {
+            "label": "Start an order",
+            "screen": "scr_catalog"
+          }
+        },
+        {
+          "id": "sec_fx_cafe_reserve",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "cafe-reserve",
+          "title": "A table, held for you",
+          "text": "Kitchen open mon–fri 7:00–16:00",
+          "cta": {
+            "label": "Reserve a table",
+            "screen": "scr_book"
+          }
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Menu",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Reserve",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Visit",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "name": "Online store",
+  "kind": "Independent online shop",
+  "tagline": "Small batches, shipped daily.",
+  "story": "A two-person studio selling direct: everything made in runs of fifty, packed in the same room it is made in.",
+  "accent": "#b3391f",
+  "logo": "ON",
+  "hours": "Packed Mon–Fri, 9:00–17:00",
+  "phone": "+1 555 0119",
+  "address": "Unit 4, Fielding Estate",
+  "vertical": "ecommerce",
+  "actions": {
+    "home": "Shop new in",
+    "view": "View product",
+    "add": "Add to cart",
+    "book": "Book a fitting",
+    "quote": "Ask about an order"
+  },
+  "features": [
+    "catalog",
+    "ordering",
+    "delivery",
+    "loyalty",
+    "offers",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "New in",
+      "items": [
+        {
+          "name": "Everyday tote",
+          "desc": "Waxed canvas, brass clips",
+          "price": 6800
+        },
+        {
+          "name": "Desk tray",
+          "desc": "Oak offcuts, oiled",
+          "price": 4200,
+          "tag": "Popular"
+        },
+        {
+          "name": "Cotton throw",
+          "desc": "Woven in small runs",
+          "price": 9400
+        }
+      ]
+    },
+    {
+      "name": "For the kitchen",
+      "items": [
+        {
+          "name": "Beech board",
+          "desc": "End grain, 30cm",
+          "price": 5200
+        },
+        {
+          "name": "Linen apron",
+          "desc": "Stone or rust",
+          "price": 3800
+        }
+      ]
+    },
+    {
+      "name": "Gifting",
+      "items": [
+        {
+          "name": "Gift card",
+          "desc": "Sent by email",
+          "price": 5000
+        },
+        {
+          "name": "Workshop pair",
+          "desc": "Two places, any date",
+          "price": 12000
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Delivery $2.99, tracked",
+      "body": "Two to three working days."
+    },
+    {
+      "title": "Seconds sale",
+      "body": "Slight marks, half price, this week."
+    }
+  ],
+  "loyalty": {
+    "goal": 5,
+    "reward": "$15 off your next order"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "minimal",
+  "fulfilment": {
+    "options": [
+      "Delivery",
+      "Pickup"
+    ],
+    "source": "default"
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "v": 2,
+  "accent": "#b3391f",
+  "design": {
+    "direction": "minimal",
+    "nav": "dock"
+  },
+  "initialScreen": "scr_catalog",
+  "screens": [
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Browse",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Shop",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_ecom_products",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "ecom-products",
+          "title": "The shelf",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_ecom_rewards",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "ecom-rewards",
+          "title": "Keep coming back",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_ecom_delivery",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "ecom-delivery",
+          "title": "Packed and posted",
+          "text": "Orders placed before 2pm leave the same working day. Collection is from the workshop, usually next day.",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_ecom_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "ecom-hero",
+          "title": "Online store",
+          "text": "Small batches, shipped daily.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_ecom_drop",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "ecom-drop",
+          "title": "New this week"
+        }
+      ]
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Visit",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

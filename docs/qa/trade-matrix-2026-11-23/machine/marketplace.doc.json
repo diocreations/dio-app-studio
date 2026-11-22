@@ -1,0 +1,149 @@
+{
+  "v": 2,
+  "accent": "#d98324",
+  "design": {
+    "direction": "minimal",
+    "nav": "dock"
+  },
+  "initialScreen": "scr_catalog",
+  "screens": [
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_c_marketplace_categories",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-marketplace-categories",
+          "title": "Categories",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_c_marketplace_delivery",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-marketplace-delivery",
+          "title": "Delivery and collection",
+          "text": "Delivery 09:00–23:00",
+          "follows": {
+            "text": "hours"
+          },
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_c_marketplace_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-marketplace-hero",
+          "title": "Marketplace",
+          "text": "Every shop on the street, one basket.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_c_marketplace_vendors",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-marketplace-vendors",
+          "title": "The shops"
+        },
+        {
+          "id": "sec_fx_c_marketplace_shop",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "c-marketplace-shop",
+          "title": "One basket, any store",
+          "text": "Order from several shops at once and track it to the door.",
+          "cta": {
+            "label": "Shop the market",
+            "screen": "scr_catalog"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Contact",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

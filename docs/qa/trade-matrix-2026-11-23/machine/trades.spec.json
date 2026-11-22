@@ -1,0 +1,121 @@
+{
+  "name": "Trades & home services",
+  "kind": "Plumbing and heating",
+  "tagline": "Turn up, fix it, clean up.",
+  "story": "One van, two engineers and a promise to tell you the price before the spanner comes out.",
+  "accent": "#a8741a",
+  "logo": "TR",
+  "hours": "Mon–Sat 7:30–18:00 · Emergency 24h",
+  "phone": "+1 555 0109",
+  "address": "Covering the whole city",
+  "vertical": "trades",
+  "actions": {
+    "home": "Get a quote",
+    "view": "View job",
+    "add": "Add to order",
+    "book": "Book a call-out",
+    "quote": "Request a quote"
+  },
+  "features": [
+    "catalog",
+    "booking",
+    "quote",
+    "offers",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Plumbing",
+      "items": [
+        {
+          "name": "Leak repair",
+          "desc": "Same day where possible",
+          "price": 0,
+          "meta": "from $120"
+        },
+        {
+          "name": "Bathroom refit",
+          "desc": "Full install, four days",
+          "price": 0,
+          "meta": "from $3,800"
+        }
+      ]
+    },
+    {
+      "name": "Heating",
+      "items": [
+        {
+          "name": "Boiler service",
+          "desc": "Certificate included",
+          "price": 9500,
+          "meta": "1 hr"
+        },
+        {
+          "name": "New boiler",
+          "desc": "Supply and fit",
+          "price": 0,
+          "meta": "from $2,900"
+        }
+      ]
+    },
+    {
+      "name": "Emergency",
+      "items": [
+        {
+          "name": "Out-of-hours call-out",
+          "desc": "Within two hours",
+          "price": 15000,
+          "meta": "first hour"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Free quote in 24 hours",
+      "body": "Send a photo, get a price the next day."
+    },
+    {
+      "title": "Landlord certificates",
+      "body": "Booked this week, certificate by email."
+    }
+  ],
+  "loyalty": {
+    "goal": 3,
+    "reward": "A free annual boiler check"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": true,
+    "staff": true,
+    "tagline": true
+  },
+  "staff": [
+    "Dan Mercer",
+    "Ruth Okafor"
+  ],
+  "team": [
+    {
+      "name": "Dan Mercer",
+      "role": "Heating engineer",
+      "credential": "Gas Safe 552103"
+    },
+    {
+      "name": "Ruth Okafor",
+      "role": "Plumbing lead",
+      "credential": "City & Guilds"
+    }
+  ],
+  "custom": "",
+  "direction": "technical",
+  "fulfilment": {
+    "options": [
+      "At your place"
+    ],
+    "source": "default"
+  }
+}

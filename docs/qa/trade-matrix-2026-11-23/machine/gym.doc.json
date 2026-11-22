@@ -1,0 +1,163 @@
+{
+  "v": 2,
+  "accent": "#1f6b52",
+  "design": {
+    "direction": "performance",
+    "nav": "dock"
+  },
+  "initialScreen": "scr_catalog",
+  "screens": [
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Plans",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Train",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_gym_timetable",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "gym-timetable",
+          "title": "This week",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_gym_plans",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "gym-plans",
+          "title": "Memberships",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_gym_join",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "gym-join",
+          "title": "Not sure where to start?",
+          "text": "Tell us your goal and we will suggest the right plan.",
+          "cta": {
+            "label": "Ask about membership",
+            "screen": "scr_quote"
+          },
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_gym_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "gym-hero",
+          "title": "Gym & studio",
+          "text": "Coaching, not guesswork.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_gym_trainers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "gym-trainers",
+          "title": "Your coaches"
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Classes",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Join",
+      "icon": "quote",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Visit",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

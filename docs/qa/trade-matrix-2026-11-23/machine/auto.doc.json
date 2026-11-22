@@ -1,0 +1,180 @@
+{
+  "v": 2,
+  "accent": "#2a5a8f",
+  "design": {
+    "direction": "technical",
+    "nav": "dock"
+  },
+  "initialScreen": "scr_catalog",
+  "screens": [
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Work",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Garage",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_auto_quote",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "auto-quote",
+          "title": "Not sure what it needs?",
+          "text": "Describe the noise, the light or the warning. We will price the diagnosis before you book it in.",
+          "cta": {
+            "label": "Get a quote",
+            "screen": "scr_quote"
+          },
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_auto_jobs",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "auto-jobs",
+          "title": "Work & prices",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_auto_vehicle",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "auto-vehicle",
+          "title": "What we look after",
+          "text": "Petrol, diesel, hybrid and electric. Cars and light vans.",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_auto_hero",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "auto-hero",
+          "title": "Garage & auto",
+          "text": "Fixed properly, explained plainly.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          }
+        },
+        {
+          "id": "sec_fx_auto_slots",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "auto-slots",
+          "title": "Next available",
+          "text": "Choose a slot and we confirm by phone the same day.",
+          "cta": {
+            "label": "Book a slot",
+            "screen": "scr_book"
+          }
+        },
+        {
+          "id": "sec_fx_auto_promise",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "auto-promise",
+          "title": "What a service includes"
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Book",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Quote",
+      "icon": "quote",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Visit",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

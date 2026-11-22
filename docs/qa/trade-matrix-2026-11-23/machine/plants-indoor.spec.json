@@ -1,0 +1,111 @@
+{
+  "name": "Indoor plant shop",
+  "kind": "Houseplant shop",
+  "tagline": "Green that tolerates a north window.",
+  "story": "A shop full of plants that survive real flats: low light, radiators, and a fortnight away in August.",
+  "accent": "#2f6b3a",
+  "logo": "IN",
+  "hours": "Tue–Sat 10:00–18:00 · Sun 11:00–16:00",
+  "phone": "+1 555 0123",
+  "address": "3 Marlow Lane, Basement",
+  "vertical": "plants-indoor",
+  "actions": {
+    "home": "Shop the plants",
+    "view": "View plant",
+    "add": "Add to order",
+    "book": "Book a repotting",
+    "quote": "Ask about a plant"
+  },
+  "features": [
+    "catalog",
+    "ordering",
+    "offers",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Easy care",
+      "items": [
+        {
+          "name": "Snake plant",
+          "desc": "Any corner, water monthly",
+          "price": 2400
+        },
+        {
+          "name": "ZZ plant",
+          "desc": "Happy in low light",
+          "price": 3200,
+          "tag": "Popular"
+        },
+        {
+          "name": "Pothos",
+          "desc": "Trailing, fast growing",
+          "price": 1600
+        }
+      ]
+    },
+    {
+      "name": "Statement",
+      "items": [
+        {
+          "name": "Fiddle-leaf fig",
+          "desc": "1.2m, bright room",
+          "price": 8400
+        },
+        {
+          "name": "Monstera",
+          "desc": "Mature, four leaves",
+          "price": 5600
+        }
+      ]
+    },
+    {
+      "name": "Pots & soil",
+      "items": [
+        {
+          "name": "Terracotta pot",
+          "desc": "16cm, with saucer",
+          "price": 1200
+        },
+        {
+          "name": "Aroid mix",
+          "desc": "5 litres, bark and perlite",
+          "price": 900
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Pot up free",
+      "body": "Bring your plant in, we will repot it."
+    },
+    {
+      "title": "Three plants, $55",
+      "body": "Pick any three from easy care."
+    }
+  ],
+  "loyalty": {
+    "goal": 4,
+    "reward": "A plant on the house"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "editorial",
+  "fulfilment": {
+    "options": [
+      "Pickup",
+      "Local delivery"
+    ],
+    "source": "default"
+  }
+}

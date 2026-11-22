@@ -1,0 +1,161 @@
+{
+  "v": 2,
+  "accent": "#7a4b8f",
+  "design": {
+    "direction": "luxe",
+    "nav": "floating"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_salon_services",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "salon-services",
+          "title": "Choose a treatment",
+          "layout": "strip"
+        },
+        {
+          "id": "sec_fx_salon_title",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "salon-title",
+          "title": "Time that belongs to you.",
+          "text": "Salon & spa · 22 Orchard Row, High Street",
+          "follows": {
+            "title": "tagline"
+          },
+          "layout": "list"
+        },
+        {
+          "id": "sec_fx_salon_staff",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "salon-staff",
+          "text": "With Maya Chen, Noa Williams, Elena Rossi",
+          "layout": "strip"
+        },
+        {
+          "id": "sec_fx_salon_dates",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "salon-dates",
+          "title": "Choose a day"
+        },
+        {
+          "id": "sec_fx_salon_action",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "salon-action",
+          "title": "Request appointment",
+          "cta": {
+            "label": "Request appointment",
+            "screen": "scr_book"
+          }
+        },
+        {
+          "id": "sec_fx_offers",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "offers",
+          "title": "Right now"
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Book",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Visit",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Enquiry",
+      "icon": "quote",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

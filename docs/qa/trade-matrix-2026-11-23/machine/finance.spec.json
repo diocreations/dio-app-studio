@@ -1,0 +1,128 @@
+{
+  "name": "Financial services",
+  "kind": "Independent financial adviser",
+  "tagline": "Plain numbers, no surprises.",
+  "story": "Unhurried financial advice for people who would rather understand the plan than be sold one.",
+  "accent": "#145a4a",
+  "logo": "FI",
+  "hours": "Mon–Fri 9:00–17:30",
+  "phone": "+1 555 0177",
+  "address": "Suite 2, Corn Exchange",
+  "vertical": "finance",
+  "actions": {
+    "home": "Request a review",
+    "view": "View service",
+    "add": "Add to order",
+    "book": "Book a call",
+    "quote": "Request a review"
+  },
+  "features": [
+    "catalog",
+    "booking",
+    "quote",
+    "offers",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Planning",
+      "items": [
+        {
+          "name": "Financial review",
+          "desc": "Two meetings, written plan",
+          "price": 45000,
+          "meta": "fixed fee"
+        },
+        {
+          "name": "Retirement check",
+          "desc": "Where you are, what it buys",
+          "price": 30000,
+          "meta": "fixed fee",
+          "tag": "Popular"
+        }
+      ]
+    },
+    {
+      "name": "Mortgages",
+      "items": [
+        {
+          "name": "First-time buyer",
+          "desc": "Whole of market",
+          "price": 0,
+          "meta": "fee on completion"
+        },
+        {
+          "name": "Remortgage",
+          "desc": "Includes product switch",
+          "price": 0,
+          "meta": "from $499"
+        }
+      ]
+    },
+    {
+      "name": "Protection",
+      "items": [
+        {
+          "name": "Life cover",
+          "desc": "Family or mortgage linked",
+          "price": 0,
+          "meta": "quoted"
+        },
+        {
+          "name": "Income protection",
+          "desc": "Short or long term",
+          "price": 0,
+          "meta": "quoted"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "First meeting free",
+      "body": "Thirty minutes, no paperwork."
+    },
+    {
+      "title": "Annual check-in",
+      "body": "Included for review clients."
+    }
+  ],
+  "loyalty": {
+    "goal": 2,
+    "reward": "A free annual check-in"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": true,
+    "staff": true,
+    "tagline": true
+  },
+  "staff": [
+    "Helen Marsh",
+    "Owen Shah"
+  ],
+  "team": [
+    {
+      "name": "Helen Marsh",
+      "role": "Independent adviser",
+      "credential": "FPFS"
+    },
+    {
+      "name": "Owen Shah",
+      "role": "Mortgage adviser",
+      "credential": "CeMAP"
+    }
+  ],
+  "custom": "",
+  "direction": "classic",
+  "fulfilment": {
+    "options": [
+      "Online",
+      "In person"
+    ],
+    "source": "default"
+  }
+}

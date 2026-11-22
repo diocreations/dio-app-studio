@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-11-22T15:49:33.842Z",
+  "source": "https://geestores.com/",
+  "origin": "http://127.0.0.1:5173",
+  "before": "docs/qa/stage1-url-first-2026-11-23/before-390.png",
+  "profileShot": "docs/qa/stage1-url-first-2026-11-23/after-profile-390.png",
+  "conceptShots": [
+    "docs/qa/stage1-url-first-2026-11-23/concept-1-390.png",
+    "docs/qa/stage1-url-first-2026-11-23/concept-2-390.png",
+    "docs/qa/stage1-url-first-2026-11-23/concept-3-390.png"
+  ],
+  "chosenShot": "docs/qa/stage1-url-first-2026-11-23/chosen-workspace-390.png",
+  "landing": {
+    "scrollY": 622,
+    "discoveryTop": 90,
+    "conceptsTop": 1582
+  },
+  "journey": {
+    "profile": {
+      "name": "GeeStores",
+      "category": "Jewellery shop",
+      "tagline": "Shop handcrafted jhumkas, harams, necklaces, earring combos and festive sarees",
+      "facts": [
+        "Website: geestores.com",
+        "Category source: visible-text",
+        "Pages read: 10",
+        "Products: 100",
+        "Priced: 100 of 100",
+        "Currency: INR",
+        "Phone: 918075257652",
+        "Email: info@geestores.com"
+      ],
+      "sourceLine": "Read from https://geestores.com/ · 10 pages · 100 catalogue entries · 69 photographs",
+      "title": "GeeStores — Jewellery shop"
+    },
+    "concepts": [
+      {
+        "id": "minimal",
+        "name": "Minimal boutique",
+        "note": "Hairlines, list rows, quiet type · Catalogue first",
+        "kind": "Jewellery shop · minimal composition",
+        "preview": "/p/83c4813f64906ddf2765161a/app?concept=minimal",
+        "iframeTitle": "GeeStores · Jewellery shop",
+        "screens": 6,
+        "images": 67,
+        "failedImages": 0,
+        "imagesMissingAlt": 5
+      },
+      {
+        "id": "editorial",
+        "name": "Gallery retail",
+        "note": "One piece per row, large imagery, editorial pacing · Image first",
+        "kind": "Jewellery shop · editorial composition",
+        "preview": "/p/83c4813f64906ddf2765161a/app?concept=editorial",
+        "iframeTitle": "GeeStores · Jewellery shop",
+        "screens": 6,
+        "images": 67,
+        "failedImages": 0,
+        "imagesMissingAlt": 5
+      },
+      {
+        "id": "lifestyle",
+        "name": "Contemporary lifestyle",
+        "note": "Soft, photographic, roomy · Narrative lead",
+        "kind": "Jewellery shop · lifestyle composition",
+        "preview": "/p/83c4813f64906ddf2765161a/app?concept=lifestyle",
+        "iframeTitle": "GeeStores · Jewellery shop",
+        "screens": 6,
+        "images": 67,
+        "failedImages": 0,
+        "imagesMissingAlt": 5
+      }
+    ]
+  },
+  "chosen": {
+    "pressed": "true",
+    "disabled": false,
+    "label": "Open Minimal boutique"
+  },
+  "workspace": {
+    "path": "/p/83c4813f64906ddf2765161a",
+    "title": "GeeStores · build v2",
+    "h1": "GeeStores"
+  },
+  "networkFailures": []
+}

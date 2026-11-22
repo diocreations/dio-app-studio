@@ -1,0 +1,117 @@
+{
+  "name": "Online courses",
+  "kind": "Online learning platform",
+  "tagline": "Learn it properly, at your own pace.",
+  "story": "Short, practical courses built by people who do the work: twelve lessons, one project, feedback at the end.",
+  "accent": "#3f4bd8",
+  "logo": "ON",
+  "hours": "Lessons open any time",
+  "phone": "+1 555 0134",
+  "address": "Online, taught from Bristol",
+  "vertical": "courses",
+  "actions": {
+    "home": "Browse the courses",
+    "view": "View course",
+    "add": "Enrol on this course",
+    "book": "Book a call",
+    "quote": "Ask about a course"
+  },
+  "features": [
+    "catalog",
+    "ordering",
+    "loyalty",
+    "offers",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Foundations",
+      "items": [
+        {
+          "name": "Read a set of accounts",
+          "desc": "Six lessons, two hours each",
+          "price": 14900
+        },
+        {
+          "name": "Write for work",
+          "desc": "Eight lessons, templates included",
+          "price": 12900,
+          "tag": "Popular"
+        }
+      ]
+    },
+    {
+      "name": "Professional",
+      "items": [
+        {
+          "name": "Bookkeeping, properly",
+          "desc": "Twelve lessons, one project",
+          "price": 34900
+        },
+        {
+          "name": "Manage a small team",
+          "desc": "Ten lessons, scripts and reviews",
+          "price": 29900
+        }
+      ]
+    },
+    {
+      "name": "Short courses",
+      "items": [
+        {
+          "name": "Spreadsheets that hold up",
+          "desc": "Three lessons",
+          "price": 4900
+        },
+        {
+          "name": "Pricing your work",
+          "desc": "Two lessons",
+          "price": 3900
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Two courses, 20% off",
+      "body": "Any pair, this month only."
+    },
+    {
+      "title": "Free first lesson",
+      "body": "Every course, no card needed."
+    }
+  ],
+  "loyalty": {
+    "goal": 2,
+    "reward": "A free short course"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": true,
+    "staff": false,
+    "tagline": true
+  },
+  "team": [
+    {
+      "name": "Rosa Bell",
+      "role": "Course lead",
+      "credential": "Finance & operations"
+    },
+    {
+      "name": "Tomas Reed",
+      "role": "Writing tutor",
+      "credential": "Editorial"
+    }
+  ],
+  "custom": "",
+  "direction": "modern",
+  "fulfilment": {
+    "options": [
+      "Online"
+    ],
+    "source": "default"
+  }
+}

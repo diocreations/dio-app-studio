@@ -1,0 +1,100 @@
+{
+  "name": "Kindergarten",
+  "kind": "Kindergarten and preschool",
+  "tagline": "Small days, big discoveries.",
+  "story": "One room, eighteen children and a garden with a mud kitchen. Ratios better than the law requires.",
+  "accent": "#c2557a",
+  "logo": "KI",
+  "hours": "Mon–Fri 7:30–18:00",
+  "phone": "+1 555 0161",
+  "address": "The Old School Room, Chapel Lane",
+  "vertical": "kindergarten",
+  "actions": {
+    "home": "Book a visit",
+    "view": "View session",
+    "add": "Add to order",
+    "book": "Book a visit",
+    "quote": "Ask about a place"
+  },
+  "features": [
+    "catalog",
+    "booking",
+    "offers",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Sessions",
+      "items": [
+        {
+          "name": "Morning session",
+          "desc": "8:45–12:00, snack included",
+          "price": 2400,
+          "meta": "per day"
+        },
+        {
+          "name": "Full day",
+          "desc": "8:45–15:30, lunch included",
+          "price": 4200,
+          "meta": "per day",
+          "tag": "Popular"
+        },
+        {
+          "name": "Term place",
+          "desc": "Five mornings a week",
+          "price": 32000,
+          "meta": "per term"
+        }
+      ]
+    },
+    {
+      "name": "Extras",
+      "items": [
+        {
+          "name": "Breakfast club",
+          "desc": "From 7:30",
+          "price": 600,
+          "meta": "per day"
+        },
+        {
+          "name": "Lunch",
+          "desc": "Cooked on site",
+          "price": 350,
+          "meta": "per day"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Two settling visits",
+      "body": "Free, before your start date."
+    },
+    {
+      "title": "Sibling discount",
+      "body": "Ten per cent on the second child."
+    }
+  ],
+  "loyalty": {
+    "goal": 3,
+    "reward": "A free breakfast club week"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "playful",
+  "fulfilment": {
+    "options": [
+      "At the kindergarten"
+    ],
+    "source": "default"
+  }
+}

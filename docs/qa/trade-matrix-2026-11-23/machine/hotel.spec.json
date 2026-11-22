@@ -1,0 +1,100 @@
+{
+  "name": "Hotel & guesthouse",
+  "kind": "Small guesthouse",
+  "tagline": "Six rooms, one long view.",
+  "story": "A converted coastguard house above the harbour. Breakfast is at one long table, whether you like it or not.",
+  "accent": "#1f6b52",
+  "logo": "HO",
+  "hours": "Reception 7:00–22:00",
+  "phone": "+1 555 0131",
+  "address": "Harbour Head, North Cliff",
+  "vertical": "hotel",
+  "actions": {
+    "home": "View rooms",
+    "view": "View room",
+    "add": "Add to order",
+    "book": "Request a stay",
+    "quote": "Ask about a stay"
+  },
+  "features": [
+    "catalog",
+    "booking",
+    "quote",
+    "offers",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Rooms",
+      "items": [
+        {
+          "name": "Garden double",
+          "desc": "Ground floor, private door",
+          "price": 18000,
+          "meta": "per night"
+        },
+        {
+          "name": "Loft suite",
+          "desc": "Sea view, roll-top bath",
+          "price": 26000,
+          "meta": "per night",
+          "tag": "Popular"
+        },
+        {
+          "name": "Single",
+          "desc": "Small, quiet, harbour side",
+          "price": 12000,
+          "meta": "per night"
+        }
+      ]
+    },
+    {
+      "name": "Extras",
+      "items": [
+        {
+          "name": "Breakfast",
+          "desc": "One table, 8–10am",
+          "price": 1800,
+          "meta": "per person"
+        },
+        {
+          "name": "Late checkout",
+          "desc": "Until 2pm",
+          "price": 3000
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Third night half price",
+      "body": "Stay two, book a third for less."
+    },
+    {
+      "title": "Book direct",
+      "body": "Breakfast included when you book here."
+    }
+  ],
+  "loyalty": {
+    "goal": 3,
+    "reward": "A free night on your third stay"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "luxe",
+  "fulfilment": {
+    "options": [
+      "At the guesthouse"
+    ],
+    "source": "default"
+  }
+}

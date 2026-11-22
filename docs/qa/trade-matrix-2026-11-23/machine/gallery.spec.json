@@ -1,0 +1,111 @@
+{
+  "name": "Art gallery",
+  "kind": "Contemporary art gallery",
+  "tagline": "Hung slowly, looked at for longer.",
+  "story": "A converted print works showing eight exhibitions a year: painting, work on paper, and the occasional piece that will not fit through the door.",
+  "accent": "#6a4a30",
+  "logo": "AR",
+  "hours": "Wed–Sun 11:00–18:00",
+  "phone": "+1 555 0171",
+  "address": "12 Kiln Lane",
+  "vertical": "gallery",
+  "actions": {
+    "home": "See what’s on",
+    "view": "View work",
+    "add": "Add to order",
+    "book": "Book a viewing",
+    "quote": "Ask about a work"
+  },
+  "features": [
+    "catalog",
+    "booking",
+    "events",
+    "gallery"
+  ],
+  "menu": [
+    {
+      "name": "Works on view",
+      "items": [
+        {
+          "name": "Kiln Study II",
+          "desc": "Ada Mensah · oil on board",
+          "price": 185000,
+          "meta": "42 × 30 cm",
+          "tag": "Current"
+        },
+        {
+          "name": "Green Interior",
+          "desc": "Ines Kaur · gouache",
+          "price": 64000,
+          "meta": "30 × 22 cm"
+        },
+        {
+          "name": "Shore, Late",
+          "desc": "Ada Mensah · oil on linen",
+          "price": 420000,
+          "meta": "120 × 90 cm"
+        }
+      ]
+    },
+    {
+      "name": "Editions",
+      "items": [
+        {
+          "name": "Tide Line",
+          "desc": "Print, edition of 40",
+          "price": 18000,
+          "meta": "50 × 40 cm"
+        },
+        {
+          "name": "Rooms We Left",
+          "desc": "Risograph, edition of 60",
+          "price": 9500,
+          "meta": "A3"
+        }
+      ]
+    },
+    {
+      "name": "Sculpture",
+      "items": [
+        {
+          "name": "Bench for a Small Room",
+          "desc": "Tom Rees · oak",
+          "price": 260000,
+          "meta": "140 × 40 cm"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Low Tide, High Window",
+      "body": "Ada Mensah · until 14 Dec"
+    },
+    {
+      "title": "Rooms We Left",
+      "body": "Ines Kaur · until 22 Feb"
+    }
+  ],
+  "loyalty": {
+    "goal": 3,
+    "reward": "A print from the current show"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "gallery",
+  "fulfilment": {
+    "options": [
+      "In gallery",
+      "Shipping"
+    ],
+    "source": "default"
+  }
+}

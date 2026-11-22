@@ -1,0 +1,169 @@
+{
+  "v": 2,
+  "accent": "#17110d",
+  "design": {
+    "direction": "classic",
+    "nav": "floating"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_pro_index",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-index",
+          "title": "Services",
+          "layout": "strip"
+        },
+        {
+          "id": "sec_fx_pro_title",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-title",
+          "title": "Professional services",
+          "text": "Clean books, no surprises.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          },
+          "layout": "list"
+        },
+        {
+          "id": "sec_fx_pro_team",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-team",
+          "title": "The people you'll work with",
+          "layout": "strip"
+        },
+        {
+          "id": "sec_fx_pro_facts",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-facts",
+          "title": "Mon–Fri 9:00–18:00",
+          "text": "Second floor, 12 Corn Exchange",
+          "follows": {
+            "title": "hours",
+            "text": "address"
+          },
+          "layout": "strip"
+        },
+        {
+          "id": "sec_fx_pro_intro",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-intro",
+          "title": "How we can help",
+          "text": "A three-person practice for owner-managed businesses: fixed fees, plain English, and a phone that gets answered."
+        },
+        {
+          "id": "sec_fx_pro_actions",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-actions",
+          "title": "Request a proposal",
+          "cta": {
+            "label": "Request a proposal",
+            "screen": "scr_quote"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Consult",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Contact",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Enquire",
+      "icon": "quote",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

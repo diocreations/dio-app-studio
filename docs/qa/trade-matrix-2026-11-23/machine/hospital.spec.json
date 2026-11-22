@@ -1,0 +1,100 @@
+{
+  "name": "Hospital & health",
+  "kind": "Community hospital",
+  "tagline": "Care close to home.",
+  "story": "A community hospital with an urgent treatment centre, two wards and clinics that mostly run to time.",
+  "accent": "#0f6b6b",
+  "logo": "HO",
+  "hours": "Visiting 14:00–20:00",
+  "phone": "+1 555 0108",
+  "address": "Brookfield Way, Northgate",
+  "vertical": "hospital",
+  "actions": {
+    "home": "Book a clinic",
+    "view": "View clinic",
+    "add": "Add to order",
+    "book": "Book a clinic",
+    "quote": "Ask the hospital"
+  },
+  "features": [
+    "catalog",
+    "booking",
+    "quote",
+    "offers",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Clinics",
+      "items": [
+        {
+          "name": "Outpatient clinic",
+          "desc": "Referral or walk-in",
+          "price": 0,
+          "meta": "by referral"
+        },
+        {
+          "name": "Diagnostics",
+          "desc": "Bloods, ECG, imaging",
+          "price": 0,
+          "meta": "same day"
+        },
+        {
+          "name": "Antenatal",
+          "desc": "Midwife-led",
+          "price": 0,
+          "meta": "weekly",
+          "tag": "Popular"
+        }
+      ]
+    },
+    {
+      "name": "Visiting & transport",
+      "items": [
+        {
+          "name": "Ward visiting",
+          "desc": "Two until eight, daily",
+          "price": 0,
+          "meta": "free"
+        },
+        {
+          "name": "Patient transport",
+          "desc": "Book two days ahead",
+          "price": 0,
+          "meta": "free"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Walk-in flu clinic",
+      "body": "Weekdays 8–11, no appointment needed."
+    },
+    {
+      "title": "Free visitor parking",
+      "body": "First hour, both car parks."
+    }
+  ],
+  "loyalty": {
+    "goal": 3,
+    "reward": "Priority booking for your next clinic"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "clinical",
+  "fulfilment": {
+    "options": [
+      "At the hospital"
+    ],
+    "source": "default"
+  }
+}

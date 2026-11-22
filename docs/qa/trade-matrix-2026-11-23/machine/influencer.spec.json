@@ -1,0 +1,102 @@
+{
+  "name": "Influencer & creator",
+  "kind": "Creator and presenter",
+  "tagline": "One camera, a hundred briefs.",
+  "story": "Home and food, filmed in a real kitchen: three formats a month, no set builds, everything shot and edited in-house.",
+  "accent": "#c72f6b",
+  "logo": "IN",
+  "hours": "Replies Mon–Thu, 9:00–17:00",
+  "phone": "+1 555 0196",
+  "address": "Based in Manchester, films anywhere",
+  "vertical": "influencer",
+  "actions": {
+    "home": "Request the rate card",
+    "view": "View format",
+    "add": "Add to order",
+    "book": "Book a shoot day",
+    "quote": "Request the rate card"
+  },
+  "features": [
+    "catalog",
+    "quote",
+    "offers",
+    "events",
+    "gallery",
+    "reviews"
+  ],
+  "menu": [
+    {
+      "name": "Formats",
+      "items": [
+        {
+          "name": "Sponsored reel",
+          "desc": "30–45s, one round of edits",
+          "price": 0,
+          "meta": "from $1,800"
+        },
+        {
+          "name": "Long-form video",
+          "desc": "Six to eight minutes",
+          "price": 0,
+          "meta": "from $3,200",
+          "tag": "Popular"
+        },
+        {
+          "name": "Story set",
+          "desc": "Three frames with links",
+          "price": 0,
+          "meta": "from $650"
+        }
+      ]
+    },
+    {
+      "name": "Usage & exclusivity",
+      "items": [
+        {
+          "name": "30-day paid usage",
+          "desc": "One channel, one market",
+          "price": 0,
+          "meta": "from $300"
+        },
+        {
+          "name": "Category exclusivity",
+          "desc": "No competitor for 90 days",
+          "price": 0,
+          "meta": "from $900"
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "title": "Q3 dates open",
+      "body": "Two shoot days left before September."
+    },
+    {
+      "title": "Three-reel bundle",
+      "body": "Book three, the edit is included."
+    }
+  ],
+  "loyalty": {
+    "goal": 3,
+    "reward": "An extra story set on your next brief"
+  },
+  "sampleContent": {
+    "menu": true,
+    "contact": true,
+    "story": true,
+    "offers": true,
+    "team": false,
+    "staff": false,
+    "tagline": true
+  },
+  "custom": "",
+  "direction": "bold",
+  "fulfilment": {
+    "options": [
+      "Remote",
+      "On location"
+    ],
+    "source": "default"
+  }
+}
