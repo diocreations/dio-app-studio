@@ -66,6 +66,67 @@ export type PriceEvidence = {
   variant?: string
 }
 
+/** One field's own origin. A row can be part website, part owner; this record
+ *  says which, how it was read, and whether the build could validate it. */
+export type FieldProvenance = {
+  source: 'website' | 'owner' | 'unverified'
+  method?:
+    | 'structured-data'
+    | 'embedded-json'
+    | 'visible-text'
+    | 'metadata'
+    | 'json-ld'
+    | 'shopify-variant'
+    | 'microdata'
+    | 'meta'
+    | 'text'
+    | 'og-image'
+    | 'public-data'
+    | 'visible-markup'
+    | 'owner'
+  /** The page or endpoint the field was read from, when known. */
+  url?: string
+  confidence: 'verified' | 'reported' | 'unverified'
+  /** True only when the build could tie this field to the item's own record. */
+  validated: boolean
+  /** When an owner field was last confirmed or changed. */
+  at?: string
+}
+
+export type MenuItemField = 'name' | 'desc' | 'price' | 'image' | 'availability'
+
+/** One reading of a catalogue row's fields, kept with the time the build
+ *  recorded it. The value is stored as the source wrote it, so a review page can
+ *  quote the earlier reading without re-parsing its evidence. */
+export type SourceSnapshot = {
+  name?: string
+  desc?: string
+  price?: string
+  priceEvidence?: PriceEvidence
+  /** ISO time this reading entered the build. */
+  at: string
+}
+
+/** What happened after an owner replaced a source value: the reading it
+ *  replaced, the newest reading from the site, and every explicit decision.
+ *  Kept so no later read can erase either side of the correction. */
+export type SourceTrail = {
+  /** The website reading the owner first corrected. */
+  original?: SourceSnapshot
+  /** The most recent website reading the owner has been shown. */
+  latest?: SourceSnapshot
+  /** When the owner last changed one of this row's fields. */
+  ownerAt?: string
+  /** Every explicit choice between the website's reading and the owner's. */
+  decisions?: {
+    field: 'name' | 'desc' | 'price'
+    choice: 'owner' | 'source'
+    ownerValue?: string
+    sourceValue?: string
+    at: string
+  }[]
+}
+
 export type MenuItem = {
   /** Stable identity derived from the section and name, not from position, so
    *  a document can reference this item across re-imports and reorderings. */
@@ -85,6 +146,25 @@ export type MenuItem = {
   capacity?: number
   /** Where this price was read, when the source made it verifiable. */
   priceEvidence?: PriceEvidence
+  /** The exact page this entry was read from. Kept so every catalogue row can
+   *  show its provenance, and so a policy or location page can be recognised
+   *  as such rather than silently becoming a product. */
+  sourceUrl?: string
+  /** How this entry was read: structured data, embedded JSON, visible text. */
+  sourceMethod?: 'structured-data' | 'embedded-json' | 'visible-text' | 'metadata'
+  /** The fields the owner wrote or corrected. Their value is owner-provided
+   *  evidence, not a website reading, and the review surfaces say so. */
+  ownerFields?: ('name' | 'desc' | 'price')[]
+  /** What the website said before the owner replaced it, kept so a correction
+   *  never erases the source it corrected. */
+  sourcePriceEvidence?: PriceEvidence
+  /** The dated record behind an owner correction: the reading that was
+   *  replaced, any later website reading, and the owner's decisions. Private
+   *  working data; it never reaches the customer app. */
+  sourceTrail?: SourceTrail
+  /** Field-by-field origin, so a website name and an owner price are never
+   *  collapsed into one row-level claim. Private working data. */
+  fieldProvenance?: Partial<Record<MenuItemField, FieldProvenance>>
   /** Every option the source lists for one product, at its own price and in its
    *  own currency. `selected` marks the one whose price this item publishes, so
    *  a cheapest-variant "from" price is never mistaken for the only option. */
@@ -100,6 +180,9 @@ export type MenuItem = {
     values?: Record<string, string>
     /** False only when the owner has marked this combination unavailable. */
     available?: boolean
+    /** Price and availability each keep their own origin; a variant price is
+     *  not proven by the parent product's price reading. */
+    fieldProvenance?: Partial<Record<'price' | 'availability', FieldProvenance>>
     /** A photograph of this option, when the owner has one. */
     media?: ItemMedia
   }[]
@@ -120,7 +203,7 @@ export type MenuItem = {
     alt?: string
     source: 'website'
     /** How the source tied this photograph to this item. */
-    method?: 'structured-data' | 'embedded-json' | 'og-image' | 'public-data'
+    method?: 'structured-data' | 'embedded-json' | 'og-image' | 'public-data' | 'visible-markup'
     /** How the source photograph sits in its frame. A whole-product fit is the
      *  default: cropping a tall illustration to a card can show its empty
      *  background and read as no photograph at all. */
@@ -148,11 +231,74 @@ export type MenuSection = { name: string; items: MenuItem[] }
 /** A social profile or other link taken from the customer's own site. */
 export type SocialLink = { label: string; url: string }
 
+/** Work a practice has completed, kept apart from the services it sells. */
+export type ProjectEntry = {
+  title: string
+  desc?: string
+  source?: 'website' | 'owner'
+  /** True only once an owner has accepted this entry into the published
+   *  portfolio. A title read from the website starts unaccepted and is never
+   *  shown to a customer as established work until the owner publishes it. */
+  accepted?: boolean
+}
+
+/** What a page was, and where its content belongs in the business model. */
+export type SourceContentKind =
+  | 'policy'
+  | 'article'
+  | 'location'
+  | 'promotion'
+  | 'navigation'
+  | 'unknown'
+
+/**
+ * The read's own record: what was kept as inventory, what was read but belongs
+ * somewhere else, what was rejected, and what is still missing. It is stored on
+ * the build so an owner can review the evidence after the crawl is gone, and so
+ * nothing is silently discarded.
+ */
+export type SourceReview = {
+  source: string
+  host: string
+  status: 'complete' | 'partial' | 'empty'
+  pages: {
+    read: string[]
+    failed: { url: string; reason: string }[]
+    usedSitemap: boolean
+  }
+  found: string[]
+  missing: string[]
+  /** Content that was read but is not this trade's inventory, with its real
+   *  destination. `information` stays available on the Visit screen; `portfolio`
+   *  can become a project; `excluded` is site chrome. */
+  rejected: {
+    name: string
+    section: string
+    kind: SourceContentKind
+    reason: string
+    source?: string
+    destination: 'information' | 'portfolio' | 'excluded'
+  }[]
+  questions: { field: string; why: string; kind: 'blocker' | 'confirm' }[]
+  conflicts: { field: string; values: { value: string; source: string }[] }[]
+}
+
 /** A trailer or clip: the label is the button, the url opens the film itself. */
 export type VideoLink = { label: string; url: string }
 
 /** Platform products sold alongside the app, priced in `pricing.ts`. */
 export type BundleId = 'marketplace'
+
+/** The owner-editable verbs a customer sees. Each label is paired with the
+ *  workflow the renderer already implements; editing copy never invents a new
+ *  destination. */
+export type ActionLabels = {
+  home: string
+  view: string
+  add: string
+  book: string
+  quote: string
+}
 
 /** The words this business uses. Drives every label in the generated app. */
 export type Vocab = {
@@ -240,6 +386,9 @@ export type AppSpec = {
   phone: string
   address: string
   vertical: VerticalId
+  /** Owner-editable customer action words. Defaults follow the trade workflow;
+   *  the settings screen can change the copy, not the destination. */
+  actions?: ActionLabels
   /** What the business calls itself: "Bookshop", "Mobile dog grooming". Used
    *  verbatim in the app so a trade outside the catalogue still reads right. */
   category?: string
@@ -274,6 +423,11 @@ export type AppSpec = {
    *  owner's decision with its timestamp. Private working data; no renderer
    *  reads it and no public route returns the spec. */
   review?: { conflicts: PriceConflict[]; decisions: PriceDecision[] }
+  /** What the read established, refused and could not find. Stored so owner
+   *  review does not depend on re-reading the website. */
+  sourceReview?: SourceReview
+  /** Completed work, shown separately from the services a practice sells. */
+  projects?: ProjectEntry[]
   /** The design they chose on the brief, so the build matches the preview. */
   layout?: LayoutChoice
   /** The look read from their own site: palette, type, corners, light or dark. */
@@ -290,6 +444,15 @@ export type AppSpec = {
   socials?: SocialLink[]
   /** Off by default; an owner must deliberately allow search indexing. */
   indexable?: boolean
+  /** How this business lets a customer receive an order. `source` says whether
+   *  the options were read from the site, set by the owner, or are simply the
+   *  trade's generic capability. A fee exists only when `deliveryFee` is set
+   *  here, so no generated build charges a rate the business never stated. */
+  fulfilment?: {
+    options: string[]
+    source: 'website' | 'owner' | 'default'
+    deliveryFee?: number
+  }
   /** Trailers and clips, shown on the about screen when the trade has them. */
   videos?: VideoLink[]
   /** The platform bundle bought with this build, if any. */

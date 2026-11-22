@@ -1,4 +1,4 @@
-import type { FeatureId, MenuSection, VerticalId, Vocab } from './types'
+import type { ActionLabels, FeatureId, MenuSection, VerticalId, Vocab } from './types'
 
 /**
  * What kind of business is this? Each entry carries the words, the seeded
@@ -55,7 +55,7 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       item: 'dish',
       order: 'Order',
       book: 'Book',
-      bookTitle: 'Book a table',
+      bookTitle: 'Request a table',
       quoteTitle: 'Ask us anything',
       partyLabel: 'Party size',
       fulfilment: ['Pickup', 'Delivery', 'At a table'],
@@ -226,7 +226,7 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       item: 'treatment',
       order: 'Order',
       book: 'Book',
-      bookTitle: 'Book an appointment',
+      bookTitle: 'Request appointment',
       quoteTitle: 'Ask about a treatment',
       partyLabel: 'People',
       fulfilment: ['In salon'],
@@ -587,11 +587,11 @@ export const VERTICALS: Record<VerticalId, Vertical> = {
       item: 'room',
       order: 'Order',
       book: 'Book',
-      bookTitle: 'Check availability',
+      bookTitle: 'Request a stay',
       quoteTitle: 'Ask about a stay',
       partyLabel: 'Guests',
       fulfilment: ['At the guesthouse'],
-      homeCta: 'Check availability',
+      homeCta: 'View rooms',
       slots: [],
     },
     menu: [
@@ -1605,7 +1605,7 @@ const CTA: Record<VerticalId, 'order' | 'book' | 'quote' | 'catalog'> = {
   trades: 'quote',
   professional: 'quote',
   property: 'quote',
-  hotel: 'book',
+  hotel: 'catalog',
   studio: 'quote',
   auto: 'book',
   hospital: 'book',
@@ -1627,6 +1627,31 @@ const CTA: Record<VerticalId, 'order' | 'book' | 'quote' | 'catalog'> = {
 
 export function ctaFor(id: VerticalId): 'order' | 'book' | 'quote' | 'catalog' {
   return CTA[id] ?? 'catalog'
+}
+
+/** Default action copy. The trade supplies the noun and workflow; the owner can
+ *  edit these words later without changing what each button does. */
+export function actionLabelsFor(id: VerticalId, vocab: Vocab): ActionLabels {
+  const retail = id === 'shop' || id === 'ecommerce' || id === 'marketplace'
+  const add = id === 'courses' ? 'Enrol on this course' : retail ? 'Add to cart' : 'Add to order'
+  // The words the pilot trades promise. They stay owner-editable in Settings;
+  // these are only the starting labels, and each one opens the workflow named
+  // beside it rather than a generic destination.
+  const pilot: Partial<Record<VerticalId, Partial<ActionLabels>>> = {
+    shop: { home: 'Shop the collection', view: 'View product', add: 'Add to cart' },
+    restaurant: { home: 'View menu', view: 'View menu', book: 'Request a table' },
+    hotel: { home: 'View rooms', view: 'View room', book: 'Request a stay' },
+    salon: { home: 'Request appointment', view: 'View treatment', book: 'Request appointment' },
+    professional: { home: 'Request a proposal', view: 'View service', book: 'Request a consultation', quote: 'Request a proposal' },
+  }
+  return {
+    home: vocab.homeCta,
+    view: `View ${vocab.item.toLowerCase()}`,
+    add,
+    book: vocab.bookTitle,
+    quote: vocab.quoteTitle,
+    ...pilot[id],
+  }
 }
 
 export const VERTICAL_IDS = Object.keys(VERTICALS) as VerticalId[]

@@ -1106,6 +1106,22 @@ function briefScript(verticals: string): string {
       plan: currentPlan,
       layout: chosenDesign ? { ...chosenDesign.axes, ...chosenElements() } : null,
       direction: chosenDesign ? chosenDesign.id : undefined,
+      // The read's own record travels with the build. The server classifies
+      // each refusal and stores where its content belongs, so nothing read is
+      // silently lost when the crawl session ends.
+      sourceReview: lastImport
+        ? {
+            source: lastImport.source,
+            host: lastImport.host,
+            status: (imported && imported.menu && imported.menu.length) ? 'partial' : 'empty',
+            pagesRead: lastImport.pagesRead,
+            pagesFailed: lastImport.pagesFailed,
+            usedSitemap: lastImport.usedSitemap,
+            found: lastImport.found,
+            missing: lastImport.missing,
+            rejected: (lastImport.quality && lastImport.quality.dropped) || [],
+          }
+        : undefined,
       site: imported
         ? {
             ...imported,

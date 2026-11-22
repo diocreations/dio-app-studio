@@ -3,7 +3,7 @@ import { composeDoc } from './blueprints'
 import { directionFor, directionsFor } from './directions'
 import type { AppSpec, ElementShape } from './types'
 import { themeFor } from './themes'
-import { verticalFor } from './verticals'
+import { actionLabelsFor, verticalFor } from './verticals'
 
 /*
  * One structured document shared by generation, the editor, preview, the
@@ -83,6 +83,7 @@ export const FLAGSHIP_VARIANTS = [
   'pro-intro',
   'pro-team',
   'pro-index',
+  'pro-work',
   'pro-actions',
   'pro-facts',
   'cafe-hero',
@@ -502,6 +503,16 @@ const SCREEN_TARGET = /^[a-z][a-z0-9_-]{0,30}$/
 const CLAMP = (value: unknown, max: number): string =>
   typeof value === 'string' ? value.trim().slice(0, max) : ''
 
+/**
+ * One heading limit for the document, the API and the editor field.
+ *
+ * A generated heading can be the business's own tagline (a salon's is 68
+ * characters). When the stored limit was 60 and the editor field allowed 60,
+ * the document held text the field could not show, and saving an untouched
+ * heading silently shortened it. Both sides now share this bound.
+ */
+export const HEADING_LIMIT = 90
+
 export function sectionLabel(kind: SectionKind): string {
   return KIND_LABEL[kind]
 }
@@ -563,6 +574,9 @@ function available(spec: AppSpec, kind: SectionKind): boolean {
 
 /** Home content the seeded design would have produced. */
 export function defaultHomeSections(spec: AppSpec): DocNode[] {
+  const vertical = verticalFor(spec.vertical)
+  const actions = spec.actions ?? actionLabelsFor(vertical.id, vertical.vocab)
+  const canBook = spec.features.includes('booking') || spec.features.includes('classes')
   const kinds: SectionKind[] = ['featured', 'offers', 'loyalty', 'visit', 'story']
   const present = seededOrder(spec, kinds).filter((kind) => available(spec, kind))
   for (const kind of kinds) {
@@ -632,6 +646,17 @@ function flagshipSection(variant: FlagshipVariant, extra: Partial<DocNode> = {})
   })
 }
 
+/** Add or remove the portfolio block when the owner accepts or clears the
+ *  work a source supplied. It has a stable id, so it is not duplicated. */
+export function syncProjectSection(doc: Doc, present: boolean): Doc {
+  const home = doc.screens.find((screen) => screen.kind === 'home')
+  if (!home) return doc
+  const exists = home.sections.some((node) => node.variant === 'pro-work')
+  if (present && !exists) home.sections.push(flagshipSection('pro-work', { title: 'Selected work' }))
+  if (!present && exists) home.sections = home.sections.filter((node) => node.variant !== 'pro-work')
+  return doc
+}
+
 /**
  * The starting document for a flagship build. The order is the trade's own
  * composition, not a generic stack: a restaurant opens on its identity and one
@@ -647,6 +672,9 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
   const address = spec.address || ''
   const canBook = spec.features.includes('booking') || spec.features.includes('classes')
   const canQuote = spec.features.includes('quote')
+  const vertical = verticalFor(spec.vertical)
+  const actions = spec.actions ?? actionLabelsFor(vertical.id, vertical.vocab)
+  const hasDishes = spec.menu.some((section) => section.items.length > 0)
   const bookingScreen = canBook ? 'scr_book' : 'scr_catalog'
   const quoteScreen = canQuote ? 'scr_quote' : 'scr_catalog'
   let sections: DocNode[] = []
@@ -660,13 +688,33 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
       // name, so a re-import or a reorder cannot leave the home naming one dish
       // and describing another. Its own words are the owner's edit; the name
       // comes from the catalogue.
-      flagshipSection('dine-feature', {
-        ...(first?.id ? { itemRef: first.id } : { title: first?.name || 'The menu' }),
-        ...(!first?.id && first?.desc ? { text: first.desc } : {}),
-      }),
+      // Only when there is a dish to feature. A block with a placeholder title
+      // and an empty photograph is not a design: it is an invitation to invent
+      // a dish the source never listed. A thin read simply has no feature.
+      ...(first
+        ? [
+            flagshipSection('dine-feature', {
+              ...(first.id ? { itemRef: first.id } : { title: first.name }),
+              ...(!first.id && first.desc ? { text: first.desc } : {}),
+            }),
+          ]
+        : []),
+      // The source's own words about the kitchen, never a stock sentence. This
+      // gives a restaurant with no readable menu a second honest home block, so
+      // concepts can compose a story-led journey instead of repeating title and
+      // action in a different colour.
+      ...(spec.story && !spec.sampleContent?.story
+        ? [flagshipSection('dine-note', { text: spec.story })]
+        : []),
       flagshipSection('dine-actions', {
-        title: 'See the menu',
-        cta: { label: 'See the menu', screen: 'scr_catalog' },
+        // With no published dishes, a menu button opens an empty room. Offer
+        // the table request that is actually implemented instead. A menu can
+        // hold empty sections, so count the dishes rather than the sections.
+        title: hasDishes || !canBook ? actions.view : actions.book,
+        cta: {
+          label: hasDishes || !canBook ? actions.view : actions.book,
+          screen: hasDishes || !canBook ? 'scr_catalog' : 'scr_book',
+        },
       }),
     ]
   } else if (spec.vertical === 'shop') {
@@ -694,8 +742,8 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
             : 'With the team',
       }),
       flagshipSection('salon-action', {
-        title: 'Book an appointment',
-        cta: { label: 'Book an appointment', screen: 'scr_book' },
+        title: actions.book,
+        cta: { label: actions.book, screen: 'scr_book' },
       }),
     ]
   } else if (spec.vertical === 'hotel') {
@@ -866,14 +914,24 @@ export function flagshipDocFromSpec(spec: AppSpec): Doc {
   } else if (spec.vertical === 'professional') {
     sections = [
       flagshipSection('pro-title', { title: spec.name, text: spec.tagline }),
-      flagshipSection('pro-intro', { title: 'How we can help', text: spec.story }),
+      ...(spec.story?.trim()
+        ? [flagshipSection('pro-intro', { title: 'How we can help', text: spec.story })]
+        : []),
+      // Completed work is proof, not a service. It only exists when the source
+      // supplied it or the owner accepted it from the review; nothing is
+      // invented to fill a portfolio.
+      ...(spec.projects?.some((project) => project.accepted !== false)
+        ? [flagshipSection('pro-work', { title: 'Selected work' })]
+        : []),
       flagshipSection('pro-team', { title: "The people you'll work with" }),
       flagshipSection('pro-index', { title: 'Services' }),
       flagshipSection('pro-actions', {
-        title: spec.features.includes('booking') ? 'Book a consultation' : 'Send an enquiry',
+        // The first commercial step is a proposal. A consultation slot is a
+        // real booking, but it is not what the home page promises.
+        title: canQuote ? actions.quote : actions.book,
         cta: {
-          label: spec.features.includes('booking') ? 'Book a consultation' : 'Send an enquiry',
-          screen: spec.features.includes('booking') ? 'scr_book' : 'scr_quote',
+          label: canQuote ? actions.quote : actions.book,
+          screen: canQuote ? 'scr_quote' : 'scr_book',
         },
       }),
       flagshipSection('pro-facts', {
@@ -1184,7 +1242,7 @@ function sanitizeSection(value: unknown, fallbackId: string): DocNode | null {
       ? { layout: raw.layout }
       : {}),
     ...(media ? { media } : {}),
-    title: CLAMP(raw.title, 60) || undefined,
+    title: CLAMP(raw.title, HEADING_LIMIT) || undefined,
     text: CLAMP(raw.text, 600) || undefined,
     ...(ctaLabel && SCREEN_TARGET.test(screenTarget)
       ? { cta: { label: ctaLabel, screen: screenTarget } }
@@ -2109,7 +2167,7 @@ export function updateSection(
               node.id === id
                 ? {
                     ...node,
-                    ...(patch.title !== undefined ? { title: CLAMP(patch.title, 60) || undefined } : {}),
+                    ...(patch.title !== undefined ? { title: CLAMP(patch.title, HEADING_LIMIT) || undefined } : {}),
                     ...(patch.text !== undefined ? { text: CLAMP(patch.text, 600) || undefined } : {}),
                     ...(patch.hidden !== undefined
                       ? { hidden: Boolean(patch.hidden), hiddenBecause: patch.hidden ? node.hiddenBecause : undefined }

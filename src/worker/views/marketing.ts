@@ -1,386 +1,259 @@
-import { BUNDLES, moneyForSpec, usd, type Quote } from '../pricing'
 import { SAMPLE_IMPORT, sampleTotals } from '../proof'
-import { VERTICALS, VERTICAL_GROUPS } from '../verticals'
-import { esc, page } from './shell'
+import { BUNDLES, usd } from '../pricing'
+import { page, esc } from './shell'
 
-function sampleQuote(): Quote {
-  return {
-    plan: 'monthly',
-    oneTime: 268000,
-    setupFee: 80000,
-    monthly: 14700,
-    firstYear: 256400,
-    lines: [],
-  }
-}
-
+/**
+ * The public product page.
+ *
+ * One promise, one input: a business website. The page shows real, running
+ * Plattr applications rather than decorative phone art, and makes no claim
+ * about native store packages or capabilities that are not live.
+ */
 export function marketingPage(): string {
-  const quote = sampleQuote()
   const proof = sampleTotals()
-  const proofSite = SAMPLE_IMPORT.site
-  const proofPreview = proofSite.menu[0]?.items.slice(0, 3) ?? []
-
-  const verticalCards = VERTICAL_GROUPS.map(
-    (group) => `
-    <div style="margin-bottom:12px">
-      <div class="tiny" style="margin-bottom:7px;letter-spacing:0.08em;text-transform:uppercase">${esc(group.label)}</div>
-      <div class="feature-chips">
-        ${group.ids
-          .map(
-            (id) =>
-              `<span class="pill">${VERTICALS[id].glyph} ${esc(VERTICALS[id].label)}</span>`,
-          )
-          .join('')}
-      </div>
-    </div>`,
-  ).join('')
-
   const bundle = BUNDLES[0]
-
   const body = `
-  <header class="wrap" style="padding:64px 0 26px">
-    <div class="grid-2" style="gap:44px;align-items:center">
-      <div>
-        <span class="eyebrow">App studio for local business</span>
-        <h1 class="display" style="margin-top:16px">A customer says they need an app.<br />It&rsquo;s on their phone before the call ends.</h1>
-        <p class="lede" style="margin-top:18px">Plattr takes a four-minute brief — restaurant, salon, gym, garage, clinic, shop, agency — and builds a working app with the right catalogue, bookings or quote form. The owner edits it live, approves it, and you package it for web, Android and iOS.</p>
-        <form action="/brief" method="get" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:24px;max-width:560px">
-          <input name="prompt" type="text" maxlength="240" placeholder="I need an app for my coffee shop" aria-label="What does the business need?" style="flex:1;min-width:220px" />
-          <button class="btn accent" type="submit">Show me three designs</button>
-        </form>
-        <p class="tiny" style="margin-top:8px">One sentence in plain words. We read the trade, tick the features that fit, and show three different designs to choose from.</p>
-        <form action="/brief" method="get" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;max-width:560px">
-          <input name="url" type="url" maxlength="300" placeholder="Or paste their website — we'll read it" aria-label="The customer's website address" autocomplete="url" style="flex:1;min-width:220px" />
-          <button class="btn ghost" type="submit">Build from their site</button>
-        </form>
-        <p class="tiny" style="margin-top:8px">Name, brand colour, catalogue, prices and contact details are read from the page — then every field stays editable.</p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">
-          <a class="btn ghost" href="#proof">See a real URL &rarr; app</a>
-          <a class="btn ghost" href="#trades">See the trades</a>
-        </div>
-        <p class="small" style="margin-top:16px">One generator, twenty-seven business types, fourteen capabilities. Bespoke logic is scoped by hand.</p>
-      </div>
-      <div>
-        <div class="phone tall">
-          <iframe id="demo-frame" title="A live Plattr build" src="/demo/app?biz=cafe" loading="lazy"></iframe>
-        </div>
-        <div class="seg" data-demos style="margin:12px auto 0;justify-content:center;display:flex;flex-wrap:wrap;gap:4px">
-          <button type="button" data-demo="cafe" aria-pressed="true">Café</button>
-          <button type="button" data-demo="restaurant" aria-pressed="false">Restaurant</button>
-          <button type="button" data-demo="salon" aria-pressed="false">Salon</button>
-          <button type="button" data-demo="gym" aria-pressed="false">Gym</button>
-          <button type="button" data-demo="shop" aria-pressed="false">Shop</button>
-          <button type="button" data-demo="trades" aria-pressed="false">Trades</button>
-        </div>
-        <p class="tiny" style="text-align:center;margin-top:8px">Real builds, running — switch trade, then tap around.</p>
-      </div>
-    </div>
-  </header>
+  <style>
+    .mkt { --mkt-ink: #101312; --mkt-muted: #69706c; --mkt-line: #e3e6e2; --mkt-soft: #f4f6f3; }
+    body:has(.mkt-hero) .nav { background: rgba(16,19,18,.88); border-bottom-color: rgba(255,255,255,.10); }
+    body:has(.mkt-hero) .nav .brand { color: #f7f8f5; }
+    body:has(.mkt-hero) .nav .brand .glyph { background: #f7f8f5; color: #101312; }
+    body:has(.mkt-hero) .nav-links a:not(.btn) { color: #aab4ac; }
+    body:has(.mkt-hero) .nav-links a:not(.btn):hover { color: #f7f8f5; }
+    body:has(.mkt-hero) .nav-links a.btn { background: #f7f8f5; color: #101312; border-color: #f7f8f5; }
+    .mkt-hero { background: #101312; color: #f7f8f5; padding: 72px 0 62px; overflow: hidden; position: relative; }
+    .mkt-hero::after { content: ""; position: absolute; width: 680px; height: 680px; right: -240px; top: -260px; border-radius: 50%; background: radial-gradient(circle, rgba(226,82,45,.28), transparent 66%); pointer-events: none; }
+    .mkt-hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1.04fr .96fr; gap: 56px; align-items: center; }
+    .mkt-badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 6px 11px; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #c8cec8; }
+    .mkt-badge i { width: 6px; height: 6px; border-radius: 50%; background: #8dd8a8; box-shadow: 0 0 0 4px rgba(141,216,168,.12); }
+    .mkt-hero h1 { margin-top: 22px; color: #f7f8f5; font-family: var(--sans); font-size: clamp(48px, 6.25vw, 86px); font-weight: 650; line-height: .96; letter-spacing: -.065em; }
+    .mkt-hero p { margin-top: 20px; max-width: 58ch; color: #b8c0ba; font-size: clamp(15px, 1.4vw, 18px); line-height: 1.6; }
+    .mkt-url { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 28px; max-width: 620px; }
+    .mkt-url input { flex: 1 1 330px; min-height: 56px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.07); color: #fff; border-radius: 12px; padding: 0 16px; font-size: 15px; }
+    .mkt-url input::placeholder { color: #7f8a82; }
+    .mkt-url input:focus { border-color: #8dd8a8; box-shadow: 0 0 0 3px rgba(141,216,168,.14); }
+    .mkt-url button { min-height: 56px; border-radius: 12px; background: #e2522d; border-color: #e2522d; color: #fff; padding-inline: 22px; font-size: 14px; }
+    .mkt-proofline { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px 18px; color: #8e9991; font-size: 11.5px; }
+    .mkt-proofline span::before { content: "✓"; color: #8dd8a8; margin-right: 5px; font-weight: 800; }
+    .mkt-visual { position: relative; min-height: 560px; display: grid; place-items: center; }
+    .mkt-window { width: min(100%, 430px); background: #f7f7f3; border-radius: 26px; padding: 9px; box-shadow: 0 40px 100px -38px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.12); transform: rotate(1.4deg); }
+    .mkt-window .bar { height: 26px; display: flex; align-items: center; gap: 5px; padding: 0 7px; }
+    .mkt-window .bar i { width: 6px; height: 6px; border-radius: 50%; background: #c8ccc7; }
+    .mkt-window iframe { display: block; width: 100%; height: 570px; border: 0; border-radius: 19px; background: #fff; }
+    .mkt-caption { position: absolute; bottom: -34px; left: 50%; transform: translateX(-50%); color: #8e9991; font-size: 10.5px; white-space: nowrap; }
+    .mkt-band { padding: 16px 0; border-bottom: 1px solid var(--mkt-line); background: #fff; }
+    .mkt-band .wrap { display: flex; flex-wrap: wrap; gap: 9px 28px; align-items: center; justify-content: center; color: var(--mkt-muted); font-size: 11.5px; }
+    .mkt-band b { color: var(--mkt-ink); font-weight: 650; }
+    .mkt-section { padding: 78px 0 10px; }
+    .mkt-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: #c24a2a; font-size: 10.5px; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+    .mkt-eyebrow::before { content: ""; width: 18px; height: 1px; background: currentColor; }
+    .mkt-section h2 { margin-top: 14px; max-width: 22ch; font-family: var(--sans); font-size: clamp(31px, 4vw, 52px); font-weight: 650; line-height: 1.02; letter-spacing: -.05em; }
+    .mkt-section .lede { margin-top: 15px; max-width: 62ch; color: var(--mkt-muted); }
+    .mkt-steps { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 0; margin-top: 34px; border-top: 1px solid var(--mkt-line); }
+    .mkt-step { padding: 22px 24px 26px 0; border-right: 1px solid var(--mkt-line); }
+    .mkt-step + .mkt-step { padding-left: 24px; }
+    .mkt-step:last-child { border-right: 0; }
+    .mkt-step b { display: block; color: #aeb5b0; font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: .12em; }
+    .mkt-step h3 { margin-top: 20px; font-family: var(--sans); font-size: 16px; font-weight: 650; letter-spacing: -.02em; }
+    .mkt-step p { margin-top: 7px; color: var(--mkt-muted); font-size: 12.5px; line-height: 1.6; }
+    .mkt-read { display: grid; grid-template-columns: .9fr 1.1fr; gap: 28px; align-items: stretch; margin-top: 34px; }
+    .mkt-read-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; border-top: 1px solid var(--mkt-line); }
+    .mkt-read-list div { padding: 15px 0; border-bottom: 1px solid var(--mkt-line); }
+    .mkt-read-list b { display: block; font-size: 13px; font-weight: 650; }
+    .mkt-read-list span { display: block; margin-top: 3px; color: var(--mkt-muted); font-size: 11.5px; line-height: 1.5; }
+    .mkt-proofcard { background: #101312; color: #f7f8f5; border-radius: 20px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; }
+    .mkt-proofcard h3 { font-family: var(--sans); font-size: 20px; font-weight: 650; letter-spacing: -.03em; }
+    .mkt-proofcard p { color: #aeb8b1; font-size: 12.5px; line-height: 1.65; margin-top: 8px; }
+    .mkt-proofcard .stat { display: flex; gap: 24px; margin-top: 20px; }
+    .mkt-proofcard .stat b { display: block; color: #f7f8f5; font-family: var(--sans); font-size: 26px; font-weight: 650; letter-spacing: -.04em; }
+    .mkt-proofcard .stat span { color: #87928a; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
+    .mkt-proofcard a { color: #f7f8f5; font-size: 12px; margin-top: 20px; text-decoration: underline; text-underline-offset: 3px; }
+    .mkt-concepts { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; margin-top: 30px; }
+    .mkt-concept { border: 1px solid var(--mkt-line); border-radius: 17px; background: #fff; padding: 10px; }
+    .mkt-concept header { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; padding: 5px 4px 9px; }
+    .mkt-concept b { font-family: var(--sans); font-size: 14px; font-weight: 650; letter-spacing: -.02em; }
+    .mkt-concept span { color: var(--mkt-muted); font-size: 10px; }
+    .mkt-concept iframe { display: block; width: 100%; height: 390px; border: 1px solid var(--mkt-line); border-radius: 11px; background: #f4f6f3; }
+    .mkt-concept p { margin: 8px 4px 2px; color: var(--mkt-muted); font-size: 11px; line-height: 1.5; }
+    .mkt-truth { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: start; margin-top: 34px; }
+    .mkt-truth h3 { font-family: var(--sans); font-size: 25px; font-weight: 650; letter-spacing: -.04em; line-height: 1.15; }
+    .mkt-truth p { margin-top: 12px; color: var(--mkt-muted); font-size: 13.5px; line-height: 1.7; }
+    .mkt-compare { border-top: 1px solid var(--mkt-line); }
+    .mkt-compare div { display: grid; grid-template-columns: 145px 1fr; gap: 16px; padding: 13px 0; border-bottom: 1px solid var(--mkt-line); font-size: 12.5px; }
+    .mkt-compare b { color: var(--mkt-ink); font-weight: 650; }
+    .mkt-compare span { color: var(--mkt-muted); }
+    .mkt-cta { margin: 74px 0 0; background: #101312; border-radius: 24px; color: #f7f8f5; padding: 44px 36px; display: flex; justify-content: space-between; align-items: center; gap: 28px; flex-wrap: wrap; }
+    .mkt-cta h2 { color: #f7f8f5; font-family: var(--sans); font-size: clamp(30px, 4vw, 48px); font-weight: 650; letter-spacing: -.055em; max-width: 18ch; }
+    .mkt-cta p { color: #aeb8b1; font-size: 13px; margin-top: 8px; max-width: 44ch; }
+    .mkt-cta .btn { background: #f7f8f5; color: #101312; border-color: #f7f8f5; }
+    .mkt-small { color: #8e9991; font-size: 11px; margin-top: 8px; }
+    .mkt-link { color: var(--mkt-ink); text-decoration: underline; text-underline-offset: 3px; }
+    .mkt-price { margin-top: 18px; color: var(--mkt-muted); font-size: 12px; }
+    @media (max-width: 940px) {
+      .mkt-hero .wrap { grid-template-columns: 1fr; gap: 36px; }
+      .mkt-hero { padding-top: 48px; }
+      .mkt-visual { min-height: 0; }
+      .mkt-steps { grid-template-columns: 1fr 1fr; }
+      .mkt-step:nth-child(2) { border-right: 0; }
+      .mkt-step:nth-child(3), .mkt-step:nth-child(4) { border-top: 1px solid var(--mkt-line); }
+      .mkt-read, .mkt-truth { grid-template-columns: 1fr; gap: 24px; }
+      .mkt-concepts { grid-template-columns: 1fr; }
+      .mkt-concept iframe { height: 500px; }
+    }
+    @media (max-width: 560px) {
+      .mkt-steps { grid-template-columns: 1fr; }
+      .mkt-step, .mkt-step + .mkt-step { border-right: 0; padding-left: 0; border-top: 1px solid var(--mkt-line); }
+      .mkt-step:first-child { border-top: 0; }
+      .mkt-read-list { grid-template-columns: 1fr; }
+      .mkt-cta { padding: 30px 22px; }
+      .mkt-url { display: grid; }
+      .mkt-url button { width: 100%; }
+    }
+  </style>
 
-  <section class="wrap" id="proof" style="padding:54px 0 18px">
-    <span class="eyebrow">A real run, not a mockup</span>
-    <h2 class="section" style="margin-top:14px;max-width:27ch">One shop URL in. This is what came back out.</h2>
-    <p class="lede" style="margin-top:14px">On ${esc(SAMPLE_IMPORT.capturedAt)} the importer was pointed at <span class="mono">${esc(SAMPLE_IMPORT.source)}</span> — a public demo bookshop. It followed ${SAMPLE_IMPORT.pages} pages, read ${proof.items} items at their listed prices and picked the brand colour out of the markup. The phone beside it is the app built from exactly that read, untouched.</p>
-
-    <div class="grid-2" style="gap:32px;align-items:start;margin-top:28px">
-      <div class="card">
-        <div class="card-head"><h3>The input</h3><span class="pill">${esc(SAMPLE_IMPORT.host)}</span></div>
-        <p class="mono small" style="word-break:break-all">${esc(SAMPLE_IMPORT.source)}</p>
-        <div class="rows" style="margin-top:14px">
-          <div class="row"><span>Pages opened</span><strong>${SAMPLE_IMPORT.pages}</strong></div>
-          <div class="row"><span>Catalogue items</span><strong>${proof.items} in ${proof.sections} sections</strong></div>
-          <div class="row"><span>Priced items</span><strong>${proof.priced} of ${proof.items}</strong></div>
-          <div class="row"><span>Currency</span><strong>${esc(proofSite.currency || 'not stated')}</strong></div>
-          <div class="row"><span>Brand colour</span><strong style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:18px;border-radius:6px;background:${esc(proofSite.accent)};border:1px solid var(--line);display:inline-block"></span><span class="mono">${esc(proofSite.accent)}</span></strong></div>
-        </div>
-        <hr class="hr" />
-        <div class="tiny" style="letter-spacing:0.06em;text-transform:uppercase">First entries read</div>
-        <ul class="ticks" style="margin-top:8px">
-          ${proofPreview
-            .map(
-              (item) =>
-                `<li>${esc(item.name)} <span class="mono" style="opacity:.7">${moneyForSpec(item.price, proofSite)}</span></li>`,
-            )
-            .join('')}
-        </ul>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">
-          <button class="btn primary" type="button" data-proof-run="${esc(SAMPLE_IMPORT.source)}">Re-run this URL live</button>
-          <a class="btn ghost" href="/brief?url=${encodeURIComponent(SAMPLE_IMPORT.source)}">Build from it &rarr;</a>
-        </div>
-        <p class="tiny" data-proof-result style="margin-top:10px">Captured ${esc(SAMPLE_IMPORT.capturedAt)}. Re-run it to get fresh numbers straight from the site.</p>
-        <p class="tiny" style="margin-top:8px">Nothing here is hand-typed sample data: the app on the right is rendered from this capture, and the run above is the importer's own output.</p>
-      </div>
-      <div>
-        <div class="phone tall">
-          <iframe title="The app built from that shop URL" src="/proof/app" loading="lazy"></iframe>
-        </div>
-        <p class="tiny" style="text-align:center;margin-top:10px">${esc(proofSite.name)} — ${proof.items} items, ${esc(proofSite.currency || 'prices as listed')}, built from the read above.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="wrap" style="padding:26px 0 10px">
-    <div class="grid-3">
-      <div class="card flat">
-        <span class="pill accent">1 · Brief</span>
-        <h3 style="margin-top:12px;font-size:17px">Pick the trade, answer ten questions</h3>
-        <p class="small" style="margin-top:6px">The catalogue, the words and the features change with the trade. Anything unusual goes in a free-text box.</p>
-      </div>
-      <div class="card flat">
-        <span class="pill accent">2 · Build</span>
-        <h3 style="margin-top:12px;font-size:17px">A working app, not a mockup</h3>
-        <p class="small" style="margin-top:6px">Real screens with a real cart, diary, timetable or quote form, seeded from that trade — and an installable manifest.</p>
-      </div>
-      <div class="card flat">
-        <span class="pill accent">3 · Ship</span>
-        <h3 style="margin-top:12px;font-size:17px">One approval, three packages</h3>
-        <p class="small" style="margin-top:6px">A PWA link today. Android and iOS projects with the signing commands you run once per client.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="wrap" id="loop" style="padding:64px 0 20px">
-    <span class="eyebrow">The build loop</span>
-    <h2 class="section" style="margin-top:14px;max-width:20ch">The customer sits in the room while it gets built.</h2>
-    <div class="grid-2" style="margin-top:30px;gap:30px;align-items:start">
-      <div class="stack">
-        <div class="card">
-          <div class="card-head"><h3>1. Send a brief link</h3><span class="pill">~4 min</span></div>
-          <p class="small">The customer picks their trade, drops in their colours, ticks what they need. The quote builds itself as they go, so the price conversation happens before the build, not after.</p>
-        </div>
-        <div class="card">
-          <div class="card-head"><h3>2. Hand over a live link</h3><span class="pill">instant</span></div>
-          <p class="small">They open their app on their own phone. Real catalogue, real cart or diary, real confirmation screens. Nothing to install, no APK to email, no TestFlight invite to chase.</p>
-        </div>
-        <div class="card">
-          <div class="card-head"><h3>3. They edit, or they ask</h3><span class="pill">v1 &rarr; v9</span></div>
-          <p class="small">Two levers: edit the brand, catalogue and features themselves, or leave a note in plain English. Either way the build bumps a version and the change history is the audit trail.</p>
-        </div>
-        <div class="card">
-          <div class="card-head"><h3>4. Approve, then package</h3><span class="pill green">signed off</span></div>
-          <p class="small">Approval locks the version and unlocks the downloads: installable web app, Android TWA project, iOS Capacitor project, plus the store checklist for that launch.</p>
-        </div>
-      </div>
-      <div class="card" style="position:sticky;top:88px">
-        <span class="pill dark">What changes per trade</span>
-        <h3 style="margin-top:14px">Same engine, different vocabulary</h3>
-        <p class="small" style="margin-top:6px">A restaurant gets a menu and table bookings. A garage gets work items and service slots. A photographer gets packages and a shoot brief. One spec drives all of it.</p>
-        <hr class="hr" />
-        <div class="rows">
-          <div class="row"><span>Restaurant</span><strong>Menu · table booking</strong></div>
-          <div class="row"><span>Salon</span><strong>Services · appointments</strong></div>
-          <div class="row"><span>Gym</span><strong>Memberships · timetable</strong></div>
-          <div class="row"><span>Shop</span><strong>Catalogue · cart</strong></div>
-          <div class="row"><span>Trades</span><strong>Jobs · quote request</strong></div>
-          <div class="row"><span>Property</span><strong>Listings · viewings</strong></div>
-          <div class="row"><span>Hotel</span><strong>Rooms · availability</strong></div>
-          <div class="row"><span>Clinic</span><strong>Treatments · appointments</strong></div>
-        </div>
-        <hr class="hr" />
-        <div class="row"><span>Sample build, one-time</span><strong>${usd(quote.oneTime)}</strong></div>
-        <p class="tiny" style="margin-top:12px">Prices are the cost of production. You set the retail price you charge the business.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="wrap" id="trades" style="padding:58px 0 20px">
-    <span class="eyebrow">Any trade</span>
-    <h2 class="section" style="margin-top:14px;max-width:24ch">Restaurants are one row in the table.</h2>
-    <p class="lede" style="margin-top:14px">Each type carries its own vocabulary, seeded content and sensible default features. Pick the closest one and the build takes shape immediately.</p>
-    <div class="grid-2" style="margin-top:26px;gap:26px;align-items:start">
-      <div class="card">${verticalCards}</div>
-      <div class="stack">
-        <div class="card">
-          <div class="card-head"><h3>Not on the list?</h3><span class="pill accent">Free text</span></div>
-          <p class="small">The brief has a box for the customer's own words: stock levels for 200 products, a staff rota, dog grooming appointments, ticket sales, a loyalty card shared with a sister shop.</p>
-          <p class="small" style="margin-top:10px">That text is stored on the build, shown next to the app, and included in the exports — so the request never quietly disappears. Anything that needs real backend logic (POS sync, stock reservations, ticketing) is quoted as custom work, honestly and separately.</p>
-        </div>
-        <div class="card">
-          <div class="card-head"><h3>What's always in the build</h3><span class="pill">Base</span></div>
-          <ul class="ticks">
-            <li>Installable app shell with an offline cache</li>
-            <li>Catalogue with sections, prices, durations and notes</li>
-            <li>Brand colour, icon and copy — all editable</li>
-            <li>Private review link and a version history</li>
-            <li>Packaging for web, Android and iOS on approval</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="wrap" id="formats" style="padding:58px 0 20px">
-    <span class="eyebrow">Formats</span>
-    <h2 class="section" style="margin-top:14px;max-width:22ch">Native, hybrid, PWA &mdash; what actually ships in minutes.</h2>
-    <p class="lede" style="margin-top:14px">This is the honest line, because it decides what you can promise on a sales call.</p>
-    <div class="grid-3" style="margin-top:26px">
-      <div class="card">
-        <div class="card-head"><h3>PWA</h3><span class="pill green">Same day</span></div>
-        <p class="small">Installable from a link, works offline, updates the moment you rebuild. No store, no review, no cut. This is what closes most local-business deals.</p>
-        <hr class="hr" />
-        <p class="tiny">Delivered as: a complete zip you host anywhere with HTTPS.</p>
-      </div>
-      <div class="card">
-        <div class="card-head"><h3>Hybrid &mdash; Android</h3><span class="pill amber">+ signing step</span></div>
-        <p class="small">A Trusted Web Activity wrapping the same build. Plattr writes the manifest, the signing notes and the Bubblewrap commands; you run them once per client.</p>
-        <hr class="hr" />
-        <p class="tiny">Delivered as: project zip &rarr; .aab for Play, .apk for direct install.</p>
-      </div>
-      <div class="card">
-        <div class="card-head"><h3>Hybrid &mdash; iOS</h3><span class="pill amber">+ Apple account</span></div>
-        <p class="small">A Capacitor project pointed at the same build. An Apple Developer account ($99/yr), a certificate and a review queue stand between you and an .ipa; we generate everything else.</p>
-        <hr class="hr" />
-        <p class="tiny">Delivered as: Xcode project &rarr; TestFlight &rarr; App Store.</p>
-      </div>
-    </div>
-    <div class="notice accent" style="margin-top:18px">
-      <strong>Full native (Swift/Kotlin from scratch) is a different product.</strong> No generator produces a credible native app in minutes, and Apple rejects thin wrappers under Guideline 4.2. The hybrid route above is what ships fast <em>and</em> survives review, because every screen is in the app, not the browser chrome.
-    </div>
-  </section>
-
-  <section class="wrap" id="pricing" style="padding:58px 0 20px">
-    <span class="eyebrow">Pricing</span>
-    <h2 class="section" style="margin-top:14px;max-width:24ch">Two ways your customer pays. One production line.</h2>
-    <div class="grid-2" style="margin-top:26px">
-      <div class="card">
-        <div class="card-head"><h3>One-time build</h3><span class="pill">Project</span></div>
-        <p class="small">The whole app, handed over, invoiced once. Best for the owner who wants to own it and call you when something changes.</p>
-        <hr class="hr" />
-        <div class="row"><span>Design + build</span><strong>$1,400</strong></div>
-        <div class="row"><span>Capabilities</span><strong>+ per feature</strong></div>
-        <div class="row"><span>Android + iOS packages</span><strong>+ $450 each</strong></div>
-        <div class="row total"><span>Typical all-in</span><strong>${usd(quote.oneTime)}</strong></div>
-        <p class="tiny" style="margin-top:10px">Quoted live in the brief, capability by capability, so nothing is a surprise.</p>
-      </div>
-      <div class="card" style="border-color:var(--ink)">
-        <div class="card-head"><h3>Monthly care plan</h3><span class="pill dark">Recurring</span></div>
-        <p class="small">A setup fee, then a monthly retainer that covers rebuilds, catalogue changes and store admin. This is the model that keeps the lights on between projects.</p>
-        <hr class="hr" />
-        <div class="row"><span>Setup (30% of build)</span><strong>${usd(quote.setupFee)}</strong></div>
-        <div class="row"><span>Monthly care</span><strong>${usd(quote.monthly)}/mo</strong></div>
-        <div class="row"><span>First year</span><strong>${usd(quote.firstYear)}</strong></div>
-        <div class="row total"><span>Same build, spread</span><strong>${usd(quote.setupFee)} + ${usd(quote.monthly)}/mo</strong></div>
-        <p class="tiny" style="margin-top:10px">Billing collection isn't wired up yet &mdash; the plan and the numbers are, so you can invoice from the build page.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="wrap" id="bundle" style="padding:10px 0 26px">
-    <div class="card" style="border-color:var(--ink)">
-      <div class="card-head"><h3>${esc(bundle.label)}</h3><span class="pill dark">Premium bundle</span></div>
-      <p class="lede" style="margin-top:2px;max-width:62ch">${esc(bundle.blurb)}</p>
-      <div class="grid-2" style="gap:26px;align-items:start;margin-top:20px">
-        <ul class="ticks">${bundle.includes.map((line) => `<li>${esc(line)}</li>`).join('')}</ul>
+  <main class="mkt">
+    <section class="mkt-hero">
+      <div class="wrap">
         <div>
-          <div class="row"><span>Build</span><strong>${usd(bundle.price)}</strong></div>
-          <div class="row"><span>Platform fee</span><strong>${usd(bundle.monthly)}/mo</strong></div>
-          <div class="row total"><span>First year</span><strong>${usd(bundle.price + bundle.monthly * 12)}</strong></div>
-          <p class="tiny" style="margin-top:10px">The storefront comes from the generator. The three apps and two back offices are a platform build — quoted line by line, not promised by a brief.</p>
-          <a class="btn primary" style="margin-top:14px" href="/brief?bundle=${esc(bundle.id)}">Quote it on a brief &rarr;</a>
+          <span class="mkt-badge"><i></i> URL-first app generation</span>
+          <h1>Your website<br />is the brief.</h1>
+          <p>Enter a business address. Plattr reads the real brand, products, prices, images and contact details, then builds three complete application concepts from that evidence. No generic brief. No trade-template content.</p>
+          <form class="mkt-url" action="/start" method="get">
+            <input name="url" type="url" maxlength="300" placeholder="https://yourbusiness.com" aria-label="Business website address" autocomplete="url" required />
+            <button class="btn" type="submit">Build three concepts →</button>
+          </form>
+          <div class="mkt-proofline">
+            <span>Real discovery, not a mockup</span>
+            <span>Owner approval before publishing</span>
+            <span>PWA-ready</span>
+          </div>
+          <p class="mkt-small">Already have a text brief? <a class="mkt-link" href="/brief" style="color:#c8cec8">Use the brief instead</a>.</p>
+        </div>
+        <div class="mkt-visual">
+          <div class="mkt-window">
+            <div class="bar"><i></i><i></i><i></i></div>
+            <iframe title="A live Plattr shop application" src="/demo/app?biz=shop&direction=editorial&media=photo" loading="lazy"></iframe>
+          </div>
+          <span class="mkt-caption">A live Plattr shop build. Explore it before you enter your URL.</span>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="wrap" style="padding:56px 0 10px">
-    <div class="grid-2" style="gap:40px;align-items:start">
-      <div>
-        <span class="eyebrow">Questions a customer will ask</span>
-        <h2 class="section" style="margin-top:14px">The answers, in plain language.</h2>
-        <p class="lede" style="margin-top:12px">Every claim on this page maps to something you can download from a build, so you can show it rather than describe it.</p>
-        <a class="btn primary" style="margin-top:22px" href="/brief">Build the first one &rarr;</a>
-      </div>
-      <div>
-        <details class="faq" open>
-          <summary>My customer runs something that isn't on the list.</summary>
-          <p>Pick the closest trade and write the specifics in the brief's free-text box. The generated app takes the shape of that trade — catalogue, diary, timetable or quote form — and the custom text travels with the build. Logic that needs a real backend (stock reservations, POS sync, ticketing, payments) is scoped and quoted separately rather than pretended.</p>
-        </details>
-        <details class="faq">
-          <summary>Can this put an app in the App Store?</summary>
-          <p>Yes, with a human step. Plattr produces the iOS project and the store checklist; you archive it in Xcode under the business's Apple Developer account and submit. Review takes days, not minutes, and Apple rejects a store page that is just a website link — which is why this build carries real in-app screens.</p>
-        </details>
-        <details class="faq">
-          <summary>And Google Play?</summary>
-          <p>Yes. The Android download is a Bubblewrap project: run its build script with your upload key and you get the .aab. A brand-new Play developer account also needs a closed test with 12 testers for 14 days before production, so quote the launch date accordingly.</p>
-        </details>
-        <details class="faq">
-          <summary>Does the customer need an account?</summary>
-          <p>No. Every build has a private link with an unguessable token. That is deliberate: a shop owner never logs in to see their app. If you want named accounts and per-seat permissions for your own team, that's the next layer to add.</p>
-        </details>
-        <details class="faq">
-          <summary>Who owns the build?</summary>
-          <p>The download is the deliverable: a static site, a project folder and a spec. Nothing is locked to Plattr, and the PWA can be hosted on the business's own domain.</p>
-        </details>
-        <details class="faq">
-          <summary>Where does the money come from?</summary>
-          <p>The quote engine prices the production work (base build, each capability, each store format) and shows it in the customer's build page. Collection is your call — one invoice, or a monthly plan with the setup fee. Payment links are not part of this build yet.</p>
-        </details>
-        <details class="faq">
-          <summary>What about a price list that changes every season?</summary>
-          <p>That's why edits are self-serve. The owner rewrites prices, durations and items in the build page and the version bumps instantly. The monthly plan is what pays for that habit.</p>
-        </details>
+    <div class="mkt-band">
+      <div class="wrap">
+        <span><b>Reads</b> names, products, prices, categories</span>
+        <span><b>Uses</b> the business's own images and brand</span>
+        <span><b>Builds</b> three structurally different apps</span>
+        <span><b>Keeps</b> every extracted fact traceable</span>
       </div>
     </div>
-  </section>
 
-  <section class="wrap" style="padding:40px 0 10px">
-    <div class="card" style="background:var(--ink);color:var(--paper);border-color:var(--ink);text-align:center;padding:44px 24px">
-      <h2 class="section" style="color:var(--paper);max-width:26ch;margin-inline:auto">Take the next brief on a call, not in a proposal.</h2>
-      <p style="color:rgba(251,246,238,0.72);font-size:15px;max-width:52ch;margin:14px auto 0">Four minutes of questions, a live app in the customer's own trade, a real quote, and a version history you can point at when the scope creeps.</p>
-      <div style="display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap">
-        <a class="btn accent" href="/brief">Start a customer brief</a>
-        <a class="btn ghost" style="color:var(--paper);border-color:rgba(251,246,238,0.3)" href="/studio">Open the studio</a>
+    <section class="mkt-section wrap" id="how">
+      <span class="mkt-eyebrow">How it works</span>
+      <h2>From a live website to a working application.</h2>
+      <p class="lede">The site is the source of truth. Plattr only asks a question when the source leaves something genuinely unresolved.</p>
+      <div class="mkt-steps">
+        <div class="mkt-step"><b>01 / READ</b><h3>Open the real pages</h3><p>Home, category and product pages. Structured data, visible prices, product photos, navigation and brand tokens.</p></div>
+        <div class="mkt-step"><b>02 / UNDERSTAND</b><h3>Build the profile</h3><p>Name, category, contact details, currency, catalogue and provenance. Missing information is reported, never invented.</p></div>
+        <div class="mkt-step"><b>03 / COMPOSE</b><h3>Three real applications</h3><p>Different home screens, navigation, catalogue rhythm, detail pages and journeys — all using the same verified facts.</p></div>
+        <div class="mkt-step"><b>04 / OWN</b><h3>Choose, edit, publish</h3><p>Open the owner workspace, correct any detail, edit visually, approve, then publish on a stable customer link.</p></div>
       </div>
-    </div>
-  </section>
-`
+    </section>
+
+    <section class="mkt-section wrap" id="proof">
+      <span class="mkt-eyebrow">What it actually reads</span>
+      <h2>Not a preset wearing the business's name.</h2>
+      <p class="lede">A trade preset may decide which capabilities make sense. It never gets to decide what the business sells, what it charges or what it looks like.</p>
+      <div class="mkt-read">
+        <div class="mkt-read-list">
+          <div><b>Identity</b><span>Business name, category, logo and brand colour from the site's own declarations.</span></div>
+          <div><b>Catalogue</b><span>Real product names, descriptions, prices and categories, with their source page.</span></div>
+          <div><b>Photography</b><span>Each product's own image when the markup ties it to that row. No stock substitutes.</span></div>
+          <div><b>Contact</b><span>Phone, email, address and opening hours when published.</span></div>
+          <div><b>Money</b><span>Currency only when the page proves it; otherwise the owner confirms it.</span></div>
+          <div><b>Provenance</b><span>Every extracted field keeps its method and source URL. Failures are shown as failures.</span></div>
+        </div>
+        <div class="mkt-proofcard">
+          <div>
+            <span class="mkt-badge" style="border-color:rgba(255,255,255,.16)">Live evidence</span>
+            <h3 style="margin-top:16px">A real import, running beside its source.</h3>
+            <p>The shop in the hero is a live Plattr build. Below it is a separate build from a captured read of <span class="mono" style="color:#dbe3dc">${esc(SAMPLE_IMPORT.source)}</span>: ${SAMPLE_IMPORT.pages} pages, read ${proof.items} items with ${proof.priced} listed prices. Nothing in that capture was hand-typed.</p>
+          </div>
+          <div>
+            <div class="stat">
+              <div><b>${proof.items}</b><span>products read</span></div>
+              <div><b>${proof.priced}</b><span>priced</span></div>
+              <div><b>${SAMPLE_IMPORT.pages}</b><span>pages opened</span></div>
+            </div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:18px">
+              <a href="/proof/app" style="margin-top:0">Open the proof build →</a>
+              <a href="/start?url=${encodeURIComponent(SAMPLE_IMPORT.source)}" style="margin-top:0">Re-run this URL live →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mkt-section wrap" id="concepts">
+      <span class="mkt-eyebrow">Three concepts, not three skins</span>
+      <h2>The same business, composed three ways.</h2>
+      <p class="lede">A concept changes what opens, how the catalogue is read, how a product detail works and how a customer moves through the app. These are live applications, not static cards.</p>
+      <div class="mkt-concepts">
+        <div class="mkt-concept">
+          <header><b>Catalogue first</b><span>compact · index</span></header>
+          <iframe title="Catalogue-first application structure" src="/demo/app?biz=shop&direction=minimal&media=photo" loading="lazy"></iframe>
+          <p>Search and browse lead. Dense product rows, direct comparison, a short path to the bag.</p>
+        </div>
+        <div class="mkt-concept">
+          <header><b>Narrative lead</b><span>editorial · story</span></header>
+          <iframe title="Narrative-led application structure" src="/demo/app?biz=shop&direction=editorial&media=photo" loading="lazy"></iframe>
+          <p>A brand statement, one strong piece, then the collection. Product pages read like features.</p>
+        </div>
+        <div class="mkt-concept">
+          <header><b>Image first</b><span>campaign · immersive</span></header>
+          <iframe title="Image-first application structure" src="/demo/app?biz=shop&direction=lifestyle&media=photo" loading="lazy"></iframe>
+          <p>Photography before words, a swipeable catalogue and a more immersive browse.</p>
+        </div>
+      </div>
+      <p class="mkt-small">These three use a demonstration shop to show the structures. When you enter your URL, every concept uses your own products and imagery instead.</p>
+    </section>
+
+    <section class="mkt-section wrap">
+      <div class="mkt-truth">
+        <div>
+          <span class="mkt-eyebrow">An honest boundary</span>
+          <h3>A trade preset is a capability map, not a content generator.</h3>
+          <p>Plattr uses trade shapes to decide which screens make sense — a shop needs a catalogue and a bag, a salon needs treatments and appointments. Everything the customer sees inside those screens comes from the business, or is clearly marked as missing until the owner supplies it.</p>
+          <p>If a product has no price, it says so. If an image could not be tied to the right product, it is not borrowed from another one. If a site cannot be read, the import fails instead of inventing a result.</p>
+          <a class="btn ghost" style="margin-top:18px" href="/start">Try your own URL →</a>
+        </div>
+        <div class="mkt-compare">
+          <div><b>Trade shape</b><span>Which functional screens and flows exist</span></div>
+          <div><b>Business facts</b><span>Names, products, prices, images and contact details from the site</span></div>
+          <div><b>Owner decisions</b><span>Corrections, missing policies and approval to publish</span></div>
+          <div><b>Never substituted</b><span>A different shop's catalogue, stock photography or invented prices</span></div>
+          <div><b>Generated today</b><span>A working web app, installable as a PWA</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="mkt-cta">
+        <div>
+          <h2>Start with the website you already have.</h2>
+          <p>No lengthy brief. No re-typing your catalogue. Three working concepts from the real business, then you decide.</p>
+          <p class="mkt-small" style="color:#a9b1ab;margin-top:10px">Running a marketplace? ${esc(bundle.label)} — ${usd(bundle.price)}, ${usd(bundle.monthly)}/mo. <a href="/brief?bundle=marketplace" style="color:#f7f8f5;text-decoration:underline">Start the marketplace brief →</a></p>
+        </div>
+        <a class="btn" href="/start">Build my three concepts →</a>
+      </div>
+    </section>
+  </main>
+  `
+
   return page({
-    title: 'Plattr — apps for any local business, from a conversation',
+    title: 'Plattr — your website becomes three working apps',
     description:
-      'Turn a short customer brief into a working app for any trade: catalogue, orders, bookings, timetables, quotes — packaged for web, Android and iOS.',
+      'Enter a business website. Plattr reads its real products, prices, images and brand, then builds three complete application concepts. Choose, customise and publish.',
     body,
-    script: DEMO_SCRIPT,
   })
 }
-
-const DEMO_SCRIPT = `
-(() => {
-  const frame = document.getElementById('demo-frame')
-  if (frame) {
-    document.querySelectorAll('[data-demo]').forEach((button) => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('[data-demo]').forEach((other) => other.setAttribute('aria-pressed', String(other === button)))
-        frame.src = '/demo/app?biz=' + button.dataset.demo
-      })
-    })
-  }
-
-  const proofButton = document.querySelector('[data-proof-run]')
-  const proofResult = document.querySelector('[data-proof-result]')
-  if (proofButton && proofResult) {
-    proofButton.addEventListener('click', async () => {
-      const label = proofButton.textContent
-      proofButton.disabled = true
-      proofButton.textContent = 'Reading the shop…'
-      proofResult.textContent = 'Crawling the site now — up to 20 seconds.'
-      try {
-        const response = await fetch('/api/import', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: proofButton.dataset.proofRun }),
-        })
-        const data = await response.json().catch(() => ({}))
-        if (!response.ok) throw new Error((data.error && data.error.message) || 'That site could not be read just now.')
-        const items = (data.site.menu || []).reduce((total, section) => total + section.items.length, 0)
-        proofResult.textContent = 'Just now: ' + data.pages + ' pages, ' + items + ' items in ' +
-          data.site.menu.length + ' sections, brand colour ' + (data.site.accent || 'not stated') + '.'
-      } catch (error) {
-        proofResult.textContent = error.message + ' The capture above still stands — the app is built from it.'
-      } finally {
-        proofButton.disabled = false
-        proofButton.textContent = label
-      }
-    })
-  }
-})()
-`

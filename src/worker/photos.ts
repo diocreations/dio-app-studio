@@ -1,6 +1,6 @@
 import { PHOTO_KEYWORDS } from './themes'
 import type { VerticalId } from './types'
-import { stockPhotos } from './flagshipImages'
+import { hasWidePhotos, stockPhotos } from './flagshipImages'
 
 export type PhotoSet = { wide: string[]; thumb: string[] }
 
@@ -16,8 +16,9 @@ const EMPTY: PhotoSet = { wide: [], thumb: [] }
 function localPhotos(vertical: VerticalId): PhotoSet {
   const photos = stockPhotos(vertical)
   if (!photos.length) return EMPTY
+  const size = hasWidePhotos(vertical) ? 1280 : 640
   return {
-    wide: photos.map((photo) => `/images/flagship/${photo.name}-1280.webp`),
+    wide: photos.map((photo) => `/images/flagship/${photo.name}-${size}.webp`),
     thumb: photos.map((photo) => `/images/flagship/${photo.name}-640.webp`),
   }
 }

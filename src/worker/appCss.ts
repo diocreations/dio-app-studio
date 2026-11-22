@@ -319,21 +319,40 @@ body[data-accent-style="underline"] .sect { border-bottom: 1px solid var(--hair)
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   z-index: 2; display: block;
 }
-.thumb.is-empty { background: var(--surface-2); }
+.thumb.is-empty {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, var(--surface-2)), var(--surface-2) 58%),
+    repeating-linear-gradient(118deg, var(--hair) 0 1px, transparent 1px 19px);
+}
 .thumb.is-empty::before, .thumb.is-empty::after { display: none; }
-/* One absence state for every product image surface. The frame keeps its
-   intended shape; the artwork underneath is never presented as a product. */
+/* One absence state for every product image surface. It is composed, not left
+   blank: the item's own name sits in the display face and the explanation is
+   quiet, so an absent photograph never looks like a broken product. */
 .media-missing {
   position: absolute; inset: 0; z-index: 0; display: grid; place-items: center; align-content: center;
-  gap: 8px; padding: 14px; background: var(--surface-2); color: var(--muted); text-align: center;
+  gap: 7px; padding: 16px; color: var(--ink); text-align: center;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 12%, var(--surface-2)), var(--surface-2) 62%),
+    repeating-linear-gradient(118deg, var(--hair) 0 1px, transparent 1px 19px);
 }
-.media-missing-icon { width: 26px; height: 26px; opacity: 0.55; }
+.media-missing::after {
+  content: ""; position: absolute; inset: 11px; border: 1px solid var(--hair); pointer-events: none;
+}
+.media-missing-icon { width: 20px; height: 20px; opacity: 0.42; }
+.media-missing-note {
+  font-size: 7.5px; font-weight: 750; letter-spacing: 0.2em; line-height: 1.3;
+  text-transform: uppercase; color: var(--muted);
+}
 .media-missing-label {
-  font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; line-height: 1.35; text-transform: uppercase;
+  max-width: 22ch; font-family: var(--display-serif); font-size: clamp(14px, 4.4vw, 20px);
+  font-weight: 500; line-height: 1.12; letter-spacing: -0.015em;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-.r-row .r-art .media-missing, .rec-art .media-missing { padding: 4px; gap: 2px; }
-.r-row .r-art .media-missing-icon, .rec-art .media-missing-icon { width: 18px; height: 18px; }
+.r-row .r-art .media-missing, .rec-art .media-missing { padding: 4px; gap: 0; }
+.r-row .r-art .media-missing::after, .rec-art .media-missing::after { inset: 4px; }
+.r-row .r-art .media-missing-icon, .rec-art .media-missing-icon { width: 16px; height: 16px; }
 .r-row .r-art .media-missing-label, .rec-art .media-missing-label { display: none; }
+.r-row .r-art .media-missing-note, .rec-art .media-missing-note { display: none; }
 .hero-art { position: absolute; inset: 0; z-index: 0; }
 .hero-art::before { content: ""; position: absolute; z-index: 1; }
 .m-circle::before {
@@ -436,9 +455,10 @@ body[data-accent-style="underline"] .sect { border-bottom: 1px solid var(--hair)
   padding: 18px 0; border-bottom: 1px solid var(--hair); transition: background 0.2s ease;
 }
 .h-row:last-child { border-bottom: 0; }
+.h-row > div { min-width: 0; }
 .h-row .name {
   font-family: var(--display); font-size: 17px; font-weight: var(--weight); letter-spacing: var(--tracking);
-  line-height: 1.2;
+  line-height: 1.2; overflow-wrap: anywhere;
 }
 .h-row .desc { font-size: 12.5px; color: var(--muted); margin-top: 4px; max-width: 30ch; line-height: 1.5; }
 .h-row .meta { font-size: 10.5px; color: var(--muted); margin-top: 6px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600; }
@@ -2613,6 +2633,203 @@ html body[data-layout="retail"] .detail-save { top: 14px; right: var(--retail-pa
 /* A visible keyboard focus ring, independent of each composition's button skin. */
 button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [tabindex]:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
   outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+/* ------------------------------------------------ three real applications */
+/* The blueprint attributes used to be labels without a rendering. These rules
+   make the three concepts differ in structure and grammar, not only palette:
+   a masthead and journal read differently from a utility bar and index, and a
+   campaign story reads differently from a compact specification. They sit last
+   because they are the concept's identity; the trade family is its accent. */
+
+/* Header architecture: a publication masthead, a compact utility bar, or a
+   dark editorial band. */
+body[data-header="masthead"] .appbar {
+  background: var(--bg); border-bottom: 2px solid var(--ink); box-shadow: none;
+  padding-top: calc(14px + var(--safe-top)); padding-bottom: 12px;
+}
+body[data-header="masthead"] .appbar .title {
+  font-family: var(--display-serif); font-size: 22px; font-weight: 500; letter-spacing: -0.025em;
+}
+body[data-header="masthead"] .appbar .kicker { letter-spacing: 0.32em; }
+body[data-header="masthead"] .appbar .mark { border-radius: 0; box-shadow: none; }
+body[data-header="masthead"] .appbar .iconbtn { border-radius: 0; box-shadow: none; background: none; }
+
+body[data-header="utility"] .appbar {
+  background: var(--surface-2); border-bottom: 1px solid var(--hair); box-shadow: none;
+  padding-top: calc(6px + var(--safe-top)); padding-bottom: 6px;
+}
+body[data-header="utility"] .appbar .title {
+  font-family: var(--body); font-size: 10.5px; font-weight: 750; letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+body[data-header="utility"] .appbar .kicker { display: none; }
+body[data-header="utility"] .appbar .mark { width: 24px; height: 24px; border-radius: 50%; font-size: 9px; box-shadow: none; }
+body[data-header="utility"] .appbar .iconbtn {
+  width: 30px; height: 30px; border: 0; border-radius: 0; background: none; box-shadow: none;
+}
+
+body[data-header="overlay"] .appbar {
+  background: var(--ink); color: var(--bg); border-bottom: 0; box-shadow: none;
+  padding-top: calc(13px + var(--safe-top)); padding-bottom: 13px;
+}
+body[data-header="overlay"] .appbar .title { color: var(--bg); font-family: var(--display); font-size: 18px; }
+body[data-header="overlay"] .appbar .kicker { color: color-mix(in srgb, var(--bg) 68%, transparent); }
+body[data-header="overlay"] .appbar .mark { background: var(--bg); color: var(--ink); box-shadow: none; }
+body[data-header="overlay"] .appbar .iconbtn {
+  color: var(--bg); border-color: color-mix(in srgb, var(--bg) 24%, transparent);
+  background: color-mix(in srgb, var(--bg) 8%, transparent); box-shadow: none;
+}
+
+/* Catalogue architecture: journal rows, an indexed grid, or a story rail. */
+body[data-catalog="journal"] .tiles { display: block; }
+body[data-catalog="journal"] .tile,
+body[data-catalog="journal"] .tile.wide {
+  flex-direction: row; align-items: stretch; gap: 15px; display: flex;
+  padding: 13px 0; border: 0; border-bottom: 1px solid var(--hair); border-radius: 0;
+  background: none; box-shadow: none;
+}
+body[data-catalog="journal"] .tile .thumb,
+body[data-catalog="journal"] .tile.wide .thumb {
+  width: 31%; flex: 0 0 31%; aspect-ratio: 1 / 1 !important; border-radius: 0;
+}
+body[data-catalog="journal"] .tile .body,
+body[data-catalog="journal"] .tile.wide .body { padding: 0; align-content: center; }
+body[data-catalog="journal"] .tile .go { position: static; margin-top: 7px; }
+body[data-catalog="journal"] .stack-card {
+  display: flex; align-items: stretch; gap: 15px; border: 0; border-top: 1px solid var(--hair);
+  border-radius: 0; background: none; box-shadow: none;
+}
+body[data-catalog="journal"] .stack-card .band { width: 32%; flex: 0 0 32%; height: auto; min-height: 120px; }
+body[data-catalog="journal"] .stack-card .body { padding: 2px 0 18px; }
+
+body[data-catalog="index"] .tiles { grid-template-columns: 1fr 1fr; gap: 8px; }
+body[data-catalog="index"] .tile {
+  border: 0; border-radius: 0; background: var(--surface-2); box-shadow: none; padding: 0;
+}
+body[data-catalog="index"] .tile .thumb { aspect-ratio: 1 / 1; border-radius: 0; }
+body[data-catalog="index"] .tile .body { padding: 9px 10px 12px; }
+body[data-catalog="index"] .tile .name { font-family: var(--body); font-size: 12.5px; font-weight: 700; letter-spacing: 0; }
+body[data-catalog="index"] .tile .go { display: none; }
+body[data-catalog="index"] .rl-grid { gap: 12px 14px; }
+body[data-catalog="index"] .rl-title { display: block; }
+body[data-catalog="index"] .rl-desc { display: none; }
+
+body[data-catalog="stories"] .tiles {
+  display: flex; gap: 13px; overflow-x: auto; margin-inline: -18px; padding: 2px 18px 12px;
+  scrollbar-width: none; scroll-snap-type: x mandatory;
+}
+body[data-catalog="stories"] .tiles::-webkit-scrollbar { display: none; }
+body[data-catalog="stories"] .tile,
+body[data-catalog="stories"] .tile.wide {
+  flex: 0 0 79%; scroll-snap-align: start; padding: 0; border: 0; border-radius: 0;
+  background: var(--surface); box-shadow: var(--shadow-2);
+}
+body[data-catalog="stories"] .tile .thumb { aspect-ratio: 4 / 5; border-radius: 0; }
+body[data-catalog="stories"] .tile .body { padding: 12px 13px 18px; }
+body[data-catalog="stories"] .tile .name { font-family: var(--display-serif); font-size: 19px; font-weight: 500; }
+body[data-catalog="stories"] .stack-card { border-radius: 0; }
+
+/* The same three catalogue arguments for row and retail grammars, so the
+   architecture does not disappear when a trade's shell is not a tile grid. */
+body[data-catalog="journal"] .r-row { gap: 16px; padding: 16px 0; }
+body[data-catalog="journal"] .r-row .r-art { width: 70px; height: 70px; border-radius: 0; }
+body[data-catalog="journal"] .h-row { padding: 20px 0; }
+body[data-catalog="journal"] .rl-grid { grid-template-columns: 1fr; row-gap: 0; }
+body[data-catalog="journal"] .rl-card { display: grid; grid-template-columns: 32% minmax(0, 1fr); gap: 18px; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--hair); }
+body[data-catalog="journal"] .rl-media { aspect-ratio: 1 / 1 !important; }
+
+body[data-catalog="index"] .r-row { gap: 11px; padding: 10px; margin-bottom: 6px; border: 0; background: var(--surface-2); }
+body[data-catalog="index"] .r-row .r-art { width: 54px; height: 54px; border-radius: 0; }
+body[data-catalog="index"] .r-row .desc { display: none; }
+body[data-catalog="index"] .h-row .desc { display: none; }
+body[data-catalog="index"] .rl-grid { grid-template-columns: 1fr 1fr; row-gap: 18px; }
+
+body[data-catalog="stories"] [data-items] { display: flex; gap: 13px; overflow-x: auto; margin-inline: -18px; padding: 2px 18px 12px; scrollbar-width: none; scroll-snap-type: x mandatory; }
+/* A story rail keeps one readable card in view. Without an explicit basis the
+   rows shrink to fit every item and become three narrow columns on a phone. */
+body[data-catalog="stories"] [data-items] > * { flex: 0 0 min(82%, 340px); width: auto; min-width: 0; }
+body[data-catalog="stories"] [data-items]::-webkit-scrollbar { display: none; }
+body[data-catalog="stories"] .r-row {
+  flex: 0 0 76%; scroll-snap-align: start; flex-direction: column; align-items: stretch;
+  padding: 0 0 14px; border: 0; background: var(--surface); box-shadow: var(--shadow-2);
+}
+body[data-catalog="stories"] .r-row .r-art { width: 100%; height: 168px; border-radius: 0; }
+body[data-catalog="stories"] .r-row .lead { padding: 12px 14px 0; }
+body[data-catalog="stories"] .r-row .tail { width: auto; padding: 8px 14px 0; justify-content: space-between; }
+body[data-catalog="stories"] .rl-grid { display: flex; gap: 13px; overflow-x: auto; margin-inline: -18px; padding: 2px 18px 12px; scrollbar-width: none; scroll-snap-type: x mandatory; }
+body[data-catalog="stories"] .rl-grid::-webkit-scrollbar { display: none; }
+body[data-catalog="stories"] .rl-card { flex: 0 0 78%; scroll-snap-align: start; }
+
+/* Card grammar: editorial captions, compact index entries, campaign posters. */
+body[data-card="editorial"] :is(.tile .name, .rl-title h3, .h-row .name, .r-row .name, .stack-card .name) {
+  font-family: var(--display-serif); font-weight: 500; letter-spacing: -0.015em;
+}
+body[data-card="editorial"] :is(.rl-desc, .h-row .desc, .r-row .desc, .stack-card p) { font-family: var(--body); }
+body[data-card="compact"] :is(.tile .name, .rl-title h3, .h-row .name, .r-row .name, .stack-card .name) {
+  font-family: var(--body); font-size: 13.5px; font-weight: 700; letter-spacing: -0.01em;
+}
+body[data-card="compact"] :is(.rl-desc, .h-row .desc, .r-row .desc, .stack-card p) { display: none; }
+body[data-card="campaign"] :is(.tile .name, .rl-title h3, .h-row .name, .stack-card .name) {
+  font-family: var(--display); font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em;
+}
+body[data-card="campaign"] .tile .body { background: var(--ink); color: var(--bg); }
+body[data-card="campaign"] .tile .price,
+body[data-card="campaign"] .tile .tiny { color: color-mix(in srgb, var(--bg) 82%, transparent); }
+
+/* Dominant image proportion. */
+body[data-imagery="portrait"] :is(.tile .thumb, .rl-media, .stack-card .band) { aspect-ratio: 4 / 5; }
+body[data-imagery="square"] :is(.tile .thumb, .rl-media, .stack-card .band) { aspect-ratio: 1 / 1; }
+body[data-imagery="wide"] :is(.tile .thumb, .rl-media, .stack-card .band) { aspect-ratio: 16 / 10; }
+body[data-imagery="portrait"] .detail-band { height: min(58vh, 520px); }
+body[data-imagery="wide"] .detail-band { height: min(38vh, 330px); }
+
+/* Detail architecture: a feature page, a two-column specification, or a story. */
+body[data-detail="feature"] .detail-body { max-width: 640px; margin-inline: auto; }
+body[data-detail="feature"] .detail-band { height: min(56vh, 500px); }
+body[data-detail="story"] .detail-band { height: min(70vh, 620px); }
+body[data-detail="story"] .detail-body { max-width: 580px; margin-inline: auto; }
+body[data-detail="story"] .detail-body h1 { font-size: clamp(34px, 10vw, 54px); }
+body[data-detail="spec"] .detail-band { height: 230px; }
+body[data-detail="spec"] .detail-body h1 { font-size: clamp(24px, 6.8vw, 32px); }
+/* The catalogue-first concept reads as a spec sheet: no photograph, the
+   service and its fee set like a document. */
+body[data-detail="spec"] .detail-band { display: none !important; }
+body[data-detail="spec"] .detail-body { padding-top: 18px; }
+/* The image-first concept runs the photograph to the page edge. */
+body[data-detail="story"] .detail-band {
+  margin-inline: calc(-1 * clamp(18px, 5vw, 64px));
+  border-radius: 0 !important;
+}
+
+@media (min-width: 900px) {
+  body[data-detail="spec"] .screen.is-detail > [data-detail-body] {
+    display: grid; grid-template-columns: minmax(280px, 0.86fr) minmax(0, 1.14fr);
+    gap: clamp(24px, 4vw, 54px); align-items: start; max-width: 1080px; margin-inline: auto;
+  }
+  body[data-detail="spec"] .screen.is-detail > [data-detail-body] .detail-band { height: min(58vh, 520px); position: sticky; top: 0; }
+  body[data-detail="spec"] .detail-body { padding-top: 10px; }
+}
+
+/* Desktop composition: use the page, keep every line readable. */
+@media (min-width: 900px) {
+  .screen { padding: 18px clamp(24px, 5vw, 64px) calc(var(--nav-space) + 40px); }
+  .screen > * { max-width: 1180px; }
+  .screen.is-booking > *, .screen.is-detail > *, .screen[data-screen="search"] > *, .screen[data-screen="more"] > * { max-width: 900px; }
+  .screen.is-detail > [data-detail-body] { max-width: 1060px; }
+  .l-hero, .cover { min-height: 430px; padding: 40px; }
+  .l-hero h1, .cover h1 { font-size: clamp(48px, 5.5vw, 76px); }
+  .l-hero p, .cover p { font-size: 15px; max-width: 44ch; }
+  .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .tile.wide { grid-column: span 2; }
+  .rl-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 26px; row-gap: 34px; }
+  .rl-grid.is-home { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .sect { max-width: 640px; }
+  .lede, .detail-body p, .h-row .desc, .r-row .desc, .stack-card p { max-width: 64ch; }
+  .detail-cta, .rd-copy .detail-cta { max-width: 720px; }
+  .more-index { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .rec-row { gap: 16px; }
+  .rec { flex-basis: 180px; }
 }
 `
 }

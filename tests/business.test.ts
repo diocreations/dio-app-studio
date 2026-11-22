@@ -329,6 +329,22 @@ describe('enquiries and dashboard', () => {
     expect(withoutSession.status).toBe(401)
   })
 
+  test('the editor page ships JavaScript the browser can parse', async () => {
+    // The catalogue panel's bulk textarea once emitted a real newline inside a
+    // string literal, which broke the whole editor script on every build.
+    const shop = await projectFor('shop')
+    const html = await (
+      await app.request(
+        `https://plattr.example/p/${shop.project.token}/edit`,
+        { headers: { cookie: shop.cookie } },
+        shop.env as never,
+      )
+    ).text()
+    const scripts = [...html.matchAll(/<script(?![^>]*src=)[^>]*>([\s\S]*?)<\/script>/g)].map((match) => match[1])
+    expect(scripts.length).toBeGreaterThan(0)
+    expect(() => new Function(scripts[scripts.length - 1])).not.toThrow()
+  })
+
   test('dashboard modules follow the trade and settings update the customer app', async () => {
     const shop = await projectFor('shop')
     const html = await (
@@ -417,12 +433,24 @@ describe('enquiries and dashboard', () => {
       menu.map((section) => ({
         name: section.name,
         items: section.items.map((item) => {
-          const { id: _id, ...rest } = item
+          const {
+            id: _id,
+            ownerFields: _owner,
+            priceEvidence: _evidence,
+            sourcePriceEvidence: _source,
+            sourceTrail: _trail,
+            fieldProvenance: _provenance,
+            ...rest
+          } = item
           return rest
         }),
       }))
     expect(withoutIds(after?.spec.menu ?? [])).toEqual(withoutIds(savedMenu))
     expect(after?.spec.menu.every((section) => section.items.every((item) => item.id))).toBe(true)
+    // The renamed row is the owner's writing. The untouched price next to it
+    // is not relabelled as owner-provided.
+    expect(after?.spec.menu[0].items[0].ownerFields).toEqual(['name', 'desc'])
+    expect(after?.spec.menu[0].items[0].priceEvidence).toBeUndefined()
     // Groups still flagged as examples are gone, including their copy.
     expect(after?.spec.offers).toEqual([])
     expect(after?.spec.story).toBe('')
@@ -475,6 +503,39 @@ describe('enquiries and dashboard', () => {
     const repaired = (await getProject(shop.env.DB, shop.project.token))!
     expect(repaired.spec.sampleContent?.menu).toBe(false)
     expect(repaired.spec.sampleContent?.contact).toBe(true)
+  })
+
+  test('owner-editable action labels change the words, not the workflow', async () => {
+    const { db, project, env, cookie } = await projectFor('salon')
+    const response = await app.request(
+      `https://plattr.example/api/projects/${project.token}/app-settings`,
+      {
+        method: 'PUT',
+        headers: { ...JSON_HEADERS, cookie },
+        body: JSON.stringify({
+          actionHome: 'View the menu of treatments',
+          actionView: 'See treatment',
+          actionAdd: 'Add extra',
+          actionBook: 'Reserve a chair',
+          actionQuote: 'Ask the team',
+        }),
+      },
+      env as never,
+    )
+    expect(response.status).toBe(200)
+    const updated = await getProject(db, project.token)
+    expect(updated?.spec.actions).toEqual({
+      home: 'View the menu of treatments',
+      view: 'See treatment',
+      add: 'Add extra',
+      book: 'Reserve a chair',
+      quote: 'Ask the team',
+    })
+    const appResponse = await app.request(`https://plattr.example/p/${project.token}/app`, {}, env as never)
+    const html = await appResponse.text()
+    expect(html).toContain('Reserve a chair')
+    // The label is copy; the booking destination stays the tested workflow.
+    expect(html).toContain('data-go="book"')
   })
 
   test('saving business details applies the new name, colour and logo everywhere', async () => {
@@ -672,21 +733,24 @@ describe('a hotel stay', () => {
     })
     expect(response.status).toBe(201)
     const body = (await response.json()) as {
-      booking: { id: string; date: string; checkOut: string; nights: number; total: number; party: number }
+      booking: { id: string; date: string; checkOut: string; nights: number; nightlyRate: number; total: number; party: number }
     }
     expect(body.booking.nights).toBe(3)
     expect(body.booking.checkOut).toBe(day(5))
+    expect(body.booking.nightlyRate).toBe(room.price)
     expect(body.booking.total).toBe(room.price * 3)
     expect(body.booking.party).toBe(2)
 
     const read = await app.request(`https://plattr.example/p/${project.token}/bookings/${body.booking.id}`, {}, env as never)
-    const stored = (await read.json()) as { booking: { nights: number; total: number; service: string } }
+    const stored = (await read.json()) as { booking: { nights: number; nightlyRate: number; total: number; service: string } }
     expect(stored.booking.nights).toBe(3)
+    expect(stored.booking.nightlyRate).toBe(room.price)
     expect(stored.booking.total).toBe(room.price * 3)
     expect(stored.booking.service).toBe(room.name)
 
     const data = await dashboardData(db, project)
     expect(data.bookings[0].nights).toBe(3)
+    expect(data.bookings[0].nightlyRate).toBe(room.price)
     expect(data.bookings[0].total).toBe(room.price * 3)
   })
 
@@ -722,7 +786,7 @@ describe('a hotel stay', () => {
     expect(Number(row?.count)).toBe(0)
   })
 
-  test('a non-room extra is not multiplied into a stay price', async () => {
+  test('refuses a non-room extra as the selected stay', async () => {
     const { project, env } = await projectFor('hotel')
     const extra = project.spec.menu[1].items[0]
     expect(extra.meta).not.toContain('night')
@@ -733,10 +797,41 @@ describe('a hotel stay', () => {
       party: 2,
       service: extra.name,
     })
-    expect(response.status).toBe(201)
-    const body = (await response.json()) as { booking: { nights: number; total: number } }
-    expect(body.booking.nights).toBe(2)
-    expect(body.booking.total).toBe(0)
+    expect(response.status).toBe(422)
+    const error = (await response.json()) as { error: { code: string } }
+    expect(error.error.code).toBe('room_unknown')
+  })
+
+  test('requires the selected room and both stay dates', async () => {
+    const { project, env } = await projectFor('hotel')
+    const room = project.spec.menu[0].items[0]
+    const noRoom = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', phone: '555 0100' },
+      date: day(2),
+      checkOut: day(4),
+      party: 2,
+    })
+    expect(noRoom.status).toBe(422)
+    expect(((await noRoom.json()) as { error: { code: string } }).error.code).toBe('room_required')
+
+    const noCheckOut = await post(env, project.token, 'bookings', {
+      customer: { name: 'Maya Rao', phone: '555 0100' },
+      date: day(2),
+      party: 2,
+      service: room.name,
+    })
+    expect(noCheckOut.status).toBe(422)
+    expect(((await noCheckOut.json()) as { error: { code: string } }).error.code).toBe('check_out_required')
+  })
+
+  test('does not expose hotel rooms through the order workflow', async () => {
+    const { project, env } = await projectFor('hotel')
+    const response = await post(env, project.token, 'orders', {
+      customer: { name: 'Maya Rao', phone: '555 0100' },
+      fulfilment: 'At the guesthouse',
+      items: [{ name: project.spec.menu[0].items[0].name, quantity: 1 }],
+    })
+    expect([404, 422]).toContain(response.status)
   })
 })
 

@@ -189,10 +189,10 @@ describe('the brief is honest about what was read', () => {
 })
 
 describe('the landing page example and its preview agree', () => {
-  test('the typed example and the first preview are the same trade', () => {
+  test('the URL-first landing page and its live app are the same trade', () => {
     const html = marketingPage()
-    expect(html).toContain('I need an app for my coffee shop')
-    expect(html).toContain('/demo/app?biz=cafe')
-    expect(html).toContain('data-demo="cafe" aria-pressed="true"')
+    expect(html).toContain('action="/start"')
+    expect(html).toContain('Enter a business address')
+    expect(html).toContain('/demo/app?biz=shop')
   })
 })

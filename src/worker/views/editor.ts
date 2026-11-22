@@ -1,4 +1,4 @@
-import type { Doc } from '../doc'
+import { HEADING_LIMIT, type Doc } from '../doc'
 import type { Project } from '../db'
 import { directionsFor } from '../directions'
 import { CATALOGUE_MEDIA_VARIANTS } from '../flagship'
@@ -58,6 +58,10 @@ export function editorPage(options: { project: Project; doc: Doc; origin: string
   }))
   const directionsJson = JSON.stringify(directions).replace(/</g, '\\u003c')
   const catalogJson = JSON.stringify(project.spec.menu).replace(/</g, '\\u003c')
+  const catalogNameJson = JSON.stringify(project.spec.category || 'Catalogue').replace(/</g, '\\u003c')
+  const sourceReviewJson = JSON.stringify(project.spec.sourceReview ?? null).replace(/</g, '\\u003c')
+  const projectsJson = JSON.stringify(project.spec.projects ?? []).replace(/</g, '\\u003c')
+  const verticalJson = JSON.stringify(project.spec.vertical).replace(/</g, '\\u003c')
   const offersJson = JSON.stringify(project.spec.offers).replace(/</g, '\\u003c')
   return `<!doctype html>
 <html lang="en">
@@ -231,6 +235,15 @@ button { cursor: pointer; }
 .media-preview .focal { position: absolute; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 1px 4px rgba(0,0,0,.4); pointer-events: none; }
 .catalog-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; border-top: 1px solid var(--line); }
 .catalog-foot .hint { margin: 0; }
+.recovery { border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin-bottom: 14px; background: var(--panel); }
+.recovery .hint { margin: 4px 0 0; }
+.recovery-top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.recovery-top a { font-size: 12px; }
+.bulk { border: 1px dashed var(--line); border-radius: 10px; padding: 10px 12px; margin-bottom: 14px; }
+.bulk summary { cursor: pointer; font-weight: 600; font-size: 13px; }
+.bulk .hint { margin: 6px 0; }
+.bulk-row { display: grid; gap: 8px; margin-bottom: 8px; }
+.bulk-row textarea { width: 100%; font: inherit; font-size: 12px; padding: 8px; border: 1px solid var(--line); border-radius: 8px; resize: vertical; }
 .cat-group { border: 1px solid var(--line-soft); border-radius: 10px; padding: 10px; margin-bottom: 10px; background: #fff; }
 .cat-group-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .cat-group-head input { flex: 1; font-weight: 600; }
@@ -353,6 +366,7 @@ button { cursor: pointer; }
   <button class="iconbtn" id="history" title="Version history" aria-label="Version history">⟲</button>
   <button class="iconbtn" id="panelRight" title="Properties" aria-label="Properties">⚙</button>
   <a class="btn ghost" href="/p/${esc(token)}/dashboard">Dashboard</a>
+  <a class="btn ghost" href="/p/${esc(token)}/review">What we read</a>
   <a class="btn ghost" href="/p/${esc(token)}" target="_blank" rel="noreferrer">Review page</a>
   <a class="btn primary" id="openApp" href="${esc(origin)}/p/${esc(token)}/app" target="_blank" rel="noreferrer">Open app ↗</a>
 </div>
@@ -476,12 +490,26 @@ button { cursor: pointer; }
 const TOKEN = ${JSON.stringify(token)};
 const INITIAL = ${json};
 const CATALOG = ${catalogJson};
+const CATALOG_NAME = ${catalogNameJson};
+const SPEC_VERTICAL = ${verticalJson};
+// The paste example follows the trade, so a hotel is not shown a pizza.
+const BULK_EXAMPLE = ({
+  restaurant: 'Margherita | 9.50 | Tomato, fior di latte, basil',
+  hotel: 'Sea-view double | 145.00 | King bed, breakfast included',
+  appointments: 'Cut and finish | 45.00 | Wash, cut and blow-dry',
+  salon: 'Cut and finish | 45.00 | Wash, cut and blow-dry',
+  retail: 'Linen shirt | 65.00 | Stonewashed linen',
+  professional: 'Site survey | 250.00 | Measured survey and report',
+  courses: 'Introduction to drawing | 120.00 | Four weekly sessions',
+}[SPEC_VERTICAL] || 'Item name | 12.50 | Short description');
+const SOURCE_REVIEW = ${sourceReviewJson};
+const PROJECTS = ${projectsJson};
 const OFFERS = ${offersJson};
 const DIRECTIONS = ${directionsJson};
 const HAS_SAVED = ${project.doc ? 'true' : 'false'};
 const SECTION_LABELS = { hero:'Hero', featured:'Featured', offers:'Offers', loyalty:'Rewards', visit:'Visit', story:'Story', testimonials:'Testimonials', cta:'Call to action', heading:'Heading', text:'Text', button:'Button', image:'Image', banner:'Banner', productList:'Product list', search:'Search', form:'Contact form', gallery:'Gallery', flagship:'Feature block' };
 const CATALOGUE_MEDIA_VARIANTS = ${JSON.stringify(CATALOGUE_MEDIA_VARIANTS)};
-const VARIANT_LABELS = { 'dine-title':'Restaurant intro', 'dine-feature':'Featured dish', 'dine-actions':'Actions', 'dine-facts':'Visit details', 'dine-note':'Kitchen note', 'shop-search':'Search', 'shop-title':'Shop intro', 'shop-products':'Products', 'shop-all':'Browse link', 'salon-title':'Salon intro', 'salon-dates':'Date picker', 'salon-services':'Treatments', 'salon-staff':'Team', 'salon-action':'Book action', 'hotel-cover':'Stay cover', 'hotel-stay':'Stay card', 'hotel-rooms':'Rooms', 'hotel-facts':'Visit details', 'pro-title':'Practice intro', 'pro-intro':'Approach', 'pro-index':'Services index', 'pro-actions':'Consult action', 'pro-facts':'Visit details', 'cafe-hero':'Café intro', 'cafe-menu':'Counter menu', 'cafe-order':'Takeaway band', 'cafe-reserve':'Table reservation', 'gym-hero':'Gym intro', 'gym-plans':'Membership plans', 'gym-timetable':'Class timetable', 'gym-trainers':'Coach profiles', 'gym-join':'Membership enquiry', 'clinic-hero':'Clinic intro', 'clinic-specialities':'Specialities', 'clinic-doctors':'Doctor profiles', 'clinic-care':'Visit steps', 'clinic-privacy':'Privacy note', 'clinic-appointments':'Appointment card', 'property-hero':'Property intro', 'property-search':'Search and filters', 'property-listings':'Listings', 'property-viewing':'Viewing card', 'property-enquire':'Valuation enquiry', 'studio-hero':'Studio intro', 'studio-work':'Selected work', 'studio-services':'Services and prices', 'studio-team':'Studio team', 'studio-book':'Project enquiry', 'offers':'Offers' };
+const VARIANT_LABELS = { 'dine-title':'Restaurant intro', 'dine-feature':'Featured dish', 'dine-actions':'Actions', 'dine-facts':'Visit details', 'dine-note':'Kitchen note', 'shop-search':'Search', 'shop-title':'Shop intro', 'shop-products':'Products', 'shop-all':'Browse link', 'salon-title':'Salon intro', 'salon-dates':'Date picker', 'salon-services':'Treatments', 'salon-staff':'Team', 'salon-action':'Book action', 'hotel-cover':'Stay cover', 'hotel-stay':'Stay card', 'hotel-rooms':'Rooms', 'hotel-facts':'Visit details', 'pro-title':'Practice intro', 'pro-intro':'Approach',   'pro-index':'Services index', 'pro-work':'Selected work', 'pro-actions':'Consult action', 'pro-facts':'Visit details', 'cafe-hero':'Café intro', 'cafe-menu':'Counter menu', 'cafe-order':'Takeaway band', 'cafe-reserve':'Table reservation', 'gym-hero':'Gym intro', 'gym-plans':'Membership plans', 'gym-timetable':'Class timetable', 'gym-trainers':'Coach profiles', 'gym-join':'Membership enquiry', 'clinic-hero':'Clinic intro', 'clinic-specialities':'Specialities', 'clinic-doctors':'Doctor profiles', 'clinic-care':'Visit steps', 'clinic-privacy':'Privacy note', 'clinic-appointments':'Appointment card', 'property-hero':'Property intro', 'property-search':'Search and filters', 'property-listings':'Listings', 'property-viewing':'Viewing card', 'property-enquire':'Valuation enquiry', 'studio-hero':'Studio intro', 'studio-work':'Selected work', 'studio-services':'Services and prices', 'studio-team':'Studio team', 'studio-book':'Project enquiry', 'offers':'Offers' };
 const SCREEN_LABELS = { home:'Home', catalog:'Catalogue', search:'Search', saved:'Saved', detail:'Details', book:'Booking', quote:'Enquiry', more:'More', contact:'Contact', profile:'Profile', about:'About', custom:'Screen' };
 const SCREEN_ICONS = { home:'home', catalog:'catalog', search:'search', saved:'heart', detail:'chevron', book:'calendar', quote:'quote', more:'dots', contact:'phone', profile:'dots', about:'quote', custom:'dots' };
 const COMPONENTS = ['heading','text','button','image','banner','gallery','productList','search','form','testimonials','cta','offers','loyalty','visit','story','featured'];
@@ -1124,12 +1152,18 @@ function renderInspector() {
   $('selectionLabel').textContent = node ? nodeLabel(node) : 'Screen';
   if (!node) { renderScreenInspector(); return; }
   const style = node.style || {}; const hides = (node.responsive && node.responsive.hideOn) || [];
+  // These action blocks render the button's own label, not a heading above it.
+  // Offering a Heading field for a value the block never draws was a parity
+  // defect: the edit saved and the customer app did not change. The button
+  // label stays editable below.
+  const actionOnly = node.kind === 'flagship' && Boolean(node.cta) &&
+    ['dine-actions', 'shop-all', 'salon-action', 'pro-actions'].includes(node.variant || '');
   $('inspector').innerHTML =
     (node.hidden && node.hiddenBecause === 'empty'
       ? '<div class="sec"><p class="hint" role="status">Hidden automatically: this section has nothing to show yet. It comes back on its own when the business has the details it needs.</p></div>'
       : '') +
     '<div class="sec">' +
-      '<div class="field"><label>Heading</label><input id="pTitle" type="text" maxlength="60" value="' + esc(node.title || '') + '" placeholder="' + (VARIANT_LABELS[node.variant] || SECTION_LABELS[node.kind]) + '" /></div>' +
+      (actionOnly ? '' : '<div class="field"><label>Heading</label><input id="pTitle" type="text" maxlength="90" value="' + esc(node.title || '') + '" placeholder="' + (VARIANT_LABELS[node.variant] || SECTION_LABELS[node.kind]) + '" /></div>') +
       '<div class="field"><label>Words</label><textarea id="pText" maxlength="600" placeholder="A sentence or two">' + esc(node.text || '') + '</textarea></div>' +
       (node.kind === 'button' || node.kind === 'banner' || node.kind === 'cta' ? '<div class="field"><label>Button label</label><input id="pCta" type="text" maxlength="28" value="' + esc((node.cta && node.cta.label) || '') + '" /></div><div class="field"><label>Button opens</label><select id="pTarget">' + state.doc.screens.map((s) => '<option value="' + s.id + '"' + (node.cta && node.cta.screen === s.id ? ' selected' : '') + '>' + esc(s.name) + '</option>').join('') + '</select></div>' : '') +
     (node.kind === 'hero' ? '' : '<div class="field"><label>Move to another screen</label><select id="pMoveTo"><option value="">Choose a screen…</option>' + state.doc.screens.filter((s) => s.id !== state.screen).map((s) => '<option value="' + s.id + '">' + esc(s.name) + '</option>').join('') + '</select></div>') +
@@ -1220,8 +1254,12 @@ function renderScreenInspector() {
   const del = $('sDelete'); if (del) del.addEventListener('click', () => { if (confirm('Delete this screen?')) removeScreen(screen.id); });
 }
 function bindInspector(node) {
-  $('pTitle').addEventListener('input', (event) => commit((doc) => patchNode(doc, node.id, { title: event.target.value }), true));
-  $('pText').addEventListener('input', (event) => commit((doc) => patchNode(doc, node.id, { text: event.target.value }), true));
+  // Action-only blocks deliberately omit the heading field: the block renders
+  // its button label, not a heading above it. Bind only fields that exist.
+  const titleInput = $('pTitle');
+  if (titleInput) titleInput.addEventListener('input', (event) => commit((doc) => patchNode(doc, node.id, { title: event.target.value }), true));
+  const textInput = $('pText');
+  if (textInput) textInput.addEventListener('input', (event) => commit((doc) => patchNode(doc, node.id, { text: event.target.value }), true));
   const pick = $('pPick');
   if (pick) pick.addEventListener('click', () => openMedia(node.id));
   const catalogPhotos = $('pCataloguePhotos');
@@ -1290,7 +1328,9 @@ function bindInspector(node) {
 function patchNode(doc, id, patch) {
   const screen = doc.screens.find((s) => s.id === state.screen); if (!screen) return doc;
   const node = screen.sections.find((s) => s.id === id); if (!node) return doc;
-  if (patch.title !== undefined) node.title = patch.title.trim().slice(0,60) || undefined;
+  // The local optimistic patch has to accept the same heading length as the
+  // server, or a long source tagline silently loses its tail on save.
+  if (patch.title !== undefined) node.title = patch.title.trim().slice(0,${HEADING_LIMIT}) || undefined;
   if (patch.text !== undefined) node.text = patch.text.trim().slice(0,600) || undefined;
   if (patch.cta !== undefined) node.cta = { label: (patch.cta.label || 'Continue').slice(0,28), screen: patch.cta.screen };
   if (patch.style) node.style = Object.assign({}, node.style, patch.style);
@@ -1333,12 +1373,18 @@ function closeMedia() {
   state.mediaTarget = null; state.catalogTarget = null; state.elementTarget = null; state.variantMediaTarget = null; state.mediaReplaceId = null; state.mediaBusy = false; $('mediaStatus').textContent = '';
   if (reopenCatalog) $('catalogModal').hidden = false;
 }
+let mediaLoadSequence = 0
 function loadMedia() {
+  // Opening the library and uploading can overlap. Only the newest request may
+  // write the grid, otherwise the pre-upload response can land last and hide
+  // the photo that was just stored.
+  const sequence = ++mediaLoadSequence
   fetch('/api/projects/' + TOKEN + '/media').then((r) => r.json().then((payload) => { if (!r.ok) throw new Error('media'); return payload; })).then((payload) => {
+    if (sequence !== mediaLoadSequence) return
     state.media = payload.media || [];
     state.mediaSuggestions = payload.suggestions || [];
     renderMedia(state.mediaSuggestions);
-  }).catch(() => { $('mediaGrid').innerHTML = '<p class="empty">The media library could not be loaded. Check the local R2 binding.</p>'; });
+  }).catch(() => { if (sequence !== mediaLoadSequence) return; $('mediaGrid').innerHTML = '<p class="empty">The media library could not be loaded. Check the local R2 binding.</p>'; });
 }
 function formatBytes(bytes) {
   const value = Number(bytes) || 0;
@@ -1466,7 +1512,15 @@ function deleteMediaItem(id) {
   fetch('/api/projects/' + TOKEN + '/media/' + id, { method: 'DELETE' }).then((response) => response.json().then((payload) => { if (!response.ok) throw new Error((payload.error && payload.error.message) || 'Could not delete.'); return payload; })).then(() => { toast('Photo deleted'); loadMedia(); }).catch((error) => toast(error.message));
 }
 function openCatalog() {
+  // Saving the catalogue closes the panel but leaves the old variant target
+  // behind. Opening it again must show the item list, not require a second
+  // click on Options just to clear that stale target.
+  state.variantTarget = null;
   state.catalog = clone(CATALOG); state.offers = clone(OFFERS);
+  // An honest empty catalogue still has to be editable. Without a section the
+  // panel rendered nothing and the owner had no way to add the first item the
+  // import had correctly refused to invent.
+  if (!state.catalog.length) state.catalog = [{ name: CATALOG_NAME, items: [] }];
   $('catalogStatus').textContent = 'Changes appear in the app after saving.';
   $('catalogModal').hidden = false; renderCatalog();
 }
@@ -1508,9 +1562,62 @@ function variantPanel(item, target) {
     '<div class="variant-foot"><button class="cat-add" type="button" data-variant-add="' + target + '">+ Add variant</button><p class="hint">Prices are in the shop currency. Default is what the product shows before the customer chooses. IDs are preserved, including Shopify IDs. Leave values unset rather than guessing a combination.</p></div>' +
     '</div>';
 }
+function recoveryPanel() {
+  const review = SOURCE_REVIEW;
+  const items = state.catalog.reduce((total, section) => total + (section.items || []).length, 0);
+  const own = state.catalog.reduce((total, section) => total + (section.items || []).filter((item) => item.ownerFields && item.ownerFields.length).length, 0);
+  const status = !items ? 'No catalogue items yet' : items + ' item' + (items === 1 ? '' : 's');
+  const why = review && review.status === 'empty'
+    ? 'We read ' + (review.pages && review.pages.read ? review.pages.read.length : 0) + ' page' + (review.pages && review.pages.read && review.pages.read.length === 1 ? '' : 's') + ' from ' + (review.host || 'the site') + ' but found no commercial items with enough evidence to publish.'
+    : review && review.status === 'partial'
+      ? 'Some items were read; the source did not provide every detail this trade needs.'
+      : '';
+  const kept = review && review.rejected ? review.rejected.filter((entry) => entry.destination === 'information') : [];
+  const portfolio = review && review.rejected ? review.rejected.filter((entry) => entry.destination === 'portfolio') : [];
+  const portfolioKey = (value) => String(value || '').toLowerCase().split(/[,.]/)[0].replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+  const inPortfolio = PROJECTS.map((entry) => portfolioKey(entry.title));
+  const remaining = portfolio.filter((entry) => !inPortfolio.includes(portfolioKey(entry.name)));
+  const missing = review && review.missing && review.missing.length ? review.missing.join(', ') : '';
+  return '<div class="recovery">' +
+      '<div class="recovery-top"><b>' + status + '</b><a href="/p/' + TOKEN + '/review">Evidence &amp; review →</a></div>' +
+      (why ? '<p class="hint">' + esc(why) + '</p>' : '') +
+      (kept.length ? '<p class="hint">' + kept.length + ' policy, location or press page' + (kept.length === 1 ? '' : 's') + ' kept as business information, not as catalogue items.</p>' : '') +
+      (remaining.length
+        ? '<p class="hint">' + remaining.length + ' case stud' + (remaining.length === 1 ? 'y can' : 'ies can') + ' be added as portfolio work in the review.</p>'
+        : portfolio.length
+          ? '<p class="hint">All ' + portfolio.length + ' case studies are in the portfolio; rename or remove them in the review.</p>'
+          : '') +
+      (missing ? '<p class="hint">Still missing: ' + esc(missing) + '. Add it here or paste a list below.</p>' : '') +
+      (own ? '<p class="hint">' + own + ' item' + (own === 1 ? ' has' : 's have') + ' your corrections, recorded as owner-provided.</p>' : '') +
+    '</div>' +
+    '<details class="bulk"' + (items ? '' : ' open') + '><summary>Paste a list</summary>' +
+      '<p class="hint">One item per line: Name | Price | Description. Blank lines are ignored. These are saved as your own data, not as website evidence.</p>' +
+      '<div class="bulk-row"><input id="bulkSection" maxlength="40" value="' + esc(CATALOG_NAME) + '" aria-label="Section for pasted items" /><textarea id="bulkPaste" rows="4" placeholder="' + esc(BULK_EXAMPLE) + '"></textarea></div>' +
+      '<button class="cat-add" type="button" data-bulk-add="1">Add these items</button>' +
+    '</details>';
+}
+function bulkAdd() {
+  const field = $('bulkPaste'); const sectionField = $('bulkSection');
+  if (!field) return;
+  const sectionName = ((sectionField && sectionField.value) || CATALOG_NAME).trim().slice(0, 40) || CATALOG_NAME;
+  let section = state.catalog.find((entry) => entry.name === sectionName);
+  if (!section) { section = { name: sectionName, items: [] }; state.catalog.push(section); }
+  let added = 0;
+  for (const line of String(field.value || '').split('\\n')) {
+    const parts = line.split('|').map((part) => part.trim());
+    if (!parts[0]) continue;
+    const amount = Number(String(parts[1] || '').replace(/[^0-9.,]/g, '').replace(',', '.'));
+    section.items.push({ name: parts[0].slice(0, 60), desc: (parts[2] || '').slice(0, 120), price: Number.isFinite(amount) && amount > 0 ? Math.round(amount * 100) : 0 });
+    added += 1;
+  }
+  if (!added) return toast('Add at least one line: Name | Price | Description');
+  field.value = '';
+  renderCatalog();
+  toast(added + ' item' + (added === 1 ? '' : 's') + ' added. Save the catalogue.');
+}
 function renderCatalog() {
   const body = $('catalogBody');
-  body.innerHTML = (state.catalog.length ? state.catalog.map((section, sectionIndex) => '<div class="cat-group">' +
+  body.innerHTML = recoveryPanel() + (state.catalog.length ? state.catalog.map((section, sectionIndex) => '<div class="cat-group">' +
     '<div class="cat-group-head"><input data-cat-section="' + sectionIndex + '" value="' + esc(section.name) + '" maxlength="40" aria-label="Category name" /><button class="cat-add" data-cat-add="' + sectionIndex + '">+ Item</button></div>' +
     ((section.items || []).length ? section.items.map((item, itemIndex) => {
       const target = sectionIndex + ':' + itemIndex;
@@ -1880,6 +1987,8 @@ $('catalogBody').addEventListener('change', (event) => {
   renderCatalog();
 });
 $('catalogBody').addEventListener('click', (event) => {
+  const bulk = event.target.closest('[data-bulk-add]');
+  if (bulk) { bulkAdd(); return; }
   const photo = event.target.closest('[data-cat-photo]');
   if (photo) { openMedia(null, photo.dataset.catPhoto); return; }
   const removePhoto = event.target.closest('[data-cat-media-remove]');
@@ -1952,6 +2061,7 @@ $('aiApply').addEventListener('click', () => {
 $('aiCommand').addEventListener('keydown', (event) => { if (event.key === 'Enter') $('aiRun').click(); });
 render();
 fitPreview();
+if (new URLSearchParams(location.search).get('panel') === 'catalog') openCatalog();
 addEventListener('resize', fitPreview);
 if (typeof ResizeObserver !== 'undefined' && document.querySelector('.canvas')) new ResizeObserver(fitPreview).observe(document.querySelector('.canvas'));
 if (!HAS_SAVED) save().then(reloadFrame);

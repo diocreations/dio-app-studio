@@ -154,7 +154,7 @@ describe('a product with several variants', () => {
         ],
       },
     ])
-    expect(menu[0].items[0].variants).toEqual([
+    expect(menu[0].items[0].variants).toMatchObject([
       { id: 'vp-early', name: 'Early entry', price: 3000, selected: true },
       { id: 'vp-late', name: 'Late entry', price: 3000 },
       { name: 'Week pass', price: 4500 },
@@ -163,7 +163,7 @@ describe('a product with several variants', () => {
     ])
   })
 
-  test('the build stores variants with their selection but not the evidence sources', () => {
+  test('the build stores variants with their selection and the evidence source', () => {
     const menu = sanitizeMenu([
       {
         name: 'Shirts',
@@ -184,12 +184,20 @@ describe('a product with several variants', () => {
       },
     ])
     const item = menu[0].items[0] as Record<string, unknown>
-    expect(item.variants).toEqual([
+    expect(item.variants).toMatchObject([
       { name: 'Small', price: 4200, currency: 'GBP', selected: true },
       { name: 'Medium', price: 5800, currency: 'GBP' },
       { name: 'Large', price: 4900, currency: 'GBP' },
     ])
-    // Public build data: the internal source of each price stays out of the spec.
-    expect(item.priceEvidence).toBeUndefined()
+    // The parent price is validated and names no variant, so each option is
+    // reported rather than inheriting the parent's validation.
+    expect((item.variants as { fieldProvenance?: unknown }[])[0].fieldProvenance).toMatchObject({
+      price: { source: 'website', confidence: 'reported', validated: false },
+      availability: { source: 'unverified', validated: false },
+    })
+    // The build keeps the source of each price for the owner's review; the
+    // public app strips it (see app.test), so evidence and publication are
+    // separate decisions.
+    expect(item.priceEvidence).toMatchObject({ source: '/products.json', validated: true })
   })
 })

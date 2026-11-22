@@ -14,8 +14,10 @@ export function conceptCss(): string {
   return `
 /* ----------------------------------------------------------- app viewport */
 html body[data-flagship="1"] { --app-w: 520px; }
-@media (min-width: 720px) { html body[data-flagship="1"] { --app-w: 720px; } }
-@media (min-width: 1120px) { html body[data-flagship="1"] { --app-w: 980px; } }
+/* Tablet and desktop use the page instead of a centred phone column. The cap
+   keeps line lengths readable on very wide screens. */
+@media (min-width: 720px) { html body[data-flagship="1"] { --app-w: min(880px, calc(100% - 40px)); } }
+@media (min-width: 1120px) { html body[data-flagship="1"] { --app-w: min(1200px, calc(100% - 64px)); } }
 html body[data-flagship="1"] .app { max-width: var(--app-w); width: 100%; margin-inline: auto; }
 html body[data-flagship="1"] .tabbar {
   left: 50% !important;
@@ -65,15 +67,15 @@ html body[data-flagship="1"] .sheet { max-width: min(100%, var(--app-w)); margin
 .media-missing-icon,
 .media-missing-label { display: none !important; }
 .media-missing::before {
-  content: attr(data-label);
-  max-width: 12ch;
+  content: attr(data-mark);
+  max-width: 4ch;
   font-family: var(--display);
-  font-size: clamp(9px, 2.4vw, 14px);
-  font-weight: 500;
-  line-height: 1.12;
-  letter-spacing: -0.015em;
+  font-size: clamp(15px, 4vw, 24px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
   text-align: center;
-  text-wrap: balance;
+  opacity: 0.5;
 }
 .media-missing::after {
   content: "";
@@ -82,15 +84,15 @@ html body[data-flagship="1"] .sheet { max-width: min(100%, var(--app-w)); margin
   height: 1px;
   background: color-mix(in srgb, var(--ink) 15%, transparent);
 }
-.media-missing[data-label=""]::before { content: "house"; font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.55; }
+.media-missing[data-mark=""]::before { content: "·"; }
 .rec-art .media-missing::before,
-.r-art .media-missing::before { content: attr(data-label); max-width: 6ch; font-size: 5.5px; line-height: 1.1; letter-spacing: 0; text-transform: none; opacity: 0.82; overflow: hidden; }
+.r-art .media-missing::before { font-size: 11px; max-width: 3ch; opacity: 0.62; }
 .rec-art .media-missing::after,
 .r-art .media-missing::after { inset: auto 26% 14%; background: color-mix(in srgb, var(--ink) 12%, transparent); }
-.rd-media .media-missing::before { font-size: clamp(18px, 5vw, 28px); max-width: 14ch; }
+.rd-media .media-missing::before { font-size: clamp(30px, 9vw, 54px); opacity: 0.34; }
 .detail-band .media-missing::before,
 .menu-band .media-missing::before,
-.listing-shot.wide .media-missing::before { font-size: clamp(18px, 5vw, 30px); max-width: 15ch; }
+.listing-shot.wide .media-missing::before { font-size: clamp(30px, 9vw, 54px); opacity: 0.34; }
 .rl-media.is-empty { aspect-ratio: 4 / 3 !important; }
 .rd-media.is-empty { aspect-ratio: 16 / 10 !important; max-height: 300px !important; }
 .detail-band.is-empty,
@@ -149,6 +151,15 @@ body[data-flagship="1"][data-concept="immersive"][data-trade="restaurant"]:has([
   letter-spacing: -0.02em;
   text-align: center;
   text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+/* Small catalogue fields carry a short monogram, centred in the field. */
+.fx-art.is-missing.is-quiet::before {
+  content: attr(data-mark);
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  max-width: none; padding: 0;
+  font-size: clamp(13px, 3.5vw, 20px); font-weight: 650; letter-spacing: .16em; opacity: .55;
 }
 .fx-art.is-missing::after {
   content: "";
@@ -160,8 +171,6 @@ body[data-flagship="1"][data-concept="immersive"][data-trade="restaurant"]:has([
   mix-blend-mode: normal;
 }
 .fx-art.is-missing[data-label=""]::before { content: ""; }
-.fx-art.is-quiet.is-missing::before,
-.fx-service .fx-art.is-missing::before,
 .fx-fin-thumb .fx-art.is-missing::before { font-size: 8px; max-width: 7ch; }
 .fx-art.is-missing::before { position: relative; z-index: 1; }
 .fx-product .fx-art.is-missing,

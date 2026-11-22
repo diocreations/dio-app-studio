@@ -103,7 +103,9 @@ function missingArt(shape: 'plate' | 'arch' | 'card' | 'room' | 'quiet' = 'card'
   // No extra elements: the field is drawn entirely in CSS so saved element
   // slot ordinals do not shift when a photograph is missing.
   const text = label.trim().replace(/\s+/g, ' ').slice(0, 32)
-  return `<span class="fx-art is-${shape} is-missing" data-label="${esc(text)}" aria-hidden="true"></span>`
+  const words = text.split(/\s+/).filter((word) => word.length > 2 && !['the', 'and', 'for', 'with', 'from'].includes(word.toLowerCase()))
+  const mark = (words.length > 1 ? words[0][0] + words[1][0] : words[0]?.slice(0, 2) || '·').toUpperCase()
+  return `<span class="fx-art is-${shape} is-missing" data-label="${esc(text)}" data-mark="${esc(mark)}" aria-hidden="true"></span>`
 }
 
 /** Real photography where the trade has a local set, a neutral frame otherwise. */
@@ -184,8 +186,8 @@ function restaurantHome(spec: AppSpec): string {
         : `<div class="fx-feature is-empty">${art(0, 'plate')}<div class="fx-feature-copy"><span class="fx-eyebrow">The menu</span><b>Being written</b><p>The kitchen has not published its first dishes yet.</p></div></div>`
     }
     <div class="fx-actions">
-      <button class="fx-primary" type="button" data-go="catalog">See the menu</button>
-      ${spec.features.includes('booking') ? `<button class="fx-secondary" type="button" data-go="book">Reserve</button>` : ''}
+      <button class="fx-primary" type="button" data-go="${spec.menu.some((section) => section.items.length > 0) || !spec.features.includes('booking') ? 'catalog' : 'book'}">${esc(spec.menu.some((section) => section.items.length > 0) || !spec.features.includes('booking') ? (spec.actions?.view ?? 'View menu') : (spec.actions?.book ?? 'Request a table'))}</button>
+      ${spec.features.includes('booking') && spec.menu.some((section) => section.items.length > 0) ? `<button class="fx-secondary" type="button" data-go="book">${esc(spec.actions?.book ?? 'Request a table')}</button>` : ''}
     </div>
     ${factline(spec)}
   </div>`
@@ -262,7 +264,7 @@ function salonHome(spec: AppSpec): string {
         : `<div class="fx-empty">${art(0, 'quiet')}<b>Services are being added.</b><p>The owner can publish treatments from the dashboard.</p></div>`
     }
     ${spec.staff?.length ? `<div class="fx-staff"><span>With</span>${spec.staff.slice(0, 4).map((name) => `<b>${esc(name)}</b>`).join('')}</div>` : ''}
-    <div class="fx-sticky"><button type="button" data-go="book">Book an appointment <span>→</span></button></div>
+    <div class="fx-sticky"><button type="button" data-go="book">${esc(spec.actions?.book ?? 'Request appointment')} <span>→</span></button></div>
   </div>`
 }
 
@@ -271,11 +273,13 @@ function hotelHome(spec: AppSpec): string {
   return `<div class="fx-home fx-hotel">
     <div class="fx-hotel-image">${still(spec, 6, 'room', spec.name)}<span class="fx-eyebrow">${esc(spec.address || verticalFor(spec.vertical).label)}</span>${rooms[0] ? `<div class="fx-stay-tag"><span>${esc(rooms[0].section)}</span><b>${esc(rooms[0].item.name)}</b><em>${price(rooms[0].item, spec)}${rooms[0].item.meta ? ` · ${esc(rooms[0].item.meta)}` : ''}</em></div>` : ''}</div>
     <div class="fx-hotel-title"><span class="fx-eyebrow">Stay</span><h1>${esc(spec.name)}</h1><p>${esc(spec.tagline)}</p></div>
-    <div class="fx-stay-card">
+    ${rooms.length
+      ? `<div class="fx-stay-card">
       <div class="fx-stay-dates"><label>Arrive<input type="date" aria-label="Arrival date" /></label><span></span><label>Leave<input type="date" aria-label="Departure date" /></label></div>
-      <button type="button" data-go="catalog">View rooms <span>→</span></button>
-    </div>
-    <div class="fx-rooms-head"><span>Rooms</span><button type="button" data-go="catalog">All rooms</button></div>
+      <button type="button" data-go="catalog">${esc(spec.actions?.home ?? 'View rooms')} <span>→</span></button>
+    </div>`
+      : ''}
+    <div class="fx-rooms-head"><span>Rooms</span>${rooms.length ? `<button type="button" data-go="catalog">All rooms</button>` : ''}</div>
     ${
       rooms.length
         ? `<div class="fx-room-stack">${rooms
@@ -324,7 +328,7 @@ function professionalHome(spec: AppSpec): string {
     </div>
     <div class="fx-pro-rule"></div>
     <figure class="fx-pro-photo">${stockImageTag('professional', 0, { sizes: '100vw' })}</figure>
-    <div class="fx-pro-intro"><span>How we can help</span><p>${esc(spec.story)}</p></div>
+    ${spec.story?.trim() ? `<div class="fx-pro-intro"><span>How we can help</span><p>${esc(spec.story)}</p></div>` : ''}
     ${
       all.length
         ? `<div class="fx-pro-index">${all
@@ -533,10 +537,10 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
       </div>`
     }
     case 'dine-actions': {
-      const action = node.cta || { label: heading || 'See the menu', screen: 'scr_catalog' }
+      const action = node.cta || { label: heading || spec.actions?.view || 'View menu', screen: 'scr_catalog' }
       return `<div class="fx-actions">
         <button class="fx-primary" type="button" data-go="${esc(targetFor(ctx, action.screen))}">${esc(action.label)}</button>
-        ${ctx.booking ? `<button class="fx-secondary" type="button" data-go="book">Reserve</button>` : ''}
+        ${ctx.booking && action.screen !== 'scr_book' ? `<button class="fx-secondary" type="button" data-go="book">${esc(spec.actions?.book ?? 'Request a table')}</button>` : ''}
       </div>`
     }
     case 'dine-facts': {
@@ -547,7 +551,9 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
         : ''
     }
     case 'dine-note':
-      return `<div class="fx-note"><span class="fx-rule"></span><span>${esc(words || 'Seasonal · cooked to order')}</span></div>`
+      // No stock sentence: an empty note is empty, not a claim about the food.
+      if (!heading && !words) return ''
+      return `<div class="fx-note"><span class="fx-rule"></span><span>${heading ? `<b>${esc(heading)}</b> ` : ''}${esc(words)}</span></div>`
     case 'shop-search':
       return `<button class="fx-search" type="button" data-search-open>
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16.2 16.2 20.5 20.5"/></svg>
@@ -611,7 +617,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
     case 'salon-staff':
       return `<div class="fx-staff"><span>With</span><b>${esc(words.replace('With ', '') || spec.staff?.slice(0, 4).join(', ') || 'the team')}</b></div>`
     case 'salon-action': {
-      const action = node.cta || { label: heading || 'Book an appointment', screen: 'scr_book' }
+      const action = node.cta || { label: heading || spec.actions?.book || 'Request appointment', screen: 'scr_book' }
       return `<div class="fx-sticky"><button type="button" data-go="${esc(targetFor(ctx, action.screen))}">${esc(action.label)} <span>→</span></button></div>`
     }
     case 'hotel-cover': {
@@ -697,6 +703,22 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
               )
               .join('')}</div>`
           : `<div class="fx-empty"><b>Services are being added.</b><p>The owner can publish services from the dashboard.</p></div>`}`
+    case 'pro-work': {
+      // Only work the owner has published. A website suggestion is not proof
+      // of anything until they accept it.
+      const projects = (spec.projects ?? []).filter((project) => project.accepted !== false).slice(0, 6)
+      if (!projects.length) return ''
+      // Proof of work, never a service row: no price, no book action.
+      return `${heading ? `<div class="fx-mini-label">${esc(heading)}</div>` : ''}
+        <div class="fx-pro-index">${projects
+          .map(
+            (project, index) => `<div class="fx-pro-row">
+              <span class="fx-pro-num">${String(index + 1).padStart(2, '0')}</span>
+              <div><b>${esc(project.title)}</b>${project.desc ? `<span>${esc(project.desc)}</span>` : ''}</div>
+            </div>`,
+          )
+          .join('')}</div>`
+    }
     case 'offers':
       return `${heading ? `<div class="fx-mini-label">${esc(heading)}</div>` : ''}
         <div class="fx-offer-list">${spec.offers
@@ -1090,7 +1112,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
         <figure class="fx-auto-cover">${visual(ctx, node, 0, 'room', true, 0)}</figure>
         <div class="fx-auto-cta">
           <button type="button" data-go="${ctx.booking ? 'book' : 'catalog'}">${ctx.booking ? 'Book a slot' : 'See the work'}</button>
-          ${spec.features.includes('quote') ? `<button type="button" class="is-quiet" data-go="quote">Get a quote</button>` : ''}
+          ${spec.features.includes('quote') ? `<button type="button" class="is-quiet" data-go="quote">${esc(spec.actions?.quote ?? 'Request a proposal')}</button>` : ''}
         </div>
       </div>`
     case 'auto-vehicle': {
@@ -1150,7 +1172,7 @@ function flagshipBody(ctx: FlagshipContext, node: DocNode): string {
         </div>
       </div>`
     case 'auto-quote': {
-      const action = node.cta || { label: 'Get a quote', screen: 'scr_quote' }
+      const action = node.cta || { label: spec.actions?.quote ?? 'Request a proposal', screen: 'scr_quote' }
       return `<div class="fx-auto-quote">
         <span class="fx-eyebrow">Diagnosis</span>
         <b>${esc(heading || 'Not sure what it needs?')}</b>
@@ -1687,11 +1709,36 @@ body[data-flagship="1"] .doc-section { margin-top: 18px; }
 /* Decorative artwork, clearly not a product photograph. */
 .fx-art { position: relative; display: block; overflow: hidden; flex: 0 0 auto; background: radial-gradient(115% 95% at 78% 12%, color-mix(in srgb, var(--accent) 38%, transparent), transparent 58%), linear-gradient(148deg, color-mix(in srgb, var(--accent) 24%, var(--bg)) 0%, color-mix(in srgb, var(--ink) 9%, var(--bg)) 100%); isolation: isolate; }
 .fx-art::after { content: ""; position: absolute; inset: 0; opacity: .18; background-image: repeating-linear-gradient(115deg, rgba(255,255,255,.24) 0 1px, transparent 1px 5px); mix-blend-mode: soft-light; }
-.fx-art.is-missing { background: var(--surface-2); }
-.fx-art.is-missing::after { display: none; }
-.fx-art.is-missing .media-missing { padding: 8px; }
-.fx-art.is-missing .media-missing-icon { width: 22px; height: 22px; opacity: .48; }
-.fx-art.is-missing .media-missing-label { display: none; }
+.fx-art.is-missing {
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 13%, var(--surface-2)), var(--surface-2) 66%),
+    repeating-linear-gradient(118deg, var(--hair) 0 1px, transparent 1px 17px);
+  border: 1px solid var(--hair);
+}
+/* A missing photograph is a composed editorial field carrying the item's own
+   name. The label uses the existing element so element-slot ordinals do not
+   shift in the editor when a photograph is absent. */
+.fx-art.is-missing::before {
+  content: attr(data-label); position: absolute; inset: 18%; z-index: 2;
+  display: grid; place-items: center; text-align: center; overflow: hidden;
+  font-family: var(--display-serif); font-size: clamp(10px, 3.2vw, 18px);
+  font-weight: 500; line-height: 1.12; letter-spacing: -0.015em; color: var(--ink); opacity: .76;
+  overflow-wrap: anywhere;
+}
+.fx-art.is-missing::after {
+  content: "Image not supplied"; position: absolute; left: 0; right: 0; bottom: 8px; z-index: 2;
+  display: block; text-align: center; font-size: 6.5px; font-weight: 750; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--muted); opacity: .68; background: none; mix-blend-mode: normal;
+}
+.fx-art.is-missing.is-plate::before { inset: 27%; }
+/* Small catalogue fields carry a two-letter mark. The full name and the
+   "image not supplied" note belong to the detail screen, where they fit. */
+.fx-art.is-missing.is-quiet::before {
+  content: attr(data-mark); inset: 0; place-items: center;
+  font-size: clamp(13px, 3.5vw, 20px); font-weight: 650; letter-spacing: .16em; opacity: .55;
+}
+.fx-art.is-missing.is-quiet::after { content: none; }
+.fx-art.is-missing .media-missing { opacity: 0.9; }
 .fx-art i { position: absolute; display: block; border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent); border-radius: 50%; }
 .fx-art i:nth-child(1) { width: 78%; height: 78%; left: -16%; top: -22%; background: color-mix(in srgb, var(--bg) 12%, transparent); }
 .fx-art i:nth-child(2) { width: 48%; height: 48%; right: -6%; bottom: -10%; background: color-mix(in srgb, var(--accent) 19%, transparent); }
@@ -2765,9 +2812,36 @@ body[data-trade="hotel"][data-direction="minimal"] .fx-rooms-head button { displ
 /* Salon: luxury sets treatments in a two-up tile grid, minimal is a priced
    list with no pictures and the days kept in one scrolling strip, editorial is
    one wide treatment per row with the staff named underneath. */
-body[data-trade="salon"][data-direction="luxe"] .fx-services { display: grid !important; grid-template-columns: 1fr 1fr; gap: 12px; }
+body[data-trade="salon"][data-direction="luxe"] .fx-services { display: grid !important; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 520px) { body[data-trade="salon"][data-direction="luxe"] .fx-services { grid-template-columns: 1fr 1fr; } }
+/* A salon can list dozens of treatments. A sideways rail hides most of them,
+   so the immersive catalogue becomes a two-up tile index instead: a different
+   catalogue architecture from the editorial list, and still easy to scan. */
+body[data-trade="salon"][data-catalog="stories"] [data-items] {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px; overflow: visible; margin-inline: 0; padding: 0;
+}
+body[data-trade="salon"][data-catalog="stories"] .h-row {
+  display: flex; flex-direction: column; gap: 6px; min-height: 118px;
+  padding: 12px; border: 1px solid var(--hair); border-radius: 14px;
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+}
+body[data-trade="salon"][data-catalog="stories"] .h-row .desc { display: none; }
+body[data-trade="salon"][data-catalog="stories"] .h-row .right {
+  display: flex; width: 100%; justify-content: space-between; align-items: center;
+  margin-top: auto; text-align: left;
+}
+body[data-trade="salon"][data-catalog="stories"] .h-row .right .price { font-size: 14px; }
+@media (min-width: 560px) {
+  body[data-trade="salon"][data-catalog="stories"] [data-items] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 body[data-trade="salon"][data-direction="luxe"] .fx-service { display: block !important; }
-body[data-trade="salon"][data-direction="luxe"] .fx-service .fx-art { aspect-ratio: 1 / 1 !important; margin-bottom: 8px; }
+body[data-trade="salon"][data-direction="luxe"] .fx-service .fx-art { width: 100% !important; max-width: none !important; height: auto !important; aspect-ratio: 4 / 3 !important; margin-bottom: 8px; }
+@media (min-width: 520px) { body[data-trade="salon"][data-direction="luxe"] .fx-service .fx-art { aspect-ratio: 1 / 1 !important; } }
+body[data-trade="salon"][data-direction="luxe"] .fx-service > div:nth-child(2) span {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  white-space: normal; overflow: hidden; max-width: none;
+}
 body[data-trade="salon"][data-direction="luxe"] .fx-service-tail { display: flex !important; justify-content: space-between; align-items: baseline; }
 body[data-trade="salon"][data-direction="luxe"] .fx-sticky { position: static !important; }
 body[data-trade="salon"][data-direction="minimal"] .fx-services { display: block !important; }
@@ -2778,6 +2852,10 @@ body[data-trade="salon"][data-direction="minimal"] .fx-dates { overflow-x: auto;
 body[data-trade="salon"][data-direction="editorial"] .fx-salon > .fx-block:has(.fx-dates) { display: none !important; }
 body[data-trade="salon"][data-direction="editorial"] .fx-services { display: grid !important; grid-template-columns: 1fr; gap: 20px; }
 body[data-trade="salon"][data-direction="editorial"] .fx-service { display: block !important; border: 0 !important; background: transparent !important; padding: 0 !important; }
+body[data-trade="salon"][data-direction="editorial"] .fx-service > div:nth-child(2) span {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  white-space: normal; overflow: hidden; max-width: none;
+}
 body[data-trade="salon"][data-direction="editorial"] .fx-service .fx-art { width: 100% !important; aspect-ratio: 16 / 10 !important; margin-bottom: 10px; }
 body[data-trade="salon"][data-direction="editorial"] .fx-service-tail { display: flex !important; justify-content: space-between; }
 body[data-trade="salon"][data-direction="editorial"] .fx-staff { display: flex !important; gap: 10px; flex-wrap: wrap; }

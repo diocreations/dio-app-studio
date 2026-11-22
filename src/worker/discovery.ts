@@ -4,6 +4,7 @@ import { blueprintFor, validateConcepts, type Diversity } from './blueprints'
 import { buildSpec } from './pricing'
 import { flagshipDocFromSpec, type Doc } from './doc'
 import type { AppSpec, MenuItem, VerticalId } from './types'
+import { assessItem, payloadFor, ruleFor, type Payload } from './catalogue'
 
 /**
  * What a website read actually established, and how well.
@@ -26,13 +27,29 @@ export type Field<T> = {
 }
 
 export type DiscoveryItem = {
+  sourceId?: string
   name: string
   desc: string
   price: number
   meta?: string
+  /** What this entry is, where it was read, how, and whether the trade's own
+   *  evidence requirements were met. A row without this cannot be published. */
+  evidence: {
+    payload: Payload
+    source: string
+    method: Method
+    confidence: Confidence
+    status: 'verified' | 'incomplete'
+    /** What the source did not provide, in the trade's own terms. */
+    missing: string[]
+  }
+  /** Every price and identity the source lists for this product. */
+  variants?: MenuItem['variants']
+  /** Size, colour and other choices, when the source states them. */
+  optionGroups?: MenuItem['optionGroups']
   /** The business's own photograph for this exact item, when the read tied one to it. */
   image?: string
-  imageMethod?: 'structured-data' | 'embedded-json' | 'og-image' | 'public-data'
+  imageMethod?: 'structured-data' | 'embedded-json' | 'og-image' | 'public-data' | 'visible-markup'
 }
 
 export type DiscoverySection = {
@@ -77,6 +94,18 @@ export type Discovery = {
     products: number
     priced: number
     withImage: number
+    /** The commercial thing this trade sells: products, dishes, rooms… */
+    payload: Payload
+    /** `complete` needs every entry verified; `empty` is an honest answer, not
+     *  a reason to invent a catalogue. */
+    status: 'complete' | 'partial' | 'empty'
+    /** Rows the read refused, with the reason, so a failed extraction is
+     *  visible rather than silently absent. */
+    rejected: { name: string; section: string; payload: Payload; reason: string }[]
+    /** Evidence this trade needs that the source did not supply. */
+    requirements: { met: string[]; missing: string[] }
+    /** Whether prices are published, quote-based, or simply unknown. */
+    pricingBasis: 'published' | 'quote' | 'unknown'
   }
   conflicts: DiscoveryConflict[]
   missing: string[]
@@ -235,10 +264,62 @@ export function buildDiscovery(input: {
   const items = site.menu.flatMap((section) => section.items)
   const priced = items.filter((item) => item.price > 0)
   const withImage = items.filter((item) => item.image?.url)
+  const payload = payloadFor(site.vertical)
+  const rule = ruleFor(site.vertical)
+  // The same verdict the cleaner used, run again on the rows that survived so
+  // discovery can say what each one is missing. It never upgrades a value.
+  const verdicts = site.menu.flatMap((section) =>
+    section.items.map((item) =>
+      assessItem({
+        name: item.name,
+        desc: item.desc,
+        price: item.price,
+        image: Boolean(item.image || item.media),
+        variants: item.variants?.length ?? 0,
+        meta: item.meta,
+        capacity: item.capacity,
+        section: section.name,
+        vertical: site.vertical,
+        source: item.sourceUrl,
+        priceVerified: item.priceEvidence?.validated,
+      }),
+    ),
+  )
+  const verified = verdicts.filter((verdict) => verdict.accept && verdict.status === 'verified').length
+  const accepted = verdicts.filter((verdict) => verdict.accept).length
+  const advised = new Set(
+    verdicts.flatMap((verdict) => (verdict.accept ? verdict.evidence : [])),
+  )
+  const requirementMissing = rule.advises.filter((key) => !advised.has(key))
+  // A refusal recorded by the cleaner is part of the read, not a quiet deletion.
+  const rejected = (input.report?.quality.dropped ?? []).map((entry) => ({
+    name: entry.name,
+    section: entry.section,
+    payload: (/article|journal|caption/.test(entry.reason)
+      ? 'article'
+      : /policy/.test(entry.reason)
+        ? 'policy'
+        : /navigation|heading|option/.test(entry.reason)
+          ? 'navigation'
+          : /location/.test(entry.reason)
+            ? 'location'
+            : /promotion|room/.test(entry.reason)
+              ? 'promotion'
+              : 'unknown') as Payload,
+    reason: entry.reason,
+  }))
 
-  const currencyBasis = site.currency || ''
-  const symbolCodes = [...new Set(proof.symbols.map((symbol) => CURRENCY_SYMBOL[symbol]).filter(Boolean))]
-  if (currencyBasis && symbolCodes.length === 1 && symbolCodes[0] !== currencyBasis) {
+  // A Shopify feed often prints the currency only in its variant labels
+  // ("£5.00"); that is still the shop's own money, beside its own price.
+  const variantSymbols = items
+    .flatMap((item) => item.variants ?? [])
+    .map((variant) => /[£$€₹¥]/.exec(variant.name)?.[0] ?? '')
+    .filter(Boolean)
+  const symbolCodes = [...new Set([...proof.symbols, ...variantSymbols].map((symbol) => CURRENCY_SYMBOL[symbol]).filter(Boolean))]
+  // A shop can omit its currency from metadata while printing one beside every
+  // price. That symbol is evidence, not a guess; two different symbols are not.
+  const currencyBasis = site.currency || (symbolCodes.length === 1 ? symbolCodes[0] : '')
+  if (site.currency && symbolCodes.length === 1 && symbolCodes[0] !== site.currency) {
     conflicts.push({
       field: 'currency',
       values: [
@@ -252,19 +333,78 @@ export function buildDiscovery(input: {
   const hoursMethod: Method = proof.hours.length ? 'structured-data' : site.hours ? 'visible-text' : 'inferred'
   const contactMethod: Method = proof.phone.length ? 'structured-data' : 'visible-text'
 
+  const pricingBasis: 'published' | 'quote' | 'unknown' = priced.length
+    ? 'published'
+    : items.length && (payload === 'service' || payload === 'treatment' || payload === 'room')
+      ? 'quote'
+      : 'unknown'
+
   const missing: string[] = []
   if (!site.name.trim()) missing.push('business name')
-  if (!items.length) missing.push('products or services')
+  if (!items.length) missing.push(`${rule.label} list`)
   if (!site.phone.trim() && !site.email.trim()) missing.push('contact details')
   if (!site.address.trim()) missing.push('address')
   if (priced.length && !currencyBasis) missing.push('currency')
+  if (pricingBasis === 'published' && !currencyBasis) missing.push('currency')
+  if (items.length && payload === 'room' && !priced.length) missing.push('room rates')
+  if (items.length && !withImage.length) missing.push(`${rule.label} photographs`)
+  if (requirementMissing.length) missing.push(`${rule.label} ${requirementMissing.join(', ')}`)
+
+  const evidenceOf = (item: MenuItem): DiscoveryItem['evidence'] => {
+    const verdict = assessItem({
+      name: item.name,
+      desc: item.desc,
+      price: item.price,
+      image: Boolean(item.image || item.media),
+      variants: item.variants?.length ?? 0,
+      meta: item.meta,
+      capacity: item.capacity,
+      vertical: site.vertical,
+      source: item.sourceUrl,
+      priceVerified: item.priceEvidence?.validated,
+    })
+    const method: Method =
+      item.sourceMethod === 'embedded-json'
+        ? 'structured-data'
+        : item.sourceMethod ??
+          (item.priceEvidence?.method === 'json-ld' ? 'structured-data' : 'visible-text')
+    const confidence: Confidence = item.priceEvidence?.validated
+      ? 'verified'
+      : verdict.status === 'verified'
+        ? 'likely'
+        : 'guess'
+    return {
+      payload: verdict.payload,
+      source: item.sourceUrl || source,
+      method,
+      confidence,
+      status: verdict.status === 'rejected' ? 'incomplete' : verdict.status,
+      missing: verdict.missing,
+    }
+  }
 
   const questions: DiscoveryQuestion[] = []
   if (!site.name.trim()) questions.push({ field: 'name', why: 'Nothing on the site named the business.', kind: 'blocker' })
+  // A name taken from the domain is a guess about the brand, and the site may
+  // write it with spaces, capitals or punctuation that a hostname cannot hold.
+  if (site.nameSource === 'host' || (site.nameSource === undefined && /^[a-z0-9]+$/.test(site.name.trim()))) {
+    questions.push({
+      field: 'name',
+      why: `We only read the name as “${site.name.trim()}”, from the web address. Is that how the business writes it?`,
+      kind: 'confirm',
+    })
+  }
   if (!items.length) {
     questions.push({
       field: 'catalogue',
-      why: 'No products or services could be read. Add them, or point us at the page that lists them.',
+      why: `No ${rule.label}s could be read as commercial inventory — the pages the crawler reached were policies, articles, locations or navigation. Add them, or point us at the page that lists your ${rule.label}s.`,
+      kind: 'confirm',
+    })
+  }
+  if (items.length && !priced.length && payload !== 'service') {
+    questions.push({
+      field: 'pricing',
+      why: `The site lists ${rule.label}s but publishes no prices for them. Prices stay hidden until you add them.`,
       kind: 'confirm',
     })
   }
@@ -363,22 +503,39 @@ export function buildDiscovery(input: {
       ),
     },
     commerce: {
-      currency: field(currencyBasis, source, symbolCodes.length ? 'visible-text' : 'metadata', currencyBasis ? 'likely' : 'guess'),
+      currency: field(
+        currencyBasis,
+        source,
+        site.currency ? 'metadata' : symbolCodes.length ? 'visible-text' : 'inferred',
+        currencyBasis ? 'likely' : 'guess',
+      ),
       sections: site.menu.map((section) => ({
         name: section.name,
         source: sourceOf(section),
         items: section.items.map((item) => ({
+          ...(item.sourceId ? { sourceId: item.sourceId } : {}),
           name: item.name,
           desc: item.desc,
           price: item.price,
           meta: item.meta,
+          ...(item.variants?.length ? { variants: item.variants } : {}),
+          ...(item.optionGroups?.length ? { optionGroups: item.optionGroups } : {}),
           image: item.image?.url,
           imageMethod: item.image?.method,
+          evidence: evidenceOf(item),
         })),
       })),
       products: items.length,
       priced: priced.length,
       withImage: withImage.length,
+      payload,
+      status: !items.length ? 'empty' : accepted > 0 && verified === accepted ? 'complete' : 'partial',
+      rejected,
+      requirements: {
+        met: rule.advises.filter((key) => advised.has(key)),
+        missing: requirementMissing,
+      },
+      pricingBasis,
     },
     conflicts,
     missing,
@@ -399,10 +556,19 @@ function siteFor(discovery: Discovery, site: ImportedSite) {
       name: section.name,
       items: section.items.map(
         (item): MenuItem => ({
+          ...(item.sourceId ? { sourceId: item.sourceId } : {}),
+          ...(item.evidence.source ? { sourceUrl: item.evidence.source } : {}),
+          ...(item.evidence.method === 'structured-data'
+            ? { sourceMethod: 'structured-data' as const }
+            : item.evidence.method === 'metadata'
+              ? { sourceMethod: 'metadata' as const }
+              : { sourceMethod: 'visible-text' as const }),
           name: item.name,
           desc: item.desc,
           price: item.price,
           ...(item.meta ? { meta: item.meta } : {}),
+          ...(item.variants?.length ? { variants: item.variants } : {}),
+          ...(item.optionGroups?.length ? { optionGroups: item.optionGroups } : {}),
           // Only the business's own photograph, with the method that tied it here.
           ...(item.image
             ? { image: { url: item.image, source: 'website' as const, method: item.imageMethod ?? 'public-data' } }
@@ -419,6 +585,7 @@ function siteFor(discovery: Discovery, site: ImportedSite) {
     accent: discovery.business.accent.value,
     currency: discovery.commerce.currency.value,
     website: discovery.url,
+    tagline: discovery.business.tagline.value,
   }
 }
 
@@ -444,7 +611,6 @@ export function discoverPlan(
       accent: overrides.accent || discovery.business.accent.value || '#2f4a3f',
       logo: overrides.logo || initialsFor(name),
       features: site.features ?? [],
-      tagline: discovery.business.tagline.value,
       category: discovery.business.category.value,
       direction: direction.id,
       site: facts,

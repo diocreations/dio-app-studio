@@ -15,6 +15,16 @@ export class MemoryD1 {
   prepare(sql: string) {
     const run = (params: unknown[]) => {
       const result = this.db.prepare(sql).run(...(params as never[]))
+      // Most legacy tests create a build and immediately exercise the customer
+      // surface. In this disposable database only, fixtures are published by
+      // default; the publication gate has a dedicated test that clears this flag.
+      if (/CREATE TABLE IF NOT EXISTS projects\b/.test(sql)) {
+        this.db.exec(`CREATE TRIGGER IF NOT EXISTS test_publish_fixture
+          AFTER INSERT ON projects
+          BEGIN
+            UPDATE projects SET published_at = '2026-01-01T00:00:00.000Z' WHERE id = NEW.id;
+          END`)
+      }
       return { success: true, meta: { changes: Number(result.changes) } }
     }
     const first = (params: unknown[]) => this.db.prepare(sql).get(...(params as never[])) ?? null

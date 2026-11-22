@@ -108,6 +108,9 @@ describe('reference trades carry their own shell', () => {
     expect(html).toContain("DATA.shell === 'menu'")
     // No invented house policy in the shell copy.
     expect(html).not.toContain('Tell the team about allergies when you order.')
+    // Tax treatment is never inferred from a website read.
+    expect(html).not.toContain('Prices include tax')
+    expect(html).not.toContain('Rates include tax')
   })
 
   test('a gym is a session app with an icon-only dock', () => {

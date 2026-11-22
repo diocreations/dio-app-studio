@@ -17,8 +17,8 @@ import { directionFor, themeForDirection, typographyTheme } from './directions'
 import { FLAGSHIP_TRADES, flagshipCatalogLead, flagshipCss, flagshipHome, flagshipSection } from './flagship'
 import { presetCss, presetFor } from './presets'
 import { CURRENCY_SYMBOLS, inkFor, moneyForSpec } from './pricing'
-import type { AppSpec, FeatureId, MenuItem, Vocab } from './types'
-import { ctaFor, verticalFor, type Vertical } from './verticals'
+import type { AppSpec, FeatureId, MenuItem, MenuSection, Vocab } from './types'
+import { actionLabelsFor, ctaFor, verticalFor, type Vertical } from './verticals'
 import { themeFor, type ShellId, type Theme } from './themes'
 
 /*
@@ -178,10 +178,18 @@ function motif(theme: Theme, label: string, extra = '', inner = ''): string {
   return `<span class="thumb ${extra} m-${theme.motif}">${inner}<span class="mono">${esc(label)}</span></span>`
 }
 
+/** Two initials make an absent photograph read as a designed mark rather
+ *  than a broken image. The full name stays in `data-label` for the editor. */
+function mediaMark(label = ''): string {
+  const words = String(label).replace(/[^\p{L}\p{N} ]+/gu, ' ').trim().split(/\s+/).filter(Boolean)
+  const mark = words.length > 1 ? words[0][0] + words[1][0] : (words[0] ?? '').slice(0, 2)
+  return mark.toUpperCase() || '·'
+}
+
 /** Product imagery has one quiet absence state everywhere: no trade artwork,
- *  no invented object, just a neutral frame with a small photograph glyph. */
+ *  no invented object, just a composed mark in the brand's own type. */
 function missingMedia(label = ''): string {
-  return `<span class="media-missing" data-label="${esc(label)}" aria-hidden="true"><svg class="media-missing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg><span class="media-missing-label">${esc(label)}</span></span>`
+  return `<span class="media-missing" data-label="${esc(label)}" data-mark="${esc(mediaMark(label))}" aria-hidden="true"><svg class="media-missing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg><span class="media-missing-note">Image not supplied</span><span class="media-missing-label">${esc(label)}</span></span>`
 }
 
 /** Item keys are `section-item`; walking them in order keeps every product or
@@ -315,7 +323,7 @@ function lHero(ctx: Ctx): string {
     <div class="hero-in">
       <span class="eyebrow">${esc(ctx.label)}</span>
       <h1>${esc(copy.name)}</h1>
-      <p>${esc(copy.tagline)}</p>
+      ${copy.tagline ? `<p>${esc(copy.tagline)}</p>` : ''}
       <div class="hero-foot">
         ${primary ? `<button class="btn hero-cta" type="button" data-go="${primary.screen}">${esc(primary.label)}</button>` : ''}
         ${hours ? `<span class="hero-meta">${esc(hours)}</span>` : ''}
@@ -333,7 +341,7 @@ function cover(ctx: Ctx, meta: string[] = []): string {
     <div class="cover-in">
       <span class="eyebrow">${esc(ctx.label)}</span>
       <h1>${esc(copy.name)}</h1>
-      <p>${esc(copy.tagline)}</p>
+      ${copy.tagline ? `<p>${esc(copy.tagline)}</p>` : ''}
       ${meta.filter(Boolean).length ? `<div class="cover-rule"></div><div class="cover-meta">${meta.filter(Boolean).map((line) => `<span>${esc(line)}</span>`).join('')}</div>` : ''}
     </div>
   </div>`
@@ -630,7 +638,7 @@ function itemStackCard(ctx: Ctx, item: MenuItem, key: string): string {
       </div>
       <div class="foot">
         <span class="tiny dim">Tap for details</span>
-        <span class="foot-tools">${saveButton(key, item.name)}<span class="btn small ghost" style="padding:9px 14px;font-size:12px">View</span></span>
+        <span class="foot-tools">${saveButton(key, item.name)}<span class="btn small ghost" style="padding:9px 14px;font-size:12px">${esc(ctx.spec.actions?.view || 'View')}</span></span>
       </div>
     </div>
   </div>`
@@ -677,7 +685,7 @@ function retailShop(ctx: Ctx): string {
   const { spec, vocab } = ctx
   const total = spec.menu.reduce((sum, section) => sum + section.items.length, 0)
   const sections = spec.menu.filter((section) => section.items.length)
-  if (!sections.length) return `<div class="shop"><div class="empty">The catalogue is being written.</div></div>`
+  if (!sections.length) return `<div class="shop">${emptyCatalogue(ctx)}</div>`
   const words = pluralWord(vocab.item)
   return `<div class="shop">
     <header class="shop-head">
@@ -807,6 +815,32 @@ function catalogCard(ctx: Ctx, sectionIndex: number, itemIndex: number): string 
  *  larger is a client mistake or a probe, and is not worth rendering. */
 export const CATALOG_MAX_CARDS = 60
 
+/** Strip provenance from catalogue rows before they reach the browser. */
+function publicMenu(menu: MenuSection[]): MenuSection[] {
+  return menu.map((section) => ({
+    ...section,
+    items: section.items.map((item) => {
+      const {
+        sourceUrl: _sourceUrl,
+        sourceMethod: _sourceMethod,
+        priceEvidence: _priceEvidence,
+        sourcePriceEvidence: _sourcePriceEvidence,
+        ownerFields: _ownerFields,
+        sourceTrail: _sourceTrail,
+        fieldProvenance: _fieldProvenance,
+        variants,
+        ...rest
+      } = item
+      return {
+        ...rest,
+        ...(variants
+          ? { variants: variants.map(({ fieldProvenance: _variantProvenance, ...variant }) => variant) }
+          : {}),
+      }
+    }),
+  }))
+}
+
 /** A slice of one shelf, used for the shipped first page and for the pages the
  *  customer asks for later. The slice is clamped here as well as at the route,
  *  so no caller can ask for an unbounded render. */
@@ -821,9 +855,31 @@ function catalogCards(ctx: Ctx, sectionIndex: number, from = 0, count = catalogF
   return out.join('')
 }
 
+/**
+ * An empty catalogue is a fact about the source, not a broken build. Say what
+ * was read, what was kept instead, and that nothing was invented.
+ */
+function emptyHomeNote(ctx: Ctx): string {
+  const review = ctx.spec.sourceReview
+  const pages = review?.pages.read.length ?? 0
+  return `<div class="sect" data-empty-home><div class="empty"><b>The menu isn’t published yet.</b><p>We read ${pages ? `${pages} page${pages === 1 ? '' : 's'}` : 'their site'}${review?.host ? ` from ${esc(review.host)}` : ''} and found no dish with the details needed to publish. Nothing has been invented; the menu appears once the business adds it.</p></div></div>`
+}
+
+function emptyCatalogue(ctx: Ctx): string {
+  const review = ctx.spec.sourceReview
+  const item = ctx.vocab.item.toLowerCase()
+  const plural = pluralWord(item)
+  if (review && review.status === 'empty') {
+    const pages = review.pages.read.length
+    const kept = review.rejected.filter((entry) => entry.destination === 'information')
+    return `<div class="empty"><b>The ${esc(plural)} aren’t published yet.</b><p>We read ${pages ? `${pages} page${pages === 1 ? '' : 's'}` : 'their site'}${review.host ? ` from ${esc(review.host)}` : ''} and found no ${esc(item)} with the details needed to publish.${kept.length ? ` ${kept.length} other page${kept.length === 1 ? ' was' : 's were'} kept as business information.` : ''} Nothing has been invented; the ${esc(plural)} appear once the business adds them.</p></div>`
+  }
+  return `<div class="empty">Nothing has been added here yet. The business’s own ${esc(plural)} appear once they are in the app.</div>`
+}
+
 function catalogBlock(ctx: Ctx): string {
   const { theme, spec } = ctx
-  if (!spec.menu.length) return `<div class="empty">The catalogue is being written.</div>`
+  if (!spec.menu.length) return emptyCatalogue(ctx)
   // Hitting an editor component called "featured" on a retail build shows the
   // first pieces, never a second copy of the Shop destination.
   if (theme.layout === 'retail') {
@@ -973,7 +1029,7 @@ function addedBlock(ctx: Ctx, node: DocNode): string {
     }
     case 'productList': {
       const entries = ctx.spec.menu.flatMap((section) => section.items).slice(0, 4)
-      if (!entries.length) return `<div class="empty">The catalogue is being written.</div>`
+      if (!entries.length) return emptyCatalogue(ctx)
       return `<div class="sect"><span class="label">${esc(title || ctx.vocab.catalog)}</span></div>
         <div class="tiles">${entries.map((item, index) => itemTile(ctx, item, `0-${index}`)).join('')}</div>`
     }
@@ -1225,8 +1281,14 @@ function homeBlock(ctx: Ctx): string {
 }
 
 function bookingBlock(ctx: Ctx): string {
-  const services = ctx.spec.menu.flatMap((section) => section.items).filter((item) => item.name)
-  const staff = ctx.spec.staff ?? []
+  const hotel = ctx.spec.vertical === 'hotel'
+  // A stay is booked against one published room, not an extra such as
+  // breakfast or parking. Those items remain catalogue detail, never a price
+  // that can be multiplied by the number of nights.
+  const services = ctx.spec.menu
+    .flatMap((section) => section.items)
+    .filter((item) => item.name && (!hotel || (item.price > 0 && /night/i.test(item.meta ?? ''))))
+  const staff = hotel ? [] : (ctx.spec.staff ?? [])
   return `<div class="sect" style="margin-top:4px"><span class="label">${esc(ctx.vocab.partyLabel)}</span></div>
     <div class="card" style="padding:16px;margin-bottom:10px">
       <div class="stepper">
@@ -1254,8 +1316,8 @@ function bookingBlock(ctx: Ctx): string {
     }
     ${
       ctx.spec.vertical !== 'restaurant' && ctx.spec.vertical !== 'cafe' && services.length
-        ? `<div class="field"><label for="book-service">Service</label><select id="book-service" data-book-service>${services
-            .map((item) => `<option value="${esc(item.name)}">${esc(item.name)}</option>`)
+        ? `<div class="field"><label for="book-service">${hotel ? 'Room' : 'Service'}</label><select id="book-service" data-book-service>${services
+            .map((item) => `<option value="${esc(item.name)}">${esc(item.name)}${hotel ? ` · ${moneyForSpec(item.price, ctx.spec)} a night` : ''}</option>`)
             .join('')}</select></div>`
         : ''
     }
@@ -1268,7 +1330,7 @@ function bookingBlock(ctx: Ctx): string {
     }
     <div class="field"><label for="book-name">Your name</label><input id="book-name" type="text" maxlength="60" data-book-name placeholder="Name" autocomplete="name" /></div>
     <div class="field"><label for="book-contact">Phone or email</label><input id="book-contact" type="text" maxlength="120" data-book-contact placeholder="How to reach you" autocomplete="tel" /></div>
-    <button class="btn accent block" type="button" data-book style="margin-top:18px">Request booking</button>
+    <button class="btn accent block" type="button" data-book style="margin-top:18px">${esc(ctx.spec.actions?.book || (hotel ? 'Request a stay' : 'Request booking'))}</button>
     <p class="tiny dim" style="text-align:center;margin-top:10px">${esc(ctx.spec.hours)}</p>`
 }
 
@@ -1367,6 +1429,24 @@ function moreBlock(ctx: Ctx): string {
         ? `<div class="sect"><span class="label">Your activity</span></div><div data-history></div>`
         : ''
     }
+    ${(() => {
+      // Policies, locations, press and other real pages that are not inventory.
+      // They stay reachable instead of being silently dropped with the rows.
+      const kept = (spec.sourceReview?.rejected ?? [])
+        .filter((entry) => entry.destination === 'information')
+        .slice(0, 8)
+      if (!kept.length) return ''
+      return `<div class="sect"><span class="label">From their site</span></div>
+        <div class="info">${kept
+          .map((entry) =>
+            // The customer sees the page's own name and, when it has one, the
+            // link. The review's internal classification stays in the review.
+            entry.source
+              ? `<p><a href="${esc(entry.source)}" target="_blank" rel="noopener">${esc(entry.name)}</a></p>`
+              : `<p>${esc(entry.name)}</p>`,
+          )
+          .join('')}<p class="tiny dim">Read on their website and kept as information, not as ${esc(ctx.vocab.catalog.toLowerCase())}.</p></div>`
+    })()}
     <div class="sect"><span class="label">Yours</span></div>
     <button class="r-row" type="button" data-go="saved">
       <div class="lead"><div class="name">Saved</div><div class="desc">Items you kept for later</div></div>
@@ -1744,8 +1824,20 @@ export function customerSpec(inputSpec: AppSpec): AppSpec {
     return sample && text === sample.trim() ? '' : text
   }
   const sampleTeam = inputSpec.sampleContent?.team === true || inputSpec.sampleContent?.staff === true
+  // An explicitly unvalidated price was read from the page as a whole rather
+  // than from this item's own record. Publishing it as this item's amount would
+  // turn a guess into a fact, so the customer sees the item as unpriced. The
+  // owner review still shows the reading, its page and its unverified flag.
+  const menu = inputSpec.menu.map((section) => ({
+    ...section,
+    items: section.items.map((item) => ({
+      ...item,
+      price: item.price > 0 && item.priceEvidence && item.priceEvidence.validated !== true ? 0 : item.price,
+    })),
+  }))
   return {
     ...inputSpec,
+    menu,
     ...(inputSpec.sampleContent?.contact
       ? {
           phone: contact(inputSpec.phone, seed.phone),
@@ -1895,31 +1987,36 @@ export function renderApp(
   const onAccent = inkFor(accent)
   const drawer = spec.structure?.nav === 'drawer'
   const has = (feature: FeatureId) => spec.features.includes(feature)
-  const ordering = has('ordering')
+  // Hotels never enter the basket path. A stay is a room request with dates,
+  // not a quantity of products, even if an imported brief advertised ordering.
+  const ordering = has('ordering') && vertical.id !== 'hotel'
   const booking = has('booking') || has('classes')
   const timetable = has('classes') && (vertical.timetable?.length ?? 0) > 0 ? vertical.timetable! : []
   const quoting = has('quote')
   const goal = Math.max(2, Math.min(12, spec.loyalty.goal || 6))
 
-  const cta = ctaFor(vertical.id)
+  // A hotel's first step is choosing a room, not a blank availability form.
+  // Its stay request remains the secondary action once a room is in view.
+  const cta = vertical.id === 'hotel' ? 'catalog' : ctaFor(vertical.id)
+  const actions = spec.actions ?? actionLabelsFor(vertical.id, vocab)
   const primary =
     vocab.detailAction === 'quote' && quoting
-      ? { label: vocab.homeCta, screen: 'quote' }
+      ? { label: actions.home, screen: 'quote' }
       : cta === 'order' && ordering
-      ? { label: vocab.homeCta, screen: 'cart' }
+      ? { label: actions.home, screen: 'cart' }
       : cta === 'quote' && quoting
-        ? { label: vocab.homeCta, screen: 'quote' }
+        ? { label: actions.home, screen: 'quote' }
         : cta === 'book' && booking
-          ? { label: vocab.homeCta, screen: 'book' }
+          ? { label: actions.home, screen: 'book' }
           : cta === 'catalog'
             // The trade opens on its list, so its own phrasing names the button.
-            ? { label: vocab.homeCta, screen: 'catalog' }
+            ? { label: actions.home, screen: 'catalog' }
             : { label: `See the ${vocab.catalog.toLowerCase()}`, screen: 'catalog' }
   const secondary =
     primary.screen !== 'book' && booking
-      ? { label: vocab.bookTitle, screen: 'book' }
+      ? { label: actions.book, screen: 'book' }
       : primary.screen !== 'quote' && quoting
-        ? { label: vocab.quoteTitle, screen: 'quote' }
+        ? { label: actions.quote, screen: 'quote' }
         : null
   const ctx: Ctx = {
     spec,
@@ -1969,12 +2066,21 @@ export function renderApp(
     loyalty: has('loyalty'),
     goal,
     reward: spec.loyalty.reward,
-    fulfilment: vocab.fulfilment,
-    deliveryFee: ordering && vocab.fulfilment.includes('Delivery') ? 299 : 0,
+    fulfilment: spec.fulfilment?.options?.length ? spec.fulfilment.options : vocab.fulfilment,
+    // A delivery fee is a business fact, not a capability. Plattr used to
+    // publish 2.99 for every ordering app; a rate now exists only when the
+    // source stated one or the owner set one, and otherwise the customer sees
+    // no charge until the business confirms its terms.
+    deliveryFee:
+      ordering && (spec.fulfilment?.options?.length ? spec.fulfilment.options : vocab.fulfilment).includes('Delivery')
+        ? Math.max(0, spec.fulfilment?.deliveryFee ?? 0)
+        : 0,
+    deliverySource: spec.fulfilment?.source ?? 'default',
     // Course checkouts still create orders; the wording follows the trade.
     isCourse: spec.vertical === 'courses',
-    addLabel: spec.vertical === 'courses' ? 'Enrol on this course' : 'Add to order',
+    addLabel: actions.add,
     placeLabel: spec.vertical === 'courses' ? 'Confirm enrolment' : 'Place order',
+    viewLabel: actions.view,
     payments: options.payments
       ? {
           enabled: true,
@@ -1992,8 +2098,8 @@ export function renderApp(
     // paging; every other layout keeps the section controls it was built with.
     retail: theme.layout === 'retail',
     listingSpecLabel: vocab.listingSpecLabel || 'Included',
-    bookTitle: vocab.bookTitle,
-    quoteTitle: vocab.quoteTitle,
+    bookTitle: actions.book,
+    quoteTitle: actions.quote,
     // A trade may sell a proposal rather than an appointment even when it also
     // offers a booking screen. The detail page leads with the real first step.
     detailAction: vocab.detailAction ?? (booking ? 'book' : quoting ? 'quote' : ''),
@@ -2002,7 +2108,11 @@ export function renderApp(
     // Only ship the sets this build can actually use.
     photoWide: media === 'art' ? [] : ctx.photos.wide,
     photoThumb: media === 'photo' ? ctx.photos.thumb : [],
-    menu: spec.menu,
+    // The public payload carries what a customer needs to choose and buy. It
+    // never carries the source URL, extraction method, validation flags or the
+    // owner's correction record: those belong to the owner review, not to a
+    // public app or its browser state.
+    menu: publicMenu(spec.menu),
     // The shop's own currency, never a guessed dollar: an imported build with
     // no confirmed currency shows bare amounts until the owner confirms one.
     currencySymbol: spec.currency
@@ -2030,7 +2140,7 @@ export function renderApp(
   const markHtml = spec.logoImage
     // No width/height attributes: they would impose a square ratio on a wide
     // wordmark and crop it to the first few letters at 26px tall.
-    ? `<img src="${esc(spec.logoImage.url)}" alt="" decoding="async" />`
+    ? `<img src="${esc(spec.logoImage.url)}" alt="" decoding="async" referrerpolicy="no-referrer" />`
     : esc(spec.logo)
 
   return `<!doctype html>
@@ -2093,6 +2203,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
                ${homeBlock(ctx)}
              </div>`
         }
+        ${!spec.menu.length && spec.vertical === 'restaurant' ? emptyHomeNote(ctx) : ''}
       </section>
 
       <section class="screen${initial === 'catalog' ? ' on' : ''}" data-screen="catalog" data-title="${esc(vocab.catalog)}">
@@ -2136,7 +2247,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
       ${
         booking
-          ? `<section class="screen is-booking${initial === 'book' ? ' on' : ''}" data-screen="book" data-title="${esc(vocab.bookTitle)}">
+          ? `<section class="screen is-booking${initial === 'book' ? ' on' : ''}" data-screen="book" data-title="${esc(actions.book)}">
                ${timetableBlock(ctx)}
                ${bookingBlock(ctx)}
              </section>`
@@ -2145,7 +2256,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 
       ${
         quoting
-          ? `<section class="screen${initial === 'quote' ? ' on' : ''}" data-screen="quote" data-title="${esc(vocab.quoteTitle)}">
+          ? `<section class="screen${initial === 'quote' ? ' on' : ''}" data-screen="quote" data-title="${esc(actions.quote)}">
                ${quoteBlock(ctx)}
              </section>`
           : ''
@@ -2291,7 +2402,12 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       const word = DATA.vertical === 'restaurant' || DATA.vertical === 'hotel' ? 'guest' : DATA.vertical === 'clinic' ? 'patient' : 'person'
       return count + ' ' + (count === 1 ? word : word === 'person' ? 'people' : word + 's')
     }
-    const missingMedia = (label) => '<span class="media-missing" data-label="' + esc(label) + '" aria-hidden="true"><svg class="media-missing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg><span class="media-missing-label">' + esc(label) + '</span></span>'
+    const mediaMark = (label) => {
+      const words = String(label || '').trim().replace(/\s+/g, ' ').split(' ')
+        .filter((word) => word.length > 2 && !['the', 'and', 'for', 'with', 'from'].includes(word.toLowerCase()))
+      return (words.length > 1 ? words[0][0] + words[1][0] : (words[0] || '').slice(0, 2) || '·').toUpperCase()
+    }
+    const missingMedia = (label) => '<span class="media-missing" data-label="' + esc(label) + '" data-mark="' + esc(mediaMark(label)) + '" aria-hidden="true"><svg class="media-missing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg><span class="media-missing-note">Image not supplied</span><span class="media-missing-label">' + esc(label) + '</span></span>'
     const buzz = (ms) => { try { if (navigator.vibrate) navigator.vibrate(ms) } catch (error) {} }
     // A remote logo that fails, or is a wordmark too wide to read at 26px
     // tall, falls back to the monogram instead of a clipped fragment.
@@ -2402,9 +2518,16 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         list.map(function (variant) {
           const on = chosen && variantRef(chosen) === variantRef(variant)
           const soldOut = variant.available === false
+          // A gift card or donation labels its option with the amount itself
+          // ("£5.00"). Printing the name and then the price repeats the same
+          // fact; the price alone still identifies the option.
+          const priceOnly = /^[£$€₹¥][ ]?[0-9][0-9.,]*$/.test(String(variant.name).trim())
           return '<button class="variant' + (on ? ' on' : '') + (soldOut ? ' is-sold-out' : '') + '" type="button" data-variant="' + esc(variantRef(variant)) + '" data-variant-key="' + key + '" aria-pressed="' + (on ? 'true' : 'false') + '"' + (soldOut ? ' disabled' : '') + '>' +
             (variant.media ? '<img src="/p/' + esc(DATA.token) + '/media/' + esc(variant.media.id) + '/320.webp" alt="" style="width:18px;height:18px;object-fit:cover;border-radius:50%;margin-right:5px" />' : '') +
-            '<span>' + esc(variant.name) + '</span><b>' + (soldOut ? 'Unavailable' : money(variant.price)) + '</b></button>'
+            (priceOnly
+              ? '<b>' + (soldOut ? 'Unavailable' : money(variant.price)) + '</b>'
+              : '<span>' + esc(variant.name) + '</span><b>' + (soldOut ? 'Unavailable' : money(variant.price)) + '</b>') +
+            '</button>'
         }).join('') + '</div></div>'
     }
 
@@ -2577,14 +2700,14 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
     // The tax note belongs to the trade's way of selling, not one shared line.
     function detailNote() {
       const copy = DATA.vertical === 'restaurant' || DATA.vertical === 'cafe'
-        ? 'Prices include tax. Tell the kitchen about allergies when you order.'
+        ? 'Ask the kitchen about allergies when you order.'
         : DATA.vertical === 'hotel'
-          ? 'Rates include tax. Tell the team about access needs before you arrive.'
+          ? 'Ask the team about access needs before you arrive.'
           : DATA.vertical === 'salon' || DATA.vertical === 'clinic'
-            ? 'Prices include tax. Tell us about allergies or access needs before your appointment.'
+            ? 'Ask us about allergies or access needs before your appointment.'
             : DATA.vertical === 'professional'
               ? 'Ask the team what this engagement includes before you book.'
-              : 'Prices include tax. Ask the team if you need help choosing.'
+              : 'Ask the team if you need help choosing.'
       return '<p class="tiny dim" style="margin-top:16px">' + copy + '</p>'
     }
 
@@ -2929,7 +3052,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       if (!host) return
       const entries = [
         ...state.orders.map((order) => ({ kind: 'Order', number: order.number, detail: order.status, date: order.createdAt, total: order.total })),
-        ...state.bookings.map((booking) => ({ kind: 'Booking', number: booking.number, detail: booking.status + (booking.date ? ' · ' + booking.date + (booking.slot ? ' ' + booking.slot : '') : ''), date: booking.date, total: null })),
+        ...state.bookings.map((booking) => ({ kind: 'Booking', number: booking.number, detail: booking.status + (booking.service ? ' · ' + booking.service : '') + (booking.date ? ' · ' + booking.date + (booking.checkOut ? ' → ' + booking.checkOut : booking.slot ? ' ' + booking.slot : '') : '') + (booking.nights ? ' · ' + booking.nights + (booking.nights === 1 ? ' night' : ' nights') : ''), date: booking.date, total: booking.total ?? null })),
       ]
       host.innerHTML = entries.length
         ? '<div class="info" style="display:grid;gap:8px">' + entries.slice(0, 6).map((entry) =>
@@ -3345,8 +3468,10 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       }
       if (summary) {
         const rate = stayRate()
+        const room = ($('[data-book-service]')?.value || '')
         summary.textContent = nights > 0
-          ? nights + (nights === 1 ? ' night' : ' nights') + (rate ? ' \u00b7 ' + money(rate * nights) : '')
+          ? (room ? room + ' \u00b7 ' : '') + nights + (nights === 1 ? ' night' : ' nights') +
+            (rate ? ' \u00b7 ' + money(rate) + ' a night \u00b7 ' + money(rate * nights) + ' total' : '')
           : 'Check-out must be after check-in.'
       }
     }
@@ -3440,7 +3565,8 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
       if (stayIn) {
         iso = stayIn.value
         if (!iso) return toast('Choose a check-in day')
-        if (!stayOut || stayDays(iso, stayOut.value) < 1) return toast('Check-out must be after check-in')
+        if (!stayOut || !stayOut.value) return toast('Choose a check-out day')
+        if (stayDays(iso, stayOut.value) < 1) return toast('Check-out must be after check-in')
       } else {
         const date = new Date()
         date.setDate(date.getDate() + Number(state.day || 0))
@@ -3462,7 +3588,7 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
           staff: ($('[data-book-staff]')?.value || ''),
         }, stayOut && stayOut.value ? { checkOut: stayOut.value } : {}))
         const booking = payload.booking
-        state.bookings = [{ id: booking.id, number: booking.number, status: booking.status, date: booking.date, slot: booking.slot }, ...state.bookings].slice(0, 12)
+        state.bookings = [{ id: booking.id, number: booking.number, status: booking.status, date: booking.date, checkOut: booking.checkOut, nights: booking.nights, nightlyRate: booking.nightlyRate, total: booking.total, party: booking.party, service: booking.service, slot: booking.slot }, ...state.bookings].slice(0, 12)
         state.customerName = name
         state.customerContact = contact
         save()
@@ -3472,8 +3598,11 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
         const when = booking.checkOut
           ? esc(booking.date) + ' → ' + esc(booking.checkOut) + ' · ' + nights + (nights === 1 ? ' night' : ' nights')
           : esc(dayLabel) + (state.slot ? ' at ' + esc(state.slot) : '')
+        const stay = booking.nightlyRate
+          ? '<br /><b>' + esc(booking.service || service) + '</b> · ' + money(booking.nightlyRate) + ' a night × ' + nights + ' = ' + money(booking.total)
+          : booking.total ? ' · ' + money(booking.total) : ''
         note('<div class="done"><div class="tick">✓</div><h2>Request sent</h2>' +
-          '<p>' + when + ' · ' + partyUnit(state.party) + (booking.total ? ' · ' + money(booking.total) : '') + '<br />This is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.</p>' +
+          '<p>' + when + ' · ' + partyUnit(booking.party || state.party) + stay + '<br />This is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.</p>' +
           (DATA.payments && DATA.payments.bookings && service
             ? '<button class="btn accent block" type="button" data-pay="booking" data-ref="' + esc(booking.id) + '" style="margin-top:14px">Pay a deposit online</button>'
             : '') +
@@ -3793,15 +3922,15 @@ ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 </html>`
 }
 
-export function renderManifest(spec: AppSpec): string {
+export function renderManifest(spec: AppSpec, options: { startUrl?: string; scope?: string } = {}): string {
   const theme = themeFor(verticalFor(spec.vertical).id)
   return JSON.stringify(
     {
       name: `${spec.name} — ${spec.kind}`,
       short_name: spec.name.slice(0, 12),
       description: spec.tagline,
-      start_url: './',
-      scope: './',
+      start_url: options.startUrl ?? './',
+      scope: options.scope ?? './',
       display: 'standalone',
       orientation: 'portrait',
       background_color: theme.bg,
@@ -3837,10 +3966,11 @@ export function renderIcon(spec: AppSpec): string {
 </svg>`
 }
 
-export function renderServiceWorker(version: number): string {
+export function renderServiceWorker(version: number, options: { startUrl?: string } = {}): string {
+  const startUrl = options.startUrl ?? './'
   return `/* Generated by Plattr — version ${version} */
 const CACHE = 'plattr-v${version}'
-const SHELL = ['./', './manifest.webmanifest', './icon.svg']
+const SHELL = [${JSON.stringify(startUrl)}, './manifest.webmanifest', './icon.svg']
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting()))
@@ -3855,11 +3985,24 @@ self.addEventListener('activate', (event) => {
 })
 
 // Navigations are network-first so a rebuild is never masked by a cached
-// document. Everything else (icons, assets) is cache-first for offline use.
+// document. Order and booking status are live reads, not assets: a cached
+// "received" must not hide a later "ready" after the business updates it.
+// Everything else (icons, assets) is cache-first for offline use.
 self.addEventListener('fetch', (event) => {
   const request = event.request
   if (request.method !== 'GET') return
-  if (new URL(request.url).origin !== self.location.origin) return
+  const url = new URL(request.url)
+  if (url.origin !== self.location.origin) return
+  // Owner APIs are live reads and writes. A cached media list or document is
+  // stale by definition and made the editor show the state from before a save.
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(fetch(request))
+    return
+  }
+  if (/\\/(?:orders|bookings)\\/[^/]+$/.test(url.pathname)) {
+    event.respondWith(fetch(request))
+    return
+  }
 
   if (request.mode === 'navigate') {
     event.respondWith(
@@ -3869,7 +4012,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE).then((cache) => cache.put(request, copy))
           return response
         })
-        .catch(() => caches.match(request).then((hit) => hit || caches.match('./'))),
+        .catch(() => caches.match(request).then((hit) => hit || caches.match(SHELL[0]))),
     )
     return
   }

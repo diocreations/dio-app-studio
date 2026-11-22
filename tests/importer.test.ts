@@ -244,7 +244,7 @@ describe('the site names its own category', () => {
       <p>Seasonal bouquets and wedding flowers, delivered same day. Add to cart.</p></body></html>`
     const site = extractSite(html, new URL('https://fernsflowers.example.com/'))
     expect(site.category).toBe('Florist')
-    expect(site.categoryBasis).toBe('the words on the page')
+    expect(site.categoryBasis).toBe('the words the business uses about itself')
   })
 
   test('a non-shop keeps its trade name rather than a retail noun', () => {
@@ -996,9 +996,10 @@ describe('the pages offer the URL route', () => {
     expect(html).toContain('data-import-report')
   })
 
-  test('the landing page posts a URL straight into the brief', () => {
+  test('the landing page opens URL discovery directly', () => {
     const html = marketingPage()
-    expect(html).toContain('action="/brief"')
+    expect(html).toContain('action="/start"')
     expect(html).toContain('name="url"')
+    expect(html).not.toContain('action="/brief"')
   })
 })

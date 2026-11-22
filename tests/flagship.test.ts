@@ -114,13 +114,14 @@ describe('flagship compositions', () => {
     expect(restaurant).not.toContain('Demo checkout')
 
     const salon = renderFlagship('salon')
-    expect(salon).toContain('Book an appointment')
+    expect(salon).toContain('Request appointment')
     expect(salon).toContain('data-book-name')
 
     const professional = renderFlagship('professional')
     // A practice's first step is a proposal; the intro-call screen stays
     // available but is not advertised as already booked.
     expect(professional).toContain('Request a proposal')
+    expect(professional).toContain('Request a consultation')
     expect(professional).not.toContain('Book a consultation')
   })
 
@@ -438,4 +439,29 @@ describe('section photograph source', () => {
     for (const variant of ['dine-feature', 'shop-products', 'salon-services', 'hotel-cover', 'hotel-rooms', 'ecom-products'])
       expect(sectionImageSource(node('flagship', variant))).toBe('catalogue')
   })
+})
+
+test('a restaurant with no published dishes offers the table request, not an empty menu', () => {
+  const spec = buildSpec({
+    name: 'Padella',
+    vertical: 'restaurant',
+    accent: '#c8452b',
+    logo: 'P',
+    features: ['catalog', 'ordering', 'booking'],
+    // A saved menu can hold empty sections; counting sections rather than
+    // dishes used to send this home button to an empty catalogue.
+    site: { website: 'https://www.padella.co', menu: [{ name: 'Menu', items: [] }] },
+  })
+  expect(spec.actions?.view).toBe('View menu')
+  expect(spec.actions?.book).toBe('Request a table')
+  const doc = flagshipDocFromSpec(spec)
+  const html = renderApp(spec, { token: 'empty-menu', live: false, flagship: true, doc })
+  expect(html).toContain('Request a table')
+  expect(html).toContain('data-go="book"')
+  expect(html).not.toContain('>See the menu<')
+})
+
+test('the client bundle defines the missing-media mark it uses', () => {
+  const html = renderApp(probeSpec('salon'), { token: 'client-mark', live: false, flagship: true })
+  expect(html).toContain('const mediaMark = (label) =>')
 })

@@ -35,7 +35,7 @@ const MENU = [
   },
 ]
 
-async function shop() {
+async function shop(deliveryFee?: number) {
   const db = new MemoryD1() as unknown as D1Database
   const project = await createProject(db, {
     name: 'Present & Correct',
@@ -47,7 +47,14 @@ async function shop() {
     features: ['catalog', 'ordering'],
     platforms: ['pwa'],
     plan: 'onetime',
-    site: { menu: MENU, currency: 'GBP', website: 'https://www.presentandcorrect.com' },
+    site: {
+      menu: MENU,
+      currency: 'GBP',
+      website: 'https://www.presentandcorrect.com',
+      ...(deliveryFee === undefined
+        ? {}
+        : { fulfilment: { options: ['Pickup', 'Delivery'], source: 'owner' as const, deliveryFee } }),
+    },
   })
   return { db, project, env: { DB: db, ASSETS: {} as Fetcher } }
 }
@@ -149,12 +156,23 @@ describe('the customer side and the record agree', () => {
     expect(large.order?.total).toBe(4800)
   })
 
-  test('the same bag delivered adds the fee on both the answer and the record', async () => {
+  test('a delivered bag carries no fee the business never set', async () => {
     const { project, env } = await shop()
     const placed = await place(project, env, [{ key: '0-0', qty: 1, variant: 'vp-single' }], undefined, 'Delivery')
-    expect(placed.order?.total).toBe(1049)
+    // The platform used to add 2.99 to every delivery. A fee is a business
+    // fact: without one stated by the source or set by the owner, the customer
+    // is charged the catalogue total and nothing else.
+    expect(placed.order?.total).toBe(750)
     const stored = await readOrder(project, env, placed.order!.id)
-    expect(stored.order.total).toBe(1049)
+    expect(stored.order.total).toBe(750)
+  })
+
+  test('a delivery fee the owner set is charged on both sides', async () => {
+    const { project, env } = await shop(499)
+    const placed = await place(project, env, [{ key: '0-0', qty: 1, variant: 'vp-single' }], undefined, 'Delivery')
+    expect(placed.order?.total).toBe(1249)
+    const stored = await readOrder(project, env, placed.order!.id)
+    expect(stored.order.total).toBe(1249)
   })
 })
 

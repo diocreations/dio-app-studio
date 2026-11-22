@@ -3,20 +3,28 @@ import type {
   AppSpec,
   BundleId,
   FeatureId,
+  FieldProvenance,
   LayoutChoice,
   MenuItem,
+  MenuItemField,
   MenuSection,
   Platform,
   Plan,
   PriceConflict,
   PriceDecision,
+  PriceEvidence,
+  ProjectEntry,
   SocialLink,
+  SourceReview,
+  SourceSnapshot,
+  SourceTrail,
   VerticalId,
   VideoLink,
 } from './types'
 import { cleanDesign, cleanStructure, type DesignKit, type SiteStructure } from './design'
 export type { DesignKit }
-import { VERTICALS, verticalFor } from './verticals'
+import { VERTICALS, actionLabelsFor, verticalFor } from './verticals'
+import { sanitizeProjects, sanitizeSourceReview } from './review'
 
 export type {
   AppSpec,
@@ -601,9 +609,201 @@ function seededLoyalty(
   return { goal: vertical.loyalty.goal, reward: 'Money off your next visit' }
 }
 
+/** Price provenance from a source or an owner. A value is only `validated`
+ *  when the caller proved it; the sanitiser never upgrades the flag. */
+function cleanPriceEvidence(input: unknown): PriceEvidence | undefined {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return undefined
+  const raw = input as Record<string, unknown>
+  const method = (['json-ld', 'shopify-variant', 'microdata', 'meta', 'text', 'owner'] as const).find(
+    (entry) => entry === raw.method,
+  )
+  if (!method) return undefined
+  const source = String(raw.source ?? '').trim().slice(0, 300)
+  if (!source) return undefined
+  return {
+    method,
+    source,
+    raw: String(raw.raw ?? '').trim().slice(0, 40),
+    currency: /^[A-Z]{3}$/.test(String(raw.currency ?? '')) ? String(raw.currency) : '',
+    validated: raw.validated === true,
+    ...(typeof raw.variant === 'string' && raw.variant.trim()
+      ? { variant: raw.variant.trim().slice(0, 60) }
+      : {}),
+  }
+}
+
+const FIELD_METHODS = [
+  'structured-data',
+  'embedded-json',
+  'visible-text',
+  'metadata',
+  'json-ld',
+  'shopify-variant',
+  'microdata',
+  'meta',
+  'text',
+  'og-image',
+  'public-data',
+  'owner',
+] as const
+
+/** A field origin supplied by a caller. Unlike price evidence, this record is
+ *  per field; an invalid entry is dropped and re-derived rather than guessed. */
+function cleanFieldProvenance(input: unknown): Partial<Record<MenuItemField, FieldProvenance>> | undefined {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return undefined
+  const out: Partial<Record<MenuItemField, FieldProvenance>> = {}
+  for (const field of ['name', 'desc', 'price', 'image', 'availability'] as const) {
+    const raw = (input as Record<string, unknown>)[field]
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) continue
+    const row = raw as Record<string, unknown>
+    const source = (['website', 'owner', 'unverified'] as const).find((value) => value === row.source)
+    if (!source) continue
+    const confidence = (['verified', 'reported', 'unverified'] as const).find(
+      (value) => value === row.confidence,
+    )
+    if (!confidence) continue
+    const method = FIELD_METHODS.find((value) => value === row.method)
+    const url = typeof row.url === 'string' && row.url.trim() ? row.url.trim().slice(0, 300) : undefined
+    const at =
+      typeof row.at === 'string' && Number.isFinite(Date.parse(row.at))
+        ? new Date(row.at).toISOString()
+        : undefined
+    out[field] = {
+      source,
+      ...(method ? { method } : {}),
+      ...(url ? { url } : {}),
+      confidence,
+      validated: source === 'owner' ? true : row.validated === true,
+      ...(at ? { at } : {}),
+    }
+  }
+  return Object.keys(out).length ? out : undefined
+}
+
+const unverified = (): FieldProvenance => ({
+  source: 'unverified',
+  confidence: 'unverified',
+  validated: false,
+})
+
+/** What each field can honestly claim from the row it belongs to. Name and
+ *  description are page text; price and image carry their own evidence; a
+ *  variant price is not proven by the parent product. */
+function deriveFieldProvenance(item: MenuItem, sourceMethod?: MenuItem['sourceMethod']): Partial<Record<MenuItemField, FieldProvenance>> {
+  const ownerFields = new Set(item.ownerFields ?? [])
+  const source = item.sourceUrl
+  const structured = sourceMethod === 'structured-data' || sourceMethod === 'embedded-json'
+  const pageField = (value: string, owner: boolean): FieldProvenance =>
+    owner
+      ? { source: 'owner', method: 'owner', confidence: 'verified', validated: true }
+      : source && value
+        ? {
+            source: 'website',
+            ...(sourceMethod ? { method: sourceMethod } : {}),
+            url: source,
+            confidence: structured ? 'verified' : 'reported',
+            validated: structured,
+          }
+        : unverified()
+  const price = item.priceEvidence
+  const image = item.image
+  return {
+    name: pageField(item.name, ownerFields.has('name')),
+    desc: pageField(item.desc, ownerFields.has('desc')),
+    price: ownerFields.has('price')
+      ? { source: 'owner', method: 'owner', confidence: 'verified', validated: true }
+      : price
+        ? {
+            source: 'website',
+            method: price.method,
+            url: price.source,
+            confidence: price.validated ? 'verified' : 'reported',
+            validated: price.validated,
+          }
+        : unverified(),
+    image: item.media
+      ? { source: 'owner', method: 'owner', confidence: 'verified', validated: true }
+      : image
+        ? {
+            source: 'website',
+            method: image.method ?? 'public-data',
+            url: image.sourceUrl ?? image.url,
+            confidence: image.method === 'structured-data' ? 'verified' : 'reported',
+            validated: image.method === 'structured-data',
+          }
+        : unverified(),
+    availability: item.variants?.some((variant) => variant.available !== undefined)
+      ? { source: 'website', confidence: 'reported', validated: false }
+      : unverified(),
+  }
+}
+
+function cleanSnapshotText(value: unknown, limit: number): string | undefined {
+  const text = String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, limit)
+  return text || undefined
+}
+
+/** A dated source reading. The one field that cannot be defaulted is `at`: a
+ *  snapshot without a time is not evidence, so it is refused rather than
+ *  stamped with the current moment. */
+function cleanSourceSnapshot(input: unknown): SourceSnapshot | undefined {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return undefined
+  const row = input as Record<string, unknown>
+  const at = typeof row.at === 'string' && Number.isFinite(Date.parse(row.at)) ? new Date(row.at).toISOString() : ''
+  if (!at) return undefined
+  const name = cleanSnapshotText(row.name, 60)
+  const desc = cleanSnapshotText(row.desc, 400)
+  const price = cleanSnapshotText(row.price, 40)
+  const priceEvidence = cleanPriceEvidence(row.priceEvidence)
+  if (!name && !desc && !price) return undefined
+  return {
+    ...(name ? { name } : {}),
+    ...(desc ? { desc } : {}),
+    ...(price ? { price } : {}),
+    ...(priceEvidence ? { priceEvidence } : {}),
+    at,
+  }
+}
+
+/** The dated correction record. Bounded like every other stored list, and the
+ *  choice stays within the two values the build can honour. */
+function cleanSourceTrail(input: unknown): SourceTrail | undefined {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return undefined
+  const row = input as Record<string, unknown>
+  const original = cleanSourceSnapshot(row.original)
+  const latest = cleanSourceSnapshot(row.latest)
+  const ownerAt =
+    typeof row.ownerAt === 'string' && Number.isFinite(Date.parse(row.ownerAt))
+      ? new Date(row.ownerAt).toISOString()
+      : undefined
+  const decisions = (Array.isArray(row.decisions) ? row.decisions : [])
+    .slice(-20)
+    .map((entry) => {
+      const decision = (entry ?? {}) as Record<string, unknown>
+      const field = (['name', 'desc', 'price'] as const).find((key) => key === decision.field)
+      const choice = (['owner', 'source'] as const).find((key) => key === decision.choice)
+      const at =
+        typeof decision.at === 'string' && Number.isFinite(Date.parse(decision.at))
+          ? new Date(decision.at).toISOString()
+          : ''
+      if (!field || !choice || !at) return null
+      const ownerValue = cleanSnapshotText(decision.ownerValue, 400)
+      const sourceValue = cleanSnapshotText(decision.sourceValue, 400)
+      return { field, choice, ...(ownerValue ? { ownerValue } : {}), ...(sourceValue ? { sourceValue } : {}), at }
+    })
+    .filter((entry): entry is NonNullable<SourceTrail['decisions']>[number] => entry !== null)
+  if (!original && !latest && !ownerAt && !decisions.length) return undefined
+  return {
+    ...(original ? { original } : {}),
+    ...(latest ? { latest } : {}),
+    ...(ownerAt ? { ownerAt } : {}),
+    ...(decisions.length ? { decisions } : {}),
+  }
+}
+
 /** Catalogue edits arrive untyped from the browser or a scraped site and are
  *  clamped here, so a malformed item can never reach a rendered app. */
-export function sanitizeMenu(input: unknown): MenuSection[] {
+export function sanitizeMenu(input: unknown, keepNames?: Set<string>): MenuSection[] {
   const sections = Array.isArray(input) ? input : []
   return sections
     .slice(0, MAX_SECTIONS)
@@ -629,6 +829,13 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               capacity?: unknown
               vendor?: unknown
               sourceId?: unknown
+              sourceUrl?: unknown
+              sourceMethod?: unknown
+              ownerFields?: unknown
+              priceEvidence?: unknown
+              sourcePriceEvidence?: unknown
+              sourceTrail?: unknown
+              fieldProvenance?: unknown
               media?: unknown
               image?: unknown
               variants?: unknown
@@ -649,12 +856,32 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
             const id = seen === 1 ? base : `${base}_${seen}`
             const rawSource = typeof entry.sourceId === 'string' ? entry.sourceId.trim() : ''
             const sourceId = /^[A-Za-z0-9_:/.-]{1,120}$/.test(rawSource) ? rawSource : undefined
+            const rawUrl = typeof entry.sourceUrl === 'string' ? entry.sourceUrl.trim() : ''
+            const sourceUrl =
+              rawUrl.length <= 300 && /^https?:\/\/[^\s"'<>]+$/i.test(rawUrl) ? rawUrl : undefined
+            const sourceMethod = (['structured-data', 'embedded-json', 'visible-text', 'metadata'] as const).find(
+              (method) => method === entry.sourceMethod,
+            )
             const optionGroups = sanitizeOptionGroups(entry.optionGroups)
-            const variants = sanitizeVariants(entry.variants, optionGroups)
+            const priceEvidence = cleanPriceEvidence(entry.priceEvidence)
+            const sourcePriceEvidence = cleanPriceEvidence(entry.sourcePriceEvidence)
+            const variants = sanitizeVariants(entry.variants, optionGroups, priceEvidence)
             const capacity = statedCapacity(entry.capacity, entry.meta, entry.desc)
-            return {
+            const ownerFields = (['name', 'desc', 'price'] as const).filter((field) =>
+              Array.isArray(entry.ownerFields) && entry.ownerFields.includes(field),
+            )
+            const sourceTrail = cleanSourceTrail(entry.sourceTrail)
+            const media = sanitizeItemMedia(entry.media)
+            const image = sanitizeItemImage(entry.image)
+            const row: MenuItem = {
               id,
+              ...(ownerFields.length ? { ownerFields } : {}),
+              ...(priceEvidence ? { priceEvidence } : {}),
+              ...(sourcePriceEvidence ? { sourcePriceEvidence } : {}),
+              ...(sourceTrail ? { sourceTrail } : {}),
               ...(sourceId ? { sourceId } : {}),
+              ...(sourceUrl ? { sourceUrl } : {}),
+              ...(sourceMethod ? { sourceMethod } : {}),
               name: itemName,
               desc: String(entry.desc ?? '').trim().slice(0, 400),
               price,
@@ -662,13 +889,35 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
               meta: String(entry.meta ?? '').trim().slice(0, 30) || undefined,
               ...(capacity ? { capacity } : {}),
               vendor: String(entry.vendor ?? '').trim().slice(0, 40) || undefined,
-              ...(sanitizeItemMedia(entry.media) ? { media: sanitizeItemMedia(entry.media) } : {}),
-              ...(sanitizeItemImage(entry.image) ? { image: sanitizeItemImage(entry.image) } : {}),
+              ...(media ? { media } : {}),
+              ...(image ? { image } : {}),
               ...(optionGroups.length ? { optionGroups } : {}),
               ...(variants.length ? { variants } : {}),
             }
+            // A caller may have recorded field origins. Anything it did not
+            // record is derived from this row's own evidence, never copied from
+            // a sibling field or a record-level status.
+            return {
+              ...row,
+              fieldProvenance: {
+                ...deriveFieldProvenance(row, sourceMethod),
+                ...(cleanFieldProvenance(entry.fieldProvenance) ?? {}),
+              },
+            }
           })
-          .filter((item) => item.name !== 'Item' || item.price > 0),
+          // A name with no price, description or photograph is a navigation
+          // label or a teaser ("Shop Now"), not a catalogue entry. Omitting it
+          // is safer than putting an unexplained tile in front of a customer;
+          // a real unpriced item still survives when it has any other evidence.
+          .filter(
+            (item) =>
+              (item.name !== 'Item' || item.price > 0) &&
+              (item.price > 0 ||
+                item.desc.length > 0 ||
+                Boolean(item.image || item.media) ||
+                Boolean(item.variants?.length) ||
+                keepNames?.has(item.name.toLowerCase())),
+          ),
       }
     })
     .filter((section) => section.items.length > 0)
@@ -680,6 +929,7 @@ export function sanitizeMenu(input: unknown): MenuSection[] {
 function sanitizeVariants(
   input: unknown,
   groups: { name: string; options: string[] }[],
+  parentEvidence?: PriceEvidence,
 ): {
   id?: string
   name: string
@@ -728,6 +978,23 @@ function sanitizeVariants(
         ...(cleanValues(entry.values) ? { values: cleanValues(entry.values) } : {}),
         ...(entry.available === false ? { available: false } : {}),
         ...(sanitizeItemMedia(entry.media) ? { media: sanitizeItemMedia(entry.media) } : {}),
+        fieldProvenance: {
+          price: parentEvidence
+            ? {
+                source: 'website',
+                method: parentEvidence.method,
+                url: parentEvidence.source,
+                confidence:
+                  parentEvidence.validated && parentEvidence.variant === name ? 'verified' : 'reported',
+                validated: parentEvidence.validated && parentEvidence.variant === name,
+              }
+            : unverified(),
+          availability:
+            entry.available === false
+              ? { source: 'website', confidence: 'reported', validated: false }
+              : unverified(),
+          ...(cleanFieldProvenance(entry.fieldProvenance) ?? {}),
+        },
       },
     ]
   })
@@ -754,6 +1021,8 @@ export function cleanLogoImage(value: unknown): { url: string; alt?: string } | 
  *  site did not state falls back to the trade's seeded copy. */
 export type SiteInfo = {
   menu?: MenuSection[]
+  /** The source's one-line description, cleaned by `buildSpec`. */
+  tagline?: string
   /** The business's own logo; initials remain the fallback. */
   logoImage?: { url: string; alt?: string }
   category?: string
@@ -767,6 +1036,10 @@ export type SiteInfo = {
   email?: string
   website?: string
   currency?: string
+  /** How the business receives an order, when the source or the owner stated
+   *  it. Absent means the app may offer the trade's generic choice but must not
+   *  quote a fee. */
+  fulfilment?: AppSpec['fulfilment']
   /** The public statement the currency came from. */
   currencyEvidence?: { code: string; method: string; source: string; raw: string }
   /** Every distinct code the source declared; more than one is a conflict. */
@@ -781,6 +1054,58 @@ export type SiteInfo = {
 }
 
 /** A free-text category, kept short and never markup. */
+/**
+ * SEO titles are not brand copy. A description written for a search result
+ * often carries pipe separators, a call to action or a keyword list; the same
+ * sentence under the hero reads like an advert, not like the business. Keep a
+ * normal one-line promise, drop the metadata-shaped ones, and let the trade's
+ * neutral tagline be absent rather than inventing a replacement.
+ */
+function cleanBrandTagline(value: string, name: string): string {
+  // Search snippets often end in an ellipsis or a dangling preposition. Cut
+  // that tail rather than rejecting the useful part of a real description.
+  const text = String(value ?? '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 90)
+    .replace(/\s*(?:\.{3}|…).*$/, '')
+    .replace(/\s+\b(?:at|and|with|the|of|for|in|on|to|by|from)\s*$/i, '')
+    .replace(/[,;:|\-–—\s]+$/, '')
+    .trim()
+  if (!text) return ''
+  const lower = text.toLowerCase()
+  if (text.includes('|')) return ''
+  if (/\b(official (website|site)|home ?page|welcome to|click here|free shipping|shop now|book now|order online|best .+ in .+)\b/.test(lower)) return ''
+  // "Shop handcrafted…" is a real description. Reject command copy like
+  // "Shop now", not every sentence that happens to open with the verb.
+  if (/^(searching|looking|find|discover|book|order|buy|explore|browse)\b/.test(lower)) return ''
+  if (/^shop\b.*\b(now|online|here)\b/.test(lower)) return ''
+  if (/\?$/.test(text) && text.split(' ').length > 8) return ''
+  if (name && lower.includes(name.trim().toLowerCase())) return ''
+  if (text.split(' ').length > 12) return ''
+  return text
+}
+
+/**
+ * The same rule for the longer story block: a search-result sentence is not a
+ * business story, and a 40-word keyword list under the hero is not an intro.
+ * Keeping it empty is honest; the owner can write the real one.
+ */
+function cleanBrandStory(value: string, name: string): string {
+  const text = String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, 240)
+  if (!text) return ''
+  const lower = text.toLowerCase()
+  if (text.includes('|') || /\.{3}|…$/.test(text)) return ''
+  if (/\b(official (website|site)|home ?page|welcome to|click here|free shipping|shop now|book now|order online)\b/.test(lower)) return ''
+  if (/^(searching|looking|find|discover|shop|book|order|buy|explore|browse)\b/.test(lower)) return ''
+  if (/\?$/.test(text) && text.split(' ').length > 12) return ''
+  if (text.split(' ').length > 45) return ''
+  // A story that opens with the business name and then describes the offer is
+  // legitimate copy. Only reject it when it repeats the name like a title tag.
+  if (name && lower.startsWith(name.trim().toLowerCase()) && text.split(' ').length < 8) return ''
+  return text
+}
+
 export function cleanCategory(value: unknown): string {
   if (typeof value !== 'string') return ''
   return value
@@ -821,6 +1146,10 @@ export function buildSpec(input: {
   tagline?: string
   custom?: string
   category?: string
+  /** The read's own record, so evidence survives the crawl session. */
+  sourceReview?: unknown
+  /** Completed work, kept apart from services. */
+  projects?: unknown
   /** Already validated by `cleanLayout`; stored so the build keeps the design
    *  the customer chose rather than a fresh deck slot. */
   layout?: LayoutChoice
@@ -845,26 +1174,43 @@ export function buildSpec(input: {
     : undefined
   const logoImage = cleanLogoImage(site.logoImage)
   const importedMenu = sanitizeMenu(site.menu)
+  // A site import is evidence-based. Missing contact details, offers, team and
+  // catalogue stay missing; the trade's demo copy is for a new, empty project,
+  // never a stand-in fact in an app that claims to come from someone's site.
+  const imported = Boolean(site.website)
+  const sourceTagline = cleanBrandTagline(
+    typeof (site as { tagline?: unknown }).tagline === 'string'
+      ? (site as { tagline: string }).tagline
+      : '',
+    name,
+  )
+  const sourceStory = cleanBrandStory(
+    typeof (site as { story?: unknown }).story === 'string' ? (site as { story: string }).story : '',
+    name,
+  )
   const category = cleanCategory(input.category ?? site.category)
   const design = cleanDesign(site.design)
   const structure = cleanStructure(site.structure)
   const direction = directionsFor(vertical.id).find((entry) => entry.id === input.direction)?.id
   const videos = cleanVideos(input.videos)
   const bundle = BUNDLES.find((entry) => entry.id === input.bundle)?.id
+  const sourceReview = sanitizeSourceReview(input.sourceReview, vertical.id)
+  const projects: ProjectEntry[] = sanitizeProjects(input.projects)
   return {
     name,
     kind: category || vertical.kind,
-    tagline: (input.tagline || vertical.tagline).slice(0, 90),
-    story: (site.story?.trim() || vertical.story).slice(0, 240),
+    tagline: (input.tagline || sourceTagline || (imported ? '' : vertical.tagline)).slice(0, 90),
+    story: sourceStory || (imported ? '' : vertical.story),
     accent: sanitizeHex(input.accent, vertical.accent),
     logo: sanitizeLogo(input.logo, initialsFor(name)),
     ...(logoImage ? { logoImage } : {}),
-    hours: (site.hours?.trim() || vertical.hours).slice(0, 90),
-    phone: (site.phone?.trim() || vertical.phone).slice(0, 24),
-    address: (site.address?.trim() || vertical.address).slice(0, 60),
+    hours: (site.hours?.trim() || (imported ? '' : vertical.hours)).slice(0, 90),
+    phone: (site.phone?.trim() || (imported ? '' : vertical.phone)).slice(0, 24),
+    address: (site.address?.trim() || (imported ? '' : vertical.address)).slice(0, 60),
     vertical: vertical.id,
+    actions: actionLabelsFor(vertical.id, vertical.vocab),
     features: normalizeFeatures(requested),
-    menu: importedMenu.length ? importedMenu : copyMenu(vertical.menu),
+    menu: importedMenu.length ? importedMenu : imported ? [] : copyMenu(vertical.menu),
     ...(site.website && importedMenu.length
       ? {
           importSummary: {
@@ -889,19 +1235,22 @@ export function buildSpec(input: {
     // another currency never inherits a dollar figure it did not write, so a
     // dollar-priced sample offer is left out and a dollar-priced sample reward
     // becomes a reward without an amount.
-    offers: seededOffers(vertical, currencyCode, Boolean(site.website)),
-    loyalty: seededLoyalty(vertical, currencyCode, Boolean(site.website)),
+    offers: imported ? [] : seededOffers(vertical, currencyCode, false),
+    loyalty: imported ? { goal: 0, reward: '' } : seededLoyalty(vertical, currencyCode, false),
     sampleContent: {
-      menu: importedMenu.length === 0,
-      contact: !site.hours?.trim() || !site.phone?.trim() || !site.address?.trim(),
-      story: !site.story?.trim(),
-      offers: true,
-      team: Boolean(vertical.team?.length),
-      staff: Boolean(vertical.staff?.length),
-      tagline: !input.tagline,
+      menu: !imported && importedMenu.length === 0,
+      // An imported build never carries the trade's sample contact or story,
+      // even when the site was silent about one of them. A missing field stays
+      // missing; marking the rest as a sample would misstate what is real.
+      contact: !imported && (!site.hours?.trim() || !site.phone?.trim() || !site.address?.trim()),
+      story: !imported && !site.story?.trim(),
+      offers: !imported,
+      team: !imported && Boolean(vertical.team?.length),
+      staff: !imported && Boolean(vertical.staff?.length),
+      tagline: !imported && !input.tagline && !sourceTagline,
     },
-    ...(vertical.staff?.length ? { staff: [...vertical.staff] } : {}),
-    ...(vertical.team?.length ? { team: vertical.team.map((person) => ({ ...person })) } : {}),
+    ...(!imported && vertical.staff?.length ? { staff: [...vertical.staff] } : {}),
+    ...(!imported && vertical.team?.length ? { team: vertical.team.map((person) => ({ ...person })) } : {}),
     custom: (input.custom ?? '').trim().slice(0, 600),
     ...(input.layout ? { layout: input.layout } : {}),
     ...(direction ? { direction } : {}),
@@ -912,6 +1261,12 @@ export function buildSpec(input: {
       ? { website: site.website.slice(0, 120) }
       : {}),
     ...(site.email?.trim() ? { email: site.email.trim().slice(0, 80) } : {}),
+    // The trade's fulfilment words are a capability, not a claim about this
+    // business, so they are labelled as the default until the source or the
+    // owner supplies its own options.
+    fulfilment: site.fulfilment ?? { options: [...vertical.vocab.fulfilment], source: 'default' },
+    ...(sourceReview ? { sourceReview } : {}),
+    ...(projects.length ? { projects } : {}),
     ...(currencyCode ? { currency: currencyCode } : {}),
     ...(currencyCode && site.currencyEvidence && site.currencyEvidence.code === currencyCode
       ? {

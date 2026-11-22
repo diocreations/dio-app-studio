@@ -66,7 +66,12 @@ describe('a price is published only with per-item evidence', () => {
 
   test('a product with no price stays empty rather than guessed', () => {
     const { sections, quality } = strict([
-      { name: 'Pens', items: [{ name: 'Desk pen', desc: '', price: 0 }, priced('Fountain pen', 12500)] },
+      {
+        name: 'Pens',
+        // The feed declared this product; only its price is missing, so the
+        // item stays with no price rather than being guessed at.
+        items: [{ name: 'Desk pen', desc: '', price: 0, sourceMethod: 'structured-data' }, priced('Fountain pen', 12500)],
+      },
     ])
     expect(sections[0].items).toHaveLength(2)
     expect(sections[0].items[0].price).toBe(0)

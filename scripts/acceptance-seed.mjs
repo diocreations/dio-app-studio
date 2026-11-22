@@ -14,7 +14,8 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 const API = process.env.ACCEPTANCE_API ?? 'http://127.0.0.1:5173'
-const OUT = '.chrome-qa/acceptance-apps.json'
+const OUT = process.env.ACCEPTANCE_APPS ?? '.chrome-qa/acceptance-apps.json'
+const ONLY = (process.env.ACCEPTANCE_TRADES ?? '').split(',').filter(Boolean)
 const MACHINE = 'docs/qa/trade-audit-2026-11-20/machine'
 const RETAIL = 'docs/qa/live-verification-2026-11-20-final/present-and-correct/spec.json'
 
@@ -48,6 +49,7 @@ const apps = [...done]
 let visitor = 0
 
 for (const [trade, directions] of Object.entries(CONCEPTS)) {
+  if (ONLY.length && !ONLY.includes(trade)) continue
   const spec =
     trade === 'shop'
       ? JSON.parse(await readFile(RETAIL, 'utf8'))

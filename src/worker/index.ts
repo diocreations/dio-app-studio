@@ -20,6 +20,8 @@ import {
   listNotes,
   listProjects,
   saveVersion,
+  setProjectPublished,
+  VersionConflictError,
   spendImportBudget,
   spendDailyBudget,
   type Project,
@@ -36,11 +38,13 @@ import {
 } from './importer'
 import { applyApproval, diffCatalogue } from './reimport'
 import { buildSpec, initialsFor, quote, sanitizeHex, sanitizeMenu, type VerticalId } from './pricing'
+import { markOwnerEdits } from './review'
 import { buildDiscovery, discoverPlan } from './discovery'
-import { applyCommand, docFromSpec, flagshipDocFromSpec, normalizeDoc } from './doc'
+import { applyCommand, docFromSpec, flagshipDocFromSpec, normalizeDoc, syncProjectSection } from './doc'
 import { FLAGSHIP_TRADES } from './flagship'
 import { directionsFor } from './directions'
 import { editorPage } from './views/editor'
+import { reviewPage } from './views/review'
 import { dashboardPage, ownerLoginPage } from './views/dashboard'
 import { paymentMissingPage, paymentPage } from './views/payments'
 import {
@@ -53,6 +57,7 @@ import {
   ownerAccessKey,
   ownerCookieName,
 } from './ownerAuth'
+import { actionLabelsFor, verticalFor } from './verticals'
 import {
   BusinessError,
   createBooking,
@@ -117,6 +122,7 @@ function foreignMedia(doc: Doc | null, menu: MenuSection[] | null, owned: Set<st
 import { cleanLayout, conceptsFor, designsFor, readPrompt } from './prompt'
 import { sampleSpec } from './proof'
 import { briefPage } from './views/brief'
+import { startPage } from './views/start'
 import { legalPage } from './views/legal'
 import { marketingPage } from './views/marketing'
 import { studioKeyPage, studioPage } from './views/studio'
@@ -228,6 +234,14 @@ app.use('*', async (c, next) => {
   headers.set('X-Content-Type-Options', 'nosniff')
   headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
   headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+  // The app and editor are self-contained but use inline styles/scripts. Keep
+  // remote images available for imported catalogues while blocking third-party
+  // scripts, objects and form destinations.
+  headers.set(
+    'Content-Security-Policy',
+    "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; img-src 'self' data: blob: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'",
+  )
+  if (isHttps(c.req.url)) headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
   // The customer app sets its own policy from the owner's indexing choice.
   if (PRIVATE_PATHS.test(c.req.path) && !/^\/p\/[0-9a-f]{24}\/app$/.test(c.req.path))
     headers.set('X-Robots-Tag', 'noindex, nofollow')
@@ -433,7 +447,7 @@ app.get('/robots.txt', (c) => {
 // already disallowed to crawlers.
 app.get('/sitemap.xml', (c) => {
   const origin = new URL(c.req.url).origin
-  const urls = ['/', '/brief', '/privacy']
+  const urls = ['/', '/start', '/brief', '/privacy']
     .map((page) => `  <url><loc>${origin}${page}</loc></url>`)
     .join('\n')
   return c.body(
@@ -448,7 +462,15 @@ app.get('/privacy', (c) => c.html(legalPage(c.env.CONTACT_EMAIL)))
 // The terms live on the same page: one short document, one link to share.
 app.get('/terms', (c) => c.redirect('/privacy', 301))
 
-app.get('/brief', (c) => c.html(briefPage()))
+/** The text brief remains the alternative for businesses without a readable
+ *  website. A URL that lands on the old route is sent to the URL-first flow. */
+app.get('/brief', (c) => {
+  const url = c.req.query('url')
+  if (url && !c.req.query('prompt')) return c.redirect(`/start?url=${encodeURIComponent(url)}`, 302)
+  return c.html(briefPage())
+})
+
+app.get('/start', (c) => c.html(startPage()))
 
 app.get('/studio', async (c) => {
   const key = (c.env.STUDIO_KEY ?? '').trim()
@@ -499,7 +521,20 @@ app.post('/studio/projects/:id/delete', async (c) => {
   const key = (c.env.STUDIO_KEY ?? '').trim()
   if (!key || !(await isOperator(getCookie(c, STUDIO_COOKIE), key))) return c.text('Not found', 404)
   const id = c.req.param('id')
-  if (/^prj_[0-9a-zA-Z]{6,40}$/.test(id)) await deleteProject(c.env.DB, id)
+  if (/^prj_[0-9a-zA-Z]{6,40}$/.test(id)) {
+    const media = await listMedia(c.env.DB, id)
+    if (media.length) {
+      if (!c.env.MEDIA) return c.text('Image storage is unavailable; nothing was deleted.', 503)
+      try {
+        await (c.env.MEDIA as unknown as MediaBucket).delete(
+          media.flatMap((entry) => entry.variants.map((variant) => variant.key)),
+        )
+      } catch {
+        return c.text('Images could not be removed; nothing was deleted.', 502)
+      }
+    }
+    await deleteProject(c.env.DB, id)
+  }
   return c.redirect('/studio', 303)
 })
 
@@ -531,6 +566,121 @@ app.get('/p/:token/edit', async (c) => {
   )
 })
 
+/**
+ * The owner's evidence desk. It is read-only about values: edits stay in the
+ * editor, where the server records changed fields as owner-provided. The one
+ * exception is accepting refused work into the portfolio, which is an explicit
+ * change of destination, not a change of evidence.
+ */
+app.get('/p/:token/review', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.html(notFoundPage(), 404)
+  if (!(await ownerSession(c, project))) return c.redirect(`/p/${project.token}/dashboard/login`, 303)
+  c.header('Cache-Control', 'no-store')
+  return c.html(reviewPage({ project, origin: new URL(c.req.url).origin }))
+})
+
+app.post('/p/:token/review/portfolio', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return c.html(notFoundPage(), 404)
+  if (!(await ownerSession(c, project))) return c.redirect(`/p/${project.token}/dashboard/login`, 303)
+  const origin = c.req.header('origin')
+  if (origin && origin !== new URL(c.req.url).origin)
+    return fail(c, 403, 'cross_origin', 'Portfolio changes are saved from the review page.')
+  const body = await c.req.parseBody()
+  const action = str(body.action, 20)
+  const spec = { ...project.spec }
+  const review = spec.sourceReview
+    ? { ...spec.sourceReview, rejected: spec.sourceReview.rejected.map((entry) => ({ ...entry })) }
+    : undefined
+  const projects = [...(spec.projects ?? [])]
+  // A source excerpt and its shortened project title are the same piece of
+  // work. Compare the first clause so "Add all" cannot add it twice.
+  const workKey = (value: string) =>
+    value.toLowerCase().split(/[,.]/)[0].replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim()
+  const add = (name: string) => {
+    const title = name.replace(/\s+/g, ' ').trim().slice(0, 120)
+    if (!title) return
+    const existing = projects.find((entry) => workKey(entry.title) === workKey(title))
+    // Accepting a suggestion that is already listed is the owner's decision to
+    // publish it, not a duplicate row.
+    if (existing) {
+      existing.accepted = true
+      return
+    }
+    const candidate = review?.rejected.find(
+      (entry) => entry.destination === 'portfolio' && workKey(entry.name) === workKey(title),
+    )
+    // A source case study keeps its website origin; a hand-typed one is the
+    // owner's. Neither is ever a service. Adding it here is the acceptance
+    // that makes it publishable.
+    projects.push({
+      title: title.slice(0, 120),
+      ...(candidate ? { source: 'website' as const } : { source: 'owner' as const }),
+      accepted: true,
+    })
+  }
+  if (action === 'add') add(str(body.name, 160))
+  if (action === 'addAll') {
+    for (const entry of review?.rejected ?? [])
+      if (entry.destination === 'portfolio') add(entry.name)
+  }
+  if (action === 'acceptAll' && str(body.confirm, 10) !== 'yes')
+    return c.html(
+      reviewPage({
+        project,
+        origin: origin ?? '',
+        notice: 'Publishing the suggested projects needs the confirmation box: review every title first.',
+      }),
+      422,
+    )
+  if (action === 'accept' || action === 'acceptAll') {
+    const index = Number(body.index)
+    for (const [position, entry] of projects.entries())
+      if (action === 'acceptAll' || position === index) entry.accepted = true
+  }
+  if (action === 'update') {
+    const index = Number(body.index)
+    const entry = projects[index]
+    if (entry) {
+      const title = str(body.title, 120)
+      if (title) entry.title = title
+      entry.desc = str(body.desc, 400) || undefined
+      entry.source = 'owner'
+      // Saving an edited suggestion is an explicit decision to publish it.
+      entry.accepted = true
+    }
+  }
+  if (action === 'remove') {
+    const index = Number(body.index)
+    if (projects[index]) projects.splice(index, 1)
+  }
+  const nextSpec = {
+    ...spec,
+    ...(projects.length ? { projects } : {}),
+    ...(review ? { sourceReview: review } : {}),
+  }
+  if (!projects.length) delete (nextSpec as { projects?: unknown }).projects
+  await c.env.DB
+    .prepare('UPDATE projects SET spec = ?, updated_at = ? WHERE id = ?')
+    .bind(JSON.stringify(nextSpec), new Date().toISOString(), project.id)
+    .run()
+  if (project.doc) {
+    const published = projects.filter((entry) => entry.accepted !== false).length
+    const nextDoc = syncProjectSection(normalizeDoc(project.doc, nextSpec), published > 0)
+    await saveDoc(c.env.DB, { ...project, spec: nextSpec }, nextDoc, { log: false })
+  }
+  const live = projects.filter((entry) => entry.accepted !== false).length
+  await log(
+    c.env.DB,
+    project.id,
+    'content',
+    'Portfolio updated',
+    projects.length ? `${projects.length} portfolio entries (${live} published); kept separate from services.` : 'Portfolio cleared.',
+  )
+  return c.redirect(`/p/${project.token}/review`, 303)
+})
+
 app.get('/p/:token', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.html(notFoundPage(), 404)
@@ -547,6 +697,21 @@ app.get('/p/:token', async (c) => {
       origin: new URL(c.req.url).origin,
     }),
   )
+})
+
+/** Only the customer surface is gated by publication; owner tools stay behind
+ *  their existing login, and a customer token never becomes an owner session. */
+const PUBLIC_APP_PATH =
+  /^\/p\/[0-9a-f]{24}\/(app|cards\/|media\/|manifest\.webmanifest|sw\.js|icon\.svg|orders(?:\/|$)|bookings(?:\/|$)|enquiries(?:\/|$))/;
+
+app.use('/p/:token/*', async (c, next) => {
+  if (!PUBLIC_APP_PATH.test(c.req.path)) return next()
+  const project = await loadProject(c)
+  if (!project) return next()
+  if (project.publishedAt) return next()
+  if (await ownerSession(c, project)) return next()
+  c.header('X-Robots-Tag', 'noindex, nofollow')
+  return c.text('Not published', 404)
 })
 
 /* ---------------------------- the built app ---------------------------- */
@@ -586,8 +751,12 @@ app.get('/p/:token/app', async (c) => {
   c.header('X-Robots-Tag', project.spec.indexable ? 'index, follow' : 'noindex, nofollow')
   const photos = await photosFor(project.spec.vertical, c.env)
   const capability = await paymentCapability(c.env.DB, project)
+  // A concept review must pass its direction into the spec as well as the
+  // document. Blueprints are selected from the spec, so without this every
+  // concept would keep the saved build's structure and only change its theme.
+  const renderSpec = concept ? { ...project.spec, direction: concept.direction } : project.spec
   return c.html(
-    renderApp(project.spec, {
+    renderApp(renderSpec, {
       token: project.token,
       version: project.version,
       slot: project.variationSlot ?? undefined,
@@ -601,8 +770,8 @@ app.get('/p/:token/app', async (c) => {
       // one with a different palette: the three structures are the choice.
       doc: concept
         ? FLAGSHIP_TRADES.has(project.spec.vertical)
-          ? flagshipDocFromSpec({ ...project.spec, direction: concept.direction })
-          : docFromSpec({ ...project.spec, direction: concept.direction })
+          ? flagshipDocFromSpec(renderSpec)
+          : docFromSpec(renderSpec)
         : starterDoc(project),
       flagship: FLAGSHIP_TRADES.has(project.spec.vertical),
       payments: capability.enabled
@@ -689,7 +858,7 @@ app.get('/p/:token/manifest.webmanifest', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.text('Not found', 404)
   c.header('Content-Type', 'application/manifest+json')
-  return c.body(renderManifest(project.spec))
+  return c.body(renderManifest(project.spec, { startUrl: `/p/${project.token}/app`, scope: `/p/${project.token}/` }))
 })
 
 app.get('/p/:token/sw.js', async (c) => {
@@ -697,7 +866,7 @@ app.get('/p/:token/sw.js', async (c) => {
   if (!project) return c.text('Not found', 404)
   c.header('Content-Type', 'text/javascript; charset=utf-8')
   c.header('Cache-Control', 'no-cache')
-  return c.body(renderServiceWorker(project.version))
+  return c.body(renderServiceWorker(project.version, { startUrl: `/p/${project.token}/app` }))
 })
 
 app.get('/p/:token/icon.svg', async (c) => {
@@ -960,10 +1129,83 @@ const importRoute = (mode: 'import' | 'discover') => async (c: Context) => {
         clientRendered: report.notes.some((line) => /client-rendered/i.test(line)),
       })
       const plan = discoverPlan(discovery, report.site)
+      // A URL-first run creates one private draft so the three concepts can be
+      // rendered as complete, navigable applications from the imported facts.
+      // Nothing is published; the owner still chooses, reviews and approves.
+      const buildVisitor = await visitorBucket(c.req.header('cf-connecting-ip'))
+      if (!(await spendDailyBudget(c.env.DB, `visitor:${buildVisitor}`, PROJECTS_PER_VISITOR))) {
+        c.header('Retry-After', String(secondsUntilReset()))
+        return fail(c, 429, 'rate_limited', 'This connection has made its builds for today. Try again tomorrow.')
+      }
+      if (!(await spendDailyBudget(c.env.DB, 'all', PROJECTS_PER_DAY))) {
+        c.header('Retry-After', String(secondsUntilReset()))
+        return fail(c, 429, 'daily_budget', 'The studio has made its builds for today. Try again tomorrow.')
+      }
+      const first = plan.concepts[0]
+      const sourceReview = {
+        source: report.source,
+        host: report.host,
+        status: discovery.commerce.status === 'empty' ? 'empty' : 'partial',
+        pagesRead: report.pagesRead,
+        pagesFailed: report.pagesFailed,
+        usedSitemap: report.usedSitemap,
+        found: report.found,
+        missing: discovery.missing,
+        rejected: discovery.commerce.rejected.map((entry) => ({
+          name: entry.name,
+          section: entry.section,
+          reason: entry.reason,
+        })),
+      }
+      const project = await createProject(c.env.DB, {
+        name: first.spec.name,
+        contact: '',
+        email: '',
+        vertical: first.spec.vertical,
+        category: first.spec.category,
+        accent: first.spec.accent,
+        logo: first.spec.logo,
+        features: first.spec.features,
+        platforms: ['pwa'],
+        plan: 'onetime',
+        direction: first.id,
+        sourceReview,
+        site: {
+          website: discovery.url,
+          menu: first.spec.menu,
+          tagline: first.spec.tagline,
+          category: first.spec.category,
+          story: first.spec.story,
+          phone: first.spec.phone,
+          email: first.spec.email,
+          address: first.spec.address,
+          hours: first.spec.hours,
+          logoImage: first.spec.logoImage,
+          currency: first.spec.currency,
+          design: first.spec.design,
+          structure: first.spec.structure,
+          socials: first.spec.socials,
+        },
+      })
+      const session = await createOwnerSession(c.env.DB, project.id)
+      setCookie(c, ownerCookieName(project.token), session.id, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'Lax',
+        secure: isHttps(c.req.url),
+        maxAge: OWNER_SESSION_DAYS * 24 * 60 * 60,
+      })
+      await log(c.env.DB, project.id, 'discover', 'Read the business website', `${discovery.commerce.products} catalogue entries from ${report.host}`)
       return c.json({
         source: report.source,
         host: report.host,
         pages: report.pages,
+        draft: {
+          token: project.token,
+          version: project.version,
+          url: `/p/${project.token}`,
+          preview: `/p/${project.token}/app`,
+        },
         discovery,
         blockers: plan.blockers,
         confirmations: plan.confirmations,
@@ -974,6 +1216,7 @@ const importRoute = (mode: 'import' | 'discover') => async (c: Context) => {
           note: concept.note,
           spec: concept.spec,
           doc: concept.doc,
+          preview: `/p/${project.token}/app?concept=${encodeURIComponent(concept.id)}`,
         })),
       })
     }
@@ -1069,6 +1312,10 @@ app.post('/api/projects', async (c) => {
   const name = str(body.name, 60)
   if (name.length < 2)
     return fail(c, 422, 'name_required', 'A business name is required.')
+  // Hotel stays are outside the initial launch scope even though the renderer
+  // and booking model remain in the codebase for a later release.
+  if (str(body.vertical, 20) === 'hotel')
+    return fail(c, 422, 'trade_unavailable', 'Hotel and accommodation apps are not available in the initial launch.')
 
   // Public by design, so builds are metered before any row is written: three a
   // day from one connection, forty a day from everyone.
@@ -1099,6 +1346,8 @@ app.post('/api/projects', async (c) => {
     direction: str(body.direction, 24),
     videos: Array.isArray(body.videos) ? (body.videos as VideoLink[]) : undefined,
     bundle: str(body.bundle, 20),
+    sourceReview: body.sourceReview,
+    projects: body.projects,
     site: (() => {
       const site = sanitizeImported(body.site)
       return site ? applyPriceDecisions(site) : undefined
@@ -1150,7 +1399,8 @@ app.patch('/api/projects/:token', async (c) => {
       ? (body.spec as Record<string, unknown>)
       : {}
 
-  const menu = Array.isArray(specInput.menu) ? sanitizeMenu(specInput.menu) : undefined
+  const savedMenu = Array.isArray(specInput.menu) ? sanitizeMenu(specInput.menu) : undefined
+  const menu = savedMenu ? markOwnerEdits(project.spec.menu, savedMenu, project.spec.currency ?? '').menu : undefined
   if (menu) {
     const foreign = foreignMedia(null, menu, await mediaIdsFor(c.env.DB, project.id))
     if (foreign.length)
@@ -1162,13 +1412,21 @@ app.patch('/api/projects/:token', async (c) => {
       )
   }
 
-  const updated = await saveVersion(c.env.DB, project, {
-    name: str(body.name, 60) || undefined,
-    accent: str(body.accent, 7) || undefined,
-    logo: str(body.logo, 4) || undefined,
-    features: body.features === undefined ? undefined : strings(body.features),
-    custom: body.custom === undefined ? undefined : str(body.custom, 600),
-    spec: {
+  const expectedVersion = Number.isInteger(body.version) ? Number(body.version) : undefined
+  const expectedUpdatedAt = typeof body.updatedAt === 'string' ? body.updatedAt : undefined
+  let updated: Project
+  try {
+    updated = await saveVersion(
+      c.env.DB,
+      project,
+      {
+        name: str(body.name, 60) || undefined,
+        accent: str(body.accent, 7) || undefined,
+        logo: str(body.logo, 4) || undefined,
+        direction: str(body.direction, 24) || undefined,
+        features: body.features === undefined ? undefined : strings(body.features),
+        custom: body.custom === undefined ? undefined : str(body.custom, 600),
+        spec: {
       ...(typeof specInput.tagline === 'string'
         ? { tagline: str(specInput.tagline, 90) }
         : {}),
@@ -1181,9 +1439,26 @@ app.patch('/api/projects/:token', async (c) => {
         : {}),
       ...(typeof specInput.phone === 'string' ? { phone: str(specInput.phone, 24) } : {}),
       ...(typeof specInput.email === 'string' ? { email: str(specInput.email, 80) } : {}),
-      ...(menu && menu.length ? { menu } : {}),
-    },
-  })
+          ...(menu && menu.length ? { menu } : {}),
+        },
+      },
+      { version: expectedVersion, updatedAt: expectedUpdatedAt },
+    )
+  } catch (error) {
+    if (error instanceof VersionConflictError)
+      return c.json(
+        {
+          error: {
+            code: 'version_conflict',
+            message: 'This build changed in another session. Reload it before saving your changes.',
+          },
+          currentVersion: error.currentVersion,
+          currentUpdatedAt: error.currentUpdatedAt,
+        },
+        409,
+      )
+    throw error
+  }
 
   // A saved heading that still reads exactly what the old specification said
   // follows the new one; anything the owner rewrote is left as it is.
@@ -1194,7 +1469,7 @@ app.patch('/api/projects/:token', async (c) => {
       await saveDoc(c.env.DB, updated, pruned.doc, { log: false })
   }
 
-  return c.json({ version: updated.version, quote: updated.quote, status: updated.status })
+  return c.json({ version: updated.version, updatedAt: updated.updatedAt, quote: updated.quote, status: updated.status })
 })
 
 /**
@@ -1270,6 +1545,9 @@ app.post('/api/projects/:token/import/check', async (c) => {
       plan: diffCatalogue(project.spec.menu, report.site.menu, url.href),
       quality: report.quality,
       images: report.images,
+      // The owner applies against exactly the copy they inspected.
+      version: project.version,
+      updatedAt: project.updatedAt,
     })
   } catch (error) {
     if (error instanceof ImportError) return c.json({ error: { code: error.code, message: error.message } }, error.status)
@@ -1294,13 +1572,28 @@ app.post('/api/projects/:token/import/apply', async (c) => {
       added?: boolean
       removed?: string[]
       changed?: string[]
+      resolutions?: unknown
     }
+    // A conflict is resolved one field at a time, in the owner's own words:
+    // keep their value, or take the website's. Anything malformed is dropped,
+    // which leaves the owner's value in place rather than guessing.
+    const resolutions = (Array.isArray(approval.resolutions) ? approval.resolutions : [])
+      .slice(0, 400)
+      .map((entry) => {
+        const row = (entry ?? {}) as Record<string, unknown>
+        const field = row.field === 'price' ? ('price' as const) : row.field === 'description' ? ('description' as const) : null
+        const choice = row.choice === 'source' ? ('source' as const) : row.choice === 'owner' ? ('owner' as const) : null
+        const itemName = str(row.name, 60)
+        return field && choice && itemName ? { name: itemName, field, choice } : null
+      })
+      .filter((entry): entry is { name: string; field: 'price' | 'description'; choice: 'owner' | 'source' } => entry !== null)
     throttleImports(`reimport:${await visitorBucket(c.req.header('cf-connecting-ip'))}`)
     const report = await importOnce(url.href)
     const menu = applyApproval(project.spec.menu, report.site.menu, {
       added: approval.added === true,
       removed: Array.isArray(approval.removed) ? approval.removed.map(String).slice(0, 200) : [],
       changed: Array.isArray(approval.changed) ? approval.changed.map(String).slice(0, 400) : [],
+      resolutions,
     })
     const foreign = foreignMedia(null, menu, await mediaIdsFor(c.env.DB, project.id))
     if (foreign.length)
@@ -1310,7 +1603,32 @@ app.post('/api/projects/:token/import/apply', async (c) => {
         'invalid_media_reference',
         'The source refers to an image this build does not own.',
       )
-    const updated = await saveVersion(c.env.DB, project, { spec: { menu } })
+    let updated: Project
+    try {
+      updated = await saveVersion(
+        c.env.DB,
+        project,
+        { spec: { menu } },
+        {
+          version: Number.isInteger(body.version) ? Number(body.version) : undefined,
+          updatedAt: typeof body.updatedAt === 'string' ? body.updatedAt : undefined,
+        },
+      )
+    } catch (error) {
+      if (error instanceof VersionConflictError)
+        return c.json(
+          {
+            error: {
+              code: 'version_conflict',
+              message: 'This build changed while the import was open. Run the check again before applying.',
+            },
+            currentVersion: error.currentVersion,
+            currentUpdatedAt: error.currentUpdatedAt,
+          },
+          409,
+        )
+      throw error
+    }
     if (updated.doc) {
       const copied = refreshCopiedCopy(starterDoc(updated), project.spec, updated.spec)
       const pruned = pruneEmptySections(copied.doc, updated.spec, updated.token)
@@ -1648,6 +1966,7 @@ app.post(
           date: booking.date,
           checkOut: booking.checkOut,
           nights: booking.nights,
+          nightlyRate: booking.nightlyRate,
           total: booking.total,
           slot: booking.slot,
           party: booking.party,
@@ -1674,6 +1993,7 @@ app.get('/p/:token/bookings/:bookingId', async (c) => {
       date: booking.date,
       checkOut: booking.checkOut,
       nights: booking.nights,
+      nightlyRate: booking.nightlyRate,
       total: booking.total,
       slot: booking.slot,
       party: booking.party,
@@ -1994,9 +2314,20 @@ app.put('/api/projects/:token/app-settings', async (c) => {
           .map((person) => person.trim().slice(0, 40))
           .filter(Boolean)
           .slice(0, 12)
+  const actionDefaults = actionLabelsFor(project.spec.vertical, verticalFor(project.spec.vertical).vocab)
+  const priorActions = project.spec.actions ?? actionDefaults
+  const actionText = (value: unknown, fallback: string) => str(value, 28) || fallback
+  const actions = {
+    home: actionText(body.actionHome, priorActions.home),
+    view: actionText(body.actionView, priorActions.view),
+    add: actionText(body.actionAdd, priorActions.add),
+    book: actionText(body.actionBook, priorActions.book),
+    quote: actionText(body.actionQuote, priorActions.quote),
+  }
   const spec = {
     ...project.spec,
     name,
+    actions,
     tagline,
     story,
     hours,
@@ -2214,7 +2545,11 @@ async function saveCatalogHandler(c: Context<{ Bindings: Bindings }, '/api/proje
   if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
   const body = await readJson(c)
   if (!body) return fail(c, 400, 'invalid_json', 'Send a JSON object.')
-  const menu = Array.isArray(body.menu) ? sanitizeMenu(body.menu) : project.spec.menu
+  const saved = Array.isArray(body.menu) ? sanitizeMenu(body.menu) : null
+  // A saved catalogue is the owner taking ownership of what they changed. The
+  // server records those fields; a site reading is never relabelled as theirs.
+  const marked = saved ? markOwnerEdits(project.spec.menu, saved, project.spec.currency ?? '') : null
+  const menu = marked?.menu ?? project.spec.menu
   const foreign = foreignMedia(null, menu, await mediaIdsFor(c.env.DB, project.id))
   if (foreign.length)
     return fail(
@@ -2253,10 +2588,41 @@ async function saveCatalogHandler(c: Context<{ Bindings: Bindings }, '/api/proje
       offers: offersChanged ? false : sample.offers,
     },
   }
-  await c.env.DB
-    .prepare('UPDATE projects SET spec = ?, updated_at = ? WHERE id = ?')
-    .bind(JSON.stringify(spec), new Date().toISOString(), project.id)
-    .run()
+  // Two timestamps can land in the same millisecond. The version is the
+  // compare-and-set that makes the second owner window stale even then.
+  const expectedVersion = Number.isInteger(body.version) ? Number(body.version) : null
+  const expectedUpdatedAt = typeof body.updatedAt === 'string' ? body.updatedAt : project.updatedAt
+  const updatedAt = new Date(
+    Math.max(Date.now(), Date.parse(project.updatedAt) + 1),
+  ).toISOString()
+  const write =
+    expectedVersion === null
+      ? await c.env.DB
+          .prepare(
+            'UPDATE projects SET spec = ?, updated_at = ?, version = version + 1 WHERE id = ? AND updated_at = ?',
+          )
+          .bind(JSON.stringify(spec), updatedAt, project.id, expectedUpdatedAt)
+          .run()
+      : await c.env.DB
+          .prepare(
+            'UPDATE projects SET spec = ?, updated_at = ?, version = version + 1 WHERE id = ? AND version = ? AND updated_at = ?',
+          )
+          .bind(JSON.stringify(spec), updatedAt, project.id, expectedVersion, expectedUpdatedAt)
+          .run()
+  // Two owner windows can hold the same catalogue. The second save must reload
+  // rather than silently replacing the first owner's correction.
+  if (!(write as { meta?: { changes?: number } }).meta?.changes)
+    return c.json(
+      {
+        error: {
+          code: 'version_conflict',
+          message: 'This catalogue changed in another session. Reload it before saving your changes.',
+        },
+        currentVersion: project.version,
+        currentUpdatedAt: project.updatedAt,
+      },
+      409,
+    )
   if (menuChanged || offersChanged)
     await log(c.env.DB, project.id, 'catalogue', 'Catalogue updated', 'Saved from an owner surface.')
   // A featured item gaining a photograph or price can bring a block back.
@@ -2264,7 +2630,7 @@ async function saveCatalogHandler(c: Context<{ Bindings: Bindings }, '/api/proje
     ? await reconcileDoc(c.env.DB, project, project.doc, spec as AppSpec)
     : { hidden: [] as string[], restored: [] as string[] }
   c.header('Cache-Control', 'private, no-store')
-  return c.json({ ok: true, menu, offers, ...sections })
+  return c.json({ ok: true, menu, offers, updatedAt, version: project.version + 1, ...sections })
 }
 
 // The visual editor addresses the catalogue through the project's private
@@ -2305,6 +2671,27 @@ app.post('/api/projects/:token/approve', async (c) => {
     hidden: pruned.hidden,
     restored: pruned.restored,
   })
+})
+
+app.post('/api/projects/:token/publish', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  if (project.status !== 'approved')
+    return fail(c, 409, 'approval_required', 'Approve this build before publishing it.')
+  const publishedAt = project.publishedAt || (await setProjectPublished(c.env.DB, project, true))
+  return c.json({
+    ok: true,
+    status: 'published',
+    publishedAt,
+    url: new URL(`/p/${project.token}/app`, c.req.url).href,
+  })
+})
+
+app.post('/api/projects/:token/unpublish', async (c) => {
+  const project = await loadProject(c)
+  if (!project) return fail(c, 404, 'not_found', 'No build with that link.')
+  await setProjectPublished(c.env.DB, project, false)
+  return c.json({ ok: true, status: 'private', url: `/p/${project.token}/app` })
 })
 
 /* ------------------------------- fallbacks ----------------------------- */

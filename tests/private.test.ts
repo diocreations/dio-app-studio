@@ -36,6 +36,25 @@ describe('the private build pages', () => {
     }
   })
 
+  test('an installed app starts at the customer app, not the owner build page', async () => {
+    const { db, token } = await customerBuild()
+    const env = { DB: db, ASSETS: {} as Fetcher }
+    const manifestResponse = await app.request(
+      `https://plattr.example/p/${token}/manifest.webmanifest`,
+      {},
+      env,
+    )
+    expect(manifestResponse.status).toBe(200)
+    const manifest = await manifestResponse.json<{ start_url: string; scope: string }>()
+    expect(manifest.start_url).toBe(`/p/${token}/app`)
+    expect(manifest.scope).toBe(`/p/${token}/`)
+
+    const worker = await (await app.request(`https://plattr.example/p/${token}/sw.js`, {}, env)).text()
+    expect(worker).toContain(`SHELL = ["/p/${token}/app", './manifest.webmanifest', './icon.svg']`)
+    expect(worker).toContain('/(?:orders|bookings)')
+    expect(worker).toContain('caches.match(SHELL[0])')
+  })
+
   test('a demo build stays indexable', () => {
     const spec = buildSpec({
       name: 'Demo Salon',

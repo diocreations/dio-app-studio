@@ -34,6 +34,6 @@ describe('professional first action', () => {
     expect(html).toContain('"detailAction":"quote"')
     expect(html).toContain('Request a proposal')
     // The appointment screen still exists, but it is not the primary action.
-    expect(html).toContain('Book an intro call')
+    expect(html).toContain('Request a consultation')
   })
 })

@@ -14,8 +14,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 const CDP = process.env.ACCEPTANCE_CDP ?? 'http://127.0.0.1:9223'
 const ORIGIN = process.env.ACCEPTANCE_API ?? 'http://127.0.0.1:5173'
-const OUT = 'docs/qa/acceptance-2026-11-21'
-const APPS = '.chrome-qa/acceptance-apps.json'
+const OUT = process.env.ACCEPTANCE_OUT ?? 'docs/qa/acceptance-2026-11-21'
+const APPS = process.env.ACCEPTANCE_APPS ?? '.chrome-qa/acceptance-apps.json'
 const apps = JSON.parse(await readFile(APPS, 'utf8'))
 await mkdir(OUT, { recursive: true })
 
@@ -147,19 +147,21 @@ async function shopFlow(app) {
   await open(app)
   await click('[data-go="catalog"]').catch(() => {})
   await sleep(300)
-  const results = await searchFor('Honeycomb Tree')
+  const results = await searchFor(app.sample || 'Honeycomb Tree')
   const detail = await text('[data-detail-body]')
   const initialPrice = await text('[data-detail-body] .price')
 
   const variants = await evaluate(
     `[...document.querySelectorAll('[data-screen="detail"] [data-variant]')].filter(${visible}).map((node) => node.innerText.trim())`,
   )
-  const pickedLarge = await clickIn('detail', '[data-variant]', 'Large')
+  const bigVariant = variants[variants.length - 1] || ''
+  const smallVariant = variants[0] || ''
+  const pickedLarge = await clickIn('detail', '[data-variant]', bigVariant)
   await sleep(400)
   const largePrice = await text('[data-detail-body] .price')
   const addedLarge = await clickIn('detail', '[data-add]')
   await sleep(250)
-  const pickedSmall = await clickIn('detail', '[data-variant]', 'Small')
+  const pickedSmall = await clickIn('detail', '[data-variant]', smallVariant)
   await sleep(350)
   const addedSmall = await clickIn('detail', '[data-add]')
   await sleep(250)
@@ -171,7 +173,7 @@ async function shopFlow(app) {
 
   // Remove the small option, leaving one line at the large price.
   await evaluate(`(() => {
-    const line = [...document.querySelectorAll('[data-cart] .cart-line')].find((node) => node.textContent.includes('Small'))
+    const line = [...document.querySelectorAll('[data-cart] .cart-line')].find((node) => node.textContent.includes(${JSON.stringify(smallVariant)}))
     line?.querySelector('[data-delta="-1"]')?.click()
   })()`)
   await sleep(300)
@@ -207,6 +209,34 @@ async function shopFlow(app) {
     confirmation,
     orders: state.orders ?? [],
   }
+}
+
+async function bookingFlow(app) {
+  await open(app)
+  await click('[data-go="book"]')
+  await sleep(500)
+  const days = (offset) => {
+    const date = new Date()
+    date.setDate(date.getDate() + offset)
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+  }
+  // A restaurant books a table; a hotel requests a stay. Below the fold both
+  // share the same form contract.
+  await setValue('[data-checkin]', days(1)).catch(() => {})
+  await setValue('[data-checkout]', days(4)).catch(() => {})
+  await click('[data-slots] .slot').catch(() => {})
+  await click('[data-party="1"]').catch(() => {})
+  await sleep(300)
+  const summary = await text('[data-stay-summary]')
+  const day = await text('[data-screen="book"]')
+  await setValue('[data-book-name]', 'Maya Rao')
+  await setValue('[data-book-contact]', 'maya@example.com')
+  await shot(`${app.trade}--${app.direction}--booking--390`)
+  await click('[data-book]')
+  await sleep(1700)
+  const confirmation = (await text('[data-note-body]')) || (await text('[data-cart-done]'))
+  const state = await stateOf(app.token)
+  return { results: 1, day, summary, confirmation, bookings: state.bookings ?? [] }
 }
 
 async function restaurantFlow(app) {
@@ -331,8 +361,8 @@ async function professionalFlow(app) {
 
 const FLOWS = {
   shop: shopFlow,
-  restaurant: restaurantFlow,
-  hotel: hotelFlow,
+  restaurant: (app) => (app.mode === 'booking' ? bookingFlow(app) : restaurantFlow(app)),
+  hotel: (app) => (app.mode === 'request' ? bookingFlow(app) : hotelFlow(app)),
   salon: salonFlow,
   professional: professionalFlow,
 }

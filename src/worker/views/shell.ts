@@ -230,6 +230,11 @@ details.faq p { margin-top: 9px; font-size: 13.5px; color: var(--muted); line-he
   .phone iframe { height: 600px; }
   .phone-sticky { position: static; }
 }
+@media (max-width: 760px) {
+  .nav-links { gap: 8px; }
+  .nav-links a:not(.btn) { display: none; }
+  .nav .wrap { gap: 10px; }
+}
 `
 
 export function page(options: {
@@ -247,11 +252,11 @@ export function page(options: {
     <div class="wrap">
       <a class="brand" href="/"><span class="glyph">p</span>plattr</a>
       <div class="nav-links">
-        <a href="/#loop">How it works</a>
-        <a href="/#formats">Formats</a>
-        <a href="/#pricing">Pricing</a>
+        <a href="/#how">How it works</a>
+        <a href="/#proof">Live example</a>
+        <a href="/#concepts">Concepts</a>
         <a href="/studio"${options.active === 'studio' ? ' style="color:var(--ink);font-weight:600"' : ''}>Studio</a>
-        <a class="btn primary small" href="/brief">Start a brief</a>
+        <a class="btn primary small" href="/start">Build from a URL</a>
       </div>
     </div>
   </nav>`
@@ -273,7 +278,7 @@ ${options.noindex ? '<meta name="robots" content="noindex, nofollow" />' : ''}
 <body>
 ${options.bare ? '' : nav}
 ${options.body}
-${options.bare ? '' : `<footer class="site"><div class="wrap"><span class="tiny">Plattr · apps for any local business, from a conversation</span><span class="tiny">Builds, versions and store packages — reviewed by a human before every launch. <a href="/privacy">Privacy &amp; terms</a></span></div></footer>`}
+${options.bare ? '' : `<footer class="site"><div class="wrap"><span class="tiny">Plattr · a working web app from the business you already have</span><span class="tiny">Every build is reviewed by its owner before publishing. <a href="/privacy">Privacy &amp; terms</a></span></div></footer>`}
 <div class="toast" data-toast></div>
 ${options.script ? `<script>${options.script}</script>` : ''}
 </body>

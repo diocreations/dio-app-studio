@@ -1,5 +1,6 @@
 import type { Activity, Note, Project } from '../db'
 import { BUNDLES, FEATURES, FEATURE_LABEL, money, PLATFORMS, usd } from '../pricing'
+import { reviewCounts } from '../review'
 import { verticalFor } from '../verticals'
 import { esc, page } from './shell'
 
@@ -7,7 +8,7 @@ const STATUS_COPY: Record<Project['status'], { label: string; pill: string; line
   in_review: {
     label: 'Ready for review',
     pill: 'amber',
-    line: 'Send this link to the owner. They can try the app, edit it, or leave a note. Nothing ships until they approve.',
+    line: 'Nothing is public yet. Check what we read, add anything missing, and approve when the app is right.',
   },
   changes_requested: {
     label: 'Changes requested',
@@ -76,6 +77,8 @@ export function workspacePage(options: {
 }): string {
   const { project, notes, activity, origin } = options
   const approved = project.status === 'approved'
+  const published = Boolean(project.publishedAt)
+  const publicUrl = `${origin}/p/${project.token}/app`
   const quote = project.quote
   const bundle = BUNDLES.find((entry) => entry.id === project.spec.bundle)
   const featureChips = project.features
@@ -84,6 +87,23 @@ export function workspacePage(options: {
   const platformNames = project.platforms
     .map((id) => PLATFORMS.find((platform) => platform.id === id)?.label ?? id)
     .join(' · ')
+  const review = project.spec.sourceReview
+  const counts = reviewCounts(review, project.spec.menu)
+  const needsOwner = counts.missing + (review?.questions.length ?? 0)
+  const catalogueCopy = counts.items
+    ? `${counts.items} item${counts.items === 1 ? '' : 's'} read and ready to check`
+    : 'No items were published — add the first ones yourself'
+  const checklist = `
+    <div class="card" id="review-checklist">
+      <div class="card-head"><h3>Before you approve</h3><span class="pill">${needsOwner ? needsOwner + ' to check' : 'Ready for your review'}</span></div>
+      <p class="small">We built this from ${esc(review?.host || 'the details you gave us')}. Nothing is public until you publish it.</p>
+      <ol class="small" style="display:grid;gap:10px;margin:12px 0 0 18px;padding:0">
+        <li><b>What we found.</b> ${esc(catalogueCopy)}. <a href="/p/${esc(project.token)}/review">Review what we read</a>.</li>
+        <li><b>What is missing.</b> ${needsOwner ? `${needsOwner} thing${needsOwner === 1 ? '' : 's'} need${needsOwner === 1 ? 's' : ''} you.` : 'Nothing is missing from the source.'} <a href="/p/${esc(project.token)}/review#missing">Check the list</a> or <a href="#edit-name">edit the details</a>.</li>
+        <li><b>The catalogue.</b> ${counts.items ? `${counts.items} entr${counts.items === 1 ? 'y is' : 'ies are'} available to edit.` : 'Add the items your customers should see.'} <a href="/p/${esc(project.token)}/edit?panel=catalog">Open the catalogue</a>.</li>
+        <li><b>Preview, approve and publish.</b> Try the customer journey, approve the build, then publish the customer app when it looks right.</li>
+      </ol>
+    </div>`
 
   const body = `
   <div class="wrap" style="padding:26px 0 0">
@@ -106,14 +126,14 @@ export function workspacePage(options: {
               : ''
           }
           <span class="pill">${esc(platformNames)}</span>
-          <span class="tiny">${esc(project.contact || 'No contact yet')}${project.email ? ` · ${esc(project.email)}` : ''}</span>
+          <span class="tiny">${esc(project.contact || project.spec.phone || project.email || 'No contact details yet')}${project.email && project.email !== project.spec.phone ? ` · ${esc(project.email)}` : ''}</span>
         </div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <button class="btn small ghost" type="button" data-copy="${origin}/p/${project.token}">Copy review link</button>
         <a class="btn small primary" href="/p/${project.token}/edit">Customise my app</a>
         <a class="btn small" href="/p/${project.token}/dashboard">Business dashboard</a>
-        <a class="btn small ghost" href="/p/${project.token}/app" target="_blank" rel="noreferrer">Preview application &#8599;</a>
+        <a class="btn small ghost" href="/p/${project.token}/app" target="_blank" rel="noreferrer">${published ? 'Open live app' : 'Preview application'} &#8599;</a>
       </div>
     </div>
   </div>
@@ -128,6 +148,7 @@ export function workspacePage(options: {
       </div>
 
       <div class="stack">
+        ${checklist}
         <div class="card">
           <div class="card-head">
             <h3>Where this stands</h3>
@@ -190,6 +211,30 @@ export function workspacePage(options: {
           }
         </div>
 
+        <div class="card" id="publish">
+          <div class="card-head">
+            <h3>Put it online</h3>
+            ${published ? '<span class="pill green">Published</span>' : approved ? '<span class="pill">Ready to publish</span>' : '<span class="pill">Approval first</span>'}
+          </div>
+          ${
+            published
+              ? `<p class="small">The customer app is live at a stable link. Edits saved from the editor appear on this same link; use Unpublish to take it offline without deleting anything.</p>
+                 <p class="small" style="margin-top:10px"><a href="${esc(publicUrl)}" target="_blank" rel="noreferrer">${esc(publicUrl)}</a></p>
+                 <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px">
+                   <button class="btn small ghost" type="button" data-copy="${esc(publicUrl)}">Copy live link</button>
+                   <button class="btn small" type="button" data-unpublish>Unpublish</button>
+                 </div>`
+              : approved
+                ? `<p class="small">Approved. Publishing makes the customer app available at a stable link. The preview, editor and published app all use the same saved document.</p>
+                   <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px">
+                     <button class="btn primary" type="button" data-publish>Publish customer app</button>
+                     <a class="btn small ghost" href="/p/${project.token}/app" target="_blank" rel="noreferrer">Check preview &#8599;</a>
+                   </div>`
+                : `<p class="small">The app is still private. Approve the build first; publishing is a separate step so an unfinished draft cannot go live by accident.</p>
+                   <div class="notice" style="margin-top:12px">Nothing at the customer link is public until you publish.</div>`
+          }
+        </div>
+
         <form class="card" id="edit-form">
           <div class="card-head">
             <h3>Edit it yourself</h3>
@@ -199,7 +244,7 @@ export function workspacePage(options: {
 
           <div class="grid-2" style="gap:14px">
             <div class="field">
-              <label for="edit-name">Restaurant name</label>
+              <label for="edit-name">Business name</label>
               <input id="edit-name" name="name" value="${esc(project.name)}" maxlength="60" />
             </div>
             <div class="field">
@@ -226,13 +271,13 @@ export function workspacePage(options: {
             </div>
           </div>
 
-          <div class="field">
+          <div class="field" id="edit-contact">
             <span class="label">Contact &amp; hours</span>
             <div class="grid-2" style="gap:10px">
-              <input name="hours" value="${esc(project.spec.hours)}" maxlength="90" aria-label="Opening hours" placeholder="Tue–Sun 17:00–23:00" style="grid-column:1/-1" />
-              <input name="phone" value="${esc(project.spec.phone)}" maxlength="24" aria-label="Phone" placeholder="+1 555 0142" />
-              <input name="email" value="${esc(project.spec.email ?? '')}" maxlength="80" aria-label="Email" placeholder="hello@example.com" />
-              <input name="address" value="${esc(project.spec.address)}" maxlength="60" aria-label="Address" placeholder="8 Furnace Yard, Old Town" style="grid-column:1/-1" />
+              <input id="edit-hours" name="hours" value="${esc(project.spec.hours)}" maxlength="90" aria-label="Opening hours" placeholder="Tue–Sun 17:00–23:00" style="grid-column:1/-1" />
+              <input id="edit-phone" name="phone" value="${esc(project.spec.phone)}" maxlength="24" aria-label="Phone" placeholder="+1 555 0142" />
+              <input id="edit-email" name="email" value="${esc(project.spec.email ?? '')}" maxlength="80" aria-label="Email" placeholder="hello@example.com" />
+              <input id="edit-address" name="address" value="${esc(project.spec.address)}" maxlength="60" aria-label="Address" placeholder="8 Furnace Yard, Old Town" style="grid-column:1/-1" />
             </div>
             <span class="hint">Filled from the website when the brief started there. Rendered in the app's “Find us” block and its directions, call and email links.</span>
           </div>
@@ -389,14 +434,16 @@ function workspaceScript(project: Project): string {
     return response.json().catch(() => ({}))
   }
 
-  document.querySelector('[data-copy]')?.addEventListener('click', async (event) => {
-    try {
-      await navigator.clipboard.writeText(event.currentTarget.dataset.copy)
-      toast('Review link copied')
-    } catch {
-      toast('Copy the link from the footer')
-    }
-  })
+  document.querySelectorAll('[data-copy]').forEach((button) =>
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy)
+        toast('Link copied')
+      } catch {
+        toast('Copy the link from the footer')
+      }
+    }),
+  )
 
   document.querySelector('[data-approve]')?.addEventListener('click', async (event) => {
     const button = event.currentTarget
@@ -411,6 +458,28 @@ function workspaceScript(project: Project): string {
       button.textContent = 'Approve build'
       toast(error.message)
     }
+  })
+
+  async function publishAction(button, path, pending) {
+    button.disabled = true
+    button.textContent = pending
+    try {
+      await send('/api/projects/' + token + path)
+      toast(path === '/publish' ? 'Published — the live link is ready' : 'Unpublished — the app is private again')
+      setTimeout(() => window.location.reload(), 450)
+    } catch (error) {
+      button.disabled = false
+      button.textContent = path === '/publish' ? 'Publish customer app' : 'Unpublish'
+      toast(error.message)
+    }
+  }
+
+  document.querySelector('[data-publish]')?.addEventListener('click', (event) =>
+    publishAction(event.currentTarget, '/publish', 'Publishing…'),
+  )
+  document.querySelector('[data-unpublish]')?.addEventListener('click', (event) => {
+    if (confirm('Take the customer app offline? The build and its data stay saved.'))
+      publishAction(event.currentTarget, '/unpublish', 'Unpublishing…')
   })
 
   document.getElementById('note-form').addEventListener('submit', async (event) => {

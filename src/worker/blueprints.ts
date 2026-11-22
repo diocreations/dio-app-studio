@@ -127,8 +127,8 @@ const ROLES: Partial<Record<string, Record<string, BlockRole>>> = {
   restaurant: {
     'dine-title': 'lead',
     'dine-feature': 'discovery',
-    'dine-actions': 'action',
     'dine-note': 'note',
+    'dine-actions': 'action',
     'dine-facts': 'visit',
   },
   hotel: {
@@ -148,6 +148,7 @@ const ROLES: Partial<Record<string, Record<string, BlockRole>>> = {
     'pro-title': 'lead',
     'pro-intro': 'lead',
     'pro-index': 'discovery',
+    'pro-work': 'proof',
     'pro-team': 'proof',
     'pro-actions': 'action',
     'pro-facts': 'visit',
@@ -270,9 +271,14 @@ export function composeHome(
   // The same catalogue, arranged for this concept: a narrative reads as rows,
   // an index as a dense grid, an image-led screen as a swipeable strip. This is
   // component layout, not a different data set, so nothing is lost.
+  // The opening block is arranged by the blueprint too. A sparse trade can
+  // have only a title and an action on home; if both concepts then receive the
+  // same split layout they are one page in two palettes. Lead keeps the split,
+  // index uses a grid, and the image-first concept gives the opening a list so
+  // the saved layouts differ even when the available blocks do not.
   const layoutFor = (role: BlockRole | null): NonNullable<DocNode['layout']> =>
     !role || role === 'lead' || role === 'note'
-      ? blueprint.id === 'lead' ? 'split' : blueprint.id === 'index' ? 'grid' : 'split'
+      ? blueprint.id === 'lead' ? 'split' : blueprint.id === 'index' ? 'grid' : 'list'
       : blueprint.id === 'lead' ? 'list' : blueprint.id === 'index' ? 'grid' : 'strip'
   // Arrange clones, but decide membership on the originals so a block can never
   // appear both on home and in the leftovers.
@@ -402,8 +408,11 @@ export type PairVerdict = {
   score: number
   sameInitial: boolean
   sameOrder: boolean
-  /** How many of the seven architectural axes are genuinely different. */
+  /** How many architectural axes are genuinely different. */
   axesDifferent: number
+  /** The six dimensions an owner is promised three different applications on,
+   *  each with its own verdict, so a failure says exactly what is too alike. */
+  dimensions: { name: string; different: boolean }[]
   reasons: string[]
 }
 
@@ -441,6 +450,27 @@ export function validateConcepts(
         ['image treatment', left.architecture.imagery === right.architecture.imagery],
       ]
       const axesDifferent = axes.filter(([, same]) => !same).length
+      // The dimensions from the design promise. Screen/navigation architecture
+      // and section composition are read from the saved document; the catalogue
+      // and detail grammar come from the architecture; the journey is the
+      // opening screen plus tab order; functionality is the functional blocks
+      // the concept actually carries (search, dates, stay, order, action).
+      const functional = (structure: Structure) =>
+        structure.sections
+          .filter((variant) => /search|dates|filters|timetable|stay|order|reserve|book|action|quote|enquire|urgent|help/i.test(variant))
+          .join('>')
+      const sameJourney = sameInitial && left.nav.join('>') === right.nav.join('>')
+      const sameComposition = left.roles.join('>') === right.roles.join('>')
+      const sameFunctionality = functional(left) === functional(right)
+      const dimensions: { name: string; different: boolean }[] = [
+        { name: 'screen and navigation architecture', different: !sameInitial || navScore !== 1 || left.navModel !== right.navModel },
+        { name: 'section types and composition', different: !sameComposition },
+        { name: 'catalogue presentation', different: left.architecture.catalog !== right.architecture.catalog || left.architecture.cards !== right.architecture.cards },
+        { name: 'detail-page interaction', different: left.architecture.detail !== right.architecture.detail },
+        { name: 'primary customer journey', different: !sameJourney },
+        { name: 'trade-specific functionality', different: !sameFunctionality },
+      ]
+      axes.push(['primary journey', sameJourney], ['section composition', sameComposition], ['trade functionality', sameFunctionality])
       // Hierarchy and chrome are what an owner experiences, so they carry the
       // weight. A shared block vocabulary is expected within one trade; the
       // same order, opening screen and tabs are what make it one design.
@@ -466,6 +496,7 @@ export function validateConcepts(
         sameInitial,
         sameOrder,
         axesDifferent,
+        dimensions,
         reasons,
       })
     }
@@ -497,6 +528,8 @@ export function auditCoverage(
   html: string,
 ): { missing: string[]; unknown: string[] } {
   const rendered = new Set([...html.matchAll(/data-sec="(sec_[^"]+)"/g)].map((match) => match[1]))
+  // The app shell ships every screen in one document and toggles visibility, so
+  // a block on another screen is still rendered, just not on screen at load.
   const nodes = doc.screens.flatMap((screen) => screen.sections)
   const visible = new Set(nodes.filter((node) => !node.hidden).map((node) => node.id))
   return {

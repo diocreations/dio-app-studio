@@ -142,11 +142,20 @@ export function stockPhotos(vertical: VerticalId): StockPhoto[] {
   return FLAGSHIP_PHOTOS[vertical] ?? []
 }
 
+/** Launch-scope trades keep the full 1280px hero; the rest use the 640px file
+ *  so the static bundle stays inside the hosting upload budget. */
+const WIDE_VERTICALS = new Set<VerticalId>(['restaurant', 'shop', 'salon', 'professional'])
+
+export function hasWidePhotos(vertical: VerticalId): boolean {
+  return WIDE_VERTICALS.has(vertical)
+}
+
 export function stockImageUrl(vertical: VerticalId, index: number, width: 320 | 640 | 1280 = 640): string {
   const photos = stockPhotos(vertical)
   if (!photos.length) return ''
   const photo = photos[index % photos.length]
-  return `/images/flagship/${photo.name}-${width}.webp`
+  const size = width === 1280 && !hasWidePhotos(vertical) ? 640 : width
+  return `/images/flagship/${photo.name}-${size}.webp`
 }
 
 export function stockImageAlt(vertical: VerticalId, index: number): string {
@@ -172,7 +181,10 @@ export function stockImageTag(
   const sizes = options.sizes ?? '(max-width: 620px) 45vw, 320px'
   const loading = options.priority ? 'eager' : 'lazy'
   const fetchPriority = options.priority ? ' fetchpriority="high"' : ''
-  return `<img class="${className}" src="/images/flagship/${photo.name}-640.webp" srcset="/images/flagship/${photo.name}-320.webp 320w, /images/flagship/${photo.name}-640.webp 640w, /images/flagship/${photo.name}-1280.webp 1280w" sizes="${sizes}" width="1280" height="960" alt="${escapeHtml(alt)}" loading="${loading}"${fetchPriority} decoding="async" />`
+  const wide = hasWidePhotos(vertical)
+    ? `, /images/flagship/${photo.name}-1280.webp 1280w`
+    : ''
+  return `<img class="${className}" src="/images/flagship/${photo.name}-640.webp" srcset="/images/flagship/${photo.name}-320.webp 320w, /images/flagship/${photo.name}-640.webp 640w${wide}" sizes="${sizes}" width="1280" height="960" alt="${escapeHtml(alt)}" loading="${loading}"${fetchPriority} decoding="async" />`
 }
 
 function escapeHtml(value: string): string {

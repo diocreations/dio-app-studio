@@ -38,6 +38,7 @@ import {
   type SiteStructure,
 } from './design'
 import { cleanLogoImage, sanitizeMenu } from './pricing'
+import { assessItem, isInventoryPage, pageRoleOf, sectionPayload } from './catalogue'
 import { themeFor } from './themes'
 import type {
   FeatureId,
@@ -96,6 +97,12 @@ export type ImportedSite = {
   email: string
   address: string
   hours: string
+  /** Where the published name was read. A host-derived name is a guess, and
+   *  discovery asks the owner rather than presenting it as the brand. */
+  nameSource?: 'structured-data' | 'metadata' | 'title' | 'host'
+  /** The page each contact detail was read from, so a published phone number
+   *  can say where it came from. */
+  contactEvidence?: { phone?: string; email?: string; address?: string; hours?: string }
   website: string
   /** The shop's currency, when one code is backed by the source. Empty when no
    *  signal was found, or when the signals disagree and the owner must choose. */
@@ -657,6 +664,9 @@ export function rankSitemapUrls(urls: URL[], origin: string, vertical?: Vertical
     if (SITEMAP_DETAIL_PATH.test(url.pathname)) score += 4
     if (PRODUCT_PATH.test(url.pathname)) score += 2
     if (AISLE_PATH.test(url.pathname)) score += 2
+    // A policy, blog, project case study or location page is not a shelf. It
+    // never reaches the queue, however product-like its URL or its page title.
+    if (vertical && !isInventoryPage(pageRoleOf({ url: url.toString(), vertical }))) continue
     const source = vertical ? TRADE_SOURCE[vertical] : undefined
     if (source?.prefer.test(url.pathname)) score += 3
     if (source?.avoid.test(url.pathname)) score -= 4
@@ -1233,6 +1243,42 @@ function hoursOf(business: Record<string, unknown>): string {
 /* Prices                                                              */
 /* ------------------------------------------------------------------ */
 
+/**
+ * The contact details a single page publishes, read the same way the entry page
+ * is read. A footer on the contact page is as much the business's own statement
+ * as the home page is, and a crawl that only reads the home page loses it.
+ */
+function contactFromPage(page: Page): { phone: string; email: string; address: string; hours: string } {
+  const business = page.nodes.find((node) => typeOf(node).some((type) => BUSINESS_TYPE.test(type))) ?? {}
+  const addressNode = (business.address ?? {}) as Record<string, unknown>
+  const structured = collapse(
+    [
+      textOf(addressNode, 'streetAddress'),
+      textOf(addressNode, 'addressLocality'),
+      textOf(addressNode, 'addressRegion'),
+      textOf(addressNode, 'postalCode'),
+    ]
+      .filter(Boolean)
+      .join(', '),
+    60,
+  )
+  const telHref = page.anchors.find((anchor) => anchor.href.toLowerCase().startsWith('tel:'))?.href.slice(4)
+  const mailHref = page.anchors
+    .find((anchor) => anchor.href.toLowerCase().startsWith('mailto:'))
+    ?.href.replace(/^mailto:/i, '')
+    .split('?')[0]
+  const phone = cleanPhone(textOf(business, 'telephone')) || cleanPhone(telHref ?? '') || cleanPhone(contactFrom(page.text, /\+\d[\d\s().-]{8,15}/))
+  const email = collapse(mailHref || contactFrom(page.text, /[\w.+-]+@[\w-]+\.[\w.]{2,}/), 80)
+  const address =
+    structured || collapse(/<address[^>]*>([\s\S]{3,200}?)<\/address>/i.exec(page.html)?.[1] ?? '', 60)
+  return {
+    phone: PLACEHOLDER_CONTACT.test(phone) ? '' : phone,
+    email: PLACEHOLDER_CONTACT.test(email) ? '' : email,
+    address: PLACEHOLDER_CONTACT.test(address) ? '' : address,
+    hours: hoursOf(business),
+  }
+}
+
 export function toCents(raw: string): number {
   if (!raw) return 0
   // One field can quote several options for the same line (“89.00 / 237.00”
@@ -1367,35 +1413,53 @@ export function cleanMenu(
 
   const cleaned = sections
     .map((section) => {
-      const hasPriced = section.items.some((item) => item.price > 0)
+      // A section the site itself labels as journal, policy or location holds
+      // words about the business, not things it sells. Its rows never reach the
+      // trade rules: the section is the evidence.
+      const sectionKind = sectionPayload(section.name, vertical)
+      const editorial =
+        sectionKind === 'article' || sectionKind === 'policy' || sectionKind === 'promotion'
       const items = section.items.flatMap((raw) => {
         // Decode first: “&rsaquo;” is markup, not part of a name.
-        const item = { ...raw, name: decode(raw.name).replace(/[\s›»>→]+$/, '').trim() }
+        const item = {
+          ...raw,
+          name: decode(raw.name)
+            // A product link often prefixes its accessible label with an
+            // instruction to the shopper. The product starts after it.
+            .replace(/^view details for\s+/i, '')
+            .replace(/[\s›»>→]+$/, '')
+            .trim(),
+        }
         if (!item.name) return []
-        // Anything still carrying a chevron or an encoded entity is markup that
-        // leaked into a name, never a product title.
-        if (/[›»→]|&[a-z#0-9]+;/i.test(item.name) || NAV_NAME.test(item.name)) {
-          dropped.push({ name: item.name, section: section.name, reason: 'navigation' })
+        if (editorial) {
+          dropped.push({ name: item.name, section: section.name, reason: `${sectionKind}-section` })
           return []
         }
-        // A printed section label is not a dish. Its name is shouted, it carries
-        // no price, and the menu around it proves prices exist — the card parser
-        // can even have mistaken the next dish for its description.
-        if (
-          item.price === 0 &&
-          item.name.length <= 32 &&
-          SECTION_HEADING.test(item.name) &&
-          (hasPriced || pricedAnywhere)
-        ) {
-          dropped.push({ name: item.name, section: section.name, reason: 'section-heading' })
-          return []
-        }
-        if (!item.desc && OPTION_LABEL.test(item.name)) {
-          dropped.push({ name: item.name, section: section.name, reason: 'option-label' })
-          return []
-        }
-        if (vertical === 'restaurant' && item.price === 0 && !item.desc) {
-          dropped.push({ name: item.name, section: section.name, reason: 'no-price-or-description' })
+        // The trade decides what kind of entry this can be and what evidence it
+        // needs. Navigation, policies, journal captions and names with no
+        // commercial substance are refused here, once, for every trade.
+        const verdict = assessItem({
+          name: item.name,
+          desc: item.desc,
+          price: item.price,
+          image: Boolean(item.image || item.media),
+          variants: item.variants?.length ?? 0,
+          meta: item.meta,
+          capacity: item.capacity,
+          section: section.name,
+          vertical,
+          source: item.sourceUrl,
+          priceVerified: item.priceEvidence?.validated,
+          fromRecord: item.sourceMethod === 'structured-data' || item.sourceMethod === 'embedded-json',
+        })
+        if (!verdict.accept) {
+          dropped.push({
+            name: item.name,
+            section: section.name,
+            reason: verdict.reason === 'section-heading' && (section.items.some((one) => one.price > 0) || pricedAnywhere)
+              ? 'section-heading'
+              : verdict.reason,
+          })
           return []
         }
         let price = item.price
@@ -1519,6 +1583,7 @@ function itemFromNode(node: Record<string, unknown>, source = ''): Item | null {
     name: collapse(name, 60),
     desc: collapse(textOf(node, 'description'), 90),
     price,
+    ...(source ? { sourceUrl: source, sourceMethod: 'structured-data' as const } : {}),
     ...(evidence ? { priceEvidence: evidence } : {}),
     ...(image ? { image: toEvidence(image, 'structured-data', collapse(name, 60)) } : {}),
   }
@@ -1595,6 +1660,22 @@ const CARD_PART =
   /price|rating|title|name|desc|image|thumb|badge|count|meta|sort|filter|pagination|wrapper|container|grid|list|toolbar|nav/i
 const CARD_SHAPE = /product[-_ ]?(card|pod|item|tile|box)/i
 
+/** The photograph inside one product card, tied to the card whose name and
+ *  price were just read. Page furniture is still refused by the image gate. */
+function imageInCard(chunk: string, base: string | undefined, name: string): Item['image'] | undefined {
+  for (const tag of chunk.match(/<img\b[^>]*>/gi) ?? []) {
+    const raw =
+      attribute(tag, 'src') ||
+      attribute(tag, 'data-src') ||
+      attribute(tag, 'data-lazy-src') ||
+      attribute(tag, 'data-original')
+    const candidate = checkImageCandidate(raw, base)
+    if (candidate.ok)
+      return toEvidence(candidate.url, 'visible-markup', collapse(attribute(tag, 'alt'), 80) || name)
+  }
+  return undefined
+}
+
 /** Products from plain markup: cards whose class says “product”, with the name
  *  and price read out of the card itself. */
 export function cardProducts(html: string, source = ''): Item[] {
@@ -1621,10 +1702,12 @@ export function cardProducts(html: string, source = ''): Item[] {
     if (name.length < 2) continue
     if (out.some((item) => item.name.toLowerCase() === name.toLowerCase())) continue
     const cents = toCents(price)
+    const image = imageInCard(chunk, source || undefined, name)
     out.push({
       name,
       desc: '',
       price: cents,
+      ...(source ? { sourceUrl: source, sourceMethod: 'visible-text' as const } : {}),
       ...(cents > 0
         ? {
             priceEvidence: {
@@ -1637,6 +1720,7 @@ export function cardProducts(html: string, source = ''): Item[] {
             },
           }
         : {}),
+      ...(image ? { image } : {}),
     })
     if (out.length >= 20) break
   }
@@ -1701,10 +1785,12 @@ export function linkedProducts(html: string, base: URL): Item[] {
     // The price may sit inside the link or beside it, inside this card only.
     const priced = card.match(PRICE_PATTERN)?.[0] ?? ''
     const cents = toCents(priced)
+    const image = imageInCard(card, source, name)
     out.push({
       name,
       desc: '',
       price: cents,
+      ...(source ? { sourceUrl: source, sourceMethod: 'visible-text' as const } : {}),
       ...(cents > 0
         ? {
             priceEvidence: {
@@ -1716,6 +1802,7 @@ export function linkedProducts(html: string, base: URL): Item[] {
             },
           }
         : {}),
+      ...(image ? { image } : {}),
     })
     if (out.length >= 20) break
   }
@@ -1727,7 +1814,13 @@ export function linkedProducts(html: string, base: URL): Item[] {
  *  to call it: the trade's word, or the listing page's own heading. */
 type Catalogue = { sections: MenuSection[]; synthetic: boolean }
 
-function catalogueOf(page: Page): Catalogue {
+function catalogueOf(page: Page, vertical?: VerticalId): Catalogue {
+  // A policy, article or location page has headings and sometimes prices. It
+  // is not a catalogue, and reading one as a catalogue is how a cookie notice
+  // becomes a product.
+  if (vertical && !isInventoryPage(pageRoleOf({ url: page.url.toString(), title: page.title, vertical }))) {
+    return { sections: [], synthetic: false }
+  }
   const source = page.url.toString()
   const fromData = sectionsFromNodes(page.nodes, source)
   if (fromData.length) return { sections: fromData, synthetic: false }
@@ -1934,12 +2027,12 @@ const CATEGORY_NOUNS: [RegExp, string][] = [
   [/\b(?:florist|flowers?|bouquets?)\b/i, 'Florist'],
   [/\b(?:bakery|baker|sourdough|pastries)\b/i, 'Bakery'],
   [/\b(?:roastery|coffee beans|espresso)\b/i, 'Coffee roaster'],
-  [/\b(?:wine|cellar|vineyard)\b/i, 'Wine shop'],
   [/\b(?:bikes?|cycling|bicycle)\b/i, 'Bike shop'],
   [/\b(?:plants?|houseplants?|garden centre)\b/i, 'Plant shop'],
   [/\b(?:furniture|sofas?|mattress)\b/i, 'Furniture shop'],
   [/\b(?:toys?|board games?|puzzles?)\b/i, 'Toy shop'],
   [/\b(?:jewellery|jewelry|necklaces?|earrings?)\b/i, 'Jewellery shop'],
+  [/\b(?:wine shop|wine store|wines?|cellar|vineyard)\b/i, 'Wine shop'],
   [/\b(?:clothing|apparel|dresses|coats|knitwear)\b/i, 'Clothing shop'],
   [/\b(?:shoes|sneakers|boots|footwear)\b/i, 'Shoe shop'],
   [/\b(?:skincare|cosmetics|make ?up|fragrance)\b/i, 'Beauty shop'],
@@ -1965,9 +2058,23 @@ function categoryOf(
     }
 
   if (vertical === 'shop') {
-    const haystack = `${page.meta['og:title'] ?? ''} ${page.meta['og:description'] ?? ''} ${page.meta.description ?? ''} ${page.title} ${collapse(page.text, 6000)}`
+    // Read the shop's own identity before its product copy. A saree shop can
+    // describe a colour as "wine" without becoming a wine shop; the title,
+    // description and navigation are the business speaking about itself.
+    const heading = /<h1[^>]*>([\s\S]{1,220}?)<\/h1>/i.exec(page.html)?.[1] ?? ''
+    // Category and collection links are the shop's own shelves. Product-card
+    // anchors are not: a saree called "floral" must not turn the shop into a
+    // florist any more than a wine-coloured saree makes it a wine shop.
+    const shelves = page.anchors
+      .filter((anchor) => /\/(?:category|categories|collections?|shop|products)(?:\/|$)/i.test(anchor.href))
+      .map((anchor) => anchor.text)
+      .join(' ')
+    const focus = `${page.meta['og:title'] ?? ''} ${page.meta['og:description'] ?? ''} ${page.meta.description ?? ''} ${page.title} ${decode(heading.replace(/<[^>]+>/g, ' '))} ${shelves}`
     for (const [pattern, label] of CATEGORY_NOUNS)
-      if (pattern.test(haystack)) return { category: label, basis: 'the words on the page' }
+      if (pattern.test(focus)) return { category: label, basis: 'the words the business uses about itself' }
+    const body = collapse(page.text, 6000)
+    for (const [pattern, label] of CATEGORY_NOUNS)
+      if (pattern.test(body)) return { category: label, basis: 'the words on the page' }
   }
 
   // A guess is not a name. Better an empty field, and the honest note, than an
@@ -2033,14 +2140,18 @@ function extractFromPage(page: Page): ImportedSite {
   const catalogue = catalogueOf(page)
   const productCount = catalogue.sections.reduce((total, section) => total + section.items.length, 0)
 
-  const name =
-    [
-      cleanName(textOf(business, 'name')),
-      cleanName(meta['og:site_name'] ?? ''),
-      cleanName(meta['og:title'] ?? ''),
-      cleanName(meta['twitter:title'] ?? ''),
-      cleanName(page.title),
-    ].find((candidate) => candidate.length >= 2) ?? nameFromHost(page.url.hostname)
+  // Keep the source's own casing. A brand written “YARMOUTH OILSKINS” or
+  // “yarmouthoilskins” is quoted as it is, never title-cased into something the
+  // business does not call itself.
+  const named = [
+    { value: cleanName(textOf(business, 'name')), source: 'structured-data' as const },
+    { value: cleanName(meta['og:site_name'] ?? ''), source: 'metadata' as const },
+    { value: cleanName(meta['og:title'] ?? ''), source: 'metadata' as const },
+    { value: cleanName(meta['twitter:title'] ?? ''), source: 'metadata' as const },
+    { value: cleanName(page.title), source: 'title' as const },
+  ].find((candidate) => candidate.value.length >= 2)
+  const name = named?.value ?? nameFromHost(page.url.hostname)
+  const nameSource = named?.source ?? 'host'
 
   const description =
     textOf(business, 'description') ||
@@ -2109,6 +2220,7 @@ function extractFromPage(page: Page): ImportedSite {
 
   return {
     name,
+    nameSource,
     tagline: collapse(textOf(business, 'slogan') || firstSentence(description, 90), 90),
     story: collapse(description, 240),
     vertical,
@@ -2326,6 +2438,8 @@ function productFromPage(page: Page): Item | null {
     name: collapse(name, 60),
     desc: collapse(page.meta.description ?? page.meta['og:description'] ?? '', 90),
     price,
+    sourceUrl: source,
+    sourceMethod: evidence?.method === 'meta' ? ('metadata' as const) : ('visible-text' as const),
     ...(evidence ? { priceEvidence: evidence } : {}),
     ...(image ? { image } : {}),
   }
@@ -2393,7 +2507,12 @@ type Crawl = {
 /** A product page turned into a catalogue section, named the way the shop
  *  names that aisle (breadcrumb), else as the business's own category. */
 function sectionFromProductPage(page: Page, site: ImportedSite): MenuSection | null {
-  const read = catalogueOf(page)
+  const role = pageRoleOf({ url: page.url.toString(), title: page.title, vertical: site.vertical })
+  // A sitemap lists every page, including policies, journals and project case
+  // studies. Only a page that can actually hold this trade's inventory is read
+  // as a catalogue page.
+  if (!isInventoryPage(role)) return null
+  const read = catalogueOf(page, site.vertical)
   const items = read.sections.flatMap((section) => section.items)
   if (!items.length) {
     const single = productFromPage(page)
@@ -2517,15 +2636,40 @@ async function shopifyProducts(
         // A shop can list more than two dozen options on one product (the live
         // shop has one with 26); the cap is only a guard against a malformed
         // feed, high enough that no real option list is cut.
+        // Shopify's option matrix is the authority on which combinations exist.
+        // The variant title is their "Small / Navy" spelling of one combination;
+        // splitting it back into the named groups keeps every valid pair (and
+        // every invalid one) explicit instead of inventing a cross-product.
+        const optionGroups = Array.isArray(product.options)
+          ? (product.options as Record<string, unknown>[]).slice(0, 8).flatMap((option) => {
+              const optionName = collapse(String(option?.name ?? ''), 24)
+              const values = Array.isArray(option?.values)
+                ? (option.values as unknown[]).map((value) => collapse(String(value ?? ''), 30)).filter(Boolean).slice(0, 20)
+                : []
+              return optionName && values.length ? [{ name: optionName, options: values }] : []
+            })
+          : []
+        const splitValues = (name: string) => {
+          if (!optionGroups.length) return undefined
+          const parts = name.split(' / ').map((part) => part.trim())
+          if (parts.length !== optionGroups.length) return undefined
+          return Object.fromEntries(optionGroups.map((group, index) => [group.name, parts[index]]))
+        }
         const variants = rawVariants
           .slice(0, 200)
-          .map((variant) => ({
-            id: variant.id == null ? '' : String(variant.id).slice(0, 120),
-            name: collapse(String(variant.title ?? ''), 40),
-            price: toCents(String(variant.price ?? '')),
-            currency,
-            raw: String(variant.price ?? ''),
-          }))
+          .map((variant) => {
+            const name = collapse(String(variant.title ?? ''), 40)
+            const values = splitValues(name)
+            return {
+              id: variant.id == null ? '' : String(variant.id).slice(0, 120),
+              name,
+              price: toCents(String(variant.price ?? '')),
+              currency,
+              raw: String(variant.price ?? ''),
+              ...(values ? { values } : {}),
+              ...(variant.available === false ? { available: false } : {}),
+            }
+          })
           .filter((variant) => variant.price > 0 && variant.name)
         // The first cheapest option wins a tie: exactly one variant is the one
         // the published price came from, even when two share that price.
@@ -2551,6 +2695,10 @@ async function shopifyProducts(
           name,
           desc: collapse(stripMarkup(String(product.body_html ?? '')), 90),
           price: cheapest?.price ?? 0,
+          // The product feed is one endpoint, but each record carries its own
+          // identity; the provenance names the feed and the product it priced.
+          sourceUrl: `${origin.origin}/products.json`,
+          sourceMethod: 'embedded-json' as const,
           ...(cheapest
             ? {
                 priceEvidence: {
@@ -2568,6 +2716,7 @@ async function shopifyProducts(
           // Every option is kept, including the only option of a simple
           // product: its Shopify ID is the identity the order and the shop
           // share, and dropping it loses that for most of the catalogue.
+          ...(optionGroups.length ? { optionGroups } : {}),
           ...(variants.length
             ? {
                 variants: variants.map((variant, index) => ({
@@ -2575,7 +2724,9 @@ async function shopifyProducts(
                   name: variant.name,
                   price: variant.price,
                   currency: variant.currency,
+                  ...(variant.values ? { values: variant.values } : {}),
                   ...(index === cheapestIndex ? { selected: true } : {}),
+                  ...(variant.available === false ? { available: false } : {}),
                 })),
               }
             : {}),
@@ -2748,6 +2899,28 @@ async function expandCatalogue(options: {
         if (resolved.evidence) currencyEvidence = resolved.evidence
       }
       if (CART_SIGNAL.test(page.html)) cartSignal = true
+      // Contact details are usually in a footer, and the home page is not the
+      // only footer in a site. Read them from every page opened, but only fill
+      // a field the crawl has not already established.
+      const contact = contactFromPage(page)
+      const evidence = site.contactEvidence ?? {}
+      if (!site.phone && contact.phone) {
+        site.phone = contact.phone
+        evidence.phone = url.toString()
+      }
+      if (!site.email && contact.email) {
+        site.email = contact.email
+        evidence.email = url.toString()
+      }
+      if (!site.address && contact.address) {
+        site.address = contact.address
+        evidence.address = url.toString()
+      }
+      if (!site.hours && contact.hours) {
+        site.hours = contact.hours
+        evidence.hours = url.toString()
+      }
+      if (Object.keys(evidence).length) site.contactEvidence = evidence
       read.push(url.pathname)
       return page
     } catch (error) {
@@ -2767,7 +2940,11 @@ async function expandCatalogue(options: {
     }
   }
 
-  const aisles = aisleLinks(entry, 40)
+  const aisles = aisleLinks(entry, 40).filter((aisle) =>
+    isInventoryPage(
+      pageRoleOf({ url: aisle.url.toString(), title: aisle.text, vertical: site.vertical }),
+    ),
+  )
   // A trade's own pages first. A restaurant's gift shop is not its menu, and a
   // hotel's shop is not its rooms: the crawl has to prefer the surface that the
   // business actually sells on, not the one with the most product markup.
@@ -2802,7 +2979,7 @@ async function expandCatalogue(options: {
     const page = await open(url)
     if (!page) continue
 
-    const read = catalogueOf(page)
+    const read = catalogueOf(page, site.vertical)
     if (read.sections.length) {
       const named = read.synthetic
         ? [{ name: listingName(page), items: read.sections[0].items }]
@@ -3179,6 +3356,14 @@ export function sanitizeImported(input: unknown): Partial<ImportedSite> | undefi
 
   return {
     name: str(source.name, 60),
+    ...(['structured-data', 'metadata', 'title', 'host'] as const).includes(
+      source.nameSource as 'structured-data',
+    )
+      ? { nameSource: source.nameSource as ImportedSite['nameSource'] }
+      : {},
+    ...(source.contactEvidence && typeof source.contactEvidence === 'object'
+      ? { contactEvidence: source.contactEvidence as NonNullable<ImportedSite['contactEvidence']> }
+      : {}),
     category: str(source.category, 40),
     ...(design ? { design } : {}),
     ...(pwa ? { pwa } : {}),
@@ -3217,7 +3402,10 @@ export function sanitizeImported(input: unknown): Partial<ImportedSite> | undefi
           })
           .filter((entry) => entry.url)
       : [],
-    menu: sanitizeMenu(source.menu),
+    menu: sanitizeMenu(
+      source.menu,
+      new Set(sanitizeDecisions(source.priceDecisions).map((decision) => decision.name.toLowerCase())),
+    ),
     priceConflicts: sanitizeConflicts(source.priceConflicts),
     priceDecisions: sanitizeDecisions(source.priceDecisions),
     features: Array.isArray(source.features)

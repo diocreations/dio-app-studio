@@ -63,6 +63,6 @@ describe('the marketplace catalogue', () => {
   test('a priced item is added to the order, not booked', () => {
     expect(spec.menu[0].items[0].price).toBeGreaterThan(0)
     expect(html).toContain("DATA.ordering && item.price > 0")
-    expect(html).toContain('Add to order')
+    expect(html).toContain('Add to cart')
   })
 })

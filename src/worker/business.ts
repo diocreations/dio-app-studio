@@ -70,6 +70,8 @@ export type Booking = {
   checkOut: string
   /** Derived from check-in and check-out, never typed by the customer. */
   nights: number
+  /** The selected room's saved nightly rate, in the build's minor unit. */
+  nightlyRate: number
   /** The room rate times the nights, in the build's minor unit. */
   total: number
   slot: string
@@ -205,6 +207,7 @@ type BookingRow = {
   date: string
   check_out: string
   nights: number
+  nightly_rate: number
   total: number
   slot: string
   party: number
@@ -329,6 +332,10 @@ function publicOrder(row: OrderRow, items: ItemRow[]): Order {
 }
 
 export async function createOrder(db: D1Database, project: Project, input: OrderInput): Promise<Order> {
+  // A room is a dated request, never a basket line. Keep the order route
+  // closed for hotels even if an imported brief carries a stale ordering flag.
+  if (project.spec.vertical === 'hotel')
+    throw new BusinessError('ordering_off', 'Rooms are requested, not ordered.', 422)
   if (!isEnabled(project, 'ordering')) throw new BusinessError('ordering_off', 'This app does not take orders.', 422)
   const items = Array.isArray(input.items) ? input.items : []
   if (!items.length) throw new BusinessError('items_required', 'Add something to the order first.', 422)
@@ -394,11 +401,15 @@ export async function createOrder(db: D1Database, project: Project, input: Order
     }
   }
 
-  const fulfilmentOptions = verticalFor(project.spec.vertical).vocab.fulfilment
+  const fulfilmentOptions = project.spec.fulfilment?.options?.length
+    ? project.spec.fulfilment.options
+    : verticalFor(project.spec.vertical).vocab.fulfilment
   const fulfilment = text(input.fulfilment, 30) || fulfilmentOptions[0] || 'Pickup'
   if (!fulfilmentOptions.includes(fulfilment))
     throw new BusinessError('fulfilment_invalid', 'Choose how you would like to receive this order.', 422)
-  const deliveryFee = fulfilment === 'Delivery' ? 299 : 0
+  // Only a rate the business itself set is charged. The platform never adds a
+  // delivery fee to an order from a business that did not state one.
+  const deliveryFee = fulfilment === 'Delivery' ? Math.max(0, project.spec.fulfilment?.deliveryFee ?? 0) : 0
   const subtotal = parsed.reduce((sum, line) => sum + line.price * line.qty, 0)
   const total = subtotal + deliveryFee
   const customer = await upsertCustomer(db, project.id, input.customer)
@@ -513,7 +524,8 @@ export async function createBooking(db: D1Database, project: Project, input: Boo
   const today = Date.now() - 24 * 60 * 60 * 1000
   if (day < today || day > Date.now() + 120 * 24 * 60 * 60 * 1000)
     throw new BusinessError('date_invalid', 'Choose a day in the next four months.', 422)
-  const slot = text(input.slot, 20)
+  const hotel = project.spec.vertical === 'hotel'
+  const slot = hotel ? '' : text(input.slot, 20)
   const configured = verticalFor(project.spec.vertical).vocab.slots
   if (slot && !configured.includes(slot) && !/^\d{1,2}:\d{2}$/.test(slot))
     throw new BusinessError('slot_invalid', 'Choose one of the available times.', 422)
@@ -525,8 +537,14 @@ export async function createBooking(db: D1Database, project: Project, input: Boo
   const serviceItem = service
     ? project.spec.menu.flatMap((section) => section.items).find((item) => item.name === service)
     : undefined
+  if (hotel && !service)
+    throw new BusinessError('room_required', 'Choose a room before requesting a stay.', 422)
   if (service && !serviceItem)
     throw new BusinessError('service_unknown', 'Choose a service from the catalogue.', 422)
+  // A hotel booking is a stay, not a service appointment. The selected room
+  // must be a saved room rate; extras and invented names cannot become a stay.
+  if (hotel && serviceItem && (!(serviceItem.price > 0) || !/night/i.test(serviceItem.meta ?? '')))
+    throw new BusinessError('room_unknown', 'Choose a room with a nightly rate.', 422)
   // Capacity is enforced only when the saved room record states it. A room
   // without a stated capacity keeps the general 1–20 request limit rather
   // than inheriting a number the business never published.
@@ -543,9 +561,11 @@ export async function createBooking(db: D1Database, project: Project, input: Boo
   // cannot name its own price or a stay that ends before it starts.
   let checkOut = ''
   let nights = 0
+  let nightlyRate = 0
   let total = 0
-  if (project.spec.vertical === 'hotel' && text(input.checkOut, 10)) {
+  if (hotel) {
     checkOut = text(input.checkOut, 10)
+    if (!checkOut) throw new BusinessError('check_out_required', 'Choose a check-out day.', 422)
     if (!/^\d{4}-\d{2}-\d{2}$/.test(checkOut) || Number.isNaN(Date.parse(checkOut + 'T12:00:00Z')))
       throw new BusinessError('date_invalid', 'Choose a valid check-out day.', 422)
     const out = Date.parse(checkOut + 'T12:00:00Z')
@@ -554,8 +574,9 @@ export async function createBooking(db: D1Database, project: Project, input: Boo
     nights = Math.round((out - day) / (24 * 60 * 60 * 1000))
     if (nights < 1) throw new BusinessError('date_invalid', 'Check-out must be after check-in.', 422)
     if (nights > 28) throw new BusinessError('date_invalid', 'Stays are limited to 28 nights.', 422)
-    if (serviceItem && serviceItem.price > 0 && /night/i.test(serviceItem.meta ?? ''))
-      total = serviceItem.price * nights
+    nightlyRate = serviceItem?.price ?? 0
+    total = nightlyRate * nights
+    if (!(total > 0)) throw new BusinessError('room_rate_required', 'That room has no nightly rate.', 422)
   }
   const customer = await upsertCustomer(db, project.id, input.customer)
   const now = new Date().toISOString()
@@ -566,6 +587,7 @@ export async function createBooking(db: D1Database, project: Project, input: Boo
     date,
     check_out: checkOut,
     nights,
+    nightly_rate: nightlyRate,
     total,
     slot,
     party,
@@ -581,8 +603,8 @@ export async function createBooking(db: D1Database, project: Project, input: Boo
   }
   await db
     .prepare(
-      `INSERT INTO bookings (id, project_id, customer_id, number, status, date, check_out, nights, total, slot, party, service, staff, note, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO bookings (id, project_id, customer_id, number, status, date, check_out, nights, nightly_rate, total, slot, party, service, staff, note, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     .bind(
       booking.id,
@@ -593,6 +615,7 @@ export async function createBooking(db: D1Database, project: Project, input: Boo
       booking.date,
       booking.check_out,
       booking.nights,
+      booking.nightly_rate,
       booking.total,
       booking.slot,
       booking.party,
@@ -621,6 +644,7 @@ export async function createBooking(db: D1Database, project: Project, input: Boo
     date,
     checkOut,
     nights,
+    nightlyRate,
     total,
     slot,
     party,
@@ -651,6 +675,7 @@ export async function getBooking(db: D1Database, projectId: string, id: string):
     date: row.date,
     checkOut: row.check_out ?? '',
     nights: Number(row.nights ?? 0),
+    nightlyRate: Number(row.nightly_rate ?? 0),
     total: Number(row.total ?? 0),
     slot: row.slot,
     party: Number(row.party),
@@ -821,6 +846,7 @@ export async function dashboardData(db: D1Database, project: Project): Promise<D
     date: row.date,
     checkOut: row.check_out ?? '',
     nights: Number(row.nights ?? 0),
+    nightlyRate: Number(row.nightly_rate ?? 0),
     total: Number(row.total ?? 0),
     slot: row.slot,
     party: Number(row.party),

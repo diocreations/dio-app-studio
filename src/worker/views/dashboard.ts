@@ -168,7 +168,7 @@ export function dashboardPage(options: {
         .map(
           (booking) => `<article class="record">
         <div class="record-head">
-          <div><b>${esc(booking.date)}${booking.checkOut ? ' → ' + esc(booking.checkOut) : ' ' + esc(booking.slot)}</b><span>#${esc(booking.number)} · ${partyCount(booking.party, project.spec.vertical)}${booking.nights ? ' · ' + booking.nights + (booking.nights === 1 ? ' night' : ' nights') : ''}${booking.total ? ' · ' + money(booking.total, symbol) : ''}</span></div>
+          <div><b>${esc(booking.date)}${booking.checkOut ? ' → ' + esc(booking.checkOut) : ' ' + esc(booking.slot)}</b><span>#${esc(booking.number)} · ${partyCount(booking.party, project.spec.vertical)}${booking.nights ? ' · ' + booking.nights + (booking.nights === 1 ? ' night' : ' nights') : ''}${booking.nightlyRate ? ' · ' + money(booking.nightlyRate, symbol) + ' a night' : ''}${booking.total ? ' · ' + money(booking.total, symbol) : ''}</span></div>
           ${pill(booking.status)}
         </div>
         <div class="record-body">
@@ -603,12 +603,16 @@ td b { font-weight: 600; }
       </div>
     </section>` : ''}
 
-    ${modules.settings ? `<section class="tab" id="tab-settings"><div class="panel settings"><h2>Application settings</h2>${hasSample ? `<div class="sample-box" id="sampleBox"><b>Sample content remains</b><p>${esc(sampleLabels.join(' · '))}. Save the catalogue or these details to mark them as yours. Removing samples clears only the groups still marked as examples — your saved catalogue, photos and layout stay.</p><div class="sample-actions"><button type="button" id="clearSample">Remove sample content</button><span id="sampleStatus"></span></div></div>` : ''}<form id="settingsForm"><div class="form-grid"><div class="field"><label for="setName">Business name</label><input id="setName" name="name" maxlength="60" value="${esc(project.spec.name)}" /></div><div class="field"><label for="setCategory">Category</label><input id="setCategory" name="category" maxlength="40" value="${esc(project.spec.category ?? '')}" /></div></div><div class="field"><label for="setTagline">Tagline</label><input id="setTagline" name="tagline" maxlength="90" value="${esc(project.spec.tagline)}" /></div><div class="field"><input type="hidden" name="indexable" value="off" /><label for="setIndexable"><input id="setIndexable" name="indexable" type="checkbox" value="on"${project.spec.indexable ? ' checked' : ''} /> Allow search engines to index the customer app</label><span class="note">Off by default. The app and its previews stay out of search results until you deliberately opt in.</span></div><div class="field"><label for="setAccent">Brand colour</label><input id="setAccent" name="accent" type="color" value="${esc(project.accent)}" style="width:72px;height:36px;padding:3px" /></div><div class="form-grid"><div class="field"><label for="setPhone">Phone</label><input id="setPhone" name="phone" maxlength="24" value="${esc(project.spec.phone)}" /></div><div class="field"><label for="setEmail">Email</label><input id="setEmail" name="email" maxlength="80" value="${esc(project.spec.email ?? '')}" /></div></div><div class="field"><label for="setAddress">Address</label><input id="setAddress" name="address" maxlength="60" value="${esc(project.spec.address)}" /></div><div class="field"><label for="setHours">Opening hours</label><input id="setHours" name="hours" maxlength="90" value="${esc(project.spec.hours)}" /></div><div class="field"><label for="setStaff">Team members (comma separated)</label><input id="setStaff" name="staff" maxlength="500" value="${esc((project.spec.staff ?? []).join(', '))}" placeholder="e.g. Maya, Sam, Priya" /><span class="note">Named team members become an optional choice on service bookings.</span></div><div class="field"><label for="setTeam">Profile cards</label><textarea id="setTeam" name="team" rows="4" maxlength="2400" placeholder="Dr Amara Osei | Principal dentist | GDC 84210">${esc((project.spec.team ?? []).map((person) => [person.name, person.role, person.credential].filter(Boolean).join(' | ')).join('\n'))}</textarea><span class="note">One person per line: name | role | credential. These drive the doctor, coach and studio profile cards.</span></div><div class="field"><label for="setStory">About</label><textarea id="setStory" name="story" maxlength="600">${esc(project.spec.story)}</textarea></div><div class="savebar"><button class="btn primary" type="submit">Save settings</button><span id="settingsStatus"></span></div></form><p class="note">The visual editor remains the place for layout, photography and design direction.</p></div></section>` : ''}
+    ${modules.settings ? `<section class="tab" id="tab-settings"><div class="panel settings"><h2>Application settings</h2>${hasSample ? `<div class="sample-box" id="sampleBox"><b>Sample content remains</b><p>${esc(sampleLabels.join(' · '))}. Save the catalogue or these details to mark them as yours. Removing samples clears only the groups still marked as examples — your saved catalogue, photos and layout stay.</p><div class="sample-actions"><button type="button" id="clearSample">Remove sample content</button><span id="sampleStatus"></span></div></div>` : ''}<form id="settingsForm"><div class="form-grid"><div class="field"><label for="setName">Business name</label><input id="setName" name="name" maxlength="60" value="${esc(project.spec.name)}" /></div><div class="field"><label for="setCategory">Category</label><input id="setCategory" name="category" maxlength="40" value="${esc(project.spec.category ?? '')}" /></div></div><div class="field"><label for="setTagline">Tagline</label><input id="setTagline" name="tagline" maxlength="90" value="${esc(project.spec.tagline)}" /></div><div class="field"><input type="hidden" name="indexable" value="off" /><label for="setIndexable"><input id="setIndexable" name="indexable" type="checkbox" value="on"${project.spec.indexable ? ' checked' : ''} /> Allow search engines to index the customer app</label><span class="note">Off by default. The app and its previews stay out of search results until you deliberately opt in.</span></div><div class="field"><label for="setAccent">Brand colour</label><input id="setAccent" name="accent" type="color" value="${esc(project.accent)}" style="width:72px;height:36px;padding:3px" /></div><div class="form-grid"><div class="field"><label for="setPhone">Phone</label><input id="setPhone" name="phone" maxlength="24" value="${esc(project.spec.phone)}" /></div><div class="field"><label for="setEmail">Email</label><input id="setEmail" name="email" maxlength="80" value="${esc(project.spec.email ?? '')}" /></div></div><div class="field"><label for="setAddress">Address</label><input id="setAddress" name="address" maxlength="60" value="${esc(project.spec.address)}" /></div><div class="field"><label for="setHours">Opening hours</label><input id="setHours" name="hours" maxlength="90" value="${esc(project.spec.hours)}" /></div><div class="field"><label for="setStaff">Team members (comma separated)</label><input id="setStaff" name="staff" maxlength="500" value="${esc((project.spec.staff ?? []).join(', '))}" placeholder="e.g. Maya, Sam, Priya" /><span class="note">Named team members become an optional choice on service bookings.</span></div><div class="field"><label for="setTeam">Profile cards</label><textarea id="setTeam" name="team" rows="4" maxlength="2400" placeholder="Dr Amara Osei | Principal dentist | GDC 84210">${esc((project.spec.team ?? []).map((person) => [person.name, person.role, person.credential].filter(Boolean).join(' | ')).join('\n'))}</textarea><span class="note">One person per line: name | role | credential. These drive the doctor, coach and studio profile cards.</span></div><div class="field"><label for="setStory">About</label><textarea id="setStory" name="story" maxlength="600">${esc(project.spec.story)}</textarea></div><h3>Customer action labels</h3><p class="note">These change the words on buttons only. Each button keeps the workflow it already runs: catalogue, cart, booking or proposal.</p><div class="form-grid"><div class="field"><label for="setActionHome">Home action</label><input id="setActionHome" name="actionHome" maxlength="28" value="${esc(project.spec.actions?.home ?? '')}" /></div><div class="field"><label for="setActionView">Item action</label><input id="setActionView" name="actionView" maxlength="28" value="${esc(project.spec.actions?.view ?? '')}" /></div></div><div class="form-grid"><div class="field"><label for="setActionAdd">Add action</label><input id="setActionAdd" name="actionAdd" maxlength="28" value="${esc(project.spec.actions?.add ?? '')}" /></div><div class="field"><label for="setActionBook">Booking action</label><input id="setActionBook" name="actionBook" maxlength="28" value="${esc(project.spec.actions?.book ?? '')}" /></div></div><div class="field"><label for="setActionQuote">Proposal or enquiry action</label><input id="setActionQuote" name="actionQuote" maxlength="28" value="${esc(project.spec.actions?.quote ?? '')}" /></div><div class="savebar"><button class="btn primary" type="submit">Save settings</button><span id="settingsStatus"></span></div></form><p class="note">The visual editor remains the place for layout, photography and design direction.</p></div></section>` : ''}
   </main>
 </div>
 <script>
 const TOKEN = ${JSON.stringify(token)};
 const IMPORTED_FROM = ${JSON.stringify(project.spec.importSummary?.source ?? '')};
+let VERSION = ${JSON.stringify(project.version)};
+let UPDATED_AT = ${JSON.stringify(project.updatedAt)};
+let IMPORT_VERSION = VERSION;
+let IMPORT_UPDATED_AT = UPDATED_AT;
 const CATALOG = ${catalogJson};
 const OFFERS = ${offersJson};
 const $ = (id) => document.getElementById(id);
@@ -695,9 +699,11 @@ async function saveCatalog(button) {
   const id = button.closest('#tab-offers') ? 'offerStatus' : button.closest('#tab-categories') ? 'categoryStatus' : 'catalogStatus';
   const holder = $(id);
   if (holder) holder.textContent = 'Saving…';
-  const response = await fetch('/api/projects/' + TOKEN + '/dashboard/catalog', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ menu: CATALOG, offers: OFFERS }) });
+  const response = await fetch('/api/projects/' + TOKEN + '/dashboard/catalog', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ menu: CATALOG, offers: OFFERS, version: VERSION, updatedAt: UPDATED_AT }) });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) { if (holder) holder.textContent = (body.error && body.error.message) || 'Could not save.'; return; }
+  if (body.updatedAt) UPDATED_AT = body.updatedAt;
+  if (Number.isInteger(body.version)) VERSION = body.version;
   CATALOG.splice(0, CATALOG.length, ...body.menu); OFFERS.splice(0, OFFERS.length, ...body.offers);
   renderProducts(); renderCategories(); renderOffers();
   if (holder) holder.textContent = 'Saved. The app now uses this catalogue.';
@@ -735,39 +741,56 @@ if (checkImport) checkImport.addEventListener('click', async () => {
     status.textContent = (body.error && body.error.message) || 'The site could not be read.';
     return;
   }
+  IMPORT_VERSION = Number.isInteger(body.version) ? body.version : VERSION;
+  IMPORT_UPDATED_AT = typeof body.updatedAt === 'string' ? body.updatedAt : UPDATED_AT;
   const plan = body.plan || {};
   const added = plan.added || [];
   const removed = plan.removed || [];
   const changed = plan.changed || [];
-  status.textContent = added.length + ' new, ' + changed.length + ' changed, ' + removed.length + ' gone, ' + (plan.unchanged || 0) + ' unchanged.';
-  if (!added.length && !removed.length && !changed.length) {
+  const conflicts = plan.conflicts || [];
+  status.textContent = added.length + ' new, ' + changed.length + ' changed, ' + removed.length + ' gone, ' + conflicts.length + ' need your decision, ' + (plan.unchanged || 0) + ' unchanged.';
+  if (!added.length && !removed.length && !changed.length && !conflicts.length) {
     host.innerHTML = '<p class="note">Nothing has changed on the site.</p>';
     return;
   }
   const rows = [];
+  // An owner correction is not a checkbox. The site's newest reading and the
+  // owner's value sit side by side with no option preselected; leaving both
+  // unset keeps the owner's value, because that is the only safe default.
+  conflicts.forEach((conflict, index) => {
+    rows.push('<div class="record"><b>' + esc(conflict.name) + '</b><span>' + esc(conflict.section) + ' · ' + esc(conflict.field) + ' changed on the site after you corrected it</span>' +
+      '<p class="note">You have ' + esc(conflict.owner) + (conflict.ownerAt ? ' (saved ' + esc(new Date(conflict.ownerAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })) + ')' : '') + '. The site ' + (conflict.originalKnown ? 'said ' + esc(conflict.original) + ' then and ' : '') + 'says ' + esc(conflict.latest) + ' now.</p>' +
+      '<label style="display:block;margin-top:4px"><input type="radio" name="res-' + index + '" data-resolve-name="' + esc(conflict.name) + '" data-resolve-field="' + esc(conflict.field) + '" value="owner" /> Keep mine</label>' +
+      '<label style="display:block"><input type="radio" name="res-' + index + '" data-resolve-name="' + esc(conflict.name) + '" data-resolve-field="' + esc(conflict.field) + '" value="source" /> Use the site\u2019s ' + esc(conflict.latest) + '</label>' +
+      '<p class="note" style="font-size:11px">Nothing changes unless you choose.</p></div>');
+  });
   if (added.length)
     rows.push('<div class="record"><label><input type="checkbox" data-approve-added checked /> Add ' + added.length + ' new ' + (added.length === 1 ? 'item' : 'items') + '</label><p class="note">' + esc(added.map((item) => item.name).slice(0, 8).join(', ')) + '</p></div>');
   for (const entry of changed)
-    rows.push('<div class="record"><b>' + esc(entry.name) + '</b><span>' + esc(entry.section) + (entry.ownerEdited ? ' · your own photo is kept' : '') + '</span>' +
-      entry.changes.map((change) => '<label style="display:block;margin-top:4px"><input type="checkbox" data-approve-change="' + esc(entry.name) + '|' + esc(change.field) + '" checked /> ' + esc(change.field) + ': ' + esc(String(change.from) || 'empty') + ' → ' + esc(String(change.to) || 'empty') + '</label>').join('') + '</div>');
+    rows.push('<div class="record"><b>' + esc(entry.name) + '</b><span>' + esc(entry.section) + '</span>' +
+      entry.changes.map((change) => change.field === 'image' && entry.ownerEdited
+        ? '<p class="note" style="margin-top:4px">Your own photo is kept; the site\u2019s image is not applied.</p>'
+        : '<label style="display:block;margin-top:4px"><input type="checkbox" data-approve-change="' + esc(entry.name) + '|' + esc(change.field) + '" checked /> ' + esc(change.field) + ': ' + esc(String(change.from) || 'empty') + ' → ' + esc(String(change.to) || 'empty') + '</label>').join('') + '</div>');
   for (const entry of removed)
     rows.push('<div class="record"><label><input type="checkbox" data-approve-remove="' + esc(entry.name) + '" /> Remove ' + esc(entry.name) + '</label><span>It is no longer on the site. Leave this unticked to keep it.</span></div>');
   host.innerHTML = rows.join('') + '<div class="links"><button class="btn primary" type="button" id="applyImport">Apply approved changes</button><span class="muted" id="applyStatus" style="font-size:12px"></span></div>';
   const apply = $('applyImport');
   apply.addEventListener('click', async () => {
+    const unresolved = conflicts.filter((conflict) => !document.querySelector('[data-resolve-name="' + CSS.escape(conflict.name) + '"][data-resolve-field="' + CSS.escape(conflict.field) + '"]:checked')).length;
     const approved = {
       added: Boolean(document.querySelector('[data-approve-added]')?.checked),
       removed: Array.from(document.querySelectorAll('[data-approve-remove]')).filter((box) => box.checked).map((box) => box.dataset.approveRemove),
       changed: Array.from(document.querySelectorAll('[data-approve-change]')).filter((box) => box.checked).map((box) => box.dataset.approveChange),
+      resolutions: Array.from(document.querySelectorAll('[data-resolve-name]')).filter((box) => box.checked).map((box) => ({ name: box.dataset.resolveName, field: box.dataset.resolveField, choice: box.value })),
     };
-    $('applyStatus').textContent = 'Applying…';
+    $('applyStatus').textContent = unresolved ? 'Applying… ' + unresolved + ' decision' + (unresolved === 1 ? '' : 's') + ' left as yours.' : 'Applying…';
     const applied = await fetch('/api/projects/' + TOKEN + '/import/apply', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ url: IMPORTED_FROM, approval: approved }),
+      body: JSON.stringify({ url: IMPORTED_FROM, approval: approved, version: IMPORT_VERSION, updatedAt: IMPORT_UPDATED_AT }),
     });
     const result = await applied.json().catch(() => ({}));
-    $('applyStatus').textContent = applied.ok ? 'Applied. The app now shows the approved changes.' : ((result.error && result.error.message) || 'That could not be applied.');
+    $('applyStatus').textContent = applied.ok ? 'Applied. The app now shows the approved changes.' + (unresolved ? ' ' + unresolved + ' conflict' + (unresolved === 1 ? ' was' : 's were') + ' left as yours.' : '') : ((result.error && result.error.message) || 'That could not be applied.');
   });
 });
 

@@ -14,7 +14,13 @@
 
 import type { MenuSection } from './types'
 
-export type ImageMethod = 'structured-data' | 'embedded-json' | 'og-image' | 'public-data'
+export type ImageMethod =
+  | 'structured-data'
+  | 'embedded-json'
+  | 'og-image'
+  | 'public-data'
+  /** The <img> sat inside this product's own card or product link. */
+  | 'visible-markup'
 
 export type ItemImageEvidence = {
   /** The rendition the app loads: a WebP card-sized copy where the source CDN offers one. */
@@ -76,7 +82,9 @@ export function checkImageCandidate(
     allowDecorative?: boolean
   } = {},
 ): ImageAcceptance | ImageRefusal {
-  const value = typeof raw === 'string' ? raw.trim() : ''
+  // HTML attributes commonly serialise `&` as `&amp;`. That is markup, not
+  // part of the image CDN's query, so decode it before the URL is stored.
+  const value = typeof raw === 'string' ? raw.trim().replace(/&amp;/gi, '&') : ''
   if (!value) return { ok: false, reason: 'no image declared' }
   let url: URL
   try {

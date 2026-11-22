@@ -46,6 +46,8 @@ export type Project = {
   /** The editable section document; null until the editor first saves one. */
   doc: Doc | null
   status: ProjectStatus
+  /** ISO time the customer app went live; empty while private. */
+  publishedAt: string
   version: number
   /** Deck position for the current build; each rebuild claims a new slot. */
   variationSlot: number | null
@@ -87,6 +89,7 @@ type ProjectRow = {
   spec: string
   doc?: string
   status: string
+  published_at: string
   version: number
   variation_slot: number | null
   created_at: string
@@ -94,6 +97,10 @@ type ProjectRow = {
 }
 
 const SCHEMA = [
+  `CREATE TABLE IF NOT EXISTS schema_meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  )`,
   `CREATE TABLE IF NOT EXISTS projects (
     id TEXT PRIMARY KEY,
     token TEXT NOT NULL UNIQUE,
@@ -111,6 +118,7 @@ const SCHEMA = [
     spec TEXT NOT NULL DEFAULT '{}',
     doc TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL DEFAULT 'in_review',
+    published_at TEXT NOT NULL DEFAULT '',
     version INTEGER NOT NULL DEFAULT 1,
     variation_slot INTEGER,
     created_at TEXT NOT NULL,
@@ -210,6 +218,7 @@ const SCHEMA = [
     date TEXT NOT NULL,
     check_out TEXT NOT NULL DEFAULT '',
     nights INTEGER NOT NULL DEFAULT 0,
+    nightly_rate INTEGER NOT NULL DEFAULT 0,
     total INTEGER NOT NULL DEFAULT 0,
     slot TEXT NOT NULL DEFAULT '',
     party INTEGER NOT NULL DEFAULT 1,
@@ -355,6 +364,7 @@ const MIGRATIONS = [
   `ALTER TABLE projects ADD COLUMN custom TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE projects ADD COLUMN variation_slot INTEGER`,
   `ALTER TABLE projects ADD COLUMN doc TEXT NOT NULL DEFAULT ''`,
+  `ALTER TABLE projects ADD COLUMN published_at TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE owner_sessions ADD COLUMN last_seen_at TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE order_items ADD COLUMN variant TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE order_items ADD COLUMN variant_id TEXT NOT NULL DEFAULT ''`,
@@ -364,6 +374,7 @@ const MIGRATIONS = [
   // derived on the server from the two dates and the saved room rate.
   `ALTER TABLE bookings ADD COLUMN check_out TEXT NOT NULL DEFAULT ''`,
   `ALTER TABLE bookings ADD COLUMN nights INTEGER NOT NULL DEFAULT 0`,
+  `ALTER TABLE bookings ADD COLUMN nightly_rate INTEGER NOT NULL DEFAULT 0`,
   `ALTER TABLE bookings ADD COLUMN total INTEGER NOT NULL DEFAULT 0`,
   // A checkout names the attempt it came from, so a retried send finds the
   // order it already made instead of charging the customer twice.
@@ -382,11 +393,24 @@ const MIGRATIONS = [
 ]
 
 const ready = new WeakMap<D1Database, Promise<void>>()
+const SCHEMA_VERSION = '2'
 
 export function ensureSchema(db: D1Database): Promise<void> {
   const existing = ready.get(db)
   if (existing) return existing
   const setup = (async () => {
+    // A warm database only needs one indexed read. Running dozens of DDL
+    // statements on every cold isolate made the first app request after a
+    // deployment intermittently fail while D1 serialized the schema lock.
+    try {
+      const row = await db
+        .prepare('SELECT value FROM schema_meta WHERE key = ?')
+        .bind('schema_version')
+        .first<{ value: string }>()
+      if (row?.value === SCHEMA_VERSION) return
+    } catch {
+      // No metadata table yet: this is a first run or an older database.
+    }
     for (const statement of SCHEMA) await db.prepare(statement).run()
     for (const statement of MIGRATIONS) {
       try {
@@ -398,7 +422,18 @@ export function ensureSchema(db: D1Database): Promise<void> {
     // M1: additive and idempotent. Existing statements above are unchanged and
     // nothing here is read by the current application paths.
     await ensurePlatformSchema(db)
-  })()
+    await db
+      .prepare(
+        `INSERT INTO schema_meta (key, value) VALUES ('schema_version', ?)
+         ON CONFLICT(key) DO UPDATE SET value = excluded.value`,
+      )
+      .bind(SCHEMA_VERSION)
+      .run()
+  })().catch((error) => {
+    // Never cache a rejected setup: the next request can retry the migration.
+    ready.delete(db)
+    throw error
+  })
   ready.set(db, setup)
   return setup
 }
@@ -510,6 +545,7 @@ function toProject(row: ProjectRow): Project {
         : row.status === 'changes_requested'
           ? 'changes_requested'
           : 'in_review',
+    publishedAt: row.published_at ?? '',
     version: row.version,
     variationSlot: row.variation_slot ?? null,
     createdAt: row.created_at,
@@ -551,6 +587,10 @@ export type NewProjectInput = {
   videos?: VideoLink[]
   /** A platform bundle to quote and build alongside the app. */
   bundle?: string
+  /** The read's record of kept, refused and missing content. */
+  sourceReview?: unknown
+  /** Completed work accepted as a portfolio, not as services. */
+  projects?: unknown
 }
 
 /** Atomic across concurrent creates: the counter is the only writer. */
@@ -590,8 +630,16 @@ export async function createProject(
     direction: input.direction,
     videos: input.videos,
     bundle: input.bundle,
+    sourceReview: input.sourceReview,
+    projects: input.projects,
     site: input.site,
   })
+
+  // Work the source suggested is not published work yet. It waits for an
+  // explicit owner acceptance on the review page, even if a client sent it as
+  // already accepted.
+  if (spec.projects?.length)
+    spec.projects = spec.projects.map((entry) => ({ ...entry, accepted: false }))
 
   const row: ProjectRow = {
     id: id('prj'),
@@ -609,6 +657,7 @@ export async function createProject(
     quote: JSON.stringify(priced),
     spec: JSON.stringify(spec),
     status: 'in_review',
+    published_at: '',
     version: 1,
     variation_slot: await nextVariationSlot(db),
     created_at: new Date().toISOString(),
@@ -875,6 +924,20 @@ export async function deleteProject(db: D1Database, id: string): Promise<void> {
     .bind(id)
     .first<{ token: string }>()
   await db.batch([
+    db.prepare('DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE project_id = ?)').bind(id),
+    db.prepare('DELETE FROM orders WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM bookings WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM enquiries WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM customers WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM notifications WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM payment_events WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM payment_transactions WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM payment_connections WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM payment_settings WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM media_cleanup_log WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM media WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM owner_sessions WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM doc_versions WHERE project_id = ?').bind(id),
     db.prepare('DELETE FROM notes WHERE project_id = ?').bind(id),
     db.prepare('DELETE FROM activity WHERE project_id = ?').bind(id),
     db.prepare('DELETE FROM projects WHERE id = ?').bind(id),
@@ -902,6 +965,19 @@ export async function deleteProject(db: D1Database, id: string): Promise<void> {
   }
 }
 
+/** A save based on an older copy of the build. The caller must reload before
+ *  changing anything; the newer owner decision stays untouched. */
+export class VersionConflictError extends Error {
+  currentVersion: number
+  currentUpdatedAt: string
+  constructor(currentVersion: number, currentUpdatedAt: string) {
+    super('This build changed in another session.')
+    this.name = 'VersionConflictError'
+    this.currentVersion = currentVersion
+    this.currentUpdatedAt = currentUpdatedAt
+  }
+}
+
 export type ProjectPatch = {
   name?: string
   /** Menu edits arrive untyped from the browser and are sanitised here. */
@@ -910,14 +986,21 @@ export type ProjectPatch = {
   accent?: string
   logo?: string
   custom?: string
+  /** The concept the owner chose from the URL-first review. */
+  direction?: string
 }
 
 export async function saveVersion(
   db: D1Database,
   project: Project,
   patch: ProjectPatch,
+  expect: { version?: number; updatedAt?: string } = {},
 ): Promise<Project> {
   await ensureSchema(db)
+  if (expect.version !== undefined && expect.version !== project.version)
+    throw new VersionConflictError(project.version, project.updatedAt)
+  if (expect.updatedAt !== undefined && expect.updatedAt !== project.updatedAt)
+    throw new VersionConflictError(project.version, project.updatedAt)
   const features = patch.features
     ? normalizeFeatures(patch.features)
     : project.features
@@ -927,6 +1010,7 @@ export async function saveVersion(
   const custom = (patch.custom ?? patch.spec?.custom ?? project.custom ?? '')
     .trim()
     .slice(0, 600)
+  const direction = patch.direction?.trim().slice(0, 24)
   const { menu: menuInput, ...specRest } = patch.spec ?? {}
 
   const spec: AppSpec = {
@@ -940,6 +1024,22 @@ export async function saveVersion(
   }
   // Guard the seeded catalogue against empty or malformed edits.
   spec.menu = sanitizeMenu(menuInput ?? spec.menu)
+  if (direction) spec.direction = direction
+  // An imported build has no trade-sample copy left, even if an older record
+  // still carries flags from before the import rules were tightened. Keeping
+  // those flags would show the owner a "sample content" warning for their own
+  // real catalogue.
+  if (spec.website) {
+    spec.sampleContent = {
+      menu: false,
+      contact: false,
+      story: false,
+      offers: false,
+      team: false,
+      staff: false,
+      tagline: false,
+    }
+  }
   if ('category' in specRest) {
     const category = cleanCategory(specRest.category)
     if (category) spec.category = category
@@ -956,13 +1056,16 @@ export async function saveVersion(
   // Every rebuild is a new build, so it gets its own deck slot. Keeping the
   // old slot and offsetting by version would collide with other projects.
   const variationSlot = await nextVariationSlot(db)
-
-  await db
+  const updatedAt = new Date().toISOString()
+  // The compare-and-set is on the row we read, not just the client's claim: a
+  // second writer that loaded the same copy loses even if both raced past the
+  // checks above.
+  const write = await db
     .prepare(
       `UPDATE projects
          SET name = ?, features = ?, accent = ?, logo = ?, spec = ?, quote = ?, custom = ?,
-             version = ?, variation_slot = ?, status = 'in_review', updated_at = ?
-       WHERE id = ?`,
+             version = ?, variation_slot = ?, status = 'in_review', published_at = '', updated_at = ?
+       WHERE id = ? AND version = ? AND updated_at = ?`,
     )
     .bind(
       spec.name,
@@ -974,10 +1077,14 @@ export async function saveVersion(
       custom,
       version,
       variationSlot,
-      new Date().toISOString(),
+      updatedAt,
       project.id,
+      project.version,
+      project.updatedAt,
     )
     .run()
+  if (!(write as { meta?: { changes?: number } }).meta?.changes)
+    throw new VersionConflictError(project.version, project.updatedAt)
 
   await log(db, project.id, 'rebuild', `Rebuilt as version ${version}`, summarisePatch(patch))
   return {
@@ -991,6 +1098,8 @@ export async function saveVersion(
     version,
     variationSlot,
     status: 'in_review',
+    publishedAt: '',
+    updatedAt,
   }
 }
 
@@ -1002,6 +1111,7 @@ function summarisePatch(patch: ProjectPatch): string {
   if (patch.spec?.menu) bits.push('catalogue')
   if (patch.spec?.tagline) bits.push('tagline')
   if (patch.custom) bits.push('custom requirements')
+  if (patch.direction) bits.push('concept')
   return bits.length ? `Updated ${bits.join(', ')}` : 'Applied customer edits'
 }
 
@@ -1025,6 +1135,34 @@ export async function approveProject(
     'Customer approved the build',
     `Version ${project.version} locked for packaging`,
   )
+}
+
+/**
+ * Publish or withdraw the customer app. `status` remains the review state;
+ * `published_at` is the public gate, so approving a later draft does not put it
+ * online by itself. Unpublishing keeps every project row and version.
+ */
+export async function setProjectPublished(
+  db: D1Database,
+  project: Project,
+  published: boolean,
+): Promise<string> {
+  await ensureSchema(db)
+  const at = published ? new Date().toISOString() : ''
+  await db
+    .prepare('UPDATE projects SET published_at = ?, updated_at = ? WHERE id = ?')
+    .bind(at, new Date().toISOString(), project.id)
+    .run()
+  await log(
+    db,
+    project.id,
+    published ? 'published' : 'unpublished',
+    published ? 'Published the customer app' : 'Took the customer app offline',
+    published
+      ? `Version ${project.version} is live at /p/${project.token}/app`
+      : 'The customer app is private again; the saved build is unchanged.',
+  )
+  return at
 }
 
 export async function addNote(

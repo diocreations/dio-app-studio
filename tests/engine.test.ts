@@ -67,7 +67,7 @@ test('a non-restaurant brief builds the right shape', () => {
     logo: 'MC',
     features: ['catalog', 'booking', 'loyalty'],
   })
-  expect(verticalFor(salon.vertical).vocab.bookTitle).toBe('Book an appointment')
+  expect(verticalFor(salon.vertical).vocab.bookTitle).toBe('Request appointment')
   expect(salon.features).toContain('booking')
   expect(salon.features).not.toContain('ordering')
   // Durations survive into the catalogue so a salon build is not a menu.
@@ -186,4 +186,22 @@ test('the zip writer produces an archive with a central directory', () => {
   expect(view.getUint32(end, true)).toBe(0x06054b50)
   expect(view.getUint16(end + 10, true)).toBe(2)
   expect(new TextDecoder().decode(bytes.slice(40, 40 + 14))).toBe('<h1>hello</h1>')
+})
+
+test('a search-result story is not published as brand copy', () => {
+  const spec = buildSpec({
+    name: 'Padella',
+    vertical: 'restaurant',
+    accent: '#c8452b',
+    logo: 'P',
+    features: ['catalog'],
+    site: {
+      website: 'https://www.padella.co',
+      story:
+        'Searching for an Italian restaurant in Shoreditch, Borough Market or Soho? Padella serves authentic, handmade pasta daily.',
+      menu: [],
+    },
+  })
+  expect(spec.story).toBe('')
+  expect(spec.tagline).toBe('')
 })
