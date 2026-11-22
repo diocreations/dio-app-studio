@@ -27,7 +27,7 @@ export function startPage(): string {
     .discovery { margin-top: 28px; scroll-margin-top: 90px; }
     .discovery-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
     .discovery-head h2 { font-size: clamp(28px, 3.4vw, 42px); max-width: 18ch; }
-    .source-line { margin-top: 8px; font-size: 12px; color: var(--muted); word-break: break-all; }
+    .source-line { margin-top: 8px; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; word-break: normal; }
     .profile { display: grid; grid-template-columns: 1.35fr .9fr; gap: 18px; margin-top: 18px; }
     .profile-main, .profile-side { border: 1px solid var(--line); border-radius: 16px; background: #fff; padding: 18px; }
     .profile-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-top: 14px; }
@@ -292,7 +292,10 @@ const START_SCRIPT = `
       say('Read ' + (data.host || url) + '. Checking the business profile and building three concepts.', true)
       render(data)
       say('Read ' + (data.host || url) + '. Review the facts, browse all three, then choose.', false)
-      document.getElementById('concepts').scrollIntoView({ behavior: 'smooth', block: 'start' })
+      // Show the extracted facts before the concepts they inform. The profile
+      // is what the owner is being asked to approve; jumping past it to the
+      // cards makes the three concepts look like a template choice.
+      document.getElementById('discovery').scrollIntoView({ behavior: 'smooth', block: 'start' })
     } catch (error) {
       say('', false)
       fail(error.message + ' No brief was filled in and nothing was invented. You can try another URL or use the text brief.')

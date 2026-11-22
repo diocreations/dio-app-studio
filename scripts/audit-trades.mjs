@@ -16,7 +16,7 @@ import { buildSpec } from '../src/worker/pricing.ts'
 import { conceptsFor, readPrompt } from '../src/worker/prompt.ts'
 import { VERTICALS, VERTICAL_IDS } from '../src/worker/verticals.ts'
 
-const OUT = 'docs/qa/trade-audit-2026-11-20'
+const OUT = process.env.TRADE_AUDIT_OUT || 'docs/qa/trade-matrix-2026-11-23'
 const MACHINE = `${OUT}/machine`
 const CDP = process.env.CDP_ORIGIN || 'http://127.0.0.1:9223'
 const WIDTH = 390
@@ -288,11 +288,17 @@ for (const trade of results) {
       const smallHtml = smallElements.slice(0, 3).map((el) => el.outerHTML.slice(0, 140))
       const tab = document.querySelector('.tabbar')
       const tabRect = tab ? tab.getBoundingClientRect() : null
+      const labelTexts = [...document.querySelectorAll('.screen.on h1, .screen.on h2, .screen.on h3, .screen.on .eyebrow, .screen.on .label, .screen.on .fx-kicker')]
+        .filter((el) => el.offsetParent)
+        .map((el) => (el.textContent || '').replace(/\s+/g, ' ').trim())
+        .filter(Boolean)
+      const duplicateLabels = [...new Set(labelTexts.filter((text, index) => labelTexts.indexOf(text) !== index))]
       return {
         overflow: doc.scrollWidth - window.innerWidth,
         smallTargets: small,
         smallClasses,
         smallHtml,
+        duplicateLabels,
         // Only what the customer can see: a lazy image below the fold is not
         // broken, it is not loaded yet.
         images: [...document.images].filter((img) => {
@@ -309,6 +315,7 @@ for (const trade of results) {
   trade.checks.push({ name: 'no-horizontal-overflow', pass: (metrics.overflow ?? 0) <= 0, detail: `${metrics.overflow}px` })
   trade.checks.push({ name: 'tap-targets', pass: (metrics.smallTargets ?? 0) === 0, detail: `${metrics.smallTargets} under 44px` })
   trade.checks.push({ name: 'images-load', pass: (metrics.images ?? 0) === 0, detail: `${metrics.images} broken` })
+  trade.checks.push({ name: 'labels-unique', pass: (metrics.duplicateLabels ?? []).length === 0, detail: (metrics.duplicateLabels ?? []).join(' | ') || 'no duplicate visible labels' })
   trade.metrics = metrics
   const capture = await call('Page.captureScreenshot', { format: 'png', fromSurface: true })
   await writeFile(`${OUT}/${trade.id}.png`, Buffer.from(capture.data, 'base64'))
@@ -356,6 +363,39 @@ for (const trade of results) {
     returnByValue: true,
   })
   trade.checks.push({ name: 'fits-320', pass: (narrow.result?.value ?? 0) <= 0, detail: `${narrow.result?.value ?? 0}px overflow at 320` })
+
+  // 430 is the wide-phone case the approved matrix names separately. Return to
+  // the trade's home screen and capture it at that width rather than inheriting
+  // the secondary workflow screen.
+  await call('Emulation.setDeviceMetricsOverride', { width: 430, height: 932, deviceScaleFactor: 1, mobile: true, screenWidth: 430, screenHeight: 932 })
+  await call('Page.navigate', { url: `http://127.0.0.1:${server.port}/${trade.id}.html?width=430` })
+  await new Promise((resolve) => setTimeout(resolve, 850))
+  await call('Runtime.evaluate', {
+    expression:
+      "document.querySelector('[data-splash]')?.remove(); document.querySelectorAll('.screen.on').forEach((el) => (el.style.animation = 'none'));",
+  })
+  await new Promise((resolve) => setTimeout(resolve, 150))
+  const wide = await call('Runtime.evaluate', {
+    expression: `(() => {
+      const doc = document.documentElement
+      const labels = [...document.querySelectorAll('.screen.on h1, .screen.on h2, .screen.on h3, .screen.on .eyebrow, .screen.on .label, .screen.on .fx-kicker')]
+        .filter((el) => el.offsetParent)
+        .map((el) => (el.textContent || '').replace(/\s+/g, ' ').trim())
+        .filter(Boolean)
+      return {
+        overflow: doc.scrollWidth - window.innerWidth,
+        duplicateLabels: [...new Set(labels.filter((text, index) => labels.indexOf(text) !== index))],
+      }
+    })()`,
+    returnByValue: true,
+  })
+  const wideMetrics = wide.result?.value ?? {}
+  trade.checks.push({ name: 'fits-430', pass: (wideMetrics.overflow ?? 0) <= 0, detail: `${wideMetrics.overflow ?? 0}px overflow at 430` })
+  trade.checks.push({ name: 'labels-unique-430', pass: (wideMetrics.duplicateLabels ?? []).length === 0, detail: (wideMetrics.duplicateLabels ?? []).join(' | ') || 'no duplicate visible labels' })
+  trade.metrics430 = wideMetrics
+  const wideCapture = await call('Page.captureScreenshot', { format: 'png', fromSurface: true })
+  await writeFile(`${OUT}/screens/${trade.id}--430.png`, Buffer.from(wideCapture.data, 'base64'))
+
   await call('Emulation.setDeviceMetricsOverride', {
     width: WIDTH,
     height: HEIGHT,

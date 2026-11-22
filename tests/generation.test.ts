@@ -6,6 +6,7 @@ import { readPrompt } from '../src/worker/prompt'
 import { renderApp } from '../src/worker/app'
 import { briefPage } from '../src/worker/views/brief'
 import { marketingPage } from '../src/worker/views/marketing'
+import { startPage } from '../src/worker/views/start'
 
 /** A home page with no <a href> at all: the case a sitemap exists for. */
 const SHELL_HOME = `<!doctype html><html><head><title>Butter &amp; Tales</title>
@@ -194,5 +195,13 @@ describe('the landing page example and its preview agree', () => {
     expect(html).toContain('action="/start"')
     expect(html).toContain('Enter a business address')
     expect(html).toContain('/demo/app?biz=shop')
+  })
+})
+
+describe('URL-first discovery', () => {
+  test('lands on the extracted profile before the three concepts', () => {
+    const html = startPage()
+    expect(html).toContain("document.getElementById('discovery').scrollIntoView")
+    expect(html).not.toContain("document.getElementById('concepts').scrollIntoView")
   })
 })
