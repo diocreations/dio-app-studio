@@ -20,6 +20,23 @@
 - Production deployment operation: `succeeded`
 - Production publication status: `published: true`
 
+### Source-to-deployment check
+
+Before the acceptance window, the released source was checked against the
+deployed build:
+
+- `git diff --quiet ba7e6be -- src tests scripts deploy.json` returned `0`.
+- The worktree has no changes in `src`, `tests`, `scripts` or `deploy.json`.
+- Worker artifact `dist/plattr_studio/index.js`:
+  `dc795ddeda2237103c392f25310a75301b9dbde379aece311588932731f1d20e`
+- Deploy asset tree hash:
+  `c768f2fc73eed0bc884488d537b7f117609524af37dce629bcbc3616fa3ba946`
+- Rebuilding from that clean worktree produced the same two hashes, so the
+  build is reproducible from `ba7e6be`.
+
+The production deployment remains the one created at `2026-11-22T11:41:35Z`;
+no production redeploy was made while waiting for the allowance reset.
+
 ## Geestores production acceptance
 
 **Status: BLOCKED — not executed.**
