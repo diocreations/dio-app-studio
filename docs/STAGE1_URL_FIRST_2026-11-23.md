@@ -92,7 +92,7 @@ The full suite includes the existing payment, auth, owner-session, isolation and
 2. **JavaScript-only sites remain unsupported.** No external rendering service was added. Incomplete extraction must be reported rather than filled in.
 3. **The lifestyle concept is the weakest of the three at 390px.** Its first viewport is text-led and only reveals a real product photograph near the fold. It is structurally distinct and uses only the business's own photography, but the visual result is not yet premium. This is a design follow-up, not a reason to call the set finished.
 4. **The live site's counts vary between crawls.** The final evidence records 10 pages / 100 entries / 69 photographs; earlier runs differed. No fixture was substituted.
-5. **Five images per concept have an empty `alt` attribute.** They are the decorative business logo and product-card images that sit beside the product name. Every concept rendered all 67 images without a failed load; empty alt is an accessibility follow-up, not fabricated content.
+5. **Five images per concept had an empty `alt` attribute.** They were four source product photographs and one cart variant swatch. Identified and corrected in Stage 2 — product photographs now carry the item name, the swatch names the option, and the remaining empty alt is the decorative logo, explicitly `aria-hidden`. See `docs/STAGE2_PROVENANCE_2026-11-23.md` §1.2. Every concept rendered all images without a failed load.
 6. **The local D1 daily/visitor counters were reset for the final QA capture.** This is local test state only; production counters and data were not touched.
 7. **No premium claim.** The screenshots show real, structurally different apps; they also show the remaining visual and content gaps recorded in Stage 0.
 

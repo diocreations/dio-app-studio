@@ -1,0 +1,107 @@
+{
+ "generatedAt": "2026-11-22T16:25:25.671Z",
+ "source": "https://geestores.com/",
+ "origin": "http://127.0.0.1:5173",
+ "shots": {
+  "profileShot": "docs/qa/stage2-provenance-2026-11-23/provenance-profile-390.png",
+  "catalogueShot": "docs/qa/stage2-provenance-2026-11-23/provenance-catalogue-390.png",
+  "journeyShot": "docs/qa/stage2-provenance-2026-11-23/provenance-journey-390.png"
+ },
+ "landing": {
+  "scrollY": 622,
+  "discoveryTop": 90,
+  "fieldEvidenceOpen": true,
+  "catalogueEvidenceOpen": true
+ },
+ "evidence": {
+  "rows": [
+   "Business name GeeStores verified · structured data · json-ld:name · open source",
+   "Category Jewellery shop likely · visible text · visible-text:business category · open source",
+   "One-line description Shop handcrafted jhumkas, harams, necklaces, earring combos and festive sarees at… likely · visible text · meta[property=\"og:description\"] or visible introduction · open source",
+   "Story Shop handcrafted jhumkas, harams, necklaces, earring combos and festive sarees at GeeStores. Curated collections, fair pricing, fast delivery. likely · visible text · visible-text:about copy · open source",
+   "Trade shop verified · inferred · the words the business uses about itself · open source",
+   "Brand colour #2757a7 likely · visible text · stylesheet palette · open source",
+   "Logo https://geestores.com/logo.png likely · metadata · structured data logo, og:logo or link[rel=icon] · open source",
+   "Opening hours Not found on the source. unconfirmed · inferred · visible-text:opening hours · open source",
+   "Phone 918075257652 likely · visible text · a[href^=\"tel:\"] · open source",
+   "Email info@geestores.com likely · visible text · a[href^=\"mailto:\"] · open source",
+   "Address Not found on the source. unconfirmed · visible text · visible-text:address · open source",
+   "Currency INR likely · visible text · visible-text:currency beside prices · open source"
+  ],
+  "products": [
+   "2272 Black and Yellow Hand Block Printed… Name: 2272 Black and Yellow Hand Block Printed… · likely · visible text · visible-text:card title Description: not found · unconfirmed · visible text · visible-text:item description · needs your confirmation Price: ₹890 · verified · visible text · visible-text:card price Currency: INR · likely · visible text · visible-text:currency beside prices Photograph: source photograph · likely · visible text · visible-text:img in product card Category: Jewellery shop · likely · visible text · visible-text:section heading",
+   "2328 Gaji Silk Ajrakh Print Black Saree… Name: 2328 Gaji Silk Ajrakh Print Black Saree… · likely · visible text · visible-text:card title Description: not found · unconfirmed · visible text · visible-text:item description · needs your confirmation Price: ₹1,800 · verified · visible text · visible-text:card price Currency: INR · likely · visible text · visible-text:currency beside prices Photograph: source photograph · likely · visible text · visible-text:img in product card Category: Jewellery shop · likely · visible text · visible-text:section heading",
+   "2212 Honey Gold Body with Zari Checks and the Contrasting… Name: 2212 Honey Gold Body with Zari Checks and the Contrasting… · likely · visible text · visible-text:card title Description: not found · unconfirmed · visible text · visible-text:item description · needs your confirmation Price: ₹1,700 · verified · visible text · visible-text:card price Currency: INR · likely · visible text · visible-text:currency beside prices Photograph: source photograph · likely · visible text · visible-text:img in product card Category: Jewellery shop · likely · visible text · visible-text:section heading",
+   "2270 Brown Color Arani Kalyani Cotton Silk Saree with… Name: 2270 Brown Color Arani Kalyani Cotton Silk Saree with… · likely · visible text · visible-text:card title Description: not found · unconfirmed · visible text · visible-text:item description · needs your confirmation Price: ₹1,190 · verified · visible text · visible-text:card price Currency: INR · likely · visible text · visible-text:currency beside prices Photograph: source photograph · likely · visible text · visible-text:img in product card Category: Jewellery shop · likely · visible text · visible-text:section heading",
+   "2221 Dual Tone Greyish Green Semi Silk… Name: 2221 Dual Tone Greyish Green Semi Silk… · likely · visible text · visible-text:card title Description: not found · unconfirmed · visible text · visible-text:item description · needs your confirmation Price: ₹1,290 · verified · visible text · visible-text:card price Currency: INR · likely · visible text · visible-text:currency beside prices Photograph: source photograph · likely · visible text · visible-text:img in product card Category: Jewellery shop · likely · visible text · visible-text:section heading",
+   "2227 Vibrant Magenta Base Semi Silk Saree Contrasted with… Name: 2227 Vibrant Magenta Base Semi Silk Saree Contrasted with… · likely · visible text · visible-text:card title Description: not found · unconfirmed · visible text · visible-text:item description · needs your confirmation Price: ₹2,450 · verified · visible text · visible-text:card price Currency: INR · likely · visible text · visible-text:currency beside prices Photograph: source photograph · likely · visible text · visible-text:img in product card Category: Jewellery shop · likely · visible text · visible-text:section heading",
+   "2246 Dharmavaram Ikat Semi Silk Saree in… Name: 2246 Dharmavaram Ikat Semi Silk Saree in… · likely · visible text · visible-text:card title Description: not found · unconfirmed · visible text · visible-text:item description · needs your confirmation Price: ₹2,250 · verified · visible text · visible-text:card price Currency: INR · likely · visible text · visible-text:currency beside prices Photograph: source photograph · likely · visible text · visible-text:img in product card Category: Jewellery shop · likely · visible text · visible-text:section heading",
+   "2230 Dual-Tone Saree in Steel Gray with… Name: 2230 Dual-Tone Saree in Steel Gray with… · likely · visible text · visible-text:card title Description: not found · unconfirmed · visible text · visible-text:item description · needs your confirmation Price: ₹740 · verified · visible text · visible-text:card price Currency: INR · likely · visible text · visible-text:currency beside prices Photograph: source photograph · likely · visible text · visible-text:img in product card Category: Jewellery shop · likely · visible text · visible-text:section heading"
+  ],
+  "counts": "101 items · 101 need confirmation · 101 without a description · 30 without a photograph",
+  "questions": [
+   "101 of 101 products have no description on the site. Nothing was written for them; add your own words in the editor.",
+   "30 of 101 products have no photograph on the site. They keep a typographic field; no stock image is substituted."
+  ],
+  "sourceLine": "Read from https://geestores.com/ · 10 pages · 101 catalogue entries · 71 photographs",
+  "profileFacts": [
+   "Website geestores.com",
+   "Name read GeeStores verified · structured data · json-ld:name",
+   "Category Jewellery shop likely · visible text · visible-text:business category",
+   "Pages read 10",
+   "Products 101",
+   "Priced 101 of 101",
+   "Currency INR likely · visible text · visible-text:currency beside prices",
+   "Phone 918075257652 likely · visible text · a[href^=\"tel:\"]",
+   "Email info@geestores.com likely · visible text · a[href^=\"mailto:\"]"
+  ],
+  "itemImages": [
+   {
+    "concept": "minimal",
+    "images": 74,
+    "missingAlt": [
+     {
+      "src": "https://geestores.com/logo.png",
+      "ariaHidden": "true"
+     },
+     {
+      "src": "https://geestores.com/logo.png",
+      "ariaHidden": "true"
+     }
+    ],
+    "failed": 0
+   },
+   {
+    "concept": "editorial",
+    "images": 74,
+    "missingAlt": [
+     {
+      "src": "https://geestores.com/logo.png",
+      "ariaHidden": "true"
+     },
+     {
+      "src": "https://geestores.com/logo.png",
+      "ariaHidden": "true"
+     }
+    ],
+    "failed": 0
+   },
+   {
+    "concept": "lifestyle",
+    "images": 74,
+    "missingAlt": [
+     {
+      "src": "https://geestores.com/logo.png",
+      "ariaHidden": "true"
+     },
+     {
+      "src": "https://geestores.com/logo.png",
+      "ariaHidden": "true"
+     }
+    ],
+    "failed": 0
+   }
+  ]
+ },
+ "networkFailures": []
+}
