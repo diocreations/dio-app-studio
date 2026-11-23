@@ -54,6 +54,10 @@ CREATE TABLE IF NOT EXISTS ai_quota (
   updated_at TEXT NOT NULL
 );`
 
+/** The one index the migration also creates, kept here so the runtime schema and
+ *  `migrations/0001_ai_quota.sql` cannot drift apart. */
+export const QUOTA_INDEX_SQL = `CREATE INDEX IF NOT EXISTS ai_quota_by_updated ON ai_quota (updated_at);`
+
 /**
  * The reservation. The row is only written when the delta still fits every
  * ceiling, so two concurrent callers cannot both take the last slot: SQLite (and
@@ -250,6 +254,11 @@ export class QuotaExhaustedError extends Error {
   }
 }
 
+/** A reservation names both halves of the estimate, because Cloudflare charges
+ *  input and output at different Neuron rates. Reserving one total at the input
+ *  rate under-states an output-heavy answer by more than half. */
+export type QuotaReserveRequest = { inputTokens: number; outputTokens: number }
+
 export type QuotaReservation = {
   model: string
   provider: string
@@ -298,7 +307,7 @@ export function quotaKeys(spec: FreeModel, at: Date) {
 
 export type QuotaLedger = {
   /** Reserve an input+output token estimate. Throws QuotaExhaustedError. */
-  reserve(spec: FreeModel, tokens: number, at?: Date): Promise<QuotaReservation>
+  reserve(spec: FreeModel, tokens: QuotaReserveRequest, at?: Date): Promise<QuotaReservation>
   /** Replace the reservation with what the provider reported. */
   settle(reservation: QuotaReservation, actual: { tokens: number; neurons: number }, at?: Date): Promise<void>
   /** Give the reservation back: the call never happened. */
@@ -315,8 +324,10 @@ export type QuotaLedger = {
  */
 export function createQuotaLedger(store: QuotaStore, clock: () => Date = () => new Date()): QuotaLedger {
   return {
-    async reserve(spec, tokens, at = clock()) {
-      const estimate = Math.max(0, Math.ceil(tokens))
+    async reserve(spec, request, at = clock()) {
+      const inputTokens = Math.max(0, Math.ceil(request.inputTokens))
+      const outputTokens = Math.max(0, Math.ceil(request.outputTokens))
+      const estimate = inputTokens + outputTokens
       const keys = quotaKeys(spec, at)
       if (estimate > spec.contextTokens) {
         throw new QuotaExhaustedError(
@@ -327,8 +338,9 @@ export function createQuotaLedger(store: QuotaStore, clock: () => Date = () => n
         )
       }
       // The Neuron pool is shared by every Cloudflare model on the account, so
-      // it is reserved separately from the per-model counters.
-      const neurons = neuronsFor(spec, estimate, 0)
+      // it is reserved separately from the per-model counters, and at both
+      // published rates: input at 31,818/M and output at 68,182/M.
+      const neurons = neuronsFor(spec, inputTokens, outputTokens)
       const legs: QuotaReservation['legs'] = []
       const planned: QuotaReservation['legs'] = [
         ...(keys.poolKey

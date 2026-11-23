@@ -195,6 +195,8 @@ const START_SCRIPT = `
   let result = null
   let selected = null
   let selectedCard = null
+  let offer = []
+  let offerIsAi = false
 
   const esc = (value) => String(value == null ? '' : value)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -252,7 +254,20 @@ const START_SCRIPT = `
     conceptGrid.innerHTML = ''
     selected = null
     selectedCard = null
+    offer = []
+    offerIsAi = false
     chooseButton.disabled = true
+  }
+
+  // A preview is always the real renderer over a stored document: the saved
+  // build, a trade concept, or the model's own document for this build. The
+  // browser never re-implements the app.
+  function previewFor(concept) {
+    const draft = result && result.draft
+    if (!draft || !draft.token) return ''
+    return offerIsAi
+      ? '/p/' + draft.token + '/app?design=' + encodeURIComponent(concept.id)
+      : (concept.preview || draft.preview + '?concept=' + encodeURIComponent(concept.id))
   }
 
   function render(data) {
@@ -360,15 +375,24 @@ const START_SCRIPT = `
     document.getElementById('discovery-title').setAttribute('title', business.name && business.name.value || '')
     discovery.hidden = false
 
-    conceptGrid.innerHTML = (data.concepts || []).map((concept) =>
+    // When the free design step succeeded, its three documents are the choice:
+    // previewed on the real app, and the chosen one saved as the owner's own
+    // document. Without it — no key, an exhausted allowance, a refused answer —
+    // the deterministic plan is the offer, exactly as before.
+    offerIsAi = Boolean(
+      data.design && data.design.status === 'ai' &&
+      Array.isArray(data.design.concepts) && data.design.concepts.length === 3,
+    )
+    offer = offerIsAi ? data.design.concepts : (data.concepts || [])
+    conceptGrid.innerHTML = offer.map((concept) =>
       '<article class="concept-card" data-concept="' + esc(concept.id) + '" aria-pressed="false">' +
-        '<header><b>' + esc(concept.name) + '</b><span>' + esc(concept.note || '') + '</span></header>' +
-        '<iframe src="' + esc(concept.preview || ((data.draft && data.draft.preview) ? data.draft.preview + '?concept=' + encodeURIComponent(concept.id) : '')) + '" title="' + esc(concept.name) + ' concept" loading="eager"></iframe>' +
-        '<p>' + esc((concept.spec && concept.spec.kind) || '') + ' · ' + esc(concept.id) + ' composition</p>' +
+        '<header><b>' + esc(concept.name) + '</b><span>' + esc(offerIsAi ? 'Free models · ' + (concept.direction || '') : (concept.note || '')) + '</span></header>' +
+        '<iframe src="' + esc(previewFor(concept)) + '" title="' + esc(concept.name) + ' concept" loading="eager"></iframe>' +
+        '<p>' + esc((concept.spec && concept.spec.kind) || '') + ' · ' + esc(offerIsAi ? 'AI composition' : concept.id + ' composition') + '</p>' +
         '<button class="btn primary small" type="button" data-pick="' + esc(concept.id) + '">Choose this concept</button>' +
       '</article>'
     ).join('')
-    concepts.hidden = !(data.concepts || []).length
+    concepts.hidden = !offer.length
     chooseButton.disabled = true
     if (!data.draft || !data.draft.token) fail('The site was read, but the owner workspace could not be created. Use the text brief instead.')
   }
@@ -405,10 +429,10 @@ const START_SCRIPT = `
     }
   }
 
-  function corrections() {
+  function corrections(direction) {
     return {
       name: document.getElementById('profile-name').value.trim(),
-      direction: selected,
+      direction: direction || selected,
       spec: {
         category: document.getElementById('profile-category').value.trim(),
         tagline: document.getElementById('profile-tagline').value.trim(),
@@ -426,20 +450,35 @@ const START_SCRIPT = `
       card.setAttribute('aria-pressed', String(card === selectedCard))
     )
     chooseButton.disabled = false
-    chooseButton.textContent = 'Open ' + (result.concepts.find((concept) => concept.id === selected) || {}).name
+    chooseButton.textContent = 'Open ' + (offer.find((concept) => concept.id === selected) || {}).name
     chooseButton.scrollIntoView({ behavior: 'smooth', block: 'center' })
   })
 
   chooseButton.addEventListener('click', async () => {
     if (!selected || !result || !result.draft || !result.draft.token) return
+    const concept = offer.find((entry) => entry.id === selected) || null
     chooseButton.disabled = true
     const original = chooseButton.textContent
     chooseButton.textContent = 'Opening the owner workspace…'
     try {
+      // An AI concept is a whole document, so choosing it saves that document
+      // through the same document API the editor uses. Updating the direction
+      // alone would leave the workspace showing a different application from
+      // the one the customer just previewed.
+      if (offerIsAi && concept && concept.doc) {
+        const saved = await fetch('/api/projects/' + result.draft.token + '/doc', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ doc: concept.doc }),
+        })
+        const detail = await saved.json().catch(() => ({}))
+        if (!saved.ok)
+          throw new Error((detail.error && detail.error.message) || 'The chosen concept could not be saved.')
+      }
       const response = await fetch('/api/projects/' + result.draft.token, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(corrections()),
+        body: JSON.stringify(corrections(concept && concept.direction)),
       })
       const data = await response.json().catch(() => ({}))
       if (!response.ok) throw new Error((data.error && data.error.message) || 'The concept could not be saved.')
