@@ -149,7 +149,12 @@ classified, and OpenRouter's `no choices` branch now preserves a reported
 
 The $0.40 generation cap and the $30 pool are enforced against the ledger that
 includes retained amounts, so an uncertain charge consumes budget exactly as a
-worst-case reservation would.
+worst-case reservation would. A successful generation settles the persistent
+pool with the ledger's accounted amount — confirmed charges **plus** retained
+reservations — not with the sum of the calls that happened to succeed. A
+first attempt that times out and is then retried successfully therefore keeps
+its reservation charged to both the generation and the trial pool, while the
+report still shows `chargedUsd`, `retainedUsd` and `accountedUsd` separately.
 
 ## 5. Understanding: facts, and assumptions kept apart
 
@@ -230,7 +235,7 @@ customer-facing generation route.
 
 ## 9. Test coverage
 
-`tests/aiTrial.test.ts` (28 tests):
+`tests/aiTrial.test.ts` (30 tests):
 
 - closed without keys: zero provider calls;
 - keys without approval still closed, for four approval spellings;
@@ -250,6 +255,9 @@ customer-facing generation route.
 - a body with usage but no choices is charged before its parse failure;
 - a body with no usage marks the attempt uncertain, retains its reservation and
   remains visible in the report;
+- a successful retry settles the persistent pool with the retained first attempt
+  as well as the confirmed charge, while a run with no uncertain attempts keeps
+  normal accounting unchanged;
 - Groq cost comes from its published rate; OpenRouter from `usage.cost`;
 - reservations are non-zero for a model that is also on the free allowlist;
 - the $30 pool refuses the claim that would cross it;
@@ -263,5 +271,5 @@ customer-facing generation route.
 - restaurant and practice compile three distinct journeys;
 - the catalogue is two primary arms plus one controlled arm at verified prices.
 
-Full suite: 876 tests, 0 failing (28 of them this trial); typecheck and
+Full suite: 878 tests, 0 failing (30 of them this trial); typecheck and
 production build clean.

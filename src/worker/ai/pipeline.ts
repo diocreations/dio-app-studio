@@ -91,6 +91,9 @@ export type DesignRun = {
   calls: CallRecord[]
   /** Every attempt made, including failed and retried ones. */
   attempts: AttemptRecord[]
+  /** What the budget must absorb: confirmed charges plus reservations retained
+   *  for attempts whose charge could not be established. Summing `calls` here
+   *  would refund a timed-out first attempt when its retry succeeds. */
   costUsd: number
   issues: Issue[]
   /** The optional copy pass was skipped to stay inside the soft limit. */
@@ -400,7 +403,10 @@ async function runPipeline(
     concepts,
     calls,
     attempts: spend.attempts,
-    costUsd: calls.reduce((total, call) => total + call.costUsd, 0),
+    // The ledger is the authority, not the calls that happened to succeed: a
+    // retained reservation for an uncertain attempt is part of the cost even
+    // when a retry produced the answer.
+    costUsd: ledger.spentUsd(),
     issues,
     softLimitReached,
   }

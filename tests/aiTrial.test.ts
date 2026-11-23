@@ -818,4 +818,63 @@ describe('every attempt is reconciled against its reservation and the cap', () =
     expect(run.verification.withinHardCap).toBe(true)
     expect(run.verification.chargedWithinReservation).toBe(true)
   })
+
+  test('a successful retry settles the pool with the retained attempt too', async () => {
+    const { spec, dossier } = await crawlSpec()
+    const { fetch, calls } = trialFetch({
+      brief: briefFrom(dossier),
+      set: sampleDesignSet(),
+      failOnce: 'design',
+    })
+    globalThis.fetch = fetch
+    const store = memoryTrialStore()
+    const run = await runTrialGeneration({
+      providerId: 'openrouter',
+      spec,
+      dossier,
+      env: trialEnv(),
+      store,
+    })
+    expect(run.status).toBe('ai')
+    expect(calls.stages).toEqual(['understand', 'design', 'design', 'copy'])
+    const uncertain = run.attempts.find((attempt) => attempt.billing === 'unknown')
+    expect(uncertain?.retainedUsd).toBeGreaterThan(0)
+    expect(run.verification.retainedUsd).toBeGreaterThan(0)
+    expect(run.verification.accountedUsd).toBeCloseTo(
+      run.verification.chargedUsd + run.verification.retainedUsd,
+      9,
+    )
+    // The run's cost and the persistent pool both carry the retained reservation.
+    expect(run.costUsd).toBeCloseTo(run.verification.accountedUsd, 9)
+    const pool = await store.read(TRIAL_ID, TRIAL_LIMITS.totalUsd)
+    expect(pool.spentUsd).toBeCloseTo(run.verification.accountedUsd, 9)
+    expect(pool.spentUsd).toBeGreaterThan(run.verification.chargedUsd)
+    expect(pool.remainingUsd).toBeCloseTo(TRIAL_LIMITS.totalUsd - pool.spentUsd, 9)
+  })
+
+  test('a run with no uncertain attempts keeps normal accounting unchanged', async () => {
+    const { spec, dossier } = await crawlSpec()
+    const { fetch } = trialFetch({ brief: briefFrom(dossier), set: sampleDesignSet() })
+    globalThis.fetch = fetch
+    const store = memoryTrialStore()
+    const run = await runTrialGeneration({
+      providerId: 'openrouter',
+      spec,
+      dossier,
+      env: trialEnv(),
+      store,
+    })
+    expect(run.status).toBe('ai')
+    expect(run.verification.retainedUsd).toBe(0)
+    expect(run.verification.uncertainAttempts).toBe(0)
+    expect(run.verification.accountedUsd).toBeCloseTo(run.verification.chargedUsd, 9)
+    expect(run.costUsd).toBeCloseTo(run.verification.chargedUsd, 9)
+    expect(run.costUsd).toBeCloseTo(
+      run.calls.reduce((total, call) => total + call.costUsd, 0),
+      9,
+    )
+    const pool = await store.read(TRIAL_ID, TRIAL_LIMITS.totalUsd)
+    expect(pool.spentUsd).toBeCloseTo(run.verification.chargedUsd, 9)
+    expect(pool.remainingUsd).toBeCloseTo(TRIAL_LIMITS.totalUsd - pool.spentUsd, 9)
+  })
 })
