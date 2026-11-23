@@ -1,7 +1,7 @@
 {
   "mode": "mocked",
   "comparable": false,
-  "generatedAt": "2026-11-23T15:10:05.229Z",
+  "generatedAt": "2026-11-23T15:22:23.073Z",
   "comparison": {
     "kind": "provider-routing and gateway comparison",
     "note": "The primary arms are not gateway-only: direct Groq is compared with OpenRouter routing to the cheapest eligible endpoint of the same model, and OpenRouter chooses that endpoint. The controlled arm pins OpenRouter to its Groq endpoint with fallbacks disabled, isolating the gateway for the same model and endpoint.",
@@ -126,7 +126,7 @@
       },
       "status": "ai",
       "costUsd": 0.001905,
-      "latencyMs": 7,
+      "latencyMs": 8,
       "servedProviders": [
         "groq"
       ],
@@ -136,6 +136,8 @@
           "attempt": 1,
           "reservedUsd": 0.0015871499999999998,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -143,6 +145,8 @@
           "attempt": 1,
           "reservedUsd": 0.0072352499999999995,
           "costUsd": 0.0011549999999999998,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -150,6 +154,8 @@
           "attempt": 1,
           "reservedUsd": 0.0022475999999999998,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         }
       ],
@@ -160,6 +166,9 @@
         "retried": false,
         "reservedUsd": 0.01107,
         "chargedUsd": 0.0019049999999999996,
+        "retainedUsd": 0,
+        "accountedUsd": 0.0019049999999999996,
+        "uncertainAttempts": 0,
         "maxAttemptReservedUsd": 0.0072352499999999995,
         "withinHardCap": true,
         "chargedWithinReservation": true,
@@ -262,7 +271,7 @@
           }
         },
         "latency": {
-          "totalMs": 7,
+          "totalMs": 8,
           "byStage": [
             {
               "stage": "understand",
@@ -274,7 +283,7 @@
             },
             {
               "stage": "copy",
-              "ms": 0
+              "ms": 1
             }
           ],
           "note": "mocked fetch, so latency is the pipeline overhead only"
@@ -309,7 +318,7 @@
       },
       "status": "ai",
       "costUsd": 0.000447,
-      "latencyMs": 2,
+      "latencyMs": 1,
       "servedProviders": [
         "MockedCheapestEndpoint"
       ],
@@ -319,6 +328,8 @@
           "attempt": 1,
           "reservedUsd": 0.00271335,
           "costUsd": 0.000087,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -326,6 +337,8 @@
           "attempt": 1,
           "reservedUsd": 0.011707249999999999,
           "costUsd": 0.00027299999999999997,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -333,6 +346,8 @@
           "attempt": 1,
           "reservedUsd": 0.0038043999999999994,
           "costUsd": 0.000087,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         }
       ],
@@ -343,6 +358,9 @@
         "retried": false,
         "reservedUsd": 0.018224999999999998,
         "chargedUsd": 0.00044699999999999997,
+        "retainedUsd": 0,
+        "accountedUsd": 0.00044699999999999997,
+        "uncertainAttempts": 0,
         "maxAttemptReservedUsd": 0.011707249999999999,
         "withinHardCap": true,
         "chargedWithinReservation": true,
@@ -445,7 +463,7 @@
           }
         },
         "latency": {
-          "totalMs": 2,
+          "totalMs": 1,
           "byStage": [
             {
               "stage": "understand",
@@ -453,7 +471,7 @@
             },
             {
               "stage": "design",
-              "ms": 0
+              "ms": 1
             },
             {
               "stage": "copy",
@@ -493,7 +511,7 @@
       },
       "status": "ai",
       "costUsd": 0.001905,
-      "latencyMs": 1,
+      "latencyMs": 2,
       "servedProviders": [
         "Groq"
       ],
@@ -503,6 +521,8 @@
           "attempt": 1,
           "reservedUsd": 0.0015871499999999998,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -510,6 +530,8 @@
           "attempt": 1,
           "reservedUsd": 0.0072352499999999995,
           "costUsd": 0.0011549999999999998,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -517,6 +539,8 @@
           "attempt": 1,
           "reservedUsd": 0.0022475999999999998,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         }
       ],
@@ -527,6 +551,9 @@
         "retried": false,
         "reservedUsd": 0.01107,
         "chargedUsd": 0.0019049999999999996,
+        "retainedUsd": 0,
+        "accountedUsd": 0.0019049999999999996,
+        "uncertainAttempts": 0,
         "maxAttemptReservedUsd": 0.0072352499999999995,
         "withinHardCap": true,
         "chargedWithinReservation": true,
@@ -629,11 +656,11 @@
           }
         },
         "latency": {
-          "totalMs": 1,
+          "totalMs": 2,
           "byStage": [
             {
               "stage": "understand",
-              "ms": 0
+              "ms": 1
             },
             {
               "stage": "design",
@@ -686,6 +713,8 @@
           "attempt": 1,
           "reservedUsd": 0.0016068,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -693,6 +722,8 @@
           "attempt": 1,
           "reservedUsd": 0.0072621,
           "costUsd": 0.0011549999999999998,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -700,6 +731,8 @@
           "attempt": 1,
           "reservedUsd": 0.0022727999999999997,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         }
       ],
@@ -710,6 +743,9 @@
         "retried": false,
         "reservedUsd": 0.0111417,
         "chargedUsd": 0.0019049999999999996,
+        "retainedUsd": 0,
+        "accountedUsd": 0.0019049999999999996,
+        "uncertainAttempts": 0,
         "maxAttemptReservedUsd": 0.0072621,
         "withinHardCap": true,
         "chargedWithinReservation": true,
@@ -860,7 +896,7 @@
       },
       "status": "ai",
       "costUsd": 0.000447,
-      "latencyMs": 2,
+      "latencyMs": 1,
       "servedProviders": [
         "MockedCheapestEndpoint"
       ],
@@ -870,6 +906,8 @@
           "attempt": 1,
           "reservedUsd": 0.0027592,
           "costUsd": 0.000087,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -877,6 +915,8 @@
           "attempt": 1,
           "reservedUsd": 0.0117699,
           "costUsd": 0.00027299999999999997,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -884,6 +924,8 @@
           "attempt": 1,
           "reservedUsd": 0.0038632,
           "costUsd": 0.000087,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         }
       ],
@@ -894,6 +936,9 @@
         "retried": false,
         "reservedUsd": 0.0183923,
         "chargedUsd": 0.00044699999999999997,
+        "retainedUsd": 0,
+        "accountedUsd": 0.00044699999999999997,
+        "uncertainAttempts": 0,
         "maxAttemptReservedUsd": 0.0117699,
         "withinHardCap": true,
         "chargedWithinReservation": true,
@@ -997,11 +1042,11 @@
           }
         },
         "latency": {
-          "totalMs": 2,
+          "totalMs": 1,
           "byStage": [
             {
               "stage": "understand",
-              "ms": 1
+              "ms": 0
             },
             {
               "stage": "design",
@@ -1055,6 +1100,8 @@
           "attempt": 1,
           "reservedUsd": 0.0016068,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -1062,6 +1109,8 @@
           "attempt": 1,
           "reservedUsd": 0.0072621,
           "costUsd": 0.0011549999999999998,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -1069,6 +1118,8 @@
           "attempt": 1,
           "reservedUsd": 0.0022727999999999997,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         }
       ],
@@ -1079,6 +1130,9 @@
         "retried": false,
         "reservedUsd": 0.0111417,
         "chargedUsd": 0.0019049999999999996,
+        "retainedUsd": 0,
+        "accountedUsd": 0.0019049999999999996,
+        "uncertainAttempts": 0,
         "maxAttemptReservedUsd": 0.0072621,
         "withinHardCap": true,
         "chargedWithinReservation": true,
@@ -1186,11 +1240,11 @@
           "byStage": [
             {
               "stage": "understand",
-              "ms": 1
+              "ms": 0
             },
             {
               "stage": "design",
-              "ms": 0
+              "ms": 1
             },
             {
               "stage": "copy",
@@ -1229,7 +1283,7 @@
       },
       "status": "ai",
       "costUsd": 0.001905,
-      "latencyMs": 1,
+      "latencyMs": 2,
       "servedProviders": [
         "groq"
       ],
@@ -1239,6 +1293,8 @@
           "attempt": 1,
           "reservedUsd": 0.00163455,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -1246,6 +1302,8 @@
           "attempt": 1,
           "reservedUsd": 0.0072915,
           "costUsd": 0.0011549999999999998,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -1253,6 +1311,8 @@
           "attempt": 1,
           "reservedUsd": 0.0023059499999999998,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         }
       ],
@@ -1263,6 +1323,9 @@
         "retried": false,
         "reservedUsd": 0.011231999999999999,
         "chargedUsd": 0.0019049999999999996,
+        "retainedUsd": 0,
+        "accountedUsd": 0.0019049999999999996,
+        "uncertainAttempts": 0,
         "maxAttemptReservedUsd": 0.0072915,
         "withinHardCap": true,
         "chargedWithinReservation": true,
@@ -1277,190 +1340,6 @@
         "reservedUsd": 0,
         "remainingUsd": 29.989581,
         "generationUsd": 0.0019049999999999996,
-        "softUsd": 0.18,
-        "hardUsd": 0.4
-      },
-      "issues": [],
-      "score": {
-        "grounding": {
-          "brief": "validated against the dossier before design",
-          "designIssues": [],
-          "invented": 0
-        },
-        "businessRelevance": {
-          "catalogueEntries": 8,
-          "catalogueScreens": 3,
-          "workflows": [
-            "browse",
-            "book",
-            "quote"
-          ]
-        },
-        "diversity": {
-          "ok": true,
-          "pairs": [
-            {
-              "pair": "ledger/index",
-              "score": 0.25,
-              "axesDifferent": 7,
-              "reasons": [
-                "same tabs",
-                "same block set",
-                "same trade functionality"
-              ]
-            },
-            {
-              "pair": "ledger/season",
-              "score": 0.25,
-              "axesDifferent": 7,
-              "reasons": [
-                "same opening screen",
-                "same block set",
-                "same trade functionality"
-              ]
-            },
-            {
-              "pair": "index/season",
-              "score": 0.1,
-              "axesDifferent": 7,
-              "reasons": [
-                "same block set",
-                "same trade functionality"
-              ]
-            }
-          ],
-          "minAxes": 7
-        },
-        "visual": {
-          "distinctPalettes": 3,
-          "distinctTypeAndHierarchy": 3,
-          "distinctNavModels": 3,
-          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
-        },
-        "completeness": {
-          "concepts": 3,
-          "screens": [
-            [
-              "home",
-              "catalog",
-              "more"
-            ],
-            [
-              "catalog",
-              "home",
-              "more"
-            ],
-            [
-              "home",
-              "catalog",
-              "more",
-              "search"
-            ]
-          ],
-          "nodes": 18,
-          "components": 9,
-          "editability": {
-            "missing": 3,
-            "unknown": 0,
-            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
-          }
-        },
-        "latency": {
-          "totalMs": 1,
-          "byStage": [
-            {
-              "stage": "understand",
-              "ms": 0
-            },
-            {
-              "stage": "design",
-              "ms": 0
-            },
-            {
-              "stage": "copy",
-              "ms": 0
-            }
-          ],
-          "note": "mocked fetch, so latency is the pipeline overhead only"
-        },
-        "cost": {
-          "usd": 0.001905,
-          "calls": 3,
-          "stages": [
-            "understand",
-            "design",
-            "copy"
-          ],
-          "softLimitReached": false
-        }
-      }
-    },
-    {
-      "business": {
-        "id": "afl",
-        "label": "Architecture for London",
-        "type": "Professional services",
-        "source": "https://www.architectureforlondon.com/",
-        "fixture": "docs/qa/generation-benchmark-2026-11-21/afl (saved crawl)"
-      },
-      "provider": {
-        "id": "openrouter",
-        "arm": "primary",
-        "label": "OpenRouter · cheapest eligible endpoint",
-        "model": "openai/gpt-oss-120b",
-        "keyEnv": "OPENROUTER_API_KEY",
-        "routingLabel": "OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it"
-      },
-      "status": "ai",
-      "costUsd": 0.000447,
-      "latencyMs": 2,
-      "servedProviders": [
-        "MockedCheapestEndpoint"
-      ],
-      "attempts": [
-        {
-          "stage": "understand",
-          "attempt": 1,
-          "reservedUsd": 0.0028239499999999996,
-          "costUsd": 0.000087,
-          "ok": true
-        },
-        {
-          "stage": "design",
-          "attempt": 1,
-          "reservedUsd": 0.011838499999999998,
-          "costUsd": 0.00027299999999999997,
-          "ok": true
-        },
-        {
-          "stage": "copy",
-          "attempt": 1,
-          "reservedUsd": 0.003940549999999999,
-          "costUsd": 0.000087,
-          "ok": true
-        }
-      ],
-      "verification": {
-        "poolClaimUsd": 0.4,
-        "hardCapUsd": 0.4,
-        "attemptsMade": 3,
-        "retried": false,
-        "reservedUsd": 0.018602999999999995,
-        "chargedUsd": 0.00044699999999999997,
-        "maxAttemptReservedUsd": 0.011838499999999998,
-        "withinHardCap": true,
-        "chargedWithinReservation": true,
-        "overReservedUsd": 0,
-        "servedProviders": [
-          "MockedCheapestEndpoint"
-        ]
-      },
-      "budget": {
-        "totalUsd": 30,
-        "spentUsd": 0.010865999999999997,
-        "reservedUsd": 0,
-        "remainingUsd": 29.989134,
-        "generationUsd": 0.00044699999999999997,
         "softUsd": 0.18,
         "hardUsd": 0.4
       },
@@ -1568,6 +1447,199 @@
           "note": "mocked fetch, so latency is the pipeline overhead only"
         },
         "cost": {
+          "usd": 0.001905,
+          "calls": 3,
+          "stages": [
+            "understand",
+            "design",
+            "copy"
+          ],
+          "softLimitReached": false
+        }
+      }
+    },
+    {
+      "business": {
+        "id": "afl",
+        "label": "Architecture for London",
+        "type": "Professional services",
+        "source": "https://www.architectureforlondon.com/",
+        "fixture": "docs/qa/generation-benchmark-2026-11-21/afl (saved crawl)"
+      },
+      "provider": {
+        "id": "openrouter",
+        "arm": "primary",
+        "label": "OpenRouter · cheapest eligible endpoint",
+        "model": "openai/gpt-oss-120b",
+        "keyEnv": "OPENROUTER_API_KEY",
+        "routingLabel": "OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it"
+      },
+      "status": "ai",
+      "costUsd": 0.000447,
+      "latencyMs": 1,
+      "servedProviders": [
+        "MockedCheapestEndpoint"
+      ],
+      "attempts": [
+        {
+          "stage": "understand",
+          "attempt": 1,
+          "reservedUsd": 0.0028239499999999996,
+          "costUsd": 0.000087,
+          "retainedUsd": 0,
+          "billing": "billed",
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "attempt": 1,
+          "reservedUsd": 0.011838499999999998,
+          "costUsd": 0.00027299999999999997,
+          "retainedUsd": 0,
+          "billing": "billed",
+          "ok": true
+        },
+        {
+          "stage": "copy",
+          "attempt": 1,
+          "reservedUsd": 0.003940549999999999,
+          "costUsd": 0.000087,
+          "retainedUsd": 0,
+          "billing": "billed",
+          "ok": true
+        }
+      ],
+      "verification": {
+        "poolClaimUsd": 0.4,
+        "hardCapUsd": 0.4,
+        "attemptsMade": 3,
+        "retried": false,
+        "reservedUsd": 0.018602999999999995,
+        "chargedUsd": 0.00044699999999999997,
+        "retainedUsd": 0,
+        "accountedUsd": 0.00044699999999999997,
+        "uncertainAttempts": 0,
+        "maxAttemptReservedUsd": 0.011838499999999998,
+        "withinHardCap": true,
+        "chargedWithinReservation": true,
+        "overReservedUsd": 0,
+        "servedProviders": [
+          "MockedCheapestEndpoint"
+        ]
+      },
+      "budget": {
+        "totalUsd": 30,
+        "spentUsd": 0.010865999999999997,
+        "reservedUsd": 0,
+        "remainingUsd": 29.989134,
+        "generationUsd": 0.00044699999999999997,
+        "softUsd": 0.18,
+        "hardUsd": 0.4
+      },
+      "issues": [],
+      "score": {
+        "grounding": {
+          "brief": "validated against the dossier before design",
+          "designIssues": [],
+          "invented": 0
+        },
+        "businessRelevance": {
+          "catalogueEntries": 8,
+          "catalogueScreens": 3,
+          "workflows": [
+            "browse",
+            "book",
+            "quote"
+          ]
+        },
+        "diversity": {
+          "ok": true,
+          "pairs": [
+            {
+              "pair": "ledger/index",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same tabs",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "ledger/season",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same opening screen",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "index/season",
+              "score": 0.1,
+              "axesDifferent": 7,
+              "reasons": [
+                "same block set",
+                "same trade functionality"
+              ]
+            }
+          ],
+          "minAxes": 7
+        },
+        "visual": {
+          "distinctPalettes": 3,
+          "distinctTypeAndHierarchy": 3,
+          "distinctNavModels": 3,
+          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
+        },
+        "completeness": {
+          "concepts": 3,
+          "screens": [
+            [
+              "home",
+              "catalog",
+              "more"
+            ],
+            [
+              "catalog",
+              "home",
+              "more"
+            ],
+            [
+              "home",
+              "catalog",
+              "more",
+              "search"
+            ]
+          ],
+          "nodes": 18,
+          "components": 9,
+          "editability": {
+            "missing": 3,
+            "unknown": 0,
+            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
+          }
+        },
+        "latency": {
+          "totalMs": 1,
+          "byStage": [
+            {
+              "stage": "understand",
+              "ms": 0
+            },
+            {
+              "stage": "design",
+              "ms": 0
+            },
+            {
+              "stage": "copy",
+              "ms": 0
+            }
+          ],
+          "note": "mocked fetch, so latency is the pipeline overhead only"
+        },
+        "cost": {
           "usd": 0.000447,
           "calls": 3,
           "stages": [
@@ -1608,6 +1680,8 @@
           "attempt": 1,
           "reservedUsd": 0.00163455,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -1615,6 +1689,8 @@
           "attempt": 1,
           "reservedUsd": 0.0072915,
           "costUsd": 0.0011549999999999998,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         },
         {
@@ -1622,6 +1698,8 @@
           "attempt": 1,
           "reservedUsd": 0.0023059499999999998,
           "costUsd": 0.000375,
+          "retainedUsd": 0,
+          "billing": "billed",
           "ok": true
         }
       ],
@@ -1632,6 +1710,9 @@
         "retried": false,
         "reservedUsd": 0.011231999999999999,
         "chargedUsd": 0.0019049999999999996,
+        "retainedUsd": 0,
+        "accountedUsd": 0.0019049999999999996,
+        "uncertainAttempts": 0,
         "maxAttemptReservedUsd": 0.0072915,
         "withinHardCap": true,
         "chargedWithinReservation": true,
@@ -1743,7 +1824,7 @@
             },
             {
               "stage": "design",
-              "ms": 1
+              "ms": 0
             },
             {
               "stage": "copy",
@@ -1987,7 +2068,7 @@
   "mockedCalls": 27,
   "latency": {
     "minMs": 1,
-    "maxMs": 7,
+    "maxMs": 8,
     "medianMs": 2
   },
   "notice": "Mocked deterministic stand-in answers. Neither provider was contacted, no money was spent, and the columns are not a quality comparison. The pinned control and the served-endpoint records are exercised with stand-in endpoint names. Set both keys and --approve-trial for the real run."

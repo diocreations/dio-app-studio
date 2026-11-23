@@ -520,15 +520,15 @@ function markdown(data) {
   lines.push('')
   lines.push('## Routing, charged cost and the cap')
   lines.push('')
-  lines.push('Every HTTP attempt is reserved before it is sent and settled with its charge, including an attempt that failed and was retried. `served` is what the gateway reported, not what the routing asked for.')
+  lines.push('Every HTTP attempt is reserved before it is sent and settled with its charge, including an attempt that failed and was retried. `served` is what the gateway reported, not what the routing asked for. A timeout, dropped connection, 429/5xx, or an answer without usable billing information keeps its reservation as `retained` instead of refunding it.')
   lines.push('')
-  lines.push('| Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Reserved (USD) | Charged (USD) | Hard cap (USD) | Charged ≤ cap | Charged ≤ reservation | Retried |')
-  lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |')
+  lines.push('| Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Reserved (USD) | Charged (USD) | Retained (uncertain) | Accounted (USD) | Hard cap (USD) | Within cap | Charged ≤ reservation | Uncertain attempts | Retried |')
+  lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |')
   for (const run of data.runs) {
     const verification = run.verification
     const expected = run.provider.expectedProvider ? `; pinned to ${run.provider.expectedProvider}` : ''
     lines.push(
-      `| ${run.business.label} | ${run.provider.id} | ${run.provider.routingLabel}${expected} | ${run.servedProviders?.join(', ') || '—'} | ${verification.attemptsMade} | ${verification.reservedUsd.toFixed(6)} | ${verification.chargedUsd.toFixed(6)} | ${verification.hardCapUsd.toFixed(2)} | ${verification.withinHardCap ? 'yes' : 'NO'} | ${verification.chargedWithinReservation ? 'yes' : 'NO'} | ${verification.retried ? 'yes' : 'no'} |`,
+      `| ${run.business.label} | ${run.provider.id} | ${run.provider.routingLabel}${expected} | ${run.servedProviders?.join(', ') || '—'} | ${verification.attemptsMade} | ${verification.reservedUsd.toFixed(6)} | ${verification.chargedUsd.toFixed(6)} | ${verification.retainedUsd.toFixed(6)} | ${verification.accountedUsd.toFixed(6)} | ${verification.hardCapUsd.toFixed(2)} | ${verification.withinHardCap ? 'yes' : 'NO'} | ${verification.chargedWithinReservation ? 'yes' : 'NO'} | ${verification.uncertainAttempts} | ${verification.retried ? 'yes' : 'no'} |`,
     )
   }
   lines.push('')
@@ -568,7 +568,7 @@ function markdown(data) {
   lines.push('- **Visual structure** — distinct palettes, type/hierarchy pairings and navigation models. Contrast is a validator rule; taste is not scored.')
   lines.push('- **Completeness and editability** — concepts, screens, document nodes, components, and a coverage audit: every visible node must reach the rendered page under its own id, or it is not editable from the same document.')
   lines.push('- **Latency** — wall clock for the whole generation and per stage. Mocked mode measures pipeline overhead only; the live run measures the gateways.')
-  lines.push('- **Cost and routing** — OpenRouter settles from its reported `usage.cost`; Groq is priced at its published rate from reported tokens. The endpoint that served each call is recorded, every attempt is reconciled against its reservation and the $0.40 cap, and a retried or failed attempt is counted rather than hidden.')
+  lines.push('- **Cost and routing** — OpenRouter settles from its reported `usage.cost`; Groq is priced at its published rate from reported tokens. The endpoint that served each call is recorded, every attempt is reconciled against its reservation and the $0.40 cap, and a retried or failed attempt is counted rather than hidden. A charge that cannot be established (timeout, dropped connection, 429/5xx, no usage) is conservatively retained: it is never released as free and never disappears from the budget.')
   lines.push('')
   lines.push('## Worst case per generation')
   lines.push('')

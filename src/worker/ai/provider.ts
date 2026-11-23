@@ -48,7 +48,20 @@ export type GenerateResult = {
   costUsd: number
   /** The provider's own charge, untouched. Absent for Anthropic and OpenAI. */
   reportedCostUsd?: number
+  /** How certain the charge is. A response without usable billing information is
+   *  `unknown`, and its reservation is retained rather than refunded. */
+  billing?: BillingState
 }
+
+/**
+ * How well an attempt's charge is established:
+ *  - `billed`: confirmed usage and a charge that can be settled;
+ *  - `not_billed`: a confirmed rejection, where the request was refused before
+ *    inference and nothing is owed;
+ *  - `unknown`: a timeout, dropped connection, 429/5xx or a response without
+ *    usable billing information. The reservation is kept: it is never free.
+ */
+export type BillingState = 'billed' | 'not_billed' | 'unknown'
 
 export type AiProvider = {
   name: ProviderName
@@ -83,11 +96,22 @@ export class ProviderError extends Error {
   status?: number
   retryable: boolean
   retryAfterMs?: number
+  /** Defaults to `unknown`: an error that has not been classified is never
+   *  assumed to be free. */
+  billing: BillingState = 'unknown'
+  /** The confirmed charge attached to a failed attempt, when there is one. */
+  costUsd?: number
 
   constructor(
     code: ProviderErrorCode,
     message: string,
-    options: { status?: number; retryable?: boolean; retryAfterMs?: number } = {},
+    options: {
+      status?: number
+      retryable?: boolean
+      retryAfterMs?: number
+      billing?: BillingState
+      costUsd?: number
+    } = {},
   ) {
     super(message)
     this.name = 'ProviderError'
@@ -95,6 +119,8 @@ export class ProviderError extends Error {
     this.status = options.status
     this.retryable = options.retryable === true
     this.retryAfterMs = options.retryAfterMs
+    this.billing = options.billing ?? 'unknown'
+    this.costUsd = options.costUsd
   }
 }
 
@@ -176,13 +202,29 @@ async function postJson(
   }
   const parsed = (await response.json().catch(() => null)) as Record<string, unknown> | null
   if (!response.ok) {
+    // A gateway can return billing information on a failed request; that charge
+    // is accounted for. Without it, a non-2xx response is uncertain even on a
+    // 4xx: the request may have reached inference before failing, so its
+    // reservation is kept rather than released. Only an error raised locally
+    // before the request is sent is a confirmed no-bill rejection.
+    const reported = reportedCostOf(parsed)
     throw new ProviderError('http', messageOf(parsed, `${label} returned ${response.status}`), {
       status: response.status,
       retryable: response.status === 429 || response.status >= 500,
       retryAfterMs: retryAfterMsOf(response.headers.get('retry-after')),
+      billing: reported !== undefined ? 'billed' : 'unknown',
+      costUsd: reported,
     })
   }
   return parsed
+}
+
+/** A numeric `usage.cost`, the only dollar figure a gateway reports. */
+function reportedCostOf(body: Record<string, unknown> | null): number | undefined {
+  const usage = body?.usage
+  if (!usage || typeof usage !== 'object') return undefined
+  const cost = (usage as Record<string, unknown>).cost
+  return typeof cost === 'number' && Number.isFinite(cost) && cost >= 0 ? cost : undefined
 }
 
 /** OpenAI-compatible `message.content` is a string on these models; an array of
@@ -477,15 +519,31 @@ export function openRouterProvider(
           ? usageRaw.cost
           : undefined
       const price = options.price ?? priceFor(model)
-      /** Attach the charge for an answer that will not be used. */
+      const usedTokens =
+        usage.inputTokens +
+        usage.cachedInputTokens +
+        usage.outputTokens +
+        (usage.reasoningTokens ?? 0)
+      /** Attach a confirmed charge, or mark the answer as unbillable. */
       const charge = (error: ProviderError): ProviderError => {
-        const billed = reported ?? costWithPrice(price, usage)
-        ;(error as ProviderError & { costUsd?: number }).costUsd = billed
+        if (reported !== undefined) {
+          error.costUsd = reported
+          error.billing = 'billed'
+        } else if (usedTokens > 0) {
+          error.costUsd = costWithPrice(price, usage)
+          error.billing = 'billed'
+        } else {
+          // No usable usage: the charge is unknown, so the pipeline keeps the
+          // reservation instead of releasing it as if the call were free.
+          error.billing = 'unknown'
+        }
         ;(error as ProviderError & { usage?: Usage }).usage = usage
         return error
       }
       if (!choice) {
-        throw new ProviderError('parse', messageOf(body, 'OpenRouter returned no choices.'))
+        // Some gateways report usage and a charge on a body without choices;
+        // that charge is preserved before the parse failure is raised.
+        throw charge(new ProviderError('parse', messageOf(body, 'OpenRouter returned no choices.')))
       }
       if (choice.finish_reason === 'length') {
         throw charge(new ProviderError('truncated', 'The design answer was cut off at the token limit.'))
@@ -545,6 +603,7 @@ export function openRouterProvider(
         requestId: typeof body?.id === 'string' ? body.id : '',
         costUsd: reported ?? costWithPrice(price, usage),
         reportedCostUsd: reported,
+        billing: reported !== undefined || usedTokens > 0 ? 'billed' : 'unknown',
       }
     },
   }
@@ -785,7 +844,8 @@ export function groqPaidProvider(
     timeoutMs?: number
   },
 ): AiProvider {
-  if (!apiKey.trim()) throw new ProviderError('no_key', 'GROQ_API_KEY is not set')
+  if (!apiKey.trim())
+    throw new ProviderError('no_key', 'GROQ_API_KEY is not set', { billing: 'not_billed' })
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS
   const effortFor = (stage: AiStage) => options.reasoning?.[stage]
   const reserveFor = (stage: AiStage, visibleMax: number) =>
@@ -821,12 +881,22 @@ export function groqPaidProvider(
         'Groq',
       )
       const audited = auditChatCompletion(body ?? {}, 'Groq')
+      const usedTokens =
+        audited.usage.inputTokens +
+        audited.usage.cachedInputTokens +
+        audited.usage.outputTokens +
+        (audited.usage.reasoningTokens ?? 0)
       if (audited.problem) {
         // Tokens were still spent, so the charge is booked before the failure
         // reaches the pipeline. Otherwise a truncated answer would look free.
-        const error = audited.problem as ProviderError & { usage?: Usage; costUsd?: number }
+        // Without usage there is nothing to price: the charge stays unknown and
+        // the reservation is retained.
+        const error = audited.problem as ProviderError & { usage?: Usage }
         error.usage = audited.usage
-        error.costUsd = costWithPrice(options.price, audited.usage)
+        if (usedTokens > 0) {
+          error.costUsd = costWithPrice(options.price, audited.usage)
+          error.billing = 'billed'
+        }
         throw error
       }
       const usage = audited.usage
@@ -840,6 +910,7 @@ export function groqPaidProvider(
         latencyMs: Date.now() - started,
         requestId: typeof body?.id === 'string' ? body.id : '',
         costUsd: costWithPrice(options.price, usage),
+        billing: usedTokens > 0 ? 'billed' : 'unknown',
       }
     },
   }
@@ -986,10 +1057,15 @@ function sleep(ms: number): Promise<void> {
 export type AttemptGuard = {
   /** Throws when this attempt's reservation does not fit the budget. */
   begin(): void
-  /** Releases the reservation and books what the attempt actually cost. An
-   *  adapter that throws after the provider has billed attaches `costUsd` to
-   *  its error, and that charge is booked too. */
-  end(result?: { costUsd: number; ok?: boolean; servedProvider?: string }): void
+  /** Settles the reservation according to how certain the charge is. A
+   *  confirmed charge is booked; a confirmed no-bill rejection releases it; an
+   *  unknown charge keeps it. See `BillingState`. */
+  end(result?: {
+    costUsd?: number
+    billing?: BillingState
+    ok?: boolean
+    servedProvider?: string
+  }): void
 }
 
 /** One retry, only for transport failures, timeouts, 429 and 5xx. A schema or
@@ -1007,8 +1083,11 @@ export async function generateWithRetry(
       result = await provider.generate(request)
     } catch (error) {
       const billed = (error as { costUsd?: number }).costUsd
+      const billing =
+        error instanceof ProviderError ? error.billing : (undefined as BillingState | undefined)
       guard?.end({
-        costUsd: typeof billed === 'number' && Number.isFinite(billed) ? billed : 0,
+        costUsd: typeof billed === 'number' && Number.isFinite(billed) ? billed : undefined,
+        billing,
         ok: false,
         servedProvider: (error as { providerServed?: string }).providerServed,
       })
@@ -1018,7 +1097,7 @@ export async function generateWithRetry(
       await sleep(delay)
       continue
     }
-    guard?.end({ costUsd: result.costUsd, ok: true })
+    guard?.end({ costUsd: result.costUsd, billing: result.billing, ok: true })
     if (!result) throw new ProviderError('transport', 'The provider returned nothing.')
     return result
   }

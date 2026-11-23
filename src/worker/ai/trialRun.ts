@@ -61,6 +61,12 @@ export type TrialRunVerification = {
   reservedUsd: number
   /** Sum actually charged across successful and failed attempts. */
   chargedUsd: number
+  /** Reservations kept because the charge could not be established. */
+  retainedUsd: number
+  /** `chargedUsd + retainedUsd`: what the trial budget had to absorb. */
+  accountedUsd: number
+  /** Attempts whose charge is unknown (timeout, transport, 429/5xx, no usage). */
+  uncertainAttempts: number
   maxAttemptReservedUsd: number
   /** Charged never exceeded the generation's hard cap. */
   withinHardCap: boolean
@@ -161,8 +167,16 @@ function verificationOf(
   poolClaimUsd: number,
 ): TrialRunVerification {
   const reservedUsd = attempts.reduce((total, attempt) => total + attempt.reservedUsd, 0)
+  const retainedUsd = attempts.reduce((total, attempt) => total + attempt.retainedUsd, 0)
+  const chargedFromAttempts = attempts.reduce((total, attempt) => total + attempt.costUsd, 0)
+  // A failed attempt that was billed carries its charge; prefer that sum when it
+  // is available, and fall back to the ledger total for a run that failed
+  // outside the attempt log.
+  const confirmedUsd = chargedFromAttempts > 0 ? chargedFromAttempts : chargedUsd - retainedUsd
   const overReservedUsd = attempts.reduce(
-    (total, attempt) => total + Math.max(0, attempt.costUsd - attempt.reservedUsd),
+    (total, attempt) =>
+      total +
+      (attempt.billing === 'billed' ? Math.max(0, attempt.costUsd - attempt.reservedUsd) : 0),
     0,
   )
   return {
@@ -171,12 +185,15 @@ function verificationOf(
     attemptsMade: attempts.length,
     retried: attempts.length > calls.length,
     reservedUsd,
-    chargedUsd,
+    chargedUsd: Math.max(0, confirmedUsd),
+    retainedUsd,
+    accountedUsd: Math.max(0, confirmedUsd) + retainedUsd,
+    uncertainAttempts: attempts.filter((attempt) => attempt.billing === 'unknown').length,
     maxAttemptReservedUsd: attempts.reduce(
       (highest, attempt) => Math.max(highest, attempt.reservedUsd),
       0,
     ),
-    withinHardCap: chargedUsd <= TRIAL_LIMITS.hardUsd + 1e-9,
+    withinHardCap: Math.max(0, confirmedUsd) + retainedUsd <= TRIAL_LIMITS.hardUsd + 1e-9,
     chargedWithinReservation: overReservedUsd <= 1e-9,
     overReservedUsd,
     servedProviders: [

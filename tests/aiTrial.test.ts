@@ -14,6 +14,9 @@ import {
   trialProviderById,
 } from '../src/worker/ai/trial'
 import { runTrialGeneration } from '../src/worker/ai/trialRun'
+import { runDesignPipeline } from '../src/worker/ai/pipeline'
+import { createLedger } from '../src/worker/ai/ledger'
+import { ProviderError, type AiProvider } from '../src/worker/ai/provider'
 import type { BusinessBrief, DesignSet } from '../src/worker/ai/contracts'
 import { parseBrief } from '../src/worker/ai/validate'
 import { briefFrom, copySetFor, crawlSpec, sampleDesignSet } from './freeAiMock'
@@ -49,11 +52,18 @@ function trialFetch(options: {
   served?: string
   /** Fail this stage once with a retryable 503 before answering. */
   failOnce?: Stage
+  /** Fail this stage once with a non-2xx body that carries billing information. */
+  failOnceWithCost?: { stage: Stage; status: number; cost: number }
   /** Cut this stage off at the token limit, after the provider has billed. */
   truncate?: Stage
+  /** Answer with usage but no choices at all. */
+  noChoices?: Stage
+  /** Answer without any usage block: the charge cannot be established. */
+  omitUsage?: Stage
 }): { fetch: typeof fetch; calls: TrialCalls } {
   const calls: TrialCalls = { hosts: [], bodies: [], stages: [], auth: [] }
   let failed = false
+  let failedWithCost = false
   const fetchImpl = (async (input: string | URL | Request, init?: RequestInit) => {
     const url = new URL(String(input))
     calls.hosts.push(url.hostname)
@@ -76,6 +86,16 @@ function trialFetch(options: {
         headers: { 'content-type': 'application/json' },
       })
     }
+    if (options.failOnceWithCost?.stage === stage && !failedWithCost) {
+      failedWithCost = true
+      return new Response(
+        JSON.stringify({
+          error: 'upstream failed after inference',
+          usage: { prompt_tokens: 900, completion_tokens: 100, cost: options.failOnceWithCost.cost },
+        }),
+        { status: options.failOnceWithCost.status, headers: { 'content-type': 'application/json' } },
+      )
+    }
     const answer =
       stage === 'understand'
         ? options.brief
@@ -90,21 +110,25 @@ function trialFetch(options: {
     if (url.hostname === 'openrouter.ai') {
       usage.cost = options.cost?.[stage] ?? 0.001
     }
+    const choices =
+      options.noChoices === stage
+        ? []
+        : [
+            {
+              message: {
+                role: 'assistant',
+                content: truncated ? '{"concepts":[]}' : JSON.stringify(answer),
+              },
+              finish_reason: truncated ? 'length' : 'stop',
+            },
+          ]
     return new Response(
       JSON.stringify({
         id: `gen-${calls.stages.length}`,
         model: body.model,
         ...(url.hostname === 'openrouter.ai' ? { provider: options.served ?? 'Groq' } : {}),
-        choices: [
-          {
-            message: {
-              role: 'assistant',
-              content: truncated ? '{"concepts":[]}' : JSON.stringify(answer),
-            },
-            finish_reason: truncated ? 'length' : 'stop',
-          },
-        ],
-        usage,
+        choices,
+        ...(options.omitUsage === stage ? {} : { usage }),
       }),
       { status: 200, headers: { 'content-type': 'application/json' } },
     )
@@ -491,6 +515,174 @@ describe('the trial schema cannot drift from its migration', () => {
     ])
     expect(TRIAL_CLAIM_SQL).toContain('ON CONFLICT(trial_id) DO UPDATE')
     expect(TRIAL_CLAIM_SQL).toContain('<= ?')
+  })
+})
+
+describe('an uncertain charge keeps its reservation', () => {
+  /** A provider that always fails with the given error, for the guard path. */
+  const failingProvider = (makeError: () => ProviderError): AiProvider => ({
+    name: 'groq',
+    modelFor: () => 'openai/gpt-oss-120b',
+    priceFor: () => GROQ_PRICE,
+    reservationPriceFor: () => GROQ_PRICE,
+    generate: async () => {
+      throw makeError()
+    },
+  })
+
+  const failWith = async (error: ProviderError) => {
+    const { spec, dossier } = await crawlSpec()
+    const ledger = createLedger(TRIAL_LIMITS.hardUsd)
+    let thrown: unknown
+    try {
+      await runDesignPipeline({
+        provider: failingProvider(() => error),
+        dossier,
+        spec,
+        ledger,
+      })
+    } catch (caught) {
+      thrown = caught
+    }
+    return { ledger, thrown }
+  }
+
+  test('a timeout is retried and both attempts keep their reservation', async () => {
+    const { ledger, thrown } = await failWith(
+      new ProviderError('timeout', 'Groq did not answer within 300000ms.', { retryable: true }),
+    )
+    const attempts = (thrown as { attemptsSpent?: { reservedUsd: number; retainedUsd: number; billing: string; costUsd: number }[] })
+      .attemptsSpent ?? []
+    // One retry: the first uncertain attempt cannot disappear from the budget.
+    expect(attempts).toHaveLength(2)
+    expect(attempts.every((attempt) => attempt.billing === 'unknown')).toBe(true)
+    expect(attempts.every((attempt) => attempt.retainedUsd === attempt.reservedUsd)).toBe(true)
+    expect(attempts.every((attempt) => attempt.costUsd === 0)).toBe(true)
+    expect(ledger.reservedUsd()).toBe(0)
+    expect(ledger.spentUsd()).toBeCloseTo(
+      attempts.reduce((total, attempt) => total + attempt.reservedUsd, 0),
+      9,
+    )
+  })
+
+  test('a dropped connection is also unknown, not free', async () => {
+    const { ledger, thrown } = await failWith(
+      new ProviderError('transport', 'Groq could not be reached (socket closed).', { retryable: true }),
+    )
+    const attempts = (thrown as { attemptsSpent?: { retainedUsd: number }[] }).attemptsSpent ?? []
+    expect(attempts).toHaveLength(2)
+    expect(ledger.spentUsd()).toBeGreaterThan(0)
+    expect(ledger.retainedUsd()).toBeCloseTo(
+      attempts.reduce((total, attempt) => total + attempt.retainedUsd, 0),
+      9,
+    )
+  })
+
+  test('a confirmed rejection before inference releases the reservation', async () => {
+    const { ledger, thrown } = await failWith(
+      new ProviderError('http', 'invalid request', {
+        status: 400,
+        retryable: false,
+        billing: 'not_billed',
+      }),
+    )
+    const attempts = (thrown as { attemptsSpent?: { billing: string; retainedUsd: number }[] })
+      .attemptsSpent ?? []
+    expect(attempts).toHaveLength(1)
+    expect(attempts[0].billing).toBe('not_billed')
+    expect(attempts[0].retainedUsd).toBe(0)
+    expect(ledger.spentUsd()).toBe(0)
+    expect(ledger.reservedUsd()).toBe(0)
+  })
+
+  test('a 4xx without billing information is uncertain, not free', async () => {
+    const { ledger, thrown } = await failWith(
+      new ProviderError('http', 'OpenRouter returned 400', { status: 400, retryable: false }),
+    )
+    const attempts = (thrown as { attemptsSpent?: { billing: string; retainedUsd: number }[] })
+      .attemptsSpent ?? []
+    expect(attempts).toHaveLength(1)
+    expect(attempts[0].billing).toBe('unknown')
+    expect(attempts[0].retainedUsd).toBeGreaterThan(0)
+    expect(ledger.spentUsd()).toBeGreaterThan(0)
+  })
+
+  test('a 5xx after inference is charged when the body reports usage.cost', async () => {
+    const { spec, dossier } = await crawlSpec()
+    const { fetch, calls } = trialFetch({
+      brief: briefFrom(dossier),
+      set: sampleDesignSet(),
+      failOnceWithCost: { stage: 'understand', status: 503, cost: 0.004 },
+    })
+    globalThis.fetch = fetch
+    const run = await runTrialGeneration({
+      providerId: 'openrouter',
+      spec,
+      dossier,
+      env: trialEnv(),
+      store: memoryTrialStore(),
+    })
+    expect(run.status).toBe('ai')
+    expect(calls.stages).toEqual(['understand', 'understand', 'design', 'copy'])
+    expect(run.attempts).toHaveLength(4)
+    expect(run.attempts[0].billing).toBe('billed')
+    expect(run.attempts[0].costUsd).toBeCloseTo(0.004, 9)
+    expect(run.attempts[0].retainedUsd).toBe(0)
+    expect(run.verification.chargedUsd).toBeGreaterThanOrEqual(0.004)
+  })
+
+  test('usage without choices is charged before the parse failure', async () => {
+    const { spec, dossier } = await crawlSpec()
+    const { fetch } = trialFetch({
+      brief: briefFrom(dossier),
+      set: sampleDesignSet(),
+      noChoices: 'understand',
+      cost: { understand: 0.006 },
+    })
+    globalThis.fetch = fetch
+    const run = await runTrialGeneration({
+      providerId: 'openrouter',
+      spec,
+      dossier,
+      env: trialEnv(),
+      store: memoryTrialStore(),
+    })
+    expect(run.status).toBe('failed')
+    expect(run.reason).toBe('parse')
+    expect(run.attempts).toHaveLength(1)
+    expect(run.attempts[0].billing).toBe('billed')
+    expect(run.attempts[0].costUsd).toBeCloseTo(0.006, 9)
+    expect(run.verification.chargedUsd).toBeCloseTo(0.006, 9)
+    expect(run.verification.retainedUsd).toBe(0)
+  })
+
+  test('a response with no usage at all retains the reservation and stays visible', async () => {
+    const { spec, dossier } = await crawlSpec()
+    const { fetch } = trialFetch({
+      brief: briefFrom(dossier),
+      set: sampleDesignSet(),
+      omitUsage: 'understand',
+      cost: { design: 0.002, copy: 0.001 },
+    })
+    globalThis.fetch = fetch
+    const run = await runTrialGeneration({
+      providerId: 'openrouter',
+      spec,
+      dossier,
+      env: trialEnv(),
+      store: memoryTrialStore(),
+    })
+    expect(run.status).toBe('ai')
+    expect(run.attempts[0].billing).toBe('unknown')
+    expect(run.attempts[0].costUsd).toBe(0)
+    expect(run.attempts[0].retainedUsd).toBeGreaterThan(0)
+    expect(run.verification.uncertainAttempts).toBe(1)
+    expect(run.verification.retainedUsd).toBeGreaterThan(0)
+    expect(run.verification.accountedUsd).toBeCloseTo(
+      run.verification.chargedUsd + run.verification.retainedUsd,
+      9,
+    )
+    expect(run.verification.withinHardCap).toBe(true)
   })
 })
 

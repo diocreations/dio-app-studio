@@ -1,6 +1,6 @@
 # Plattr AI trial: Groq vs OpenRouter
 
-- Generated: 2026-11-23T15:10:05.229Z
+- Generated: 2026-11-23T15:22:23.073Z
 - Mode: **mocked** — not comparable
 - Gate: simulated (mocked mode)
 - Same model on every arm: `openai/gpt-oss-120b`
@@ -23,31 +23,31 @@
 
 | Business | Type | Arm | Status | Served by | Latency (ms) | Cost (USD) | Concepts | Diversity | Min axes | Nodes | Editable (missing/unknown) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| GeeStores | Jewellery retail | groq | ai | groq | 7 | 0.0019 | 3 | distinct | 7 | 15 | 3/0 |
-| GeeStores | Jewellery retail | openrouter | ai | MockedCheapestEndpoint | 2 | 0.0004 | 3 | distinct | 7 | 15 | 3/0 |
-| GeeStores | Jewellery retail | openrouter-groq (control) | ai | Groq | 1 | 0.0019 | 3 | distinct | 7 | 15 | 3/0 |
+| GeeStores | Jewellery retail | groq | ai | groq | 8 | 0.0019 | 3 | distinct | 7 | 15 | 3/0 |
+| GeeStores | Jewellery retail | openrouter | ai | MockedCheapestEndpoint | 1 | 0.0004 | 3 | distinct | 7 | 15 | 3/0 |
+| GeeStores | Jewellery retail | openrouter-groq (control) | ai | Groq | 2 | 0.0019 | 3 | distinct | 7 | 15 | 3/0 |
 | Padella | Restaurant | groq | ai | groq | 2 | 0.0019 | 3 | distinct | 7 | 12 | 0/0 |
-| Padella | Restaurant | openrouter | ai | MockedCheapestEndpoint | 2 | 0.0004 | 3 | distinct | 7 | 12 | 0/0 |
+| Padella | Restaurant | openrouter | ai | MockedCheapestEndpoint | 1 | 0.0004 | 3 | distinct | 7 | 12 | 0/0 |
 | Padella | Restaurant | openrouter-groq (control) | ai | Groq | 2 | 0.0019 | 3 | distinct | 7 | 12 | 0/0 |
-| Architecture for London | Professional services | groq | ai | groq | 1 | 0.0019 | 3 | distinct | 7 | 18 | 3/0 |
-| Architecture for London | Professional services | openrouter | ai | MockedCheapestEndpoint | 2 | 0.0004 | 3 | distinct | 7 | 18 | 3/0 |
+| Architecture for London | Professional services | groq | ai | groq | 2 | 0.0019 | 3 | distinct | 7 | 18 | 3/0 |
+| Architecture for London | Professional services | openrouter | ai | MockedCheapestEndpoint | 1 | 0.0004 | 3 | distinct | 7 | 18 | 3/0 |
 | Architecture for London | Professional services | openrouter-groq (control) | ai | Groq | 1 | 0.0019 | 3 | distinct | 7 | 18 | 3/0 |
 
 ## Routing, charged cost and the cap
 
-Every HTTP attempt is reserved before it is sent and settled with its charge, including an attempt that failed and was retried. `served` is what the gateway reported, not what the routing asked for.
+Every HTTP attempt is reserved before it is sent and settled with its charge, including an attempt that failed and was retried. `served` is what the gateway reported, not what the routing asked for. A timeout, dropped connection, 429/5xx, or an answer without usable billing information keeps its reservation as `retained` instead of refunding it.
 
-| Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Reserved (USD) | Charged (USD) | Hard cap (USD) | Charged ≤ cap | Charged ≤ reservation | Retried |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| GeeStores | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011070 | 0.001905 | 0.40 | yes | yes | no |
-| GeeStores | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018225 | 0.000447 | 0.40 | yes | yes | no |
-| GeeStores | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011070 | 0.001905 | 0.40 | yes | yes | no |
-| Padella | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011142 | 0.001905 | 0.40 | yes | yes | no |
-| Padella | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018392 | 0.000447 | 0.40 | yes | yes | no |
-| Padella | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011142 | 0.001905 | 0.40 | yes | yes | no |
-| Architecture for London | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011232 | 0.001905 | 0.40 | yes | yes | no |
-| Architecture for London | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018603 | 0.000447 | 0.40 | yes | yes | no |
-| Architecture for London | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011232 | 0.001905 | 0.40 | yes | yes | no |
+| Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Reserved (USD) | Charged (USD) | Retained (uncertain) | Accounted (USD) | Hard cap (USD) | Within cap | Charged ≤ reservation | Uncertain attempts | Retried |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| GeeStores | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011070 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
+| GeeStores | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018225 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0 | no |
+| GeeStores | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011070 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
+| Padella | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011142 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
+| Padella | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018392 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0 | no |
+| Padella | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011142 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
+| Architecture for London | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011232 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
+| Architecture for London | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018603 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0 | no |
+| Architecture for London | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011232 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
 
 ## Screenshots
 
@@ -97,7 +97,7 @@ The HTML beside each PNG is the same document the preview, editor and saved proj
 - **Visual structure** — distinct palettes, type/hierarchy pairings and navigation models. Contrast is a validator rule; taste is not scored.
 - **Completeness and editability** — concepts, screens, document nodes, components, and a coverage audit: every visible node must reach the rendered page under its own id, or it is not editable from the same document.
 - **Latency** — wall clock for the whole generation and per stage. Mocked mode measures pipeline overhead only; the live run measures the gateways.
-- **Cost and routing** — OpenRouter settles from its reported `usage.cost`; Groq is priced at its published rate from reported tokens. The endpoint that served each call is recorded, every attempt is reconciled against its reservation and the $0.40 cap, and a retried or failed attempt is counted rather than hidden.
+- **Cost and routing** — OpenRouter settles from its reported `usage.cost`; Groq is priced at its published rate from reported tokens. The endpoint that served each call is recorded, every attempt is reconciled against its reservation and the $0.40 cap, and a retried or failed attempt is counted rather than hidden. A charge that cannot be established (timeout, dropped connection, 429/5xx, no usage) is conservatively retained: it is never released as free and never disappears from the budget.
 
 ## Worst case per generation
 

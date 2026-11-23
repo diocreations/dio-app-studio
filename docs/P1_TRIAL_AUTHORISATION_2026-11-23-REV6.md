@@ -37,7 +37,10 @@ model, `openai/gpt-oss-120b`. Architecture and pricing detail:
 
 A generation reserves its $0.40 ceiling against the pool before its first call
 and settles to the actual charge afterwards. A generation that cannot reserve is
-refused without contacting a provider.
+refused without contacting a provider. A charge that cannot be established — a
+timeout, dropped connection, non-2xx without billing information, or an answer
+without usage — keeps its reservation as spent instead of being refunded, so an
+uncertain attempt can never silently increase the remaining budget.
 
 ## Prohibited in this trial
 

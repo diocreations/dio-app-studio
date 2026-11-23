@@ -123,9 +123,33 @@ At these prices the $0.18 soft limit is a guard rather than a likely stop, and
 nine generations cost cents against the $30 pool.
 
 Every HTTP attempt, including a failed or retried one, reserves separately and
-is reconciled in the report: `reservedUsd`, `chargedUsd`, `maxAttemptReservedUsd`,
-`withinHardCap`, `chargedWithinReservation` and `retried`. A truncated or
+is reconciled in the report: `reservedUsd`, `chargedUsd`, `retainedUsd`,
+`accountedUsd`, `maxAttemptReservedUsd`, `withinHardCap`,
+`chargedWithinReservation`, `uncertainAttempts` and `retried`. A truncated or
 wrongly-routed answer is charged before it fails, so a refusal cannot look free.
+
+### Uncertain charges are never refunded
+
+An attempt is classified before its reservation is settled:
+
+| What happened | Classification | Effect on the budget |
+| --- | --- | --- |
+| Usage and a charge are known (reported `usage.cost`, or reported tokens priced at the published rate) | `billed` | Settle the confirmed charge |
+| The request was refused locally, before it was sent (for example a missing key) | `not_billed` | Release the reservation |
+| Timeout, dropped connection, unreadable response, any non-2xx without billing information (including 4xx), or a 2xx body with no usable usage | `unknown` | **Keep the reservation as spent** |
+
+A timeout or dropped connection may have reached the provider and been billed;
+an answer without usage cannot be priced. In both cases the reservation is
+retained (`retainedUsd`) rather than released, so an uncertain attempt is
+visible in the report and can never silently refund itself. A retry takes its
+own reservation: the first, uncertain attempt stays in the budget alongside the
+retry. A 5xx or 4xx body that does report `usage.cost` is charged before it is
+classified, and OpenRouter's `no choices` branch now preserves a reported
+`usage.cost` before throwing.
+
+The $0.40 generation cap and the $30 pool are enforced against the ledger that
+includes retained amounts, so an uncertain charge consumes budget exactly as a
+worst-case reservation would.
 
 ## 5. Understanding: facts, and assumptions kept apart
 
@@ -206,7 +230,7 @@ customer-facing generation route.
 
 ## 9. Test coverage
 
-`tests/aiTrial.test.ts` (21 tests):
+`tests/aiTrial.test.ts` (28 tests):
 
 - closed without keys: zero provider calls;
 - keys without approval still closed, for four approval spellings;
@@ -218,6 +242,14 @@ customer-facing generation route.
   served elsewhere is refused as `provider_mismatch` and still charged;
 - a truncated attempt is charged and counted in the verification, and a retried
   attempt reserves twice and is reported as retried;
+- a timeout and a dropped connection are retried, and both attempts retain their
+  reservations rather than looking free;
+- a confirmed pre-inference rejection releases its reservation, while a 4xx
+  without billing stays uncertain and keeps it;
+- a 5xx with `usage.cost` is charged, not retained;
+- a body with usage but no choices is charged before its parse failure;
+- a body with no usage marks the attempt uncertain, retains its reservation and
+  remains visible in the report;
 - Groq cost comes from its published rate; OpenRouter from `usage.cost`;
 - reservations are non-zero for a model that is also on the free allowlist;
 - the $30 pool refuses the claim that would cross it;
@@ -231,5 +263,5 @@ customer-facing generation route.
 - restaurant and practice compile three distinct journeys;
 - the catalogue is two primary arms plus one controlled arm at verified prices.
 
-Full suite: 869 tests, 0 failing (21 of them this trial); typecheck and
+Full suite: 876 tests, 0 failing (28 of them this trial); typecheck and
 production build clean.

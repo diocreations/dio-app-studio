@@ -18,6 +18,7 @@ import {
   type AiProvider,
   type AiStage,
   type AttemptGuard,
+  type BillingState,
   type GenerateResult,
 } from './provider'
 import { fatal, parseBrief, parseCopy, parseDesignSet, type Issue } from './validate'
@@ -72,7 +73,12 @@ export type AttemptRecord = {
   stage: AiStage
   attempt: number
   reservedUsd: number
+  /** Confirmed charge. An uncertain attempt records 0 here and the reservation
+   *  in `retainedUsd`, so it cannot look free. */
   costUsd: number
+  /** Reservation kept because the charge could not be established. */
+  retainedUsd: number
+  billing: BillingState
   ok: boolean
   /** The upstream endpoint, when the gateway reported one for this attempt. */
   servedProvider?: string
@@ -144,17 +150,46 @@ async function callStage(
       }
       attempts += 1
       reservedUsd += reservation
-      attemptsLog.push({ stage, attempt: attempts, reservedUsd: reservation, costUsd: 0, ok: false })
+      attemptsLog.push({
+        stage,
+        attempt: attempts,
+        reservedUsd: reservation,
+        costUsd: 0,
+        retainedUsd: 0,
+        billing: 'unknown',
+        ok: false,
+      })
     },
     end(result) {
-      // On a transport failure the provider may still have billed something we
-      // cannot see. The ledger records zero and the run aborts, so the trial
-      // ceiling is never crossed by an estimate.
-      const charged = result?.costUsd ?? 0
-      ledger.settle(reservation, charged)
+      // Three cases, in order of certainty:
+      //  - a confirmed charge is settled against the reservation;
+      //  - a confirmed rejection before inference releases it;
+      //  - anything else (timeout, dropped connection, 5xx, an answer without
+      //    usable billing information) keeps the reservation as spent. A
+      //    provider may have received and billed a request we never saw finish,
+      //    so an unknown charge is never refunded.
+      const billing: BillingState = result?.billing ?? 'billed'
+      const charged =
+        typeof result?.costUsd === 'number' && Number.isFinite(result.costUsd) && result.costUsd >= 0
+          ? result.costUsd
+          : undefined
+      let settled: number | undefined
+      let retained = 0
+      if (billing === 'billed' && charged !== undefined) {
+        ledger.settle(reservation, charged)
+        settled = charged
+      } else if (billing === 'not_billed') {
+        ledger.settle(reservation, 0)
+        settled = 0
+      } else {
+        ledger.retain(reservation)
+        retained = reservation
+      }
       const entry = attemptsLog[attemptsLog.length - 1]
       if (entry) {
-        entry.costUsd = charged
+        entry.billing = billing
+        entry.costUsd = settled ?? 0
+        entry.retainedUsd = retained
         entry.ok = result?.ok ?? false
         entry.servedProvider = result?.servedProvider
       }
