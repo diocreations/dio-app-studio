@@ -44,6 +44,7 @@ import {
   trialStatus,
 } from '../src/worker/ai/trial.ts'
 import { runTrialGeneration } from '../src/worker/ai/trialRun.ts'
+import { PROMPT_DIGEST, PROMPT_VERSION } from '../src/worker/ai/prompts.ts'
 import { exitCodeFor, runMatrix } from './ai-trial-matrix.ts'
 import { briefFor, designSetFor, trialBusinesses } from '../tests/aiTrialFixtures.ts'
 import { copySetFor } from '../tests/freeAiMock.ts'
@@ -415,6 +416,8 @@ async function generate(business, provider, generation) {
     servedProviders: run.servedProviders,
     /** Every attempt, including one that failed and was retried. */
     attempts: run.attempts,
+    /** Per-call usage: tokens, latency, attribution, reservation and charge. */
+    calls: run.calls,
     verification: run.verification,
     budget: run.budget,
     issues: run.issues.map((issue) => ({ code: issue.code, message: issue.message })),
@@ -473,6 +476,9 @@ const latencies = runs.filter((run) => run.score).map((run) => run.latencyMs)
 const report = {
   mode: live ? 'live' : 'mocked',
   comparable: live,
+  /** The instruction set these results belong to; never mix revisions. */
+  promptVersion: PROMPT_VERSION,
+  promptDigest: PROMPT_DIGEST,
   /** False when the matrix stopped at a failed generation. */
   complete: matrix.complete,
   runStatus: matrix.complete ? 'complete' : 'interrupted',
@@ -565,6 +571,7 @@ function markdown(data) {
   lines.push(`- Gate: ${data.gate}`)
   lines.push(`- Run: **${data.complete ? 'complete' : 'interrupted'}**${data.complete ? '' : ` — stopped at generation ${data.interrupted.generation}; ${data.plan.skipped} generation(s) skipped`}`)
   lines.push(`- Same model on every arm: \`${TRIAL_PROVIDERS[0].model}\``)
+  lines.push(`- Prompt version: \`${data.promptVersion}\` · digest \`${data.promptDigest}\``)
   lines.push('- Comparison type: **provider-routing and gateway**, not gateway-only. The primary arms compare direct Groq with OpenRouter routing to the cheapest eligible endpoint; the controlled arm pins OpenRouter to its Groq endpoint with fallbacks disabled.')
   lines.push('- The serving endpoint is recorded from each response; a pinned call served by anything else is refused, and an unpinned call that does not report its endpoint is not treated as a known vendor.');
   lines.push(`- Spend${data.comparable ? '' : ' (simulated)'}: $${data.totalCostUsd.toFixed(4)} of $${TRIAL_LIMITS.totalUsd.toFixed(2)}`)

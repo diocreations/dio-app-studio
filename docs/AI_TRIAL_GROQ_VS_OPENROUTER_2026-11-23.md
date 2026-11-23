@@ -1,14 +1,17 @@
 # The paid AI trial: Groq vs OpenRouter
 
-Status: **prepared and tested offline. No live provider call has been made.**
-Neither key is present, so nothing in Plattr's shipped generation path is
-AI-powered yet. This document describes the integration that is ready for the
-approved run, what it costs, and exactly what still needs the keys.
+Status: **one live attempt made and stopped by the grounding guard.** The first
+paid generation (Yarmouth Oilskins / direct Groq, prompt
+`plattr-design/2026-11-23.1`) was billed $0.0010698 and refused `brief_invalid`;
+the matrix stopped and the remaining eight cells were never sent. Nothing is
+deployed, and Plattr's shipped generation path remains AI-free.
 
 Generated: 2026-11-23. Revision 2 adds endpoint attribution and a controlled
 pinned arm. This document replaces the earlier trial drafts, which named the
 wrong provider. Revision 3 replaces the synthetic GeeStores retail fixture with
-the real saved Yarmouth Oilskins crawl.
+the real saved Yarmouth Oilskins crawl. Revision 4 corrects the understand
+prompt (`plattr-design/2026-11-24.1`): sourced facts stay sourced facts, and
+assumptions describe only what the dossier does not say.
 
 ### Trial businesses and provenance
 
@@ -197,6 +200,26 @@ assumption may be wrong, but it may not present itself as a fact. Grounding is
 unchanged: name, trade, currency, catalogue count and workflows are checked
 against the dossier; `verbatim` headings must appear in the read; structural
 headings may not carry a price or a claim.
+
+### Prompt revision and comparability
+
+| Prompt | Used by | State |
+| --- | --- | --- |
+| `plattr-design/2026-11-23.1` | first live attempt, 2026-11-23 | 1 generation, `brief_invalid` (`invented_assumption`), $0.0010698 charged, 8 skipped |
+| `plattr-design/2026-11-24.1` | every run from now on | adds the facts/assumptions rules and the Yarmouth worked example to the understand stage |
+
+Prompt digest for `2026-11-24.1` (sha256 over the three system strings):
+`bbfeda0b05d703230a2c45ac1e5446edb2b8f975f1658041efef9ed19ddf0fc0`. It is
+recorded in `report.json` as `promptDigest` and printed in `REPORT.md`, beside
+`promptVersion`. Each run also records every call's input, cached-input, output
+and reasoning tokens, latency, provider and model attribution, reservation,
+charge and billing class.
+
+The two revisions are not comparable. The next nine-generation run must send
+`2026-11-24.1` to all three arms and all three businesses, and `report.json`
+records `promptVersion` so a run can never be attributed to the wrong
+instructions. The validator and `CLAIM_WORDS` are unchanged by this revision:
+the correction is instructional, not a relaxation of the grounding gate.
 
 ## 6. Generation: three real directions
 

@@ -299,6 +299,19 @@ describe('the live trial uses only real saved crawls', () => {
     expect(requests[0]).toHaveLength(3)
     expect(requests[1]).toEqual(requests[0])
     expect(requests[2]).toEqual(requests[0])
+
+    // The revised instruction set is the one every arm actually sends, in the
+    // understand stage where the refused brief was produced.
+    for (const armRequests of requests) {
+      const understand = armRequests.find((request) => {
+        const format = request.response_format as { json_schema?: { name?: string } }
+        return format.json_schema?.name === 'plattr_understand'
+      })
+      expect(understand).toBeDefined()
+      const messages = understand?.messages as { role: string; content: string }[]
+      expect(messages[0].content).toContain('Sourced facts and assumptions are different instruments')
+      expect(messages[0].content).toContain('The brand values handcrafted quality.')
+    }
   })
 })
 
