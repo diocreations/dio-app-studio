@@ -1,0 +1,1994 @@
+{
+  "mode": "mocked",
+  "comparable": false,
+  "generatedAt": "2026-11-23T15:10:05.229Z",
+  "comparison": {
+    "kind": "provider-routing and gateway comparison",
+    "note": "The primary arms are not gateway-only: direct Groq is compared with OpenRouter routing to the cheapest eligible endpoint of the same model, and OpenRouter chooses that endpoint. The controlled arm pins OpenRouter to its Groq endpoint with fallbacks disabled, isolating the gateway for the same model and endpoint.",
+    "arms": {
+      "primary": [
+        "groq",
+        "openrouter"
+      ],
+      "controlled": [
+        "openrouter-groq"
+      ]
+    }
+  },
+  "limits": {
+    "totalUsd": 30,
+    "softUsd": 0.18,
+    "hardUsd": 0.4
+  },
+  "providers": [
+    {
+      "id": "groq",
+      "arm": "primary",
+      "gateway": "groq",
+      "label": "Groq · GroqCloud",
+      "keyEnv": "GROQ_API_KEY",
+      "model": "openai/gpt-oss-120b",
+      "routingLabel": "direct to GroqCloud; no gateway in between",
+      "pricing": "Groq production price, read 2026-11-23: $0.15 input / $0.075 cached input / $0.60 output per 1M tokens; 131,072 context; 65,536 max completion; strict json_schema supported."
+    },
+    {
+      "id": "openrouter",
+      "arm": "primary",
+      "gateway": "openrouter",
+      "label": "OpenRouter · cheapest eligible endpoint",
+      "keyEnv": "OPENROUTER_API_KEY",
+      "model": "openai/gpt-oss-120b",
+      "routingLabel": "OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it",
+      "pricing": "OpenRouter standard pay-as-you-go, read 2026-11-23: no inference markup; cheapest standard endpoints for this model $0.03 input / $0.15 output per 1M, dearest listed $0.35 / $0.95. Billed at the selected endpoint and settled from usage.cost."
+    },
+    {
+      "id": "openrouter-groq",
+      "arm": "controlled",
+      "gateway": "openrouter",
+      "label": "OpenRouter · pinned to Groq",
+      "keyEnv": "OPENROUTER_API_KEY",
+      "model": "openai/gpt-oss-120b",
+      "routingLabel": "OpenRouter pinned to its Groq endpoint (provider.only=[\"Groq\"]) with fallbacks disabled; a response served by any other endpoint is refused",
+      "expectedProvider": "Groq",
+      "pricing": "OpenRouter pinned to Groq with fallbacks off, read 2026-11-23: the endpoint is Groq's own $0.15 input / $0.075 cached input / $0.60 output per 1M. OpenRouter charges no inference markup for it; its 5.5% credit-purchase fee is paid at top-up, not per call, and is recorded separately."
+    }
+  ],
+  "callCeilings": [
+    {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "inputPerMillion": 0.15,
+      "outputPerMillion": 0.6,
+      "reservationInputPerMillion": 0.15,
+      "reservationOutputPerMillion": 0.6,
+      "ceilingUsd": 0.0131
+    },
+    {
+      "provider": "openrouter",
+      "model": "openai/gpt-oss-120b",
+      "inputPerMillion": 0.03,
+      "outputPerMillion": 0.15,
+      "reservationInputPerMillion": 0.35,
+      "reservationOutputPerMillion": 0.95,
+      "ceilingUsd": 0.0231
+    },
+    {
+      "provider": "openrouter-groq",
+      "model": "openai/gpt-oss-120b",
+      "inputPerMillion": 0.15,
+      "outputPerMillion": 0.6,
+      "reservationInputPerMillion": 0.15,
+      "reservationOutputPerMillion": 0.6,
+      "ceilingUsd": 0.0131
+    }
+  ],
+  "gate": "simulated (mocked mode)",
+  "totalCostUsd": 0.012771,
+  "businesses": [
+    {
+      "id": "geestores",
+      "label": "GeeStores",
+      "type": "Jewellery retail",
+      "source": "https://geestores.example/",
+      "fixture": "tests/freeAiMock.ts site fixture (importer fixture suite)"
+    },
+    {
+      "id": "padella",
+      "label": "Padella",
+      "type": "Restaurant",
+      "source": "https://www.padella.co/",
+      "fixture": "docs/qa/generation-benchmark-2026-11-21/padella (saved crawl)"
+    },
+    {
+      "id": "afl",
+      "label": "Architecture for London",
+      "type": "Professional services",
+      "source": "https://www.architectureforlondon.com/",
+      "fixture": "docs/qa/generation-benchmark-2026-11-21/afl (saved crawl)"
+    }
+  ],
+  "runs": [
+    {
+      "business": {
+        "id": "geestores",
+        "label": "GeeStores",
+        "type": "Jewellery retail",
+        "source": "https://geestores.example/",
+        "fixture": "tests/freeAiMock.ts site fixture (importer fixture suite)"
+      },
+      "provider": {
+        "id": "groq",
+        "arm": "primary",
+        "label": "Groq · GroqCloud",
+        "model": "openai/gpt-oss-120b",
+        "keyEnv": "GROQ_API_KEY",
+        "routingLabel": "direct to GroqCloud; no gateway in between"
+      },
+      "status": "ai",
+      "costUsd": 0.001905,
+      "latencyMs": 7,
+      "servedProviders": [
+        "groq"
+      ],
+      "attempts": [
+        {
+          "stage": "understand",
+          "attempt": 1,
+          "reservedUsd": 0.0015871499999999998,
+          "costUsd": 0.000375,
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "attempt": 1,
+          "reservedUsd": 0.0072352499999999995,
+          "costUsd": 0.0011549999999999998,
+          "ok": true
+        },
+        {
+          "stage": "copy",
+          "attempt": 1,
+          "reservedUsd": 0.0022475999999999998,
+          "costUsd": 0.000375,
+          "ok": true
+        }
+      ],
+      "verification": {
+        "poolClaimUsd": 0.4,
+        "hardCapUsd": 0.4,
+        "attemptsMade": 3,
+        "retried": false,
+        "reservedUsd": 0.01107,
+        "chargedUsd": 0.0019049999999999996,
+        "maxAttemptReservedUsd": 0.0072352499999999995,
+        "withinHardCap": true,
+        "chargedWithinReservation": true,
+        "overReservedUsd": 0,
+        "servedProviders": [
+          "groq"
+        ]
+      },
+      "budget": {
+        "totalUsd": 30,
+        "spentUsd": 0.0019049999999999996,
+        "reservedUsd": 0,
+        "remainingUsd": 29.998095,
+        "generationUsd": 0.0019049999999999996,
+        "softUsd": 0.18,
+        "hardUsd": 0.4
+      },
+      "issues": [],
+      "score": {
+        "grounding": {
+          "brief": "validated against the dossier before design",
+          "designIssues": [],
+          "invented": 0
+        },
+        "businessRelevance": {
+          "catalogueEntries": 3,
+          "catalogueScreens": 3,
+          "workflows": [
+            "browse",
+            "buy"
+          ]
+        },
+        "diversity": {
+          "ok": true,
+          "pairs": [
+            {
+              "pair": "ledger/index",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same tabs",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "ledger/season",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same opening screen",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "index/season",
+              "score": 0.1,
+              "axesDifferent": 7,
+              "reasons": [
+                "same block set",
+                "same trade functionality"
+              ]
+            }
+          ],
+          "minAxes": 7
+        },
+        "visual": {
+          "distinctPalettes": 3,
+          "distinctTypeAndHierarchy": 3,
+          "distinctNavModels": 3,
+          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
+        },
+        "completeness": {
+          "concepts": 3,
+          "screens": [
+            [
+              "home",
+              "catalog",
+              "more"
+            ],
+            [
+              "catalog",
+              "home",
+              "more"
+            ],
+            [
+              "home",
+              "catalog",
+              "search",
+              "more"
+            ]
+          ],
+          "nodes": 15,
+          "components": 9,
+          "editability": {
+            "missing": 3,
+            "unknown": 0,
+            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
+          }
+        },
+        "latency": {
+          "totalMs": 7,
+          "byStage": [
+            {
+              "stage": "understand",
+              "ms": 1
+            },
+            {
+              "stage": "design",
+              "ms": 0
+            },
+            {
+              "stage": "copy",
+              "ms": 0
+            }
+          ],
+          "note": "mocked fetch, so latency is the pipeline overhead only"
+        },
+        "cost": {
+          "usd": 0.001905,
+          "calls": 3,
+          "stages": [
+            "understand",
+            "design",
+            "copy"
+          ],
+          "softLimitReached": false
+        }
+      }
+    },
+    {
+      "business": {
+        "id": "geestores",
+        "label": "GeeStores",
+        "type": "Jewellery retail",
+        "source": "https://geestores.example/",
+        "fixture": "tests/freeAiMock.ts site fixture (importer fixture suite)"
+      },
+      "provider": {
+        "id": "openrouter",
+        "arm": "primary",
+        "label": "OpenRouter · cheapest eligible endpoint",
+        "model": "openai/gpt-oss-120b",
+        "keyEnv": "OPENROUTER_API_KEY",
+        "routingLabel": "OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it"
+      },
+      "status": "ai",
+      "costUsd": 0.000447,
+      "latencyMs": 2,
+      "servedProviders": [
+        "MockedCheapestEndpoint"
+      ],
+      "attempts": [
+        {
+          "stage": "understand",
+          "attempt": 1,
+          "reservedUsd": 0.00271335,
+          "costUsd": 0.000087,
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "attempt": 1,
+          "reservedUsd": 0.011707249999999999,
+          "costUsd": 0.00027299999999999997,
+          "ok": true
+        },
+        {
+          "stage": "copy",
+          "attempt": 1,
+          "reservedUsd": 0.0038043999999999994,
+          "costUsd": 0.000087,
+          "ok": true
+        }
+      ],
+      "verification": {
+        "poolClaimUsd": 0.4,
+        "hardCapUsd": 0.4,
+        "attemptsMade": 3,
+        "retried": false,
+        "reservedUsd": 0.018224999999999998,
+        "chargedUsd": 0.00044699999999999997,
+        "maxAttemptReservedUsd": 0.011707249999999999,
+        "withinHardCap": true,
+        "chargedWithinReservation": true,
+        "overReservedUsd": 0,
+        "servedProviders": [
+          "MockedCheapestEndpoint"
+        ]
+      },
+      "budget": {
+        "totalUsd": 30,
+        "spentUsd": 0.0023519999999999995,
+        "reservedUsd": 0,
+        "remainingUsd": 29.997648,
+        "generationUsd": 0.00044699999999999997,
+        "softUsd": 0.18,
+        "hardUsd": 0.4
+      },
+      "issues": [],
+      "score": {
+        "grounding": {
+          "brief": "validated against the dossier before design",
+          "designIssues": [],
+          "invented": 0
+        },
+        "businessRelevance": {
+          "catalogueEntries": 3,
+          "catalogueScreens": 3,
+          "workflows": [
+            "browse",
+            "buy"
+          ]
+        },
+        "diversity": {
+          "ok": true,
+          "pairs": [
+            {
+              "pair": "ledger/index",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same tabs",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "ledger/season",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same opening screen",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "index/season",
+              "score": 0.1,
+              "axesDifferent": 7,
+              "reasons": [
+                "same block set",
+                "same trade functionality"
+              ]
+            }
+          ],
+          "minAxes": 7
+        },
+        "visual": {
+          "distinctPalettes": 3,
+          "distinctTypeAndHierarchy": 3,
+          "distinctNavModels": 3,
+          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
+        },
+        "completeness": {
+          "concepts": 3,
+          "screens": [
+            [
+              "home",
+              "catalog",
+              "more"
+            ],
+            [
+              "catalog",
+              "home",
+              "more"
+            ],
+            [
+              "home",
+              "catalog",
+              "search",
+              "more"
+            ]
+          ],
+          "nodes": 15,
+          "components": 9,
+          "editability": {
+            "missing": 3,
+            "unknown": 0,
+            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
+          }
+        },
+        "latency": {
+          "totalMs": 2,
+          "byStage": [
+            {
+              "stage": "understand",
+              "ms": 0
+            },
+            {
+              "stage": "design",
+              "ms": 0
+            },
+            {
+              "stage": "copy",
+              "ms": 0
+            }
+          ],
+          "note": "mocked fetch, so latency is the pipeline overhead only"
+        },
+        "cost": {
+          "usd": 0.000447,
+          "calls": 3,
+          "stages": [
+            "understand",
+            "design",
+            "copy"
+          ],
+          "softLimitReached": false
+        }
+      }
+    },
+    {
+      "business": {
+        "id": "geestores",
+        "label": "GeeStores",
+        "type": "Jewellery retail",
+        "source": "https://geestores.example/",
+        "fixture": "tests/freeAiMock.ts site fixture (importer fixture suite)"
+      },
+      "provider": {
+        "id": "openrouter-groq",
+        "arm": "controlled",
+        "label": "OpenRouter · pinned to Groq",
+        "model": "openai/gpt-oss-120b",
+        "keyEnv": "OPENROUTER_API_KEY",
+        "routingLabel": "OpenRouter pinned to its Groq endpoint (provider.only=[\"Groq\"]) with fallbacks disabled; a response served by any other endpoint is refused",
+        "expectedProvider": "Groq"
+      },
+      "status": "ai",
+      "costUsd": 0.001905,
+      "latencyMs": 1,
+      "servedProviders": [
+        "Groq"
+      ],
+      "attempts": [
+        {
+          "stage": "understand",
+          "attempt": 1,
+          "reservedUsd": 0.0015871499999999998,
+          "costUsd": 0.000375,
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "attempt": 1,
+          "reservedUsd": 0.0072352499999999995,
+          "costUsd": 0.0011549999999999998,
+          "ok": true
+        },
+        {
+          "stage": "copy",
+          "attempt": 1,
+          "reservedUsd": 0.0022475999999999998,
+          "costUsd": 0.000375,
+          "ok": true
+        }
+      ],
+      "verification": {
+        "poolClaimUsd": 0.4,
+        "hardCapUsd": 0.4,
+        "attemptsMade": 3,
+        "retried": false,
+        "reservedUsd": 0.01107,
+        "chargedUsd": 0.0019049999999999996,
+        "maxAttemptReservedUsd": 0.0072352499999999995,
+        "withinHardCap": true,
+        "chargedWithinReservation": true,
+        "overReservedUsd": 0,
+        "servedProviders": [
+          "Groq"
+        ]
+      },
+      "budget": {
+        "totalUsd": 30,
+        "spentUsd": 0.004256999999999999,
+        "reservedUsd": 0,
+        "remainingUsd": 29.995743,
+        "generationUsd": 0.0019049999999999996,
+        "softUsd": 0.18,
+        "hardUsd": 0.4
+      },
+      "issues": [],
+      "score": {
+        "grounding": {
+          "brief": "validated against the dossier before design",
+          "designIssues": [],
+          "invented": 0
+        },
+        "businessRelevance": {
+          "catalogueEntries": 3,
+          "catalogueScreens": 3,
+          "workflows": [
+            "browse",
+            "buy"
+          ]
+        },
+        "diversity": {
+          "ok": true,
+          "pairs": [
+            {
+              "pair": "ledger/index",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same tabs",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "ledger/season",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same opening screen",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "index/season",
+              "score": 0.1,
+              "axesDifferent": 7,
+              "reasons": [
+                "same block set",
+                "same trade functionality"
+              ]
+            }
+          ],
+          "minAxes": 7
+        },
+        "visual": {
+          "distinctPalettes": 3,
+          "distinctTypeAndHierarchy": 3,
+          "distinctNavModels": 3,
+          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
+        },
+        "completeness": {
+          "concepts": 3,
+          "screens": [
+            [
+              "home",
+              "catalog",
+              "more"
+            ],
+            [
+              "catalog",
+              "home",
+              "more"
+            ],
+            [
+              "home",
+              "catalog",
+              "search",
+              "more"
+            ]
+          ],
+          "nodes": 15,
+          "components": 9,
+          "editability": {
+            "missing": 3,
+            "unknown": 0,
+            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
+          }
+        },
+        "latency": {
+          "totalMs": 1,
+          "byStage": [
+            {
+              "stage": "understand",
+              "ms": 0
+            },
+            {
+              "stage": "design",
+              "ms": 0
+            },
+            {
+              "stage": "copy",
+              "ms": 0
+            }
+          ],
+          "note": "mocked fetch, so latency is the pipeline overhead only"
+        },
+        "cost": {
+          "usd": 0.001905,
+          "calls": 3,
+          "stages": [
+            "understand",
+            "design",
+            "copy"
+          ],
+          "softLimitReached": false
+        }
+      }
+    },
+    {
+      "business": {
+        "id": "padella",
+        "label": "Padella",
+        "type": "Restaurant",
+        "source": "https://www.padella.co/",
+        "fixture": "docs/qa/generation-benchmark-2026-11-21/padella (saved crawl)"
+      },
+      "provider": {
+        "id": "groq",
+        "arm": "primary",
+        "label": "Groq · GroqCloud",
+        "model": "openai/gpt-oss-120b",
+        "keyEnv": "GROQ_API_KEY",
+        "routingLabel": "direct to GroqCloud; no gateway in between"
+      },
+      "status": "ai",
+      "costUsd": 0.001905,
+      "latencyMs": 2,
+      "servedProviders": [
+        "groq"
+      ],
+      "attempts": [
+        {
+          "stage": "understand",
+          "attempt": 1,
+          "reservedUsd": 0.0016068,
+          "costUsd": 0.000375,
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "attempt": 1,
+          "reservedUsd": 0.0072621,
+          "costUsd": 0.0011549999999999998,
+          "ok": true
+        },
+        {
+          "stage": "copy",
+          "attempt": 1,
+          "reservedUsd": 0.0022727999999999997,
+          "costUsd": 0.000375,
+          "ok": true
+        }
+      ],
+      "verification": {
+        "poolClaimUsd": 0.4,
+        "hardCapUsd": 0.4,
+        "attemptsMade": 3,
+        "retried": false,
+        "reservedUsd": 0.0111417,
+        "chargedUsd": 0.0019049999999999996,
+        "maxAttemptReservedUsd": 0.0072621,
+        "withinHardCap": true,
+        "chargedWithinReservation": true,
+        "overReservedUsd": 0,
+        "servedProviders": [
+          "groq"
+        ]
+      },
+      "budget": {
+        "totalUsd": 30,
+        "spentUsd": 0.006161999999999998,
+        "reservedUsd": 0,
+        "remainingUsd": 29.993838,
+        "generationUsd": 0.0019049999999999996,
+        "softUsd": 0.18,
+        "hardUsd": 0.4
+      },
+      "issues": [],
+      "score": {
+        "grounding": {
+          "brief": "validated against the dossier before design",
+          "designIssues": [],
+          "invented": 0
+        },
+        "businessRelevance": {
+          "catalogueEntries": 5,
+          "catalogueScreens": 3,
+          "workflows": [
+            "browse",
+            "buy",
+            "book"
+          ]
+        },
+        "diversity": {
+          "ok": true,
+          "pairs": [
+            {
+              "pair": "ledger/index",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same tabs",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "ledger/season",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same opening screen",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "index/season",
+              "score": 0.1,
+              "axesDifferent": 7,
+              "reasons": [
+                "same block set",
+                "same trade functionality"
+              ]
+            }
+          ],
+          "minAxes": 7
+        },
+        "visual": {
+          "distinctPalettes": 3,
+          "distinctTypeAndHierarchy": 3,
+          "distinctNavModels": 3,
+          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
+        },
+        "completeness": {
+          "concepts": 3,
+          "screens": [
+            [
+              "home",
+              "catalog",
+              "more"
+            ],
+            [
+              "catalog",
+              "home",
+              "more"
+            ],
+            [
+              "home",
+              "catalog",
+              "search",
+              "more"
+            ]
+          ],
+          "nodes": 12,
+          "components": 9,
+          "editability": {
+            "missing": 0,
+            "unknown": 0,
+            "note": "every visible node reached the rendered page under its own id"
+          }
+        },
+        "latency": {
+          "totalMs": 2,
+          "byStage": [
+            {
+              "stage": "understand",
+              "ms": 1
+            },
+            {
+              "stage": "design",
+              "ms": 0
+            },
+            {
+              "stage": "copy",
+              "ms": 0
+            }
+          ],
+          "note": "mocked fetch, so latency is the pipeline overhead only"
+        },
+        "cost": {
+          "usd": 0.001905,
+          "calls": 3,
+          "stages": [
+            "understand",
+            "design",
+            "copy"
+          ],
+          "softLimitReached": false
+        }
+      }
+    },
+    {
+      "business": {
+        "id": "padella",
+        "label": "Padella",
+        "type": "Restaurant",
+        "source": "https://www.padella.co/",
+        "fixture": "docs/qa/generation-benchmark-2026-11-21/padella (saved crawl)"
+      },
+      "provider": {
+        "id": "openrouter",
+        "arm": "primary",
+        "label": "OpenRouter · cheapest eligible endpoint",
+        "model": "openai/gpt-oss-120b",
+        "keyEnv": "OPENROUTER_API_KEY",
+        "routingLabel": "OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it"
+      },
+      "status": "ai",
+      "costUsd": 0.000447,
+      "latencyMs": 2,
+      "servedProviders": [
+        "MockedCheapestEndpoint"
+      ],
+      "attempts": [
+        {
+          "stage": "understand",
+          "attempt": 1,
+          "reservedUsd": 0.0027592,
+          "costUsd": 0.000087,
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "attempt": 1,
+          "reservedUsd": 0.0117699,
+          "costUsd": 0.00027299999999999997,
+          "ok": true
+        },
+        {
+          "stage": "copy",
+          "attempt": 1,
+          "reservedUsd": 0.0038632,
+          "costUsd": 0.000087,
+          "ok": true
+        }
+      ],
+      "verification": {
+        "poolClaimUsd": 0.4,
+        "hardCapUsd": 0.4,
+        "attemptsMade": 3,
+        "retried": false,
+        "reservedUsd": 0.0183923,
+        "chargedUsd": 0.00044699999999999997,
+        "maxAttemptReservedUsd": 0.0117699,
+        "withinHardCap": true,
+        "chargedWithinReservation": true,
+        "overReservedUsd": 0,
+        "servedProviders": [
+          "MockedCheapestEndpoint"
+        ]
+      },
+      "budget": {
+        "totalUsd": 30,
+        "spentUsd": 0.0066089999999999986,
+        "reservedUsd": 0,
+        "remainingUsd": 29.993391,
+        "generationUsd": 0.00044699999999999997,
+        "softUsd": 0.18,
+        "hardUsd": 0.4
+      },
+      "issues": [],
+      "score": {
+        "grounding": {
+          "brief": "validated against the dossier before design",
+          "designIssues": [],
+          "invented": 0
+        },
+        "businessRelevance": {
+          "catalogueEntries": 5,
+          "catalogueScreens": 3,
+          "workflows": [
+            "browse",
+            "buy",
+            "book"
+          ]
+        },
+        "diversity": {
+          "ok": true,
+          "pairs": [
+            {
+              "pair": "ledger/index",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same tabs",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "ledger/season",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same opening screen",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "index/season",
+              "score": 0.1,
+              "axesDifferent": 7,
+              "reasons": [
+                "same block set",
+                "same trade functionality"
+              ]
+            }
+          ],
+          "minAxes": 7
+        },
+        "visual": {
+          "distinctPalettes": 3,
+          "distinctTypeAndHierarchy": 3,
+          "distinctNavModels": 3,
+          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
+        },
+        "completeness": {
+          "concepts": 3,
+          "screens": [
+            [
+              "home",
+              "catalog",
+              "more"
+            ],
+            [
+              "catalog",
+              "home",
+              "more"
+            ],
+            [
+              "home",
+              "catalog",
+              "search",
+              "more"
+            ]
+          ],
+          "nodes": 12,
+          "components": 9,
+          "editability": {
+            "missing": 0,
+            "unknown": 0,
+            "note": "every visible node reached the rendered page under its own id"
+          }
+        },
+        "latency": {
+          "totalMs": 2,
+          "byStage": [
+            {
+              "stage": "understand",
+              "ms": 1
+            },
+            {
+              "stage": "design",
+              "ms": 0
+            },
+            {
+              "stage": "copy",
+              "ms": 0
+            }
+          ],
+          "note": "mocked fetch, so latency is the pipeline overhead only"
+        },
+        "cost": {
+          "usd": 0.000447,
+          "calls": 3,
+          "stages": [
+            "understand",
+            "design",
+            "copy"
+          ],
+          "softLimitReached": false
+        }
+      }
+    },
+    {
+      "business": {
+        "id": "padella",
+        "label": "Padella",
+        "type": "Restaurant",
+        "source": "https://www.padella.co/",
+        "fixture": "docs/qa/generation-benchmark-2026-11-21/padella (saved crawl)"
+      },
+      "provider": {
+        "id": "openrouter-groq",
+        "arm": "controlled",
+        "label": "OpenRouter · pinned to Groq",
+        "model": "openai/gpt-oss-120b",
+        "keyEnv": "OPENROUTER_API_KEY",
+        "routingLabel": "OpenRouter pinned to its Groq endpoint (provider.only=[\"Groq\"]) with fallbacks disabled; a response served by any other endpoint is refused",
+        "expectedProvider": "Groq"
+      },
+      "status": "ai",
+      "costUsd": 0.001905,
+      "latencyMs": 2,
+      "servedProviders": [
+        "Groq"
+      ],
+      "attempts": [
+        {
+          "stage": "understand",
+          "attempt": 1,
+          "reservedUsd": 0.0016068,
+          "costUsd": 0.000375,
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "attempt": 1,
+          "reservedUsd": 0.0072621,
+          "costUsd": 0.0011549999999999998,
+          "ok": true
+        },
+        {
+          "stage": "copy",
+          "attempt": 1,
+          "reservedUsd": 0.0022727999999999997,
+          "costUsd": 0.000375,
+          "ok": true
+        }
+      ],
+      "verification": {
+        "poolClaimUsd": 0.4,
+        "hardCapUsd": 0.4,
+        "attemptsMade": 3,
+        "retried": false,
+        "reservedUsd": 0.0111417,
+        "chargedUsd": 0.0019049999999999996,
+        "maxAttemptReservedUsd": 0.0072621,
+        "withinHardCap": true,
+        "chargedWithinReservation": true,
+        "overReservedUsd": 0,
+        "servedProviders": [
+          "Groq"
+        ]
+      },
+      "budget": {
+        "totalUsd": 30,
+        "spentUsd": 0.008513999999999997,
+        "reservedUsd": 0,
+        "remainingUsd": 29.991486,
+        "generationUsd": 0.0019049999999999996,
+        "softUsd": 0.18,
+        "hardUsd": 0.4
+      },
+      "issues": [],
+      "score": {
+        "grounding": {
+          "brief": "validated against the dossier before design",
+          "designIssues": [],
+          "invented": 0
+        },
+        "businessRelevance": {
+          "catalogueEntries": 5,
+          "catalogueScreens": 3,
+          "workflows": [
+            "browse",
+            "buy",
+            "book"
+          ]
+        },
+        "diversity": {
+          "ok": true,
+          "pairs": [
+            {
+              "pair": "ledger/index",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same tabs",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "ledger/season",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same opening screen",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "index/season",
+              "score": 0.1,
+              "axesDifferent": 7,
+              "reasons": [
+                "same block set",
+                "same trade functionality"
+              ]
+            }
+          ],
+          "minAxes": 7
+        },
+        "visual": {
+          "distinctPalettes": 3,
+          "distinctTypeAndHierarchy": 3,
+          "distinctNavModels": 3,
+          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
+        },
+        "completeness": {
+          "concepts": 3,
+          "screens": [
+            [
+              "home",
+              "catalog",
+              "more"
+            ],
+            [
+              "catalog",
+              "home",
+              "more"
+            ],
+            [
+              "home",
+              "catalog",
+              "search",
+              "more"
+            ]
+          ],
+          "nodes": 12,
+          "components": 9,
+          "editability": {
+            "missing": 0,
+            "unknown": 0,
+            "note": "every visible node reached the rendered page under its own id"
+          }
+        },
+        "latency": {
+          "totalMs": 2,
+          "byStage": [
+            {
+              "stage": "understand",
+              "ms": 1
+            },
+            {
+              "stage": "design",
+              "ms": 0
+            },
+            {
+              "stage": "copy",
+              "ms": 0
+            }
+          ],
+          "note": "mocked fetch, so latency is the pipeline overhead only"
+        },
+        "cost": {
+          "usd": 0.001905,
+          "calls": 3,
+          "stages": [
+            "understand",
+            "design",
+            "copy"
+          ],
+          "softLimitReached": false
+        }
+      }
+    },
+    {
+      "business": {
+        "id": "afl",
+        "label": "Architecture for London",
+        "type": "Professional services",
+        "source": "https://www.architectureforlondon.com/",
+        "fixture": "docs/qa/generation-benchmark-2026-11-21/afl (saved crawl)"
+      },
+      "provider": {
+        "id": "groq",
+        "arm": "primary",
+        "label": "Groq · GroqCloud",
+        "model": "openai/gpt-oss-120b",
+        "keyEnv": "GROQ_API_KEY",
+        "routingLabel": "direct to GroqCloud; no gateway in between"
+      },
+      "status": "ai",
+      "costUsd": 0.001905,
+      "latencyMs": 1,
+      "servedProviders": [
+        "groq"
+      ],
+      "attempts": [
+        {
+          "stage": "understand",
+          "attempt": 1,
+          "reservedUsd": 0.00163455,
+          "costUsd": 0.000375,
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "attempt": 1,
+          "reservedUsd": 0.0072915,
+          "costUsd": 0.0011549999999999998,
+          "ok": true
+        },
+        {
+          "stage": "copy",
+          "attempt": 1,
+          "reservedUsd": 0.0023059499999999998,
+          "costUsd": 0.000375,
+          "ok": true
+        }
+      ],
+      "verification": {
+        "poolClaimUsd": 0.4,
+        "hardCapUsd": 0.4,
+        "attemptsMade": 3,
+        "retried": false,
+        "reservedUsd": 0.011231999999999999,
+        "chargedUsd": 0.0019049999999999996,
+        "maxAttemptReservedUsd": 0.0072915,
+        "withinHardCap": true,
+        "chargedWithinReservation": true,
+        "overReservedUsd": 0,
+        "servedProviders": [
+          "groq"
+        ]
+      },
+      "budget": {
+        "totalUsd": 30,
+        "spentUsd": 0.010418999999999998,
+        "reservedUsd": 0,
+        "remainingUsd": 29.989581,
+        "generationUsd": 0.0019049999999999996,
+        "softUsd": 0.18,
+        "hardUsd": 0.4
+      },
+      "issues": [],
+      "score": {
+        "grounding": {
+          "brief": "validated against the dossier before design",
+          "designIssues": [],
+          "invented": 0
+        },
+        "businessRelevance": {
+          "catalogueEntries": 8,
+          "catalogueScreens": 3,
+          "workflows": [
+            "browse",
+            "book",
+            "quote"
+          ]
+        },
+        "diversity": {
+          "ok": true,
+          "pairs": [
+            {
+              "pair": "ledger/index",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same tabs",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "ledger/season",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same opening screen",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "index/season",
+              "score": 0.1,
+              "axesDifferent": 7,
+              "reasons": [
+                "same block set",
+                "same trade functionality"
+              ]
+            }
+          ],
+          "minAxes": 7
+        },
+        "visual": {
+          "distinctPalettes": 3,
+          "distinctTypeAndHierarchy": 3,
+          "distinctNavModels": 3,
+          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
+        },
+        "completeness": {
+          "concepts": 3,
+          "screens": [
+            [
+              "home",
+              "catalog",
+              "more"
+            ],
+            [
+              "catalog",
+              "home",
+              "more"
+            ],
+            [
+              "home",
+              "catalog",
+              "more",
+              "search"
+            ]
+          ],
+          "nodes": 18,
+          "components": 9,
+          "editability": {
+            "missing": 3,
+            "unknown": 0,
+            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
+          }
+        },
+        "latency": {
+          "totalMs": 1,
+          "byStage": [
+            {
+              "stage": "understand",
+              "ms": 0
+            },
+            {
+              "stage": "design",
+              "ms": 0
+            },
+            {
+              "stage": "copy",
+              "ms": 0
+            }
+          ],
+          "note": "mocked fetch, so latency is the pipeline overhead only"
+        },
+        "cost": {
+          "usd": 0.001905,
+          "calls": 3,
+          "stages": [
+            "understand",
+            "design",
+            "copy"
+          ],
+          "softLimitReached": false
+        }
+      }
+    },
+    {
+      "business": {
+        "id": "afl",
+        "label": "Architecture for London",
+        "type": "Professional services",
+        "source": "https://www.architectureforlondon.com/",
+        "fixture": "docs/qa/generation-benchmark-2026-11-21/afl (saved crawl)"
+      },
+      "provider": {
+        "id": "openrouter",
+        "arm": "primary",
+        "label": "OpenRouter · cheapest eligible endpoint",
+        "model": "openai/gpt-oss-120b",
+        "keyEnv": "OPENROUTER_API_KEY",
+        "routingLabel": "OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it"
+      },
+      "status": "ai",
+      "costUsd": 0.000447,
+      "latencyMs": 2,
+      "servedProviders": [
+        "MockedCheapestEndpoint"
+      ],
+      "attempts": [
+        {
+          "stage": "understand",
+          "attempt": 1,
+          "reservedUsd": 0.0028239499999999996,
+          "costUsd": 0.000087,
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "attempt": 1,
+          "reservedUsd": 0.011838499999999998,
+          "costUsd": 0.00027299999999999997,
+          "ok": true
+        },
+        {
+          "stage": "copy",
+          "attempt": 1,
+          "reservedUsd": 0.003940549999999999,
+          "costUsd": 0.000087,
+          "ok": true
+        }
+      ],
+      "verification": {
+        "poolClaimUsd": 0.4,
+        "hardCapUsd": 0.4,
+        "attemptsMade": 3,
+        "retried": false,
+        "reservedUsd": 0.018602999999999995,
+        "chargedUsd": 0.00044699999999999997,
+        "maxAttemptReservedUsd": 0.011838499999999998,
+        "withinHardCap": true,
+        "chargedWithinReservation": true,
+        "overReservedUsd": 0,
+        "servedProviders": [
+          "MockedCheapestEndpoint"
+        ]
+      },
+      "budget": {
+        "totalUsd": 30,
+        "spentUsd": 0.010865999999999997,
+        "reservedUsd": 0,
+        "remainingUsd": 29.989134,
+        "generationUsd": 0.00044699999999999997,
+        "softUsd": 0.18,
+        "hardUsd": 0.4
+      },
+      "issues": [],
+      "score": {
+        "grounding": {
+          "brief": "validated against the dossier before design",
+          "designIssues": [],
+          "invented": 0
+        },
+        "businessRelevance": {
+          "catalogueEntries": 8,
+          "catalogueScreens": 3,
+          "workflows": [
+            "browse",
+            "book",
+            "quote"
+          ]
+        },
+        "diversity": {
+          "ok": true,
+          "pairs": [
+            {
+              "pair": "ledger/index",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same tabs",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "ledger/season",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same opening screen",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "index/season",
+              "score": 0.1,
+              "axesDifferent": 7,
+              "reasons": [
+                "same block set",
+                "same trade functionality"
+              ]
+            }
+          ],
+          "minAxes": 7
+        },
+        "visual": {
+          "distinctPalettes": 3,
+          "distinctTypeAndHierarchy": 3,
+          "distinctNavModels": 3,
+          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
+        },
+        "completeness": {
+          "concepts": 3,
+          "screens": [
+            [
+              "home",
+              "catalog",
+              "more"
+            ],
+            [
+              "catalog",
+              "home",
+              "more"
+            ],
+            [
+              "home",
+              "catalog",
+              "more",
+              "search"
+            ]
+          ],
+          "nodes": 18,
+          "components": 9,
+          "editability": {
+            "missing": 3,
+            "unknown": 0,
+            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
+          }
+        },
+        "latency": {
+          "totalMs": 2,
+          "byStage": [
+            {
+              "stage": "understand",
+              "ms": 1
+            },
+            {
+              "stage": "design",
+              "ms": 0
+            },
+            {
+              "stage": "copy",
+              "ms": 0
+            }
+          ],
+          "note": "mocked fetch, so latency is the pipeline overhead only"
+        },
+        "cost": {
+          "usd": 0.000447,
+          "calls": 3,
+          "stages": [
+            "understand",
+            "design",
+            "copy"
+          ],
+          "softLimitReached": false
+        }
+      }
+    },
+    {
+      "business": {
+        "id": "afl",
+        "label": "Architecture for London",
+        "type": "Professional services",
+        "source": "https://www.architectureforlondon.com/",
+        "fixture": "docs/qa/generation-benchmark-2026-11-21/afl (saved crawl)"
+      },
+      "provider": {
+        "id": "openrouter-groq",
+        "arm": "controlled",
+        "label": "OpenRouter · pinned to Groq",
+        "model": "openai/gpt-oss-120b",
+        "keyEnv": "OPENROUTER_API_KEY",
+        "routingLabel": "OpenRouter pinned to its Groq endpoint (provider.only=[\"Groq\"]) with fallbacks disabled; a response served by any other endpoint is refused",
+        "expectedProvider": "Groq"
+      },
+      "status": "ai",
+      "costUsd": 0.001905,
+      "latencyMs": 1,
+      "servedProviders": [
+        "Groq"
+      ],
+      "attempts": [
+        {
+          "stage": "understand",
+          "attempt": 1,
+          "reservedUsd": 0.00163455,
+          "costUsd": 0.000375,
+          "ok": true
+        },
+        {
+          "stage": "design",
+          "attempt": 1,
+          "reservedUsd": 0.0072915,
+          "costUsd": 0.0011549999999999998,
+          "ok": true
+        },
+        {
+          "stage": "copy",
+          "attempt": 1,
+          "reservedUsd": 0.0023059499999999998,
+          "costUsd": 0.000375,
+          "ok": true
+        }
+      ],
+      "verification": {
+        "poolClaimUsd": 0.4,
+        "hardCapUsd": 0.4,
+        "attemptsMade": 3,
+        "retried": false,
+        "reservedUsd": 0.011231999999999999,
+        "chargedUsd": 0.0019049999999999996,
+        "maxAttemptReservedUsd": 0.0072915,
+        "withinHardCap": true,
+        "chargedWithinReservation": true,
+        "overReservedUsd": 0,
+        "servedProviders": [
+          "Groq"
+        ]
+      },
+      "budget": {
+        "totalUsd": 30,
+        "spentUsd": 0.012770999999999998,
+        "reservedUsd": 0,
+        "remainingUsd": 29.987229,
+        "generationUsd": 0.0019049999999999996,
+        "softUsd": 0.18,
+        "hardUsd": 0.4
+      },
+      "issues": [],
+      "score": {
+        "grounding": {
+          "brief": "validated against the dossier before design",
+          "designIssues": [],
+          "invented": 0
+        },
+        "businessRelevance": {
+          "catalogueEntries": 8,
+          "catalogueScreens": 3,
+          "workflows": [
+            "browse",
+            "book",
+            "quote"
+          ]
+        },
+        "diversity": {
+          "ok": true,
+          "pairs": [
+            {
+              "pair": "ledger/index",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same tabs",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "ledger/season",
+              "score": 0.25,
+              "axesDifferent": 7,
+              "reasons": [
+                "same opening screen",
+                "same block set",
+                "same trade functionality"
+              ]
+            },
+            {
+              "pair": "index/season",
+              "score": 0.1,
+              "axesDifferent": 7,
+              "reasons": [
+                "same block set",
+                "same trade functionality"
+              ]
+            }
+          ],
+          "minAxes": 7
+        },
+        "visual": {
+          "distinctPalettes": 3,
+          "distinctTypeAndHierarchy": 3,
+          "distinctNavModels": 3,
+          "note": "structural checks (palette, type, hierarchy, nav); contrast is enforced by the validator, taste is not judged"
+        },
+        "completeness": {
+          "concepts": 3,
+          "screens": [
+            [
+              "home",
+              "catalog",
+              "more"
+            ],
+            [
+              "catalog",
+              "home",
+              "more"
+            ],
+            [
+              "home",
+              "catalog",
+              "more",
+              "search"
+            ]
+          ],
+          "nodes": 18,
+          "components": 9,
+          "editability": {
+            "missing": 3,
+            "unknown": 0,
+            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
+          }
+        },
+        "latency": {
+          "totalMs": 1,
+          "byStage": [
+            {
+              "stage": "understand",
+              "ms": 0
+            },
+            {
+              "stage": "design",
+              "ms": 1
+            },
+            {
+              "stage": "copy",
+              "ms": 0
+            }
+          ],
+          "note": "mocked fetch, so latency is the pipeline overhead only"
+        },
+        "cost": {
+          "usd": 0.001905,
+          "calls": 3,
+          "stages": [
+            "understand",
+            "design",
+            "copy"
+          ],
+          "softLimitReached": false
+        }
+      }
+    }
+  ],
+  "artefacts": [
+    {
+      "business": "geestores",
+      "provider": "groq",
+      "concept": "ledger",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-ledger.png",
+      "captured": true
+    },
+    {
+      "business": "geestores",
+      "provider": "groq",
+      "concept": "index",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-index.png",
+      "captured": true
+    },
+    {
+      "business": "geestores",
+      "provider": "groq",
+      "concept": "season",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-season.png",
+      "captured": true
+    },
+    {
+      "business": "geestores",
+      "provider": "openrouter",
+      "concept": "ledger",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-ledger.png",
+      "captured": true
+    },
+    {
+      "business": "geestores",
+      "provider": "openrouter",
+      "concept": "index",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-index.png",
+      "captured": true
+    },
+    {
+      "business": "geestores",
+      "provider": "openrouter",
+      "concept": "season",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-season.png",
+      "captured": true
+    },
+    {
+      "business": "geestores",
+      "provider": "openrouter-groq",
+      "concept": "ledger",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-ledger.png",
+      "captured": true
+    },
+    {
+      "business": "geestores",
+      "provider": "openrouter-groq",
+      "concept": "index",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-index.png",
+      "captured": true
+    },
+    {
+      "business": "geestores",
+      "provider": "openrouter-groq",
+      "concept": "season",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-season.png",
+      "captured": true
+    },
+    {
+      "business": "padella",
+      "provider": "groq",
+      "concept": "ledger",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/padella/groq-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/padella/groq-ledger.png",
+      "captured": true
+    },
+    {
+      "business": "padella",
+      "provider": "groq",
+      "concept": "index",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/padella/groq-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/padella/groq-index.png",
+      "captured": true
+    },
+    {
+      "business": "padella",
+      "provider": "groq",
+      "concept": "season",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/padella/groq-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/padella/groq-season.png",
+      "captured": true
+    },
+    {
+      "business": "padella",
+      "provider": "openrouter",
+      "concept": "ledger",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-ledger.png",
+      "captured": true
+    },
+    {
+      "business": "padella",
+      "provider": "openrouter",
+      "concept": "index",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-index.png",
+      "captured": true
+    },
+    {
+      "business": "padella",
+      "provider": "openrouter",
+      "concept": "season",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-season.png",
+      "captured": true
+    },
+    {
+      "business": "padella",
+      "provider": "openrouter-groq",
+      "concept": "ledger",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-groq-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-groq-ledger.png",
+      "captured": true
+    },
+    {
+      "business": "padella",
+      "provider": "openrouter-groq",
+      "concept": "index",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-groq-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-groq-index.png",
+      "captured": true
+    },
+    {
+      "business": "padella",
+      "provider": "openrouter-groq",
+      "concept": "season",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-groq-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/padella/openrouter-groq-season.png",
+      "captured": true
+    },
+    {
+      "business": "afl",
+      "provider": "groq",
+      "concept": "ledger",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/afl/groq-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/afl/groq-ledger.png",
+      "captured": true
+    },
+    {
+      "business": "afl",
+      "provider": "groq",
+      "concept": "index",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/afl/groq-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/afl/groq-index.png",
+      "captured": true
+    },
+    {
+      "business": "afl",
+      "provider": "groq",
+      "concept": "season",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/afl/groq-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/afl/groq-season.png",
+      "captured": true
+    },
+    {
+      "business": "afl",
+      "provider": "openrouter",
+      "concept": "ledger",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-ledger.png",
+      "captured": true
+    },
+    {
+      "business": "afl",
+      "provider": "openrouter",
+      "concept": "index",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-index.png",
+      "captured": true
+    },
+    {
+      "business": "afl",
+      "provider": "openrouter",
+      "concept": "season",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-season.png",
+      "captured": true
+    },
+    {
+      "business": "afl",
+      "provider": "openrouter-groq",
+      "concept": "ledger",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-groq-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-groq-ledger.png",
+      "captured": true
+    },
+    {
+      "business": "afl",
+      "provider": "openrouter-groq",
+      "concept": "index",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-groq-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-groq-index.png",
+      "captured": true
+    },
+    {
+      "business": "afl",
+      "provider": "openrouter-groq",
+      "concept": "season",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-groq-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/afl/openrouter-groq-season.png",
+      "captured": true
+    }
+  ],
+  "screenshotFailure": null,
+  "mockedCalls": 27,
+  "latency": {
+    "minMs": 1,
+    "maxMs": 7,
+    "medianMs": 2
+  },
+  "notice": "Mocked deterministic stand-in answers. Neither provider was contacted, no money was spent, and the columns are not a quality comparison. The pinned control and the served-endpoint records are exercised with stand-in endpoint names. Set both keys and --approve-trial for the real run."
+}

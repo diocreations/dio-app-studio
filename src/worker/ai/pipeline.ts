@@ -67,18 +67,36 @@ export type CallRecord = {
   ok: boolean
 }
 
+/** One HTTP attempt, including a retry: what it reserved and what it charged. */
+export type AttemptRecord = {
+  stage: AiStage
+  attempt: number
+  reservedUsd: number
+  costUsd: number
+  ok: boolean
+  /** The upstream endpoint, when the gateway reported one for this attempt. */
+  servedProvider?: string
+}
+
 export type DesignRun = {
   brief: BusinessBrief
   set: DesignSet
   concepts: CompiledConcept[]
   calls: CallRecord[]
+  /** Every attempt made, including failed and retried ones. */
+  attempts: AttemptRecord[]
   costUsd: number
   issues: Issue[]
+  /** The optional copy pass was skipped to stay inside the soft limit. */
+  softLimitReached: boolean
 }
 
 export class PipelineError extends Error {
   code: string
   issues: Issue[]
+  /** Calls and attempts completed before the failure, for cost verification. */
+  calls: CallRecord[] = []
+  attempts: AttemptRecord[] = []
 
   constructor(code: string, message: string, issues: Issue[] = []) {
     super(message)
@@ -94,6 +112,7 @@ async function callStage(
   provider: AiProvider,
   stage: AiStage,
   ledger: Ledger,
+  attemptsLog: AttemptRecord[],
   request: { system: string; user: string; maxOutputTokens: number },
 ): Promise<StageCall> {
   const model = provider.modelFor(stage)
@@ -106,6 +125,9 @@ async function callStage(
     model,
     estimateTokens(`${request.system}\n${request.user}`) + 900,
     reserveOutput,
+    // The provider knows the price its route can be billed at; the global table
+    // cannot, because the same model can be served by two gateways.
+    provider.reservationPriceFor?.(model),
   )
   let attempts = 0
   let reservedUsd = 0
@@ -122,12 +144,20 @@ async function callStage(
       }
       attempts += 1
       reservedUsd += reservation
+      attemptsLog.push({ stage, attempt: attempts, reservedUsd: reservation, costUsd: 0, ok: false })
     },
     end(result) {
       // On a transport failure the provider may still have billed something we
       // cannot see. The ledger records zero and the run aborts, so the trial
       // ceiling is never crossed by an estimate.
-      ledger.settle(reservation, result?.costUsd ?? 0)
+      const charged = result?.costUsd ?? 0
+      ledger.settle(reservation, charged)
+      const entry = attemptsLog[attemptsLog.length - 1]
+      if (entry) {
+        entry.costUsd = charged
+        entry.ok = result?.ok ?? false
+        entry.servedProvider = result?.servedProvider
+      }
     },
   }
   const result = await generateWithRetry(
@@ -172,17 +202,47 @@ function record(
   }
 }
 
-export async function runDesignPipeline(input: {
+type PipelineInput = {
   provider: AiProvider
   dossier: Dossier
   spec: AppSpec
   ledger: Ledger
-}): Promise<DesignRun> {
+  /** Stop before the optional copy pass once this much has been spent. */
+  softStopUsd?: number
+}
+
+/**
+ * The pipeline, with the calls and attempts it managed to make kept alongside a
+ * failure. A refused generation is still billed, so the accounting must survive
+ * the throw.
+ */
+export async function runDesignPipeline(input: PipelineInput): Promise<DesignRun> {
+  const spend: { calls: CallRecord[]; attempts: AttemptRecord[] } = { calls: [], attempts: [] }
+  try {
+    return await runPipeline(input, spend)
+  } catch (error) {
+    if (error instanceof PipelineError) {
+      error.calls = spend.calls
+      error.attempts = spend.attempts
+    } else if (error instanceof Error) {
+      // A provider failure that ends the run still happened after calls and
+      // reservations; keep them available to the cost reconciliation.
+      ;(error as Error & { attemptsSpent?: AttemptRecord[] }).attemptsSpent = spend.attempts
+      ;(error as Error & { callsSpent?: CallRecord[] }).callsSpent = spend.calls
+    }
+    throw error
+  }
+}
+
+async function runPipeline(
+  input: PipelineInput,
+  spend: { calls: CallRecord[]; attempts: AttemptRecord[] },
+): Promise<DesignRun> {
   const { provider, dossier, spec, ledger } = input
-  const calls: CallRecord[] = []
+  const calls = spend.calls
   const issues: Issue[] = []
 
-  const understoodCall = await callStage(provider, 'understand', ledger, {
+  const understoodCall = await callStage(provider, 'understand', ledger, spend.attempts, {
     ...understandPrompt(dossier),
     maxOutputTokens: MAX_OUTPUT_TOKENS.understand,
   })
@@ -202,7 +262,7 @@ export async function runDesignPipeline(input: {
   }
   const brief = briefResult.value
 
-  const designedCall = await callStage(provider, 'design', ledger, {
+  const designedCall = await callStage(provider, 'design', ledger, spend.attempts, {
     ...designPrompt(dossier, brief),
     maxOutputTokens: MAX_OUTPUT_TOKENS.design,
   })
@@ -225,8 +285,19 @@ export async function runDesignPipeline(input: {
 
   // Copy is an improvement, not a dependency. If it fails, the headings the
   // design set already carries are used; nothing is invented to replace them.
+  // A trial that has reached its soft limit skips it for the same reason: the
+  // design is already complete and validated, and the copy pass is optional.
+  const softLimitReached =
+    input.softStopUsd !== undefined &&
+    ledger.spentUsd() + ledger.reservedUsd() >= input.softStopUsd
+  if (softLimitReached) {
+    issues.push({
+      code: 'soft_limit',
+      message: `The generation reached its $${input.softStopUsd!.toFixed(2)} soft limit after the design pass; the copy pass was skipped.`,
+    })
+  } else {
   try {
-    const copiedCall = await callStage(provider, 'copy', ledger, {
+    const copiedCall = await callStage(provider, 'copy', ledger, spend.attempts, {
       ...copyPrompt(dossier, brief, set),
       maxOutputTokens: MAX_OUTPUT_TOKENS.copy,
     })
@@ -256,6 +327,7 @@ export async function runDesignPipeline(input: {
       code: 'copy_failed',
       message: `The copy pass failed (${error instanceof Error ? error.message : 'unknown'}); the design set headings stand.`,
     })
+  }
   }
 
   const concepts: CompiledConcept[] = []
@@ -292,7 +364,9 @@ export async function runDesignPipeline(input: {
     set,
     concepts,
     calls,
+    attempts: spend.attempts,
     costUsd: calls.reduce((total, call) => total + call.costUsd, 0),
     issues,
+    softLimitReached,
   }
 }

@@ -113,6 +113,7 @@ export function briefFrom(dossier: Dossier): BusinessBrief {
     brand: { personality: ['ceremonial', 'ornate'], formality: 'formal', energy: 'calm' },
     vocabulary: { catalog: 'Collection', item: 'Piece', buy: 'Add to bag', enquire: 'Ask about this piece' },
     constraints: { mustNotInvent: ['prices', 'materials'] },
+    assumptions: [],
     questions: [],
   }
 }

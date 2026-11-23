@@ -152,7 +152,11 @@ describe('ai_quota migration on a local database', () => {
     const version = db
       .prepare("SELECT value FROM schema_meta WHERE key = 'schema_version'")
       .get() as { value: string }
-    expect(version.value).toBe('3')
+    expect(version.value).toBe('4')
+    // Version 4 adds the trial's spend pool on the same open.
+    expect(
+      db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'ai_trial_spend'").get(),
+    ).toEqual({ name: 'ai_trial_spend' })
 
     // Usable, not merely present.
     const ledger = createQuotaLedger(d1QuotaStore(d1()))

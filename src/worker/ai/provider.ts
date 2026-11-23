@@ -1,4 +1,4 @@
-import { costUsd, estimateTokens, type Usage } from './pricing'
+import { costUsd, costWithPrice, estimateTokens, priceFor, type ModelPrice, type Usage } from './pricing'
 import type { QuotaLedger, QuotaReservation } from './quotas'
 import { assertZeroCost, neuronsFor, PaidRequestRefused, type FreeModel } from './zeroCost'
 
@@ -59,6 +59,11 @@ export type AiProvider = {
   maxOutputFor?(stage: AiStage): number | undefined
   /** Billed output to reserve: visible ceiling plus reasoning allowance. */
   reserveOutputFor?(stage: AiStage, visibleMax: number): number
+  /** The price this route is billed at, when it differs per provider. */
+  priceFor?(model: string): ModelPrice
+  /** The price a reservation must cover: the dearest endpoint this route can
+   *  be billed at, which is not always the list price it usually pays. */
+  reservationPriceFor?(model: string): ModelPrice
   generate(request: GenerateRequest): Promise<GenerateResult>
 }
 
@@ -365,6 +370,12 @@ export type OpenRouterRouting = {
 }
 
 export type OpenRouterOptions = {
+  /** The approved trial gate. Without it the paid gateway stays closed. */
+  authorised?: boolean
+  /** The price this route is normally billed at. */
+  price?: ModelPrice
+  /** The dearest endpoint the routing rules can select, for reservations. */
+  reservationPrice?: ModelPrice
   routing?: OpenRouterRouting
   /** Endpoint slug this route must be served by. Checked against the
    *  response's `provider` field; absent or different attribution fails the
@@ -402,8 +413,12 @@ export function openRouterProvider(
     modelFor: (stage) => models[stage],
     effortFor,
     reserveOutputFor: reserveFor,
+    priceFor: () => options.price ?? priceFor(models.design),
+    reservationPriceFor: () => options.reservationPrice ?? options.price ?? priceFor(models.design),
     async generate(request: GenerateRequest): Promise<GenerateResult> {
-      refusePaid('openrouter', models[request.stage])
+      // The gateway is paid. It opens only for an authorised trial, never for
+      // the shipping routes, which build their providers elsewhere.
+      if (!options.authorised) refusePaid('openrouter', models[request.stage])
       const model = models[request.stage]
       const started = Date.now()
       const effort = effortFor(request.stage)
@@ -445,39 +460,9 @@ export function openRouterProvider(
       )
       const choices = Array.isArray(body?.choices) ? (body.choices as Record<string, unknown>[]) : []
       const choice = choices[0]
-      if (!choice) {
-        throw new ProviderError('parse', messageOf(body, 'OpenRouter returned no choices.'))
-      }
-      if (choice.finish_reason === 'length') {
-        throw new ProviderError('truncated', 'The design answer was cut off at the token limit.')
-      }
-      if (choice.finish_reason === 'error') {
-        throw new ProviderError('refused', messageOf(choice, 'The upstream provider stopped with an error.'))
-      }
-      const providerServed =
-        typeof body?.provider === 'string'
-          ? body.provider
-          : typeof choice.provider === 'string'
-            ? choice.provider
-            : undefined
-      // Attribution is part of the measurement. A pinned route that is served
-      // by anything else is not the comparison that was authorised, so the
-      // answer is refused rather than recorded against the wrong vendor.
-      if (options.expectedProvider) {
-        if (!providerServed) {
-          throw new ProviderError(
-            'provider_mismatch',
-            `OpenRouter did not report which endpoint served this call, so ${options.expectedProvider} could not be confirmed. The answer was discarded.`,
-          )
-        }
-        if (providerServed.toLowerCase() !== options.expectedProvider.toLowerCase()) {
-          throw new ProviderError(
-            'provider_mismatch',
-            `OpenRouter served this call from ${providerServed}, not ${options.expectedProvider}. The route is pinned; the answer was discarded.`,
-          )
-        }
-      }
-      const json = parseJson(messageText(choice.message as Record<string, unknown> | undefined))
+      // Usage is read before any judgement about the answer: a truncated,
+      // refused or wrongly-attributed answer still consumed billed tokens, and
+      // that charge must reach the ledger rather than look free.
       const usageRaw = (body?.usage ?? {}) as Record<string, unknown>
       const promptDetails = (usageRaw.prompt_tokens_details ?? {}) as Record<string, unknown>
       const completionDetails = (usageRaw.completion_tokens_details ?? {}) as Record<string, unknown>
@@ -491,6 +476,64 @@ export function openRouterProvider(
         typeof usageRaw.cost === 'number' && Number.isFinite(usageRaw.cost) && usageRaw.cost >= 0
           ? usageRaw.cost
           : undefined
+      const price = options.price ?? priceFor(model)
+      /** Attach the charge for an answer that will not be used. */
+      const charge = (error: ProviderError): ProviderError => {
+        const billed = reported ?? costWithPrice(price, usage)
+        ;(error as ProviderError & { costUsd?: number }).costUsd = billed
+        ;(error as ProviderError & { usage?: Usage }).usage = usage
+        return error
+      }
+      if (!choice) {
+        throw new ProviderError('parse', messageOf(body, 'OpenRouter returned no choices.'))
+      }
+      if (choice.finish_reason === 'length') {
+        throw charge(new ProviderError('truncated', 'The design answer was cut off at the token limit.'))
+      }
+      if (choice.finish_reason === 'error' || choice.finish_reason === 'content_filter') {
+        throw charge(
+          new ProviderError('refused', messageOf(choice, 'The upstream provider stopped with an error.')),
+        )
+      }
+      const providerServed =
+        typeof body?.provider === 'string'
+          ? body.provider
+          : typeof choice.provider === 'string'
+            ? choice.provider
+            : undefined
+      // Attribution is part of the measurement. A pinned route that is served
+      // by anything else is not the comparison that was authorised, so the
+      // answer is refused rather than recorded against the wrong vendor.
+      if (options.expectedProvider) {
+        if (!providerServed) {
+          throw charge(
+            new ProviderError(
+              'provider_mismatch',
+              `OpenRouter did not report which endpoint served this call, so ${options.expectedProvider} could not be confirmed. The answer was discarded.`,
+            ),
+          )
+        }
+        if (providerServed.toLowerCase() !== options.expectedProvider.toLowerCase()) {
+          const mismatch = charge(
+            new ProviderError(
+              'provider_mismatch',
+              `OpenRouter served this call from ${providerServed}, not ${options.expectedProvider}. The route is pinned; the answer was discarded.`,
+            ),
+          )
+          ;(mismatch as ProviderError & { providerServed?: string }).providerServed = providerServed
+          throw mismatch
+        }
+      }
+      let json: unknown
+      try {
+        json = parseJson(messageText(choice.message as Record<string, unknown> | undefined))
+      } catch (error) {
+        throw charge(
+          error instanceof ProviderError
+            ? error
+            : new ProviderError('parse', 'The provider answer could not be read.'),
+        )
+      }
       return {
         json,
         usage,
@@ -500,7 +543,7 @@ export function openRouterProvider(
         providerServed,
         latencyMs: Date.now() - started,
         requestId: typeof body?.id === 'string' ? body.id : '',
-        costUsd: reported ?? costUsd(model, usage),
+        costUsd: reported ?? costWithPrice(price, usage),
         reportedCostUsd: reported,
       }
     },
@@ -722,6 +765,87 @@ export function groqProvider(
 }
 
 /**
+ * GroqCloud, paid plan, for the approved trial only.
+ *
+ * Same request shape as the free adapter — Groq's strict `json_schema`
+ * constrained decoding is the reason the pipeline can demand an exact
+ * `DesignSet` — but without the free-model allowlist or the quota ledger. The
+ * caller must hold an explicit trial authorisation; the adapter itself never
+ * decides that, and it returns the price-derived charge because Groq reports
+ * tokens but not dollars.
+ */
+export function groqPaidProvider(
+  apiKey: string,
+  models: AiModels,
+  options: {
+    price: ModelPrice
+    reservationPrice?: ModelPrice
+    reasoning?: Partial<Record<AiStage, ReasoningEffort>>
+    reasoningReserveTokens?: Partial<Record<AiStage, number>>
+    timeoutMs?: number
+  },
+): AiProvider {
+  if (!apiKey.trim()) throw new ProviderError('no_key', 'GROQ_API_KEY is not set')
+  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS
+  const effortFor = (stage: AiStage) => options.reasoning?.[stage]
+  const reserveFor = (stage: AiStage, visibleMax: number) =>
+    visibleMax + Math.max(0, options.reasoningReserveTokens?.[stage] ?? 0)
+  return {
+    name: 'groq',
+    modelFor: (stage) => models[stage],
+    effortFor,
+    reserveOutputFor: reserveFor,
+    priceFor: () => options.price,
+    reservationPriceFor: () => options.reservationPrice ?? options.price,
+    async generate(request: GenerateRequest): Promise<GenerateResult> {
+      const model = models[request.stage]
+      const started = Date.now()
+      const effort = effortFor(request.stage)
+      const body = await postJson(
+        'https://api.groq.com/openai/v1/chat/completions',
+        {
+          model,
+          messages: [
+            { role: 'system', content: request.system },
+            { role: 'user', content: request.user },
+          ],
+          max_completion_tokens: reserveFor(request.stage, request.maxOutputTokens),
+          response_format: {
+            type: 'json_schema',
+            json_schema: { name: `plattr_${request.stage}`, strict: true, schema: request.schema },
+          },
+          ...(effort ? { reasoning_effort: effort } : {}),
+        },
+        { authorization: `Bearer ${apiKey}` },
+        timeoutMs,
+        'Groq',
+      )
+      const audited = auditChatCompletion(body ?? {}, 'Groq')
+      if (audited.problem) {
+        // Tokens were still spent, so the charge is booked before the failure
+        // reaches the pipeline. Otherwise a truncated answer would look free.
+        const error = audited.problem as ProviderError & { usage?: Usage; costUsd?: number }
+        error.usage = audited.usage
+        error.costUsd = costWithPrice(options.price, audited.usage)
+        throw error
+      }
+      const usage = audited.usage
+      return {
+        json: audited.json,
+        usage,
+        model,
+        modelServed: typeof body?.model === 'string' ? body.model : undefined,
+        provider: 'groq',
+        providerServed: 'groq',
+        latencyMs: Date.now() - started,
+        requestId: typeof body?.id === 'string' ? body.id : '',
+        costUsd: costWithPrice(options.price, usage),
+      }
+    },
+  }
+}
+
+/**
  * Cloudflare Workers AI, free allocation, OpenAI-compatible Chat Completions.
  *
  * The free plan has no overage: the daily Neuron pool simply stops. That is the
@@ -862,8 +986,10 @@ function sleep(ms: number): Promise<void> {
 export type AttemptGuard = {
   /** Throws when this attempt's reservation does not fit the budget. */
   begin(): void
-  /** Releases the reservation and books what the attempt actually cost. */
-  end(result?: GenerateResult): void
+  /** Releases the reservation and books what the attempt actually cost. An
+   *  adapter that throws after the provider has billed attaches `costUsd` to
+   *  its error, and that charge is booked too. */
+  end(result?: { costUsd: number; ok?: boolean; servedProvider?: string }): void
 }
 
 /** One retry, only for transport failures, timeouts, 429 and 5xx. A schema or
@@ -880,14 +1006,19 @@ export async function generateWithRetry(
     try {
       result = await provider.generate(request)
     } catch (error) {
-      guard?.end()
+      const billed = (error as { costUsd?: number }).costUsd
+      guard?.end({
+        costUsd: typeof billed === 'number' && Number.isFinite(billed) ? billed : 0,
+        ok: false,
+        servedProvider: (error as { providerServed?: string }).providerServed,
+      })
       const retryable = error instanceof ProviderError && error.retryable
       if (!retryable || attempt >= retries) throw error
       const delay = error.retryAfterMs ?? 500 * (attempt + 1)
       await sleep(delay)
       continue
     }
-    guard?.end(result)
+    guard?.end({ costUsd: result.costUsd, ok: true })
     if (!result) throw new ProviderError('transport', 'The provider returned nothing.')
     return result
   }

@@ -68,6 +68,22 @@ export const BusinessBriefSchema = z
       })
       .strict(),
     constraints: z.object({ mustNotInvent: z.array(z.string().max(80)).max(6) }).strict(),
+    /**
+     * What the model inferred but the source does not state. Kept separate from
+     * every other field so a reader can see the line between a fact and a
+     * guess. The validator refuses a number, price or claim in this list.
+     */
+    assumptions: z
+      .array(
+        z
+          .object({
+            claim: z.string().max(160),
+            basis: z.enum(['inference', 'guess']),
+            why: z.string().max(160),
+          })
+          .strict(),
+      )
+      .max(5),
     questions: z
       .array(
         z

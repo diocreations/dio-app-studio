@@ -4,8 +4,8 @@
  * The numbers are per token so every calculation stays exact. They are not a
  * substitute for the invoice: a provider can change a price, a gateway can
  * route to a different endpoint, and a cached read is billed differently from
- * a fresh one. `docs/P1_TRIAL_AUTHORISATION_2026-11-23-REV4.md` records the
- * prices this table was built from and when they were read.
+ * a fresh one. `docs/AI_TRIAL_GROQ_VS_OPENROUTER_2026-11-23.md` records the
+ * prices the trial was built from and when they were read.
  */
 
 import { isFreeModel } from './zeroCost'
@@ -80,8 +80,7 @@ export function priceFor(model: string): ModelPrice {
   return price
 }
 
-export function costUsd(model: string, usage: Usage): number {
-  const price = priceFor(model)
+export function costWithPrice(price: ModelPrice, usage: Usage): number {
   const cached = Math.max(0, Math.min(usage.inputTokens, usage.cachedInputTokens))
   return (
     (usage.inputTokens - cached) * price.input +
@@ -90,14 +89,25 @@ export function costUsd(model: string, usage: Usage): number {
   )
 }
 
+export function costUsd(model: string, usage: Usage): number {
+  return costWithPrice(priceFor(model), usage)
+}
+
 /** The most a call can cost: every input token fresh, every output token used,
  *  priced at the dearest endpoint the route could be billed at. */
-export function estimateMaxUsd(model: string, inputTokens: number, maxOutputTokens: number): number {
+export function estimateMaxUsd(
+  model: string,
+  inputTokens: number,
+  maxOutputTokens: number,
+  priceOverride?: ModelPrice,
+): number {
   // A free-tier model has no billable ceiling. `RESERVATION_PRICES` records the
   // commercial rate this model would cost on a paid plan; that is not a
-  // reservation Plattr can ever incur, so it must not reach the ledger.
-  if (isFreeModel(model)) return 0
-  const price = RESERVATION_PRICES[model] ?? priceFor(model)
+  // reservation Plattr can ever incur, so it must not reach the ledger. An
+  // explicit provider price overrides that: the approved trial bills the same
+  // model on a paid plan, and the reservation must be real there.
+  if (!priceOverride && isFreeModel(model)) return 0
+  const price = priceOverride ?? RESERVATION_PRICES[model] ?? priceFor(model)
   return Math.max(0, inputTokens) * price.input + Math.max(0, maxOutputTokens) * price.output
 }
 

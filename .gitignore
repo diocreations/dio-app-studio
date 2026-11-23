@@ -22,3 +22,6 @@ scripts/art/*.png
 .chrome-qa/
 # regenerable acceptance captures; the JSON reports are kept
 /docs/qa/acceptance-2026-11-21/*.png
+
+# generated trial pages; REPORT.md, report.json and the PNGs are kept
+/docs/qa/ai-trial-2026-11-23/**/*.html

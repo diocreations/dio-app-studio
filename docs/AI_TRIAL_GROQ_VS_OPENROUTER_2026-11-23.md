@@ -1,0 +1,235 @@
+# The paid AI trial: Groq vs OpenRouter
+
+Status: **prepared and tested offline. No live provider call has been made.**
+Neither key is present, so nothing in Plattr's shipped generation path is
+AI-powered yet. This document describes the integration that is ready for the
+approved run, what it costs, and exactly what still needs the keys.
+
+Generated: 2026-11-23. Revision 2 adds endpoint attribution and a controlled
+pinned arm. This document replaces the earlier trial drafts, which named the
+wrong provider.
+
+## 1. What is being compared
+
+Two gateways serving the **same model**, with the same prompts, stages, JSON
+schemas, output ceilings and reasoning allowance. This is a **provider-routing
+and gateway comparison**, not a gateway-only comparison: OpenRouter's
+`sort: "price"` chooses among same-model endpoints and does not guarantee a
+specific vendor.
+
+| Arm | Endpoint | Key | Model ID | Routing |
+| --- | --- | --- | --- | --- |
+| Primary | `https://api.groq.com/openai/v1/chat/completions` | `GROQ_API_KEY` | `openai/gpt-oss-120b` | direct, no gateway |
+| Primary | `https://openrouter.ai/api/v1/chat/completions` | `OPENROUTER_API_KEY` | `openai/gpt-oss-120b` | cheapest eligible endpoint (`sort: price`, fallbacks allowed) |
+| Controlled | the same OpenRouter endpoint | `OPENROUTER_API_KEY` | `openai/gpt-oss-120b` | pinned to Groq (`only: ["Groq"]`), fallbacks disabled |
+
+Because the model is identical, a difference in grounding, diversity, latency or
+cost is a difference between the gateways and the endpoints they select — not
+between two model families. The primary Groq-versus-OpenRouter result answers
+the practical question: what a customer would get and pay. The controlled arm
+removes routing as a variable by pinning OpenRouter to Groq's endpoint.
+
+Every response's serving endpoint is recorded per stage and per generation
+(`servedProviders`, and `providerServed` on each call). Unpinned routing that
+does not report its endpoint is not attributed to a vendor; a pinned call served
+by anything other than Groq is refused as `provider_mismatch` and still charged.
+
+`scripts/ai-trial.mjs` runs three businesses × three arms = nine generations.
+
+## 2. Model IDs and prices (read 2026-11-23)
+
+### Groq — `openai/gpt-oss-120b`
+
+Source: <https://console.groq.com/docs/models> and
+<https://console.groq.com/docs/structured-outputs>.
+
+| Property | Value |
+| --- | --- |
+| Input | $0.15 per 1M tokens |
+| Cached input | $0.075 per 1M tokens |
+| Output | $0.60 per 1M tokens |
+| Context | 131,072 tokens |
+| Max completion | 65,536 tokens |
+| Structured output | `json_schema` with `strict: true` (constrained decoding) |
+| Reported speed | ~500 tokens/second |
+
+Groq reports tokens, not dollars, so the adapter prices the reported usage at
+this published rate. The rate is not a guess: it is the production price on the
+page above.
+
+### OpenRouter — `openai/gpt-oss-120b`
+
+Source: <https://openrouter.ai/openai/gpt-oss-120b> and the per-endpoint listing.
+
+| Property | Value |
+| --- | --- |
+| Inference markup | none; the endpoint price is passed through |
+| Cheapest standard endpoints | $0.03 input / $0.15 output per 1M |
+| Dearest listing for this model | $0.35 input (Cerebras) / $0.95 output (SambaNova) |
+| Context | 131,072 tokens |
+| Billing | `usage.cost` in the response is the charge that is settled |
+| Account fee | 5.5% on credit purchases; inference itself is not marked up |
+
+Routing for the primary arm is `sort: price`, `allow_fallbacks: true` within the
+same model, `require_parameters: true`, `data_collection: "deny"`. The
+reservation uses the dearest listing ($0.35 / $0.95) so the $0.40 generation cap
+cannot be made nominal by an expensive endpoint; settlement uses what was
+actually reported.
+
+The controlled arm sends `only: ["Groq"]`, `allow_fallbacks: false`, so the
+only endpoint that can answer is Groq's. Its price is Groq's own $0.15 / $0.075
+/ $0.60, and any other serving endpoint is refused. OpenRouter's 5.5% credit
+purchase fee is paid when credits are bought, not per call, and is not part of
+the per-generation charge.
+
+## 3. The gate
+
+`src/worker/ai/trial.ts` refuses to build a provider unless **all** of these are
+true:
+
+- `GROQ_API_KEY` is present;
+- `OPENROUTER_API_KEY` is present;
+- `PLATTR_AI_TRIAL=approved` is set;
+- live mode was started with `--approve-trial`.
+
+A comparison needs both keys, so one key alone is refused as `no_keys` and names
+the missing variable. Every refusal happens before a socket is opened. Keys are
+read from `.dev.vars` (gitignored) or the environment; they are not logged, not
+returned in a result object, and not placed in a request body. Tests assert all
+three, and that each gateway receives only its own key.
+
+## 4. The budget
+
+| Rule | Value | Where enforced |
+| --- | --- | --- |
+| Whole trial | $30.00 | atomic claim in `ai_trial_spend` |
+| Soft limit per generation | $0.18 | before the optional copy pass |
+| Hard limit per generation | $0.40 | in-process ledger, before each attempt |
+
+Before a generation starts, it reserves its hard ceiling against the pool in one
+statement whose `WHERE` carries the $30 total. On every exit path — success,
+validation failure, crash — the reservation is replaced with the actual charge.
+There is no top-up code and no credit purchase.
+
+Worst-case ceiling for one full generation at these token ceilings:
+
+| Arm | Reservation price in/out per 1M | Ceiling per generation |
+| --- | --- | --- |
+| Groq (primary) | $0.15 / $0.60 | about $0.013 |
+| OpenRouter, cheapest (primary) | $0.35 / $0.95 | about $0.023 |
+| OpenRouter pinned to Groq (controlled) | $0.15 / $0.60 | about $0.013 |
+
+At these prices the $0.18 soft limit is a guard rather than a likely stop, and
+nine generations cost cents against the $30 pool.
+
+Every HTTP attempt, including a failed or retried one, reserves separately and
+is reconciled in the report: `reservedUsd`, `chargedUsd`, `maxAttemptReservedUsd`,
+`withinHardCap`, `chargedWithinReservation` and `retried`. A truncated or
+wrongly-routed answer is charged before it fails, so a refusal cannot look free.
+
+## 5. Understanding: facts, and assumptions kept apart
+
+`BusinessBrief` carries an explicit `assumptions[]` list (`claim`, `basis:
+inference|guess`, `why`), separate from every sourced field. The validator
+rejects an assumption containing a number, a currency or a claim word: an
+assumption may be wrong, but it may not present itself as a fact. Grounding is
+unchanged: name, trade, currency, catalogue count and workflows are checked
+against the dossier; `verbatim` headings must appear in the read; structural
+headings may not carry a price or a claim.
+
+## 6. Generation: three real directions
+
+The contract requires three concepts with at least six of nine axes different,
+distinct type pairings, and compiled documents that are not the same sections in
+the same order. A palette-only triple is refused during design validation.
+
+The offline evaluation also exposed a real gap: a concept's navigation never
+reached the compiled document for non-shop trades, so a restaurant or practice
+compiled three concepts onto identical tabs, opening screen and journey.
+`compileConcept` now applies the concept's tabs, opening screen and navigation
+model to the document before validation, with a regression test that compiles a
+restaurant and a professional practice and requires three distinct journeys.
+
+Both gateways produce the same `DesignSet`/`CopySet` contracts, which compile to
+the same `Doc` the preview, editor, saved project and publish read. There is no
+second document format, renderer or save path.
+
+## 7. Evaluation
+
+`bun scripts/ai-trial.mjs` measures, per gateway and business:
+
+- **factual grounding** — brief validated against the dossier, design issue
+  codes listed, invented/ungrounded count;
+- **business relevance** — catalogue entries, catalogue screens, workflows;
+- **concept diversity** — pairwise axis differences and per-pair verdicts;
+- **visual structure** — distinct palettes, type/hierarchy pairings, navigation
+  models (contrast is a validator rule; taste is not scored);
+- **completeness and editability** — concepts, screens, nodes, components and a
+  coverage audit of every visible node against the rendered page;
+- **latency** — wall clock for the generation plus per-stage provider latency;
+- **actual cost and routing** — OpenRouter reported charge, Groq published rate
+  on reported tokens, the serving endpoint per call, and every attempt checked
+  against its reservation and the $0.40 cap.
+
+```bash
+bun scripts/ai-trial.mjs --status                 # gate, both keys, pool; no calls
+bun scripts/ai-trial.mjs                          # mocked stand-in, no keys, no spend
+bun scripts/ai-trial.mjs --live --approve-trial   # the paid run
+```
+
+### Mocked run
+
+`docs/qa/ai-trial-2026-11-23/mocked/REPORT.md` is labelled `mode: mocked` and
+`comparable: false`. It proves the plumbing: three arms, both keys, the pinned
+routing body, endpoint attribution (with clearly stand-in endpoint names), the
+HTML/PNG sets, the validators and the budget, with deterministic stand-in
+answers. Latency there measures pipeline overhead only, and cost is simulated.
+It is not a quality comparison.
+
+### Live run
+
+The same tables with real answers, real latency, real reported cost and any
+refusals. Written to `docs/qa/ai-trial-2026-11-23/live/`.
+
+## 8. What still needs your keys
+
+1. `GROQ_API_KEY` in `.dev.vars` (the same variable the free route uses; the
+   trial needs a billing-enabled Groq account).
+2. `OPENROUTER_API_KEY` in `.dev.vars`.
+3. `PLATTR_AI_TRIAL=approved` for the trial window.
+4. `bun scripts/ai-trial.mjs --status` must print `gate: open` and both models.
+5. `bun scripts/ai-trial.mjs --live --approve-trial`.
+
+Do not paste keys into chat, logs or the repository. Nothing in this trial
+deploys, publishes or writes to production data, and it does not change the
+customer-facing generation route.
+
+## 9. Test coverage
+
+`tests/aiTrial.test.ts` (21 tests):
+
+- closed without keys: zero provider calls;
+- keys without approval still closed, for four approval spellings;
+- a comparison needs both keys; one key alone names the missing one;
+- Groq contacts only `api.groq.com`, OpenRouter only `openrouter.ai`, each with
+  its own key, both with the same model, and every arm records its serving
+  endpoint;
+- the pinned arm sends `only: ["Groq"]` with fallbacks disabled, and a call
+  served elsewhere is refused as `provider_mismatch` and still charged;
+- a truncated attempt is charged and counted in the verification, and a retried
+  attempt reserves twice and is reported as retried;
+- Groq cost comes from its published rate; OpenRouter from `usage.cost`;
+- reservations are non-zero for a model that is also on the free allowlist;
+- the $30 pool refuses the claim that would cross it;
+- a generation that would cross $0.40 is refused before its second call;
+- the $0.18 soft limit keeps the design and skips copy;
+- a palette-only triple is refused as `concepts_not_distinct`;
+- accepted documents carry three different structures;
+- neither key appears in bodies, issues or results;
+- an assumption carrying a price is rejected;
+- migration and runtime schema cannot drift;
+- restaurant and practice compile three distinct journeys;
+- the catalogue is two primary arms plus one controlled arm at verified prices.
+
+Full suite: 869 tests, 0 failing (21 of them this trial); typecheck and
+production build clean.

@@ -33,6 +33,7 @@ Your job in this step is understanding, not design. Read the dossier and answer:
 - which workflows it actually offers, with a reason for each one it does not;
 - its likely personality, explicitly as a design hypothesis;
 - the words it uses for its own catalogue, item and main action;
+- at most five assumptions: what you inferred but the dossier does not state, each marked inference or guess with the reason. No number, price, currency, material, address or claim may appear in one. An empty list means everything you wrote is sourced;
 - at most three questions whose answers would change the design, never asking for something the dossier already contains.
 
 If the dossier is thin, say less. An empty audience is better than an invented one.`,
