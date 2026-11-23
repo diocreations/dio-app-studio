@@ -1,0 +1,264 @@
+{
+  "site": "padella",
+  "trade": "restaurant",
+  "source": "https://www.padella.co/",
+  "sourceKind": "saved crawl report, 21 November 2026 (no network request)",
+  "before": {
+    "items": 5,
+    "priced": 0,
+    "withImage": 0,
+    "sections": [
+      [
+        "Restaurant",
+        5
+      ]
+    ],
+    "missing": [
+      "contact details",
+      "address"
+    ]
+  },
+  "after": {
+    "items": 0,
+    "priced": 0,
+    "withImage": 0,
+    "payload": "dish",
+    "status": "empty",
+    "pricingBasis": "unknown",
+    "requirements": {
+      "met": [],
+      "missing": [
+        "price",
+        "image"
+      ]
+    },
+    "inventoryPagesRead": [
+      "/",
+      "/menus",
+      "/menu"
+    ],
+    "currency": {
+      "value": "GBP",
+      "source": "https://www.padella.co/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "missing": [
+      "dish list",
+      "contact details",
+      "address",
+      "dish price, image"
+    ],
+    "questions": [
+      {
+        "field": "name",
+        "why": "We only read the name as “Padella”, from the web address. Is that how the business writes it?",
+        "kind": "confirm"
+      },
+      {
+        "field": "catalogue",
+        "why": "No dishs could be read as commercial inventory — the pages the crawler reached were policies, articles, locations or navigation. Add them, or point us at the page that lists your dishs.",
+        "kind": "confirm"
+      },
+      {
+        "field": "contact",
+        "why": "No phone or email was published.",
+        "kind": "confirm"
+      }
+    ],
+    "conflicts": []
+  },
+  "name": {
+    "value": "Padella",
+    "source": "host",
+    "confidence": "likely"
+  },
+  "contact": {
+    "phone": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "email": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "evidence": {}
+  },
+  "pages": [
+    {
+      "path": "/",
+      "role": "inventory"
+    },
+    {
+      "path": "/menus",
+      "role": "inventory"
+    },
+    {
+      "path": "/menu",
+      "role": "inventory"
+    },
+    {
+      "path": "/cookie-policy/",
+      "role": "policy"
+    },
+    {
+      "path": "/privacy-policy/",
+      "role": "policy"
+    },
+    {
+      "path": "/shoreditch/",
+      "role": "location"
+    },
+    {
+      "path": "/borough-market/",
+      "role": "location"
+    },
+    {
+      "path": "/soho/",
+      "role": "location"
+    }
+  ],
+  "rejected": [
+    {
+      "name": "Cookie Policy",
+      "section": "Restaurant",
+      "payload": "policy",
+      "reason": "policy-page"
+    },
+    {
+      "name": "Privacy Policy",
+      "section": "Restaurant",
+      "payload": "policy",
+      "reason": "policy-page"
+    },
+    {
+      "name": "Padella Shoreditch",
+      "section": "Restaurant",
+      "payload": "location",
+      "reason": "location-page"
+    },
+    {
+      "name": "Padella Borough Market",
+      "section": "Restaurant",
+      "payload": "location",
+      "reason": "location-page"
+    },
+    {
+      "name": "Padella Soho",
+      "section": "Restaurant",
+      "payload": "location",
+      "reason": "location-page"
+    }
+  ],
+  "accepted": [],
+  "checks": [
+    {
+      "name": "no policy rows published",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "no editorial rows published",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "no navigation or location rows published",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "real inventory retained",
+      "ok": true,
+      "detail": "0 of a required 0"
+    },
+    {
+      "name": "every published price carries validated evidence",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "every item carries a source",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "currency is stated wherever a price is published",
+      "ok": true,
+      "detail": "GBP"
+    },
+    {
+      "name": "every photograph is attached to an item, not shared between them",
+      "ok": true,
+      "detail": "0 photographs, 0 distinct"
+    },
+    {
+      "name": "an empty catalogue is disclosed, not filled",
+      "ok": true,
+      "detail": [
+        "name",
+        "catalogue",
+        "contact"
+      ]
+    },
+    {
+      "name": "business name keeps the source casing",
+      "ok": true,
+      "detail": "Padella"
+    },
+    {
+      "name": "all three concepts are structurally distinct",
+      "ok": false,
+      "detail": [
+        "editorial/modern:7",
+        "editorial/luxe:7",
+        "modern/luxe:7"
+      ]
+    },
+    {
+      "name": "no delivery fee is invented",
+      "ok": true,
+      "detail": [
+        {
+          "options": [
+            "Pickup",
+            "Delivery",
+            "At a table"
+          ],
+          "source": "default"
+        },
+        {
+          "options": [
+            "Pickup",
+            "Delivery",
+            "At a table"
+          ],
+          "source": "default"
+        },
+        {
+          "options": [
+            "Pickup",
+            "Delivery",
+            "At a table"
+          ],
+          "source": "default"
+        }
+      ]
+    },
+    {
+      "name": "every catalogue row the trade refused is recorded",
+      "ok": true,
+      "detail": "5 dropped / 5 recorded"
+    }
+  ]
+}

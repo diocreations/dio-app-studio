@@ -1,0 +1,900 @@
+{
+  "generatedAt": "2026-11-21T18:03:01.439Z",
+  "report": [
+    {
+      "trade": "shop",
+      "direction": "minimal",
+      "token": "9c64047705e85a070d02f242",
+      "elapsed": 7280,
+      "result": {
+        "results": 1,
+        "detailHasName": false,
+        "variants": [
+          "£5",
+          "£10",
+          "£25",
+          "£50",
+          "£100",
+          "£250",
+          "£500"
+        ],
+        "pickedLarge": true,
+        "addedLarge": true,
+        "pickedSmall": true,
+        "addedSmall": true,
+        "initialPrice": "£5",
+        "largePrice": "£500",
+        "twoLines": "Yarmouth Oilskins Gift Card — £500.00\n£500\n−\n1\n+\nYarmouth Oilskins Gift Card — £5.00\n£5\n−\n1\n+",
+        "twoTotal": "Subtotal\n£505\nTotal\n£505",
+        "oneTotal": "Subtotal\n£5\nTotal\n£5",
+        "deliveryTotal": "Subtotal\n£5\nTotal\n£5",
+        "confirmation": "✓\nOrder #5233\n\nDelivery · £5\nSent to yarmouthoilskins. They will confirm when it is ready.\n\nDone",
+        "orders": [
+          {
+            "id": "ord_a19f2e26ce86f402b1",
+            "number": "5233",
+            "status": "new",
+            "total": 500,
+            "createdAt": "2026-11-21T18:01:02.470Z"
+          },
+          {
+            "id": "ord_9f1f190476f5690460",
+            "number": "5732",
+            "status": "new",
+            "total": 50500,
+            "createdAt": "2026-11-21T17:57:42.592Z"
+          }
+        ]
+      },
+      "readOrder": {
+        "order": {
+          "id": "ord_a19f2e26ce86f402b1",
+          "number": "5233",
+          "status": "new",
+          "fulfilment": "Delivery",
+          "total": 500,
+          "currency": "GBP",
+          "items": [
+            {
+              "name": "Yarmouth Oilskins Gift Card",
+              "variant": "£5.00",
+              "variantId": "56824548589942",
+              "price": 500,
+              "qty": 1
+            }
+          ],
+          "createdAt": "2026-11-21T18:01:02.470Z",
+          "updatedAt": "2026-11-21T18:01:02.470Z"
+        }
+      },
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 2,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "shop",
+      "direction": "editorial",
+      "token": "42e8b6c19303b4985477bbf0",
+      "elapsed": 7274,
+      "result": {
+        "results": 1,
+        "detailHasName": false,
+        "variants": [
+          "£5",
+          "£10",
+          "£25",
+          "£50",
+          "£100",
+          "£250",
+          "£500"
+        ],
+        "pickedLarge": true,
+        "addedLarge": true,
+        "pickedSmall": true,
+        "addedSmall": true,
+        "initialPrice": "£5",
+        "largePrice": "£500",
+        "twoLines": "Yarmouth Oilskins Gift Card — £500.00\n£500\n−\n1\n+\nYarmouth Oilskins Gift Card — £5.00\n£5\n−\n1\n+",
+        "twoTotal": "Subtotal\n£505\nTotal\n£505",
+        "oneTotal": "Subtotal\n£5\nTotal\n£5",
+        "deliveryTotal": "Subtotal\n£5\nTotal\n£5",
+        "confirmation": "✓\nOrder #2671\n\nDelivery · £5\nSent to yarmouthoilskins. They will confirm when it is ready.\n\nDone",
+        "orders": [
+          {
+            "id": "ord_4fe4715078374421c2",
+            "number": "2671",
+            "status": "new",
+            "total": 500,
+            "createdAt": "2026-11-21T18:01:09.750Z"
+          },
+          {
+            "id": "ord_235aa0b2e4a9cece79",
+            "number": "5474",
+            "status": "new",
+            "total": 50500,
+            "createdAt": "2026-11-21T17:57:49.877Z"
+          }
+        ]
+      },
+      "readOrder": {
+        "order": {
+          "id": "ord_4fe4715078374421c2",
+          "number": "2671",
+          "status": "new",
+          "fulfilment": "Delivery",
+          "total": 500,
+          "currency": "GBP",
+          "items": [
+            {
+              "name": "Yarmouth Oilskins Gift Card",
+              "variant": "£5.00",
+              "variantId": "56824548589942",
+              "price": 500,
+              "qty": 1
+            }
+          ],
+          "createdAt": "2026-11-21T18:01:09.750Z",
+          "updatedAt": "2026-11-21T18:01:09.750Z"
+        }
+      },
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 2,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "shop",
+      "direction": "lifestyle",
+      "token": "b9b50aafa9d4d35414040419",
+      "elapsed": 7274,
+      "result": {
+        "results": 1,
+        "detailHasName": false,
+        "variants": [
+          "£5",
+          "£10",
+          "£25",
+          "£50",
+          "£100",
+          "£250",
+          "£500"
+        ],
+        "pickedLarge": true,
+        "addedLarge": true,
+        "pickedSmall": true,
+        "addedSmall": true,
+        "initialPrice": "£5",
+        "largePrice": "£500",
+        "twoLines": "Yarmouth Oilskins Gift Card — £500.00\n£500\n−\n1\n+\nYarmouth Oilskins Gift Card — £5.00\n£5\n−\n1\n+",
+        "twoTotal": "Subtotal\n£505\nTotal\n£505",
+        "oneTotal": "Subtotal\n£5\nTotal\n£5",
+        "deliveryTotal": "Subtotal\n£5\nTotal\n£5",
+        "confirmation": "✓\nOrder #7664\n\nDelivery · £5\nSent to yarmouthoilskins. They will confirm when it is ready.\n\nDone",
+        "orders": [
+          {
+            "id": "ord_9e5391b29c70a742e2",
+            "number": "7664",
+            "status": "new",
+            "total": 500,
+            "createdAt": "2026-11-21T18:01:17.020Z"
+          },
+          {
+            "id": "ord_0a36d6b7cb1a6b6405",
+            "number": "9320",
+            "status": "new",
+            "total": 50500,
+            "createdAt": "2026-11-21T17:57:57.142Z"
+          }
+        ]
+      },
+      "readOrder": {
+        "order": {
+          "id": "ord_9e5391b29c70a742e2",
+          "number": "7664",
+          "status": "new",
+          "fulfilment": "Delivery",
+          "total": 500,
+          "currency": "GBP",
+          "items": [
+            {
+              "name": "Yarmouth Oilskins Gift Card",
+              "variant": "£5.00",
+              "variantId": "56824548589942",
+              "price": 500,
+              "qty": 1
+            }
+          ],
+          "createdAt": "2026-11-21T18:01:17.020Z",
+          "updatedAt": "2026-11-21T18:01:17.020Z"
+        }
+      },
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 2,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "restaurant",
+      "direction": "editorial",
+      "token": "8cee0badb7638ed9961311da",
+      "elapsed": 3924,
+      "result": {
+        "results": 1,
+        "day": "Party size\n4\nChoose a day\nTODAY\nTOMORROW\nMON 23\nTUE 24\nWED 25\nChoose a time\n18:00\n18:30\n19:00\n19:30\n20:00\n20:30\n21:00\nYOUR NAME\nPHONE OR EMAIL\nREQUEST BOOKING",
+        "summary": "",
+        "confirmation": "✓\nRequest sent\n\nToday at 18:00 · 4 guests\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_9ebbb4e77b8b8ef1e4",
+            "number": "3075",
+            "status": "requested",
+            "date": "2026-11-21",
+            "slot": "18:00"
+          },
+          {
+            "id": "bkg_a3e8659a11a033249f",
+            "number": "4004",
+            "status": "requested",
+            "date": "2026-11-21",
+            "slot": "18:00"
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_9ebbb4e77b8b8ef1e4",
+          "number": "3075",
+          "status": "requested",
+          "date": "2026-11-21",
+          "checkOut": "",
+          "nights": 0,
+          "total": 0,
+          "slot": "18:00",
+          "party": 4,
+          "service": ""
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 2,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "restaurant",
+      "direction": "modern",
+      "token": "b51b3bd3a1415eeb7b5c1b77",
+      "elapsed": 3916,
+      "result": {
+        "results": 1,
+        "day": "PARTY SIZE\n4\nCHOOSE A DAY\nToday\nTomorrow\nMon 23\nTue 24\nWed 25\nCHOOSE A TIME\n18:00\n18:30\n19:00\n19:30\n20:00\n20:30\n21:00\nYOUR NAME\nPHONE OR EMAIL\nREQUEST BOOKING",
+        "summary": "",
+        "confirmation": "✓\nRequest sent\n\nToday at 18:00 · 4 guests\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_7790806fd3bba8fdec",
+            "number": "2794",
+            "status": "requested",
+            "date": "2026-11-21",
+            "slot": "18:00"
+          },
+          {
+            "id": "bkg_5cbd1862a1eaffc98c",
+            "number": "5652",
+            "status": "requested",
+            "date": "2026-11-21",
+            "slot": "18:00"
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_7790806fd3bba8fdec",
+          "number": "2794",
+          "status": "requested",
+          "date": "2026-11-21",
+          "checkOut": "",
+          "nights": 0,
+          "total": 0,
+          "slot": "18:00",
+          "party": 4,
+          "service": ""
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 2,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "restaurant",
+      "direction": "luxe",
+      "token": "aa0f3da00434c928d0530acf",
+      "elapsed": 3917,
+      "result": {
+        "results": 1,
+        "day": "Party size\n4\nChoose a day\nTODAY\nTOMORROW\nMON 23\nTUE 24\nWED 25\nChoose a time\n18:00\n18:30\n19:00\n19:30\n20:00\n20:30\n21:00\nYOUR NAME\nPHONE OR EMAIL\nREQUEST BOOKING",
+        "summary": "",
+        "confirmation": "✓\nRequest sent\n\nToday at 18:00 · 4 guests\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_c86cea27e57859d682",
+            "number": "2232",
+            "status": "requested",
+            "date": "2026-11-21",
+            "slot": "18:00"
+          },
+          {
+            "id": "bkg_bf010449cd6a0f98d5",
+            "number": "6988",
+            "status": "requested",
+            "date": "2026-11-21",
+            "slot": "18:00"
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_c86cea27e57859d682",
+          "number": "2232",
+          "status": "requested",
+          "date": "2026-11-21",
+          "checkOut": "",
+          "nights": 0,
+          "total": 0,
+          "slot": "18:00",
+          "party": 4,
+          "service": ""
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 2,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "hotel",
+      "direction": "minimal",
+      "token": "19bb8d15653e7a512182cc8c",
+      "elapsed": 3919,
+      "result": {
+        "results": 1,
+        "day": "GUESTS\n5\nCHECK IN\nCHECK OUT\n\n3 nights\n\nNo live availability is shown. This sends a request; the business confirms the room is free.\n\nYOUR NAME\nPHONE OR EMAIL\nRequest booking",
+        "summary": "3 nights",
+        "confirmation": "✓\nRequest sent\n\n2026-11-22 → 2026-11-25 · 3 nights · 5 guests\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_a75e73962562638a51",
+            "number": "9244",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_743492cc39733b814d",
+            "number": "6592",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_a75e73962562638a51",
+          "number": "9244",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "2026-11-25",
+          "nights": 3,
+          "total": 0,
+          "slot": "",
+          "party": 5,
+          "service": ""
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 2,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "hotel",
+      "direction": "editorial",
+      "token": "9ad0fcaa4a93635e62b73066",
+      "elapsed": 3919,
+      "result": {
+        "results": 1,
+        "day": "Guests\n5\nCheck in\nCheck out\n\n3 nights\n\nNo live availability is shown. This sends a request; the business confirms the room is free.\n\nYOUR NAME\nPHONE OR EMAIL\nRequest booking",
+        "summary": "3 nights",
+        "confirmation": "✓\nRequest sent\n\n2026-11-22 → 2026-11-25 · 3 nights · 5 guests\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_5b9d3903cfea6c28cd",
+            "number": "7581",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_fe48e438d108256196",
+            "number": "4788",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_5b9d3903cfea6c28cd",
+          "number": "7581",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "2026-11-25",
+          "nights": 3,
+          "total": 0,
+          "slot": "",
+          "party": 5,
+          "service": ""
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 2,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "hotel",
+      "direction": "luxe",
+      "token": "1c2148a11e45fa7f3ba97a4a",
+      "elapsed": 3916,
+      "result": {
+        "results": 1,
+        "day": "Guests\n5\nCheck in\nCheck out\n\n3 nights\n\nNo live availability is shown. This sends a request; the business confirms the room is free.\n\nYOUR NAME\nPHONE OR EMAIL\nRequest booking",
+        "summary": "3 nights",
+        "confirmation": "✓\nRequest sent\n\n2026-11-22 → 2026-11-25 · 3 nights · 5 guests\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_92fe67b23f03b6137b",
+            "number": "4037",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          },
+          {
+            "id": "bkg_491bba700d75b12c94",
+            "number": "8151",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": ""
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_92fe67b23f03b6137b",
+          "number": "4037",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "2026-11-25",
+          "nights": 3,
+          "total": 0,
+          "slot": "",
+          "party": 5,
+          "service": ""
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 2,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "salon",
+      "direction": "minimal",
+      "token": "856e99cb07a60471d6cd4010",
+      "elapsed": 5268,
+      "result": {
+        "results": 21,
+        "detail": "SALON & SPA\nBack to Back Highlights - Full Head\n\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\n\nSalon & spa\n\nPrices include tax. Tell us about allergies or access needs before your appointment.\n\nBook an appointment",
+        "detailCta": [
+          "Book an appointment"
+        ],
+        "service": "Back to Back Highlights - Full Head",
+        "hasStaffChoice": false,
+        "confirmation": "✓\nRequest sent\n\nTomorrow at 12:00 · 1 person\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_8fff77327742bbf53a",
+            "number": "5650",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_400420053f9774bdd5",
+            "number": "2488",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_bf210e238de8a4da9e",
+            "number": "4787",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_8fff77327742bbf53a",
+          "number": "5650",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "",
+          "nights": 0,
+          "total": 0,
+          "slot": "12:00",
+          "party": 1,
+          "service": "Back to Back Highlights - Full Head"
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 3,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "salon",
+      "direction": "editorial",
+      "token": "0f3b618e88d828d8a1d1bff9",
+      "elapsed": 5247,
+      "result": {
+        "results": 21,
+        "detail": "SALON & SPA\nBack to Back Highlights - Full Head\n\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\n\nSalon & spa\n\nPrices include tax. Tell us about allergies or access needs before your appointment.\n\nBook an appointment",
+        "detailCta": [
+          "Book an appointment"
+        ],
+        "service": "Back to Back Highlights - Full Head",
+        "hasStaffChoice": false,
+        "confirmation": "✓\nRequest sent\n\nTomorrow at 12:00 · 1 person\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_2e957f0b98f9890f81",
+            "number": "2609",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_1c3d219995fde7579f",
+            "number": "5610",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_d323857f35093442f8",
+            "number": "5731",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_2e957f0b98f9890f81",
+          "number": "2609",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "",
+          "nights": 0,
+          "total": 0,
+          "slot": "12:00",
+          "party": 1,
+          "service": "Back to Back Highlights - Full Head"
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 3,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "salon",
+      "direction": "luxe",
+      "token": "eea8c1f7278fafcd090eda42",
+      "elapsed": 5247,
+      "result": {
+        "results": 21,
+        "detail": "SALON & SPA\nBack to Back Highlights - Full Head\n\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\n\nSalon & spa\n\nPrices include tax. Tell us about allergies or access needs before your appointment.\n\nBook an appointment",
+        "detailCta": [
+          "Book an appointment"
+        ],
+        "service": "Back to Back Highlights - Full Head",
+        "hasStaffChoice": false,
+        "confirmation": "✓\nRequest sent\n\nTomorrow at 12:00 · 1 person\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "bookings": [
+          {
+            "id": "bkg_bb999b6b027d86effd",
+            "number": "6392",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_0ec69eabc41c1951ee",
+            "number": "7167",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          },
+          {
+            "id": "bkg_6ac09ad829ac8d8d50",
+            "number": "3940",
+            "status": "requested",
+            "date": "2026-11-22",
+            "slot": "12:00"
+          }
+        ]
+      },
+      "readOrder": null,
+      "readBooking": {
+        "booking": {
+          "id": "bkg_bb999b6b027d86effd",
+          "number": "6392",
+          "status": "requested",
+          "date": "2026-11-22",
+          "checkOut": "",
+          "nights": 0,
+          "total": 0,
+          "slot": "12:00",
+          "party": 1,
+          "service": "Back to Back Highlights - Full Head"
+        }
+      },
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 3,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "professional",
+      "direction": "classic",
+      "token": "fd82a84b358ca0503f90c30e",
+      "elapsed": 5208,
+      "result": {
+        "results": 0,
+        "detail": "",
+        "detailCta": [],
+        "detailPrimary": "",
+        "homeActions": [
+          "Request a proposal"
+        ],
+        "opened": false,
+        "openedFromDetail": false,
+        "quoteTitle": "Request a proposal",
+        "heading": "Request sent",
+        "confirmation": "✓\nRequest sent\n\nThanks Maya Rao — the business will reply on maya@example.com. Your request is now in their dashboard.\n\nDone"
+      },
+      "readOrder": null,
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 3,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "professional",
+      "direction": "minimal",
+      "token": "b60afcc74086dc1844910a0c",
+      "elapsed": 5182,
+      "result": {
+        "results": 0,
+        "detail": "",
+        "detailCta": [],
+        "detailPrimary": "",
+        "homeActions": [],
+        "opened": false,
+        "openedFromDetail": false,
+        "quoteTitle": "REQUEST A PROPOSAL",
+        "heading": "Request sent",
+        "confirmation": "✓\nRequest sent\n\nThanks Maya Rao — the business will reply on maya@example.com. Your request is now in their dashboard.\n\nDone"
+      },
+      "readOrder": null,
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 3,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    },
+    {
+      "trade": "professional",
+      "direction": "editorial",
+      "token": "97838210d9cc700f16e4315f",
+      "elapsed": 5585,
+      "result": {
+        "results": 0,
+        "detail": "",
+        "detailCta": [],
+        "detailPrimary": "",
+        "homeActions": [
+          "Request a proposal"
+        ],
+        "opened": false,
+        "openedFromDetail": false,
+        "quoteTitle": "",
+        "heading": "",
+        "confirmation": ""
+      },
+      "readOrder": null,
+      "readBooking": null,
+      "dashboardStatus": 200,
+      "dashboardOrders": 0,
+      "dashboardBookings": 0,
+      "dashboardEnquiries": 0,
+      "dashboardRevenue": null,
+      "consoleErrors": [],
+      "networkFailures": []
+    }
+  ],
+  "responsive": [
+    {
+      "trade": "shop",
+      "width": 390,
+      "screen": "detail"
+    },
+    {
+      "trade": "shop",
+      "width": 430,
+      "screen": "detail"
+    },
+    {
+      "trade": "shop",
+      "width": 768,
+      "screen": "detail"
+    },
+    {
+      "trade": "shop",
+      "width": 1280,
+      "screen": "detail"
+    },
+    {
+      "trade": "restaurant",
+      "width": 390,
+      "screen": "detail"
+    },
+    {
+      "trade": "restaurant",
+      "width": 430,
+      "screen": "detail"
+    },
+    {
+      "trade": "restaurant",
+      "width": 768,
+      "screen": "detail"
+    },
+    {
+      "trade": "restaurant",
+      "width": 1280,
+      "screen": "detail"
+    },
+    {
+      "trade": "hotel",
+      "width": 390,
+      "screen": "detail"
+    },
+    {
+      "trade": "hotel",
+      "width": 430,
+      "screen": "detail"
+    },
+    {
+      "trade": "hotel",
+      "width": 768,
+      "screen": "detail"
+    },
+    {
+      "trade": "hotel",
+      "width": 1280,
+      "screen": "detail"
+    },
+    {
+      "trade": "salon",
+      "width": 390,
+      "screen": "detail"
+    },
+    {
+      "trade": "salon",
+      "width": 430,
+      "screen": "detail"
+    },
+    {
+      "trade": "salon",
+      "width": 768,
+      "screen": "detail"
+    },
+    {
+      "trade": "salon",
+      "width": 1280,
+      "screen": "detail"
+    },
+    {
+      "trade": "professional",
+      "width": 390,
+      "screen": "detail"
+    },
+    {
+      "trade": "professional",
+      "width": 430,
+      "screen": "detail"
+    },
+    {
+      "trade": "professional",
+      "width": 768,
+      "screen": "detail"
+    },
+    {
+      "trade": "professional",
+      "width": 1280,
+      "screen": "detail"
+    }
+  ]
+}

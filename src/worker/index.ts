@@ -40,6 +40,7 @@ import { applyApproval, diffCatalogue } from './reimport'
 import { buildSpec, initialsFor, quote, sanitizeHex, sanitizeMenu, type VerticalId } from './pricing'
 import { markOwnerEdits } from './review'
 import { buildDiscovery, discoverPlan } from './discovery'
+import { identityIssues } from './identity'
 import { applyCommand, docFromSpec, flagshipDocFromSpec, normalizeDoc, syncProjectSection } from './doc'
 import { FLAGSHIP_TRADES } from './flagship'
 import { directionsFor } from './directions'
@@ -86,6 +87,8 @@ import {
 import type { AppSpec, MenuSection, VideoLink } from './types'
 import type { Doc } from './doc'
 import { pruneEmptySections, refreshCopiedCopy } from './publish'
+import { designWithFreeProviders } from './ai/design'
+import { createQuotaLedger, d1QuotaStore } from './ai/quotas'
 
 /**
  * A business change (settings, catalogue, import) can give a section the data it
@@ -172,6 +175,19 @@ type Bindings = {
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
+
+/** A sample catalogue has no photographs of its own; it must not borrow the
+ *  trade's stock library as if those were its products. */
+const NO_PHOTOS = { wide: [] as string[], thumb: [] as string[] }
+
+/** A build that supplies its own catalogue, or was read from a website, never
+ *  renders the platform's trade photography — not even in a flagship block that
+ *  predates the catalogue. Its own image or an honest empty frame, nothing
+ *  else. */
+function withoutStockPhotography(html: string, spec: { sample?: boolean; website?: string }): string {
+  if (!spec.sample && !spec.website) return html
+  return html.replace(/<img class="fx-photo"[^>]*src="\/images\/flagship\/[^"]*"[^>]*>/g, '')
+}
 
 /** Private trees: token pages and the operator board. */
 const PRIVATE_PATHS = /^\/(p|studio)(\/|$)/
@@ -749,14 +765,14 @@ app.get('/p/:token/app', async (c) => {
   const concept = conceptPreview(new URL(c.req.url), project.spec.vertical)
   c.header('Cache-Control', 'no-store')
   c.header('X-Robots-Tag', project.spec.indexable ? 'index, follow' : 'noindex, nofollow')
-  const photos = await photosFor(project.spec.vertical, c.env)
+  const photos = project.spec.sample ? NO_PHOTOS : await photosFor(project.spec.vertical, c.env)
   const capability = await paymentCapability(c.env.DB, project)
   // A concept review must pass its direction into the spec as well as the
   // document. Blueprints are selected from the spec, so without this every
   // concept would keep the saved build's structure and only change its theme.
   const renderSpec = concept ? { ...project.spec, direction: concept.direction } : project.spec
   return c.html(
-    renderApp(renderSpec, {
+    withoutStockPhotography(renderApp(renderSpec, {
       token: project.token,
       version: project.version,
       slot: project.variationSlot ?? undefined,
@@ -769,11 +785,13 @@ app.get('/p/:token/app', async (c) => {
       // A concept review renders that concept's own document, not the saved
       // one with a different palette: the three structures are the choice.
       doc: concept
-        ? FLAGSHIP_TRADES.has(project.spec.vertical)
+        ? FLAGSHIP_TRADES.has(project.spec.vertical) && !project.spec.sample
           ? flagshipDocFromSpec(renderSpec)
           : docFromSpec(renderSpec)
-        : starterDoc(project),
-      flagship: FLAGSHIP_TRADES.has(project.spec.vertical),
+        : project.spec.sample
+          ? docFromSpec(renderSpec)
+          : starterDoc(project),
+      flagship: FLAGSHIP_TRADES.has(project.spec.vertical) && !project.spec.sample,
       payments: capability.enabled
         ? { payOrders: capability.payOrders, payBookings: capability.payBookings, provider: capability.provider ?? '' }
         : undefined,
@@ -786,7 +804,7 @@ app.get('/p/:token/app', async (c) => {
           ? c.req.query('screen')?.slice(0, 40)
           : undefined,
       preview: concept,
-    }),
+    }), renderSpec),
   )
 })
 
@@ -810,20 +828,20 @@ app.get('/p/:token/cards/:section', async (c) => {
   const count = boundedInteger(c.req.query('count'), 24, 1, CATALOG_MAX_CARDS)
   if (!Number.isInteger(section) || from === null || count === null) return c.text('', 400)
   if (section < 0 || section >= project.spec.menu.length) return c.text('', 404)
-  const photos = await photosFor(project.spec.vertical, c.env)
+  const photos = project.spec.sample ? NO_PHOTOS : await photosFor(project.spec.vertical, c.env)
   c.header('Cache-Control', 'private, no-store')
   c.header('X-Robots-Tag', 'noindex, nofollow')
   return c.html(
-    renderApp(project.spec, {
+    withoutStockPhotography(    renderApp(project.spec, {
       token: project.token,
       version: project.version,
       slot: project.variationSlot ?? undefined,
       photos,
       noindex: true,
-      doc: starterDoc(project),
-      flagship: FLAGSHIP_TRADES.has(project.spec.vertical),
+      doc: project.spec.sample ? docFromSpec(project.spec) : starterDoc(project),
+      flagship: FLAGSHIP_TRADES.has(project.spec.vertical) && !project.spec.sample,
       cards: { section, from, count },
-    }),
+    }), project.spec),
   )
 })
 
@@ -933,22 +951,45 @@ app.get('/proof/app', async (c) => {
  */
 function previewMenu(raw: string | undefined): MenuSection[] {
   if (!raw) return []
-  const items = raw
-    .split(';')
-    .slice(0, 12)
-    .map((entry) => {
-      const [name, price] = entry.split('~')
-      const clean = (name ?? '').trim().slice(0, 60)
-      if (!clean) return null
-      const value = Number(price)
-      return {
-        name: clean,
-        desc: '',
-        price: Number.isFinite(value) && value > 0 ? Math.round(value * 100) : 0,
-      }
-    })
-    .filter((item): item is MenuSection['items'][number] => item !== null)
-  return items.length ? [{ name: 'Popular', items }] : []
+  const parsed = raw.split('||').map((group) => {
+    const [rawName, rows] = group.includes('::') ? group.split('::') : ['Popular', group]
+    let name = 'Popular'
+    try {
+      name = decodeURIComponent(rawName || 'Popular').trim().slice(0, 40) || 'Popular'
+    } catch {
+      name = 'Popular'
+    }
+    const items = (rows || '')
+      .split(';')
+      .slice(0, 12)
+      .map((entry) => {
+        const [itemName, price, rawImage] = entry.split('~')
+        const clean = (itemName ?? '').trim().slice(0, 60)
+        if (!clean) return null
+        const value = Number(price)
+        let image = ''
+        try {
+          image = rawImage ? decodeURIComponent(rawImage) : ''
+        } catch {
+          image = ''
+        }
+        return {
+          name: clean,
+          desc: '',
+          price: Number.isFinite(value) && value > 0 ? Math.round(value * 100) : 0,
+          // A preview carries the product's own source photograph, so a real
+          // catalogue is judged with its real images rather than grey cards.
+          ...(/^https?:\/\/[^\s"'<>]+$/i.test(image)
+            ? { image: { url: image, source: 'website' as const } }
+            : {}),
+        }
+      })
+      .filter((item): item is MenuSection['items'][number] => item !== null)
+    if (!items.length) return null
+    // A URL preview is capped by length; the built app keeps the whole read.
+    return { name, items }
+  })
+  return parsed.filter((section): section is MenuSection => section !== null).slice(0, 4)
 }
 
 app.get('/demo/app', async (c) => {
@@ -965,6 +1006,9 @@ app.get('/demo/app', async (c) => {
     .filter(Boolean)
     .slice(0, 20)
   const menu = previewMenu(c.req.query('items'))
+  // Artwork is not a photograph: a preview that asks for art has no source
+  // photographs, so it must not borrow the trade's stock library either.
+  const artOnly = (c.req.query('media') || '').trim() === 'art'
   const conceptDirection = (c.req.query('direction') || '').trim()
   const direction = directionsFor(demo.vertical).some((entry) => entry.id === conceptDirection)
     ? conceptDirection
@@ -978,9 +1022,13 @@ app.get('/demo/app', async (c) => {
     ...(direction ? { direction } : {}),
     ...(tagline ? { tagline } : {}),
     ...(category ? { category } : {}),
-    ...(menu.length ? { site: { menu } } : {}),
+    // A supplied catalogue is the business's sample, not the trade's demo
+    // seed: it never gets this trade's stock photography on its product cards.
+    // An art-only request says the same thing even when the catalogue is the
+    // trade seed, which is how a prompt business is previewed.
+    ...(menu.length || artOnly ? { site: { ...(menu.length ? { menu } : {}), sample: true } } : {}),
   })
-  const photos = await photosFor(demo.vertical, c.env)
+  const photos = spec.sample ? NO_PHOTOS : await photosFor(demo.vertical, c.env)
   c.header('Cache-Control', 'public, max-age=60')
   // Demo-only overrides, so one variation axis can be looked at on its own.
   // A blank parameter (`?variant=&density=`) is treated as absent, not as a
@@ -992,14 +1040,19 @@ app.get('/demo/app', async (c) => {
   const rawVariant = axis('variant')
   const variant = rawVariant && /^[0-3]$/.test(rawVariant) ? Number(rawVariant) : undefined
   return c.html(
-    renderApp(spec, {
+    withoutStockPhotography(renderApp(spec, {
       token: `demo-${demo.vertical}`,
       live: false,
       photos,
       // A concept is reviewed on the real document and composition, never on a
-      // stripped renderer: the same data, the same blocks, the same CSS.
+      // stripped renderer: the same data, the same blocks, the same CSS. A
+      // sample catalogue has no photographs, so it uses the composition that
+      // draws honest empty frames instead of flagship photo blocks with the
+      // photography removed.
       ...(direction
-        ? { doc: flagshipDocFromSpec(spec), flagship: FLAGSHIP_TRADES.has(demo.vertical) }
+        ? spec.sample
+          ? { doc: docFromSpec(spec) }
+          : { doc: flagshipDocFromSpec(spec), flagship: FLAGSHIP_TRADES.has(demo.vertical) }
         : {}),
       preview: {
         variant,
@@ -1012,11 +1065,14 @@ app.get('/demo/app', async (c) => {
         buttons: axis('buttons'),
         cards: axis('cards'),
         preset: axis('preset'),
-        direction: axis('direction'),
+                direction: axis('direction'),
       },
-    }),
+    }), spec),
   )
 })
+
+
+
 
 /* -------------------------------- exports ------------------------------ */
 
@@ -1196,6 +1252,23 @@ const importRoute = (mode: 'import' | 'discover') => async (c: Context) => {
         maxAge: OWNER_SESSION_DAYS * 24 * 60 * 60,
       })
       await log(c.env.DB, project.id, 'discover', 'Read the business website', `${discovery.commerce.products} catalogue entries from ${report.host}`)
+      // The free design step runs beside the deterministic plan, never instead
+      // of it: no keys, an exhausted free allowance or a refused answer all
+      // leave the three imported documents above untouched.
+      const design = await designWithFreeProviders({
+        spec: first.spec,
+        source: report.source,
+        env: c.env as unknown as Record<string, string | undefined>,
+        quota: createQuotaLedger(d1QuotaStore(c.env.DB)),
+      })
+      if (design.status === 'ai')
+        await log(
+          c.env.DB,
+          project.id,
+          'design',
+          'Drafted three concepts on free models',
+          `${design.models.understand} + ${design.models.design} + ${design.models.copy}, $${design.costUsd.toFixed(2)}`,
+        )
       return c.json({
         source: report.source,
         host: report.host,
@@ -1210,6 +1283,11 @@ const importRoute = (mode: 'import' | 'discover') => async (c: Context) => {
         blockers: plan.blockers,
         confirmations: plan.confirmations,
         diversity: plan.diversity,
+        // `concepts` stays the deterministic plan so every existing preview,
+        // editor and export keeps working; the model's documents arrive under
+        // `design` with the same shape and can be applied through the editor's
+        // document API (`PUT /api/projects/:token/doc`).
+        design,
         concepts: plan.concepts.map((concept) => ({
           id: concept.id,
           name: concept.name,
@@ -1317,6 +1395,20 @@ app.post('/api/projects', async (c) => {
   if (str(body.vertical, 20) === 'hotel')
     return fail(c, 422, 'trade_unavailable', 'Hotel and accommodation apps are not available in the initial launch.')
 
+  // One build, one business. A read site's trade, the chosen trade and the
+  // business's own category wording must agree before a row is written or a
+  // build token is spent. This is the server-side half of the isolation rule:
+  // the browser cannot mix a florist's navigation with a jeweller's catalogue
+  // by sending stale fields.
+  const requestedVertical = str(body.vertical, 20)
+  const siteInput = sanitizeImported(body.site)
+  const identity = identityIssues({
+    vertical: requestedVertical,
+    category: str(body.category, 40),
+    siteVertical: siteInput?.vertical,
+  })
+  if (identity.length) return fail(c, 422, 'identity_mismatch', identity[0].message)
+
   // Public by design, so builds are metered before any row is written: three a
   // day from one connection, forty a day from everyone.
   const visitor = await visitorBucket(c.req.header('cf-connecting-ip'))
@@ -1333,7 +1425,7 @@ app.post('/api/projects', async (c) => {
     name,
     contact: str(body.contact, 80),
     email: str(body.email, 120),
-    vertical: str(body.vertical, 20),
+    vertical: requestedVertical,
     tagline: str(body.tagline, 90),
     custom: str(body.custom, 600),
     category: str(body.category, 40),
@@ -1348,10 +1440,7 @@ app.post('/api/projects', async (c) => {
     bundle: str(body.bundle, 20),
     sourceReview: body.sourceReview,
     projects: body.projects,
-    site: (() => {
-      const site = sanitizeImported(body.site)
-      return site ? applyPriceDecisions(site) : undefined
-    })(),
+    site: siteInput ? applyPriceDecisions(siteInput) : undefined,
   })
   // The person who just created the build holds its first owner session; the
   // customer app link alone can never edit it.
@@ -1398,6 +1487,12 @@ app.patch('/api/projects/:token', async (c) => {
     body.spec && typeof body.spec === 'object' && !Array.isArray(body.spec)
       ? (body.spec as Record<string, unknown>)
       : {}
+
+  // Renaming the category cannot silently change what the business is. A café
+  // label on a jewellery build is a contradiction, not a correction.
+  const nextCategory = typeof specInput.category === 'string' ? str(specInput.category, 40) : project.spec.category
+  const identity = identityIssues({ vertical: project.spec.vertical, category: nextCategory })
+  if (identity.length) return fail(c, 422, 'identity_mismatch', identity[0].message)
 
   const savedMenu = Array.isArray(specInput.menu) ? sanitizeMenu(specInput.menu) : undefined
   const menu = savedMenu ? markOwnerEdits(project.spec.menu, savedMenu, project.spec.currency ?? '').menu : undefined

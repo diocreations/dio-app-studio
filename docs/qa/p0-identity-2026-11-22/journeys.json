@@ -1,0 +1,985 @@
+{
+  "startedAt": "2026-11-22T17:32:21.479Z",
+  "origin": "http://127.0.0.1:5173",
+  "journeys": [
+    {
+      "slug": "geestores-jewellery",
+      "kind": "url",
+      "input": "https://geestores.com/",
+      "detected": {
+        "title": "GeeStores — Jewellery shop",
+        "name": "GeeStores",
+        "category": "Jewellery shop",
+        "source": "Read from https://geestores.com/ · 10 pages · 93 catalogue entries · 64 photographs",
+        "pages": "64 with images"
+      },
+      "concepts": [
+        {
+          "id": "minimal",
+          "heading": "Minimal boutique",
+          "note": "Hairlines, list rows, quiet type · Catalogue first",
+          "specLine": "Jewellery shop · minimal composition",
+          "preview": "http://127.0.0.1:5173/p/4582e96c7d41f37dde587ade/app?concept=minimal"
+        },
+        {
+          "id": "editorial",
+          "heading": "Gallery retail",
+          "note": "One piece per row, large imagery, editorial pacing · Image first",
+          "specLine": "Jewellery shop · editorial composition",
+          "preview": "http://127.0.0.1:5173/p/4582e96c7d41f37dde587ade/app?concept=editorial"
+        },
+        {
+          "id": "lifestyle",
+          "heading": "Contemporary lifestyle",
+          "note": "Soft, photographic, roomy · Narrative lead",
+          "specLine": "Jewellery shop · lifestyle composition",
+          "preview": "http://127.0.0.1:5173/p/4582e96c7d41f37dde587ade/app?concept=lifestyle"
+        }
+      ],
+      "apps": [
+        {
+          "name": "Shop handcrafted jhumkas, harams, necklaces, earring combos and festive sarees",
+          "title": "GeeStores · Jewellery shop",
+          "nav": [],
+          "background": "#ffffff",
+          "palette": {
+            "bg": "#ffffff",
+            "surface": "#f5f5f5",
+            "ink": "#111111",
+            "accent": "#2757a7",
+            "display": "\"DM Sans\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif"
+          },
+          "displayFont": "\"Helvetica Neue\", Inter, Arial, sans-serif",
+          "imageCount": 63,
+          "loadedImages": 63,
+          "failedImages": 0,
+          "cards": [
+            {
+              "name": "2275 Black & Maroon Hand Block Printed… ₹1,250",
+              "image": "https://geestores.com/api/public/media/public/woo/2530-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2275 Black & Maroon Hand Block Printed…"
+            },
+            {
+              "name": "2365 Semi Tussar Saree in Light Magenta… ₹1,690",
+              "image": "https://geestores.com/api/public/media/public/woo/2935-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2365 Semi Tussar Saree in Light Magenta…"
+            },
+            {
+              "name": "2268 Blue Color Arani Kalyani Cotton Silk Saree with… ₹1,290",
+              "image": "https://geestores.com/api/public/media/public/woo/2597-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2268 Blue Color Arani Kalyani Cotton Silk Saree with…"
+            },
+            {
+              "name": "2225 Mauve-Pink Kanchipuram Semi Silk Saree With Temple… ₹1,890",
+              "image": "https://geestores.com/api/public/media/public/woo/3162-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2225 Mauve-Pink Kanchipuram Semi Silk Saree With Temple…"
+            },
+            {
+              "name": "2379 Dark Brown Soft Semi Silk Saree with… ₹1,790",
+              "image": "https://geestores.com/api/public/media/public/woo/2950-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2379 Dark Brown Soft Semi Silk Saree with…"
+            },
+            {
+              "name": "2278 Navy Blue Polka Dots Hand Block… ₹1,250",
+              "image": "https://geestores.com/api/public/media/public/woo/2551-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2278 Navy Blue Polka Dots Hand Block…"
+            },
+            {
+              "name": "2218 Semi Silk Saree in Beige with Gold Zari Checks and… ₹1,800",
+              "image": "https://geestores.com/api/public/media/public/woo/2732-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2218 Semi Silk Saree in Beige with Gold Zari Checks and…"
+            },
+            {
+              "name": "2247 Metallic Champagne Gold and Wine… ₹790",
+              "image": "https://geestores.com/api/public/media/public/woo/2610-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2247 Metallic Champagne Gold and Wine…"
+            },
+            {
+              "name": "2226 Rust Orange Kanchipuram Semi Silk Saree Combined with… ₹2,450",
+              "image": "https://geestores.com/api/public/media/public/woo/2559-0.png?width=480&height=600&quality=70",
+              "alt": "2226 Rust Orange Kanchipuram Semi Silk Saree Combined with…"
+            },
+            {
+              "name": "2368 Semi Tussar Saree in Dark Navy Blue with Gold Zari… ₹1,640",
+              "image": "https://geestores.com/api/public/media/public/woo/2728-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2368 Semi Tussar Saree in Dark Navy Blue with Gold Zari…"
+            },
+            {
+              "name": "2244 Cotton Handloom Saree With Onion Pink Contrasting With… ₹1,499",
+              "image": "https://geestores.com/api/public/media/public/woo/2674-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2244 Cotton Handloom Saree With Onion Pink Contrasting With…"
+            },
+            {
+              "name": "2235 OIlive Green Cotton Silk Saree with… ₹1,750",
+              "image": "https://geestores.com/api/public/media/public/uploads/products/bb57ceef-453a-494e-99c8-2bda61f84412/1788702337159-chatgpt-image-sep-5-2026-06-04-57-pm.webp?width=480&height=600&quality=70",
+              "alt": "2235 OIlive Green Cotton Silk Saree with…"
+            },
+            {
+              "name": "2372 Royal Purple Kanchi Cotton Silk Saree… ₹1,140",
+              "image": "https://geestores.com/api/public/media/public/woo/2838-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2372 Royal Purple Kanchi Cotton Silk Saree…"
+            },
+            {
+              "name": "2362 Semi Kanchi Cotton Saree in Stripes on Muted Antique… ₹1,150",
+              "image": "https://geestores.com/api/public/media/public/woo/2912-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2362 Semi Kanchi Cotton Saree in Stripes on Muted Antique…"
+            }
+          ],
+          "text": "JEWELLERY SHOP SHOP THE COLLECTION Shop handcrafted jhumkas, harams, necklaces, earring combos and festive sarees 93 pieces Showing 85 of 93 pieces ALL JEWELLERY SHOP SAREE JHUMKA JEWELLERY COTTON SAREES SHORT NECKLACE EARRINGS COMBOS LONG NECKLACE SET ALL PRODUCTS JEWELLERY SHOP 20 2275 Black & Maroon Hand Block Printed… ₹1,250 2216 Classic Olive Green Kanchipuram Semi Silk Saree with… ₹1,900 2365 Semi Tussar Saree in Light Magenta… ₹1,690 2268 Blue Color Arani Kalyani Cotton Silk Saree with… ₹1,290 2225 Mauve-Pink Kanchipuram Semi Silk Saree With Temple… ₹1,890 2318 Deep Royal Purple Kanchi Cotton Saree… ₹1,100 2325 Solid Purple Handloom Saree with Wide… ₹1,290 2379 Dark Brown Soft Semi Silk Saree with… ₹1,790 2278 Navy Blue Polka Dots Hand Block… ₹1,250 2218 Semi Silk Saree in Beige with Gold Zari Checks and… ₹1,800 2247 Metallic Champagne Gold and Wine… ₹790 2226 Rust Orange Kanchipu"
+        },
+        {
+          "name": "Shop handcrafted jhumkas, harams, necklaces, earring combos and festive sarees",
+          "title": "GeeStores · Jewellery shop",
+          "nav": [],
+          "background": "#ffffff",
+          "palette": {
+            "bg": "#ffffff",
+            "surface": "#f5f5f5",
+            "ink": "#111111",
+            "accent": "#2757a7",
+            "display": "\"DM Sans\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif"
+          },
+          "displayFont": "\"DM Sans\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+          "imageCount": 63,
+          "loadedImages": 63,
+          "failedImages": 0,
+          "cards": [
+            {
+              "name": "IMAGE NOT SUPPLIED 2275 BLACK & MAROON HAND BLOCK PRINTED… ₹1,250",
+              "image": "https://geestores.com/api/public/media/public/woo/2530-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2275 Black & Maroon Hand Block Printed…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2365 SEMI TUSSAR SAREE IN LIGHT MAGENTA… ₹1,690",
+              "image": "https://geestores.com/api/public/media/public/woo/2935-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2365 Semi Tussar Saree in Light Magenta…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2268 BLUE COLOR ARANI KALYANI COTTON SILK SAREE WITH… ₹1,290",
+              "image": "https://geestores.com/api/public/media/public/woo/2597-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2268 Blue Color Arani Kalyani Cotton Silk Saree with…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2225 MAUVE-PINK KANCHIPURAM SEMI SILK SAREE WITH TEMPLE… ₹1,890",
+              "image": "https://geestores.com/api/public/media/public/woo/3162-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2225 Mauve-Pink Kanchipuram Semi Silk Saree With Temple…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2379 DARK BROWN SOFT SEMI SILK SAREE WITH… ₹1,790",
+              "image": "https://geestores.com/api/public/media/public/woo/2950-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2379 Dark Brown Soft Semi Silk Saree with…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2278 NAVY BLUE POLKA DOTS HAND BLOCK… ₹1,250",
+              "image": "https://geestores.com/api/public/media/public/woo/2551-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2278 Navy Blue Polka Dots Hand Block…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2218 SEMI SILK SAREE IN BEIGE WITH GOLD ZARI CHECKS AND… ₹1,800",
+              "image": "https://geestores.com/api/public/media/public/woo/2732-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2218 Semi Silk Saree in Beige with Gold Zari Checks and…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2247 METALLIC CHAMPAGNE GOLD AND WINE… ₹790",
+              "image": "https://geestores.com/api/public/media/public/woo/2610-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2247 Metallic Champagne Gold and Wine…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2226 RUST ORANGE KANCHIPURAM SEMI SILK SAREE COMBINED WITH… ₹2,450",
+              "image": "https://geestores.com/api/public/media/public/woo/2559-0.png?width=480&height=600&quality=70",
+              "alt": "2226 Rust Orange Kanchipuram Semi Silk Saree Combined with…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2368 SEMI TUSSAR SAREE IN DARK NAVY BLUE WITH GOLD ZARI… ₹1,640",
+              "image": "https://geestores.com/api/public/media/public/woo/2728-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2368 Semi Tussar Saree in Dark Navy Blue with Gold Zari…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2244 COTTON HANDLOOM SAREE WITH ONION PINK CONTRASTING WITH… ₹1,499",
+              "image": "https://geestores.com/api/public/media/public/woo/2674-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2244 Cotton Handloom Saree With Onion Pink Contrasting With…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2235 OILIVE GREEN COTTON SILK SAREE WITH… ₹1,750",
+              "image": "https://geestores.com/api/public/media/public/uploads/products/bb57ceef-453a-494e-99c8-2bda61f84412/1788702337159-chatgpt-image-sep-5-2026-06-04-57-pm.webp?width=480&height=600&quality=70",
+              "alt": "2235 OIlive Green Cotton Silk Saree with…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2372 ROYAL PURPLE KANCHI COTTON SILK SAREE… ₹1,140",
+              "image": "https://geestores.com/api/public/media/public/woo/2838-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2372 Royal Purple Kanchi Cotton Silk Saree…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2362 SEMI KANCHI COTTON SAREE IN STRIPES ON MUTED ANTIQUE… ₹1,150",
+              "image": "https://geestores.com/api/public/media/public/woo/2912-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2362 Semi Kanchi Cotton Saree in Stripes on Muted Antique…"
+            }
+          ],
+          "text": "THE COLLECTION Shop Shop handcrafted jhumkas, harams, necklaces, earring combos and festive sarees 93 PIECES SORT Featured Price, low to high Price, high to low A–Z ALL JEWELLERY SHOP SAREE JHUMKA JEWELLERY COTTON SAREES SHORT NECKLACE EARRINGS COMBOS LONG NECKLACE SET ALL PRODUCTS JEWELLERY SHOP 20 IMAGE NOT SUPPLIED 2275 BLACK & MAROON HAND BLOCK PRINTED… ₹1,250 IMAGE NOT SUPPLIED 2216 CLASSIC OLIVE GREEN KANCHIPURAM SEMI SILK SAREE WITH… ₹1,900 IMAGE NOT SUPPLIED 2365 SEMI TUSSAR SAREE IN LIGHT MAGENTA… ₹1,690 IMAGE NOT SUPPLIED 2268 BLUE COLOR ARANI KALYANI COTTON SILK SAREE WITH… ₹1,290 IMAGE NOT SUPPLIED 2225 MAUVE-PINK KANCHIPURAM SEMI SILK SAREE WITH TEMPLE… ₹1,890 IMAGE NOT SUPPLIED 2318 DEEP ROYAL PURPLE KANCHI COTTON SAREE… ₹1,100 IMAGE NOT SUPPLIED 2325 SOLID PURPLE HANDLOOM SAREE WITH WIDE… ₹1,290 IMAGE NOT SUPPLIED 2379 DARK BROWN SOFT SEMI SILK SAREE WITH… ₹1,790 IMAGE NOT"
+        },
+        {
+          "name": "Shop handcrafted jhumkas, harams, necklaces, earring combos and festive sarees",
+          "title": "GeeStores · Jewellery shop",
+          "nav": [],
+          "background": "#ffffff",
+          "palette": {
+            "bg": "#ffffff",
+            "surface": "#f5f5f5",
+            "ink": "#111111",
+            "accent": "#2757a7",
+            "display": "\"DM Sans\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif"
+          },
+          "displayFont": "\"DM Sans\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+          "imageCount": 63,
+          "loadedImages": 63,
+          "failedImages": 0,
+          "cards": [
+            {
+              "name": "IMAGE NOT SUPPLIED 2275 Black & Maroon Hand Block Printed… ₹1,250",
+              "image": "https://geestores.com/api/public/media/public/woo/2530-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2275 Black & Maroon Hand Block Printed…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2365 Semi Tussar Saree in Light Magenta… ₹1,690",
+              "image": "https://geestores.com/api/public/media/public/woo/2935-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2365 Semi Tussar Saree in Light Magenta…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2268 Blue Color Arani Kalyani Cotton Silk Saree with… ₹1,290",
+              "image": "https://geestores.com/api/public/media/public/woo/2597-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2268 Blue Color Arani Kalyani Cotton Silk Saree with…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2225 Mauve-Pink Kanchipuram Semi Silk Saree With Temple… ₹1,890",
+              "image": "https://geestores.com/api/public/media/public/woo/3162-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2225 Mauve-Pink Kanchipuram Semi Silk Saree With Temple…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2379 Dark Brown Soft Semi Silk Saree with… ₹1,790",
+              "image": "https://geestores.com/api/public/media/public/woo/2950-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2379 Dark Brown Soft Semi Silk Saree with…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2278 Navy Blue Polka Dots Hand Block… ₹1,250",
+              "image": "https://geestores.com/api/public/media/public/woo/2551-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2278 Navy Blue Polka Dots Hand Block…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2218 Semi Silk Saree in Beige with Gold Zari Checks and… ₹1,800",
+              "image": "https://geestores.com/api/public/media/public/woo/2732-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2218 Semi Silk Saree in Beige with Gold Zari Checks and…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2247 Metallic Champagne Gold and Wine… ₹790",
+              "image": "https://geestores.com/api/public/media/public/woo/2610-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2247 Metallic Champagne Gold and Wine…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2226 Rust Orange Kanchipuram Semi Silk Saree Combined with… ₹2,450",
+              "image": "https://geestores.com/api/public/media/public/woo/2559-0.png?width=480&height=600&quality=70",
+              "alt": "2226 Rust Orange Kanchipuram Semi Silk Saree Combined with…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2368 Semi Tussar Saree in Dark Navy Blue with Gold Zari… ₹1,640",
+              "image": "https://geestores.com/api/public/media/public/woo/2728-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2368 Semi Tussar Saree in Dark Navy Blue with Gold Zari…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2244 Cotton Handloom Saree With Onion Pink Contrasting With… ₹1,499",
+              "image": "https://geestores.com/api/public/media/public/woo/2674-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2244 Cotton Handloom Saree With Onion Pink Contrasting With…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2235 OIlive Green Cotton Silk Saree with… ₹1,750",
+              "image": "https://geestores.com/api/public/media/public/uploads/products/bb57ceef-453a-494e-99c8-2bda61f84412/1788702337159-chatgpt-image-sep-5-2026-06-04-57-pm.webp?width=480&height=600&quality=70",
+              "alt": "2235 OIlive Green Cotton Silk Saree with…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2372 Royal Purple Kanchi Cotton Silk Saree… ₹1,140",
+              "image": "https://geestores.com/api/public/media/public/woo/2838-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2372 Royal Purple Kanchi Cotton Silk Saree…"
+            },
+            {
+              "name": "IMAGE NOT SUPPLIED 2362 Semi Kanchi Cotton Saree in Stripes on Muted Antique… ₹1,150",
+              "image": "https://geestores.com/api/public/media/public/woo/2912-0.jpeg?width=480&height=600&quality=70",
+              "alt": "2362 Semi Kanchi Cotton Saree in Stripes on Muted Antique…"
+            }
+          ],
+          "text": "JEWELLERY SHOP Shop THE COLLECTION Shop handcrafted jhumkas, harams, necklaces, earring combos and festive sarees 93 pieces Showing 85 of 93 pieces ALL JEWELLERY SHOP SAREE JHUMKA JEWELLERY COTTON SAREES SHORT NECKLACE EARRINGS COMBOS LONG NECKLACE SET ALL PRODUCTS JEWELLERY SHOP 20 IMAGE NOT SUPPLIED 2275 Black & Maroon Hand Block Printed… ₹1,250 IMAGE NOT SUPPLIED 2216 Classic Olive Green Kanchipuram Semi Silk Saree with… ₹1,900 IMAGE NOT SUPPLIED 2365 Semi Tussar Saree in Light Magenta… ₹1,690 IMAGE NOT SUPPLIED 2268 Blue Color Arani Kalyani Cotton Silk Saree with… ₹1,290 IMAGE NOT SUPPLIED 2225 Mauve-Pink Kanchipuram Semi Silk Saree With Temple… ₹1,890 IMAGE NOT SUPPLIED 2318 Deep Royal Purple Kanchi Cotton Saree… ₹1,100 IMAGE NOT SUPPLIED 2325 Solid Purple Handloom Saree with Wide… ₹1,290 IMAGE NOT SUPPLIED 2379 Dark Brown Soft Semi Silk Saree with… ₹1,790 IMAGE NOT SUPPLIED 2278 Na"
+        }
+      ],
+      "different": {
+        "name": false,
+        "background": false,
+        "accent": false,
+        "displayFont": true,
+        "nav": false,
+        "textOrder": true
+      },
+      "different13": {
+        "name": false,
+        "background": false,
+        "accent": false,
+        "displayFont": true,
+        "nav": false,
+        "textOrder": true
+      },
+      "screenshots": {
+        "desktop": [
+          "docs/qa/p0-identity-2026-11-22/geestores-jewellery-1-concept-desktop.png",
+          "docs/qa/p0-identity-2026-11-22/geestores-jewellery-2-concept-desktop.png",
+          "docs/qa/p0-identity-2026-11-22/geestores-jewellery-3-concept-desktop.png"
+        ],
+        "mobile": [
+          "docs/qa/p0-identity-2026-11-22/geestores-jewellery-1-concept-mobile.png",
+          "docs/qa/p0-identity-2026-11-22/geestores-jewellery-2-concept-mobile.png",
+          "docs/qa/p0-identity-2026-11-22/geestores-jewellery-3-concept-mobile.png"
+        ]
+      },
+      "mustShow": {
+        "words": [
+          "GeeStores",
+          "Saree|Jhumka|Jewellery"
+        ],
+        "missing": []
+      },
+      "mustNotShow": {
+        "words": [
+          "Flat white|Cappuccino|Reserve a table|Florist",
+          "Grey placeholder"
+        ],
+        "leaked": []
+      },
+      "saved": {
+        "url": "http://127.0.0.1:5173/p/4582e96c7d41f37dde587ade",
+        "titleBefore": "GeeStores · build v2",
+        "titleAfter": "GeeStores · build v2",
+        "stable": true,
+        "excerpt": "p\nplattr\nHow it works\nLive example\nConcepts\nStudio\nBuild from a URL\n← Studio\nGeeStores\nReady for review\nJewellery shop\nShop & retail shape\nBuild v2\nRead from their site ↗\nMobile web app (PWA)\n918075257652\nCopy review link\nCustomise my app\nBusiness dashboard\nPreview application ↗\n\nLive build v2 — this is the app, not a mockup.\n\nBefore you approve\n3 to check\n\nWe built this from geestores.com. Nothing is public until you publish it.\n\nWhat we found. 93 items read and ready to check. Review what we r"
+      },
+      "exceptions": []
+    },
+    {
+      "slug": "cafe-kochi",
+      "kind": "prompt",
+      "input": "need a website for a cafe in kochi",
+      "detected": {
+        "read": "Read as Café & bakery — from “cafe”.\nCatalogue, menu or price list\n— Standard for a café & bakery\nOnline orders & cart\n— Standard for a café & bakery\nBookings & appointments\n— Standard for a café & bakery\nLoyalty & memberships\n— Standard for a café & bakery\nOffers & promotions\n— Standard for a café & bakery\nReviews & testimonials\n— Standard for a café & bakery\n\nThese are ticked for you in the features step; every one can be changed.",
+        "trade": "Café & bakery",
+        "name": "",
+        "category": "",
+        "tagline": ""
+      },
+      "freshBeforePrompt": {
+        "name": "",
+        "wish": "",
+        "concepts": 0,
+        "bannerHidden": false
+      },
+      "concepts": [
+        {
+          "id": "editorial",
+          "heading": "Daylight editorial",
+          "preview": "http://127.0.0.1:5173/demo/app?biz=cafe&direction=editorial&media=art&name=Your+business&accent=%23c8452b&logo=YB&feat=ordering%2Cbooking%2Ccatalog%2Cloyalty%2Coffers%2Creviews"
+        },
+        {
+          "id": "modern",
+          "heading": "Counter service",
+          "preview": "http://127.0.0.1:5173/demo/app?biz=cafe&direction=modern&media=art&name=Your+business&accent=%23c8452b&logo=YB&feat=ordering%2Cbooking%2Ccatalog%2Cloyalty%2Coffers%2Creviews"
+        },
+        {
+          "id": "warm",
+          "heading": "Neighbourhood bakery",
+          "preview": "http://127.0.0.1:5173/demo/app?biz=cafe&direction=warm&media=art&name=Your+business&accent=%23c8452b&logo=YB&feat=ordering%2Cbooking%2Ccatalog%2Cloyalty%2Coffers%2Creviews"
+        }
+      ],
+      "apps": [
+        {
+          "name": "Your business",
+          "title": "Your business · Coffee bar and bakery",
+          "nav": [],
+          "background": "#f6f2ea",
+          "palette": {
+            "bg": "#f6f2ea",
+            "surface": "#fffdf9",
+            "ink": "#1b1712",
+            "accent": "#c8452b",
+            "display": "ui-serif, \"Iowan Old Style\", \"Palatino Linotype\", Palatino, Georgia, serif"
+          },
+          "displayFont": "ui-serif, \"Iowan Old Style\", \"Palatino Linotype\", Palatino, Georgia, serif",
+          "imageCount": 0,
+          "loadedImages": 0,
+          "failedImages": 0,
+          "cards": [],
+          "text": "YB CAFÉ & BAKERY Menu Menu 7 Showing 7 of 7 items All Coffee Bakery All day Coffee 3 Flat white House blend, 6oz $4.20 Filter of the week NEW Rotating single origin $3.60 Cold brew 18-hour steep, over ice $4.80 Bakery 2 Croissant Laminated over three days $3.80 Cardamom bun Baked at 5am $4.50 All day 2 Granola bowl Yoghurt, honey, poached pear $8 Eggs on rye POPULAR Chilli oil, herbs $12 Home Menu More Reserve a table Your order Nothing here yet. Add something from the menu."
+        },
+        {
+          "name": "Your business",
+          "title": "Your business · Coffee bar and bakery",
+          "nav": [],
+          "background": "#fbfaf7",
+          "palette": {
+            "bg": "#fbfaf7",
+            "surface": "#ffffff",
+            "ink": "#151515",
+            "accent": "#c8452b",
+            "display": "\"Helvetica Neue\", Inter, ui-sans-serif, system-ui, \"Segoe UI\", Arial, sans-serif"
+          },
+          "displayFont": "\"Helvetica Neue\", Inter, ui-sans-serif, system-ui, \"Segoe UI\", Arial, sans-serif",
+          "imageCount": 0,
+          "loadedImages": 0,
+          "failedImages": 0,
+          "cards": [],
+          "text": "YB Menu Menu 7 Showing 7 of 7 items All Coffee Bakery All day Coffee 3 IMAGE NOT SUPPLIED Flat white Flat white $4.20 IMAGE NOT SUPPLIED Filter of the week Filter of the week $3.60 IMAGE NOT SUPPLIED Cold brew Cold brew $4.80 Bakery 2 IMAGE NOT SUPPLIED Croissant Croissant $3.80 IMAGE NOT SUPPLIED Cardamom bun Cardamom bun $4.50 All day 2 IMAGE NOT SUPPLIED Granola bowl Granola bowl $8 IMAGE NOT SUPPLIED Eggs on rye Eggs on rye $12 Home Menu More Reserve a table Your order Nothing here yet. Add something from the menu."
+        },
+        {
+          "name": "Your business",
+          "title": "Your business · Coffee bar and bakery",
+          "nav": [],
+          "background": "#f3ede2",
+          "palette": {
+            "bg": "#f3ede2",
+            "surface": "#fdf9f1",
+            "ink": "#241d15",
+            "accent": "#c8452b",
+            "display": "\"Avenir Next Condensed\", \"Roboto Condensed\", \"Helvetica Neue Condensed\", \"Arial Narrow\", Arial, sans-serif"
+          },
+          "displayFont": "\"Avenir Next Condensed\", \"Roboto Condensed\", \"Helvetica Neue Condensed\", \"Arial Narrow\", Arial, sans-serif",
+          "imageCount": 0,
+          "loadedImages": 0,
+          "failedImages": 0,
+          "cards": [],
+          "text": "YB CAFÉ & BAKERY Menu Menu 7 Showing 7 of 7 items All Coffee Bakery All day Coffee 3 Flat white House blend, 6oz $4.20 Filter of the week NEW Rotating single origin $3.60 Cold brew 18-hour steep, over ice $4.80 Bakery 2 Croissant Laminated over three days $3.80 Cardamom bun Baked at 5am $4.50 All day 2 Granola bowl Yoghurt, honey, poached pear $8 Eggs on rye POPULAR Chilli oil, herbs $12 HOME MENU MORE RESERVE A TABLE Your order Nothing here yet. Add something from the menu."
+        }
+      ],
+      "different": {
+        "name": false,
+        "background": true,
+        "accent": false,
+        "displayFont": true,
+        "nav": false,
+        "textOrder": true
+      },
+      "different13": {
+        "name": false,
+        "background": true,
+        "accent": false,
+        "displayFont": true,
+        "nav": false,
+        "textOrder": false
+      },
+      "screenshots": {
+        "desktop": [
+          "docs/qa/p0-identity-2026-11-22/cafe-kochi-1-cafe-kochi-desktop.png",
+          "docs/qa/p0-identity-2026-11-22/cafe-kochi-2-cafe-kochi-desktop.png",
+          "docs/qa/p0-identity-2026-11-22/cafe-kochi-3-cafe-kochi-desktop.png"
+        ],
+        "mobile": [
+          "docs/qa/p0-identity-2026-11-22/cafe-kochi-1-cafe-kochi-mobile.png",
+          "docs/qa/p0-identity-2026-11-22/cafe-kochi-2-cafe-kochi-mobile.png",
+          "docs/qa/p0-identity-2026-11-22/cafe-kochi-3-cafe-kochi-mobile.png"
+        ]
+      },
+      "mustShow": {
+        "words": [
+          "Café|Cafe",
+          "Menu|Coffee"
+        ],
+        "missing": []
+      },
+      "mustNotShow": {
+        "words": [
+          "GeeStores",
+          "Saree",
+          "Jhumka",
+          "Jewellery"
+        ],
+        "leaked": []
+      },
+      "saved": {
+        "url": "http://127.0.0.1:5173/p/f4ef063d243f25afa0c74ab2",
+        "titleBefore": "Kochi Coffee House · build v1",
+        "titleAfter": "Kochi Coffee House · build v1",
+        "stable": true,
+        "excerpt": "p\nplattr\nHow it works\nLive example\nConcepts\nStudio\nBuild from a URL\n← Studio\nKochi Coffee House\nReady for review\nCafé & bakery\nBuild v1\nMobile web app (PWA)\n+1 555 0198\nCopy review link\nCustomise my app\nBusiness dashboard\nPreview application ↗\n\nLive build v1 — this is the app, not a mockup.\n\nBefore you approve\nReady for your review\n\nWe built this from the details you gave us. Nothing is public until you publish it.\n\nWhat we found. 7 items read and ready to check. Review what we read.\nWhat is missing. Nothing is missing from the source. Check the list or edit the details.\nThe catalogue. 7 entri"
+      },
+      "exceptions": []
+    },
+    {
+      "slug": "florist-kochi",
+      "kind": "prompt",
+      "input": "I run a florist in Kochi — bouquets, wedding flowers and same-day delivery",
+      "detected": {
+        "read": "Read as Florist — from “florist”.\nCatalogue, menu or price list\n— Standard for a shop & retail\nOnline orders & cart\n— Standard for a shop & retail\nDelivery & fulfilment\n— Standard for a shop & retail\nLoyalty & memberships\n— Standard for a shop & retail\nOffers & promotions\n— Standard for a shop & retail\nGallery & portfolio\n— Standard for a shop & retail\nReviews & testimonials\n— Standard for a shop & retail\n\nThese are ticked for you in the features step; every one can be changed.",
+        "trade": "Florist",
+        "name": "",
+        "category": "Florist",
+        "tagline": ""
+      },
+      "freshBeforePrompt": {
+        "name": "",
+        "wish": "",
+        "concepts": 0,
+        "bannerHidden": true
+      },
+      "concepts": [
+        {
+          "id": "minimal",
+          "heading": "Minimal boutique",
+          "preview": "http://127.0.0.1:5173/demo/app?biz=shop&direction=minimal&media=art&name=Your+business&cat=Florist&accent=%237a3f5a&logo=YB&items=Bouquets%3A%3ASeasonal+hand-tied+bouquet%7E45%7E%3BRose+and+eucalyptus+bunch%7E38%7E%3BMarket+posy%7E24%7E%7C%7COccasions%3A%3ABirthday+arrangement%7E52%7E%3BWedding+flowers%7E120%7E%3BSympathy+tribute%7E60%7E%7C%7CPlants%2520%2526%2520gifts%3A%3APotted+orchid%7E34%7E%3BDried+arrangement%7E29%7E%3BLocal+delivery%7E9%7E&feat=ordering%2Cdelivery%2Ccatalog%2Cloyalty%2Coffers%2Creviews%2Cgallery"
+        },
+        {
+          "id": "editorial",
+          "heading": "Gallery retail",
+          "preview": "http://127.0.0.1:5173/demo/app?biz=shop&direction=editorial&media=art&name=Your+business&cat=Florist&accent=%237a3f5a&logo=YB&items=Bouquets%3A%3ASeasonal+hand-tied+bouquet%7E45%7E%3BRose+and+eucalyptus+bunch%7E38%7E%3BMarket+posy%7E24%7E%7C%7COccasions%3A%3ABirthday+arrangement%7E52%7E%3BWedding+flowers%7E120%7E%3BSympathy+tribute%7E60%7E%7C%7CPlants%2520%2526%2520gifts%3A%3APotted+orchid%7E34%7E%3BDried+arrangement%7E29%7E%3BLocal+delivery%7E9%7E&feat=ordering%2Cdelivery%2Ccatalog%2Cloyalty%2Coffers%2Creviews%2Cgallery"
+        },
+        {
+          "id": "lifestyle",
+          "heading": "Contemporary lifestyle",
+          "preview": "http://127.0.0.1:5173/demo/app?biz=shop&direction=lifestyle&media=art&name=Your+business&cat=Florist&accent=%237a3f5a&logo=YB&items=Bouquets%3A%3ASeasonal+hand-tied+bouquet%7E45%7E%3BRose+and+eucalyptus+bunch%7E38%7E%3BMarket+posy%7E24%7E%7C%7COccasions%3A%3ABirthday+arrangement%7E52%7E%3BWedding+flowers%7E120%7E%3BSympathy+tribute%7E60%7E%7C%7CPlants%2520%2526%2520gifts%3A%3APotted+orchid%7E34%7E%3BDried+arrangement%7E29%7E%3BLocal+delivery%7E9%7E&feat=ordering%2Cdelivery%2Ccatalog%2Cloyalty%2Coffers%2Creviews%2Cgallery"
+        }
+      ],
+      "apps": [
+        {
+          "name": "Your business",
+          "title": "Your business · Florist",
+          "nav": [],
+          "background": "#fbfaf7",
+          "palette": {
+            "bg": "#fbfaf7",
+            "surface": "#ffffff",
+            "ink": "#151515",
+            "accent": "#7a3f5a",
+            "display": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", system-ui, \"Helvetica Neue\", sans-serif"
+          },
+          "displayFont": "-apple-system, \"system-ui\", \"Segoe UI\", system-ui, \"Helvetica Neue\", sans-serif",
+          "imageCount": 0,
+          "loadedImages": 0,
+          "failedImages": 0,
+          "cards": [],
+          "text": "YB FLORIST Shop SHOP 9 Showing 9 of 9 pieces ALL BOUQUETS OCCASIONS PLANTS & GIFTS BOUQUETS 3 Seasonal hand-tied bouquet $45 Rose and eucalyptus bunch $38 Market posy $24 OCCASIONS 3 Birthday arrangement $52 Wedding flowers $120 Sympathy tribute $60 PLANTS & GIFTS 3 Potted orchid $34 Dried arrangement $29 Local delivery $9 HOME SHOP MORE Your bag Nothing here yet. Add something from the shop."
+        },
+        {
+          "name": "Your business",
+          "title": "Your business · Florist",
+          "nav": [],
+          "background": "#f6f2ea",
+          "palette": {
+            "bg": "#f6f2ea",
+            "surface": "#fffdf9",
+            "ink": "#1b1712",
+            "accent": "#7a3f5a",
+            "display": "ui-serif, \"Iowan Old Style\", \"Palatino Linotype\", Palatino, Georgia, serif"
+          },
+          "displayFont": "ui-serif, \"Iowan Old Style\", \"Palatino Linotype\", Palatino, Georgia, serif",
+          "imageCount": 0,
+          "loadedImages": 0,
+          "failedImages": 0,
+          "cards": [],
+          "text": "YB THE COLLECTION Shop Things worth keeping. 9 PIECES SORT Featured Price, low to high Price, high to low A–Z ALL BOUQUETS OCCASIONS PLANTS & GIFTS BOUQUETS 3 IMAGE NOT SUPPLIED Seasonal hand-tied bouquet Seasonal hand-tied bouquet $45 IMAGE NOT SUPPLIED Rose and eucalyptus bunch Rose and eucalyptus bunch $38 IMAGE NOT SUPPLIED Market posy Market posy $24 OCCASIONS 3 IMAGE NOT SUPPLIED Birthday arrangement Birthday arrangement $52 IMAGE NOT SUPPLIED Wedding flowers Wedding flowers $120 IMAGE NOT SUPPLIED Sympathy tribute Sympathy tribute $60 PLANTS & GIFTS 3 IMAGE NOT SUPPLIED Potted orchid Potted orchid $34 IMAGE NOT SUPPLIED Dried arrangement Dried arrangement $29 IMAGE NOT SUPPLIED Local delivery Local delivery $9 Home Shop More Your bag Nothing here yet. Add something from the shop."
+        },
+        {
+          "name": "Your business",
+          "title": "Your business · Florist",
+          "nav": [],
+          "background": "#f3ede2",
+          "palette": {
+            "bg": "#f3ede2",
+            "surface": "#fdf9f1",
+            "ink": "#241d15",
+            "accent": "#7a3f5a",
+            "display": "\"Helvetica Neue\", Inter, ui-sans-serif, system-ui, \"Segoe UI\", Arial, sans-serif"
+          },
+          "displayFont": "\"Helvetica Neue\", Inter, ui-sans-serif, system-ui, \"Segoe UI\", Arial, sans-serif",
+          "imageCount": 0,
+          "loadedImages": 0,
+          "failedImages": 0,
+          "cards": [],
+          "text": "YB FLORIST Shop SHOP 9 Showing 9 of 9 pieces ALL BOUQUETS OCCASIONS PLANTS & GIFTS BOUQUETS 3 IMAGE NOT SUPPLIED Seasonal hand-tied bouquet Seasonal hand-tied bouquet $45 IMAGE NOT SUPPLIED Rose and eucalyptus bunch Rose and eucalyptus bunch $38 IMAGE NOT SUPPLIED Market posy Market posy $24 OCCASIONS 3 IMAGE NOT SUPPLIED Birthday arrangement Birthday arrangement $52 IMAGE NOT SUPPLIED Wedding flowers Wedding flowers $120 IMAGE NOT SUPPLIED Sympathy tribute Sympathy tribute $60 PLANTS & GIFTS 3 IMAGE NOT SUPPLIED Potted orchid Potted orchid $34 IMAGE NOT SUPPLIED Dried arrangement Dried arrangement $29 IMAGE NOT SUPPLIED Local delivery Local delivery $9 HOME SHOP MORE Your bag Nothing here yet. Add something from the shop."
+        }
+      ],
+      "different": {
+        "name": false,
+        "background": true,
+        "accent": false,
+        "displayFont": true,
+        "nav": false,
+        "textOrder": true
+      },
+      "different13": {
+        "name": false,
+        "background": true,
+        "accent": false,
+        "displayFont": true,
+        "nav": false,
+        "textOrder": true
+      },
+      "screenshots": {
+        "desktop": [
+          "docs/qa/p0-identity-2026-11-22/florist-kochi-1-florist-kochi-desktop.png",
+          "docs/qa/p0-identity-2026-11-22/florist-kochi-2-florist-kochi-desktop.png",
+          "docs/qa/p0-identity-2026-11-22/florist-kochi-3-florist-kochi-desktop.png"
+        ],
+        "mobile": [
+          "docs/qa/p0-identity-2026-11-22/florist-kochi-1-florist-kochi-mobile.png",
+          "docs/qa/p0-identity-2026-11-22/florist-kochi-2-florist-kochi-mobile.png",
+          "docs/qa/p0-identity-2026-11-22/florist-kochi-3-florist-kochi-mobile.png"
+        ]
+      },
+      "mustShow": {
+        "words": [
+          "Florist",
+          "Bouquet",
+          "Wedding"
+        ],
+        "missing": []
+      },
+      "mustNotShow": {
+        "words": [
+          "GeeStores",
+          "Saree",
+          "Jhumka",
+          "Stoneware mug"
+        ],
+        "leaked": []
+      },
+      "saved": {
+        "url": "http://127.0.0.1:5173/p/5ef158655652a6ad8e816e52",
+        "titleBefore": "Kochi Bloom Room · build v1",
+        "titleAfter": "Kochi Bloom Room · build v1",
+        "stable": true,
+        "excerpt": "p\nplattr\nHow it works\nLive example\nConcepts\nStudio\nBuild from a URL\n← Studio\nKochi Bloom Room\nReady for review\nFlorist\nShop & retail shape\nBuild v1\nMobile web app (PWA)\n+1 555 0163\nCopy review link\nCustomise my app\nBusiness dashboard\nPreview application ↗\n\nLive build v1 — this is the app, not a mockup.\n\nBefore you approve\nReady for your review\n\nWe built this from the details you gave us. Nothing is public until you publish it.\n\nWhat we found. 9 items read and ready to check. Review what we read.\nWhat is missing. Nothing is missing from the source. Check the list or edit the details.\nThe catalo"
+      },
+      "exceptions": []
+    },
+    {
+      "slug": "salon-bluetit",
+      "kind": "url",
+      "input": "https://www.bluetitlondon.com/",
+      "detected": {
+        "title": "Blue Tit London — Salon & spa",
+        "name": "Blue Tit London",
+        "category": "Salon & spa",
+        "source": "Read from https://bluetitlondon.com/ · 15 pages · 82 catalogue entries · 0 photographs",
+        "pages": "No images read"
+      },
+      "concepts": [
+        {
+          "id": "luxe",
+          "heading": "Luxury beauty",
+          "note": "Dark, poised, appointment-led · Narrative lead",
+          "specLine": "Salon & spa · luxe composition",
+          "preview": "http://127.0.0.1:5173/p/b91230e7f68cb384d98cb293/app?concept=luxe"
+        },
+        {
+          "id": "minimal",
+          "heading": "Modern minimal",
+          "note": "Calm list, no decoration · Catalogue first",
+          "specLine": "Salon & spa · minimal composition",
+          "preview": "http://127.0.0.1:5173/p/b91230e7f68cb384d98cb293/app?concept=minimal"
+        },
+        {
+          "id": "editorial",
+          "heading": "Editorial wellness",
+          "note": "Warm serif headings, grotesk reading, generous spacing · Image first",
+          "specLine": "Salon & spa · editorial composition",
+          "preview": "http://127.0.0.1:5173/p/b91230e7f68cb384d98cb293/app?concept=editorial"
+        }
+      ],
+      "apps": [
+        {
+          "name": "Blue Tit is a group of award-winning boutique hair salons in London.",
+          "title": "Blue Tit London · Salon & spa",
+          "nav": [],
+          "background": "#101110",
+          "palette": {
+            "bg": "#101110",
+            "surface": "#181a18",
+            "ink": "#f4f1e9",
+            "accent": "#0d6efd",
+            "display": "ui-serif, \"Iowan Old Style\", \"Palatino Linotype\", Palatino, Georgia, serif"
+          },
+          "displayFont": "ui-serif, \"Iowan Old Style\", \"Palatino Linotype\", Palatino, Georgia, serif",
+          "imageCount": 2,
+          "loadedImages": 2,
+          "failedImages": 0,
+          "cards": [],
+          "text": "SALON & SPA Services Services 82 Showing 12 of 82 treatments ALL SALON & SPA Salon & spa 82 Rebuilding M+ OWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two… £26 Back to Back Highlights - Full Head Colouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs) Back to Back Highlights - Half Head Colouring the top half of hair using a back-to-back foiling technique for maximum… Highlights - Full Head Colouring a full head of hair using foils. (2.5 hrs) Highlights - Half Head Colouring the top half of hair using foils. (2.5 hrs) Highlights - T-Section Colouring the parting and hairline using foils. (1 hr 45min) Face Framing Colouring the hairline to frame the face using foils. (1 hr 45min) Balayage - Full Head Lightening the ends of a full head of hair creating a dark to light fade. (2hrs 30) Balayage - Half Head Lightening the ends of th"
+        },
+        {
+          "name": "Blue Tit is a group of award-winning boutique hair salons in London.",
+          "title": "Blue Tit London · Salon & spa",
+          "nav": [],
+          "background": "#fbfaf7",
+          "palette": {
+            "bg": "#fbfaf7",
+            "surface": "#ffffff",
+            "ink": "#151515",
+            "accent": "#0d6efd",
+            "display": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", system-ui, \"Helvetica Neue\", sans-serif"
+          },
+          "displayFont": "\"Helvetica Neue\", Inter, Arial, sans-serif",
+          "imageCount": 2,
+          "loadedImages": 2,
+          "failedImages": 0,
+          "cards": [],
+          "text": "SALON & SPA SERVICES SERVICES 82 Showing 12 of 82 treatments All Salon & spa SALON & SPA 82 Rebuilding M+ £26 Back to Back Highlights - Full Head Back to Back Highlights - Half Head Highlights - Full Head Highlights - Half Head Highlights - T-Section Face Framing Balayage - Full Head Balayage - Half Head Balayage - T-section Reverse Balayage Root Tint – Balayage Add-on Show 24 more Showing 12 of 82 SERVICES HOME BOOK VISIT"
+        },
+        {
+          "name": "Blue Tit is a group of award-winning boutique hair salons in London.",
+          "title": "Blue Tit London · Salon & spa",
+          "nav": [],
+          "background": "#f6f2ea",
+          "palette": {
+            "bg": "#f6f2ea",
+            "surface": "#fffdf9",
+            "ink": "#1b1712",
+            "accent": "#0d6efd",
+            "display": "ui-serif, \"Iowan Old Style\", \"Palatino Linotype\", Palatino, Georgia, serif"
+          },
+          "displayFont": "ui-serif, \"Iowan Old Style\", Palatino, Georgia, serif",
+          "imageCount": 2,
+          "loadedImages": 2,
+          "failedImages": 0,
+          "cards": [],
+          "text": "SALON & SPA Services Services 82 Showing 12 of 82 treatments ALL SALON & SPA Salon & spa 82 REBUILDING M+ £26 BACK TO BACK HIGHLIGHTS - FULL HEAD BACK TO BACK HIGHLIGHTS - HALF HEAD HIGHLIGHTS - FULL HEAD HIGHLIGHTS - HALF HEAD HIGHLIGHTS - T-SECTION FACE FRAMING BALAYAGE - FULL HEAD BALAYAGE - HALF HEAD BALAYAGE - T-SECTION REVERSE BALAYAGE ROOT TINT – BALAYAGE ADD-ON Show 24 more Showing 12 of 82 Home Services Search Book Visit"
+        }
+      ],
+      "different": {
+        "name": false,
+        "background": true,
+        "accent": false,
+        "displayFont": true,
+        "nav": false,
+        "textOrder": true
+      },
+      "different13": {
+        "name": false,
+        "background": true,
+        "accent": false,
+        "displayFont": true,
+        "nav": false,
+        "textOrder": true
+      },
+      "screenshots": {
+        "desktop": [
+          "docs/qa/p0-identity-2026-11-22/salon-bluetit-1-concept-desktop.png",
+          "docs/qa/p0-identity-2026-11-22/salon-bluetit-2-concept-desktop.png",
+          "docs/qa/p0-identity-2026-11-22/salon-bluetit-3-concept-desktop.png"
+        ],
+        "mobile": [
+          "docs/qa/p0-identity-2026-11-22/salon-bluetit-1-concept-mobile.png",
+          "docs/qa/p0-identity-2026-11-22/salon-bluetit-2-concept-mobile.png",
+          "docs/qa/p0-identity-2026-11-22/salon-bluetit-3-concept-mobile.png"
+        ]
+      },
+      "mustShow": {
+        "words": [
+          "Blue Tit|salon|hair"
+        ],
+        "missing": []
+      },
+      "mustNotShow": {
+        "words": [
+          "Saree|Jhumka|GeeStores|Flat white"
+        ],
+        "leaked": []
+      },
+      "saved": {
+        "url": "http://127.0.0.1:5173/p/b91230e7f68cb384d98cb293",
+        "titleBefore": "Blue Tit London · build v2",
+        "titleAfter": "Blue Tit London · build v2",
+        "stable": true,
+        "excerpt": "p\nplattr\nHow it works\nLive example\nConcepts\nStudio\nBuild from a URL\n← Studio\nBlue Tit London\nReady for review\nSalon & spa\nSalon & spa shape\nBuild v2\nRead from their site ↗\nMobile web app (PWA)\n01702412486\nCopy review link\nCustomise my app\nBusiness dashboard\nPreview application ↗\n\nLive build v2 — this is the app, not a mockup.\n\nBefore you approve\n2 to check\n\nWe built this from bluetitlondon.com. Nothing is public until you publish it.\n\nWhat we found. 82 items read and ready to check. Review what "
+      },
+      "exceptions": []
+    },
+    {
+      "slug": "professional-kochi",
+      "kind": "prompt",
+      "input": "I need a website for an accounting firm in Kochi — services, fixed fees and enquiries",
+      "detected": {
+        "read": "Read as Professional services — from “accounting”.\nCatalogue, menu or price list\n— Standard for a professional services\nBookings & appointments\n— Standard for a professional services\nQuote / enquiry form\n— Standard for a professional services\nReviews & testimonials\n— Standard for a professional services\n\nThese are ticked for you in the features step; every one can be changed.",
+        "trade": "Professional services",
+        "name": "",
+        "category": "",
+        "tagline": ""
+      },
+      "freshBeforePrompt": {
+        "name": "",
+        "wish": "",
+        "concepts": 0,
+        "bannerHidden": true
+      },
+      "concepts": [
+        {
+          "id": "classic",
+          "heading": "Classic counsel",
+          "preview": "http://127.0.0.1:5173/demo/app?biz=professional&direction=classic&media=art&name=Your+business&accent=%23c8452b&logo=YB&feat=booking%2Cquote%2Ccatalog%2Creviews"
+        },
+        {
+          "id": "minimal",
+          "heading": "Modern advisory",
+          "preview": "http://127.0.0.1:5173/demo/app?biz=professional&direction=minimal&media=art&name=Your+business&accent=%23c8452b&logo=YB&feat=booking%2Cquote%2Ccatalog%2Creviews"
+        },
+        {
+          "id": "editorial",
+          "heading": "Editorial practice",
+          "preview": "http://127.0.0.1:5173/demo/app?biz=professional&direction=editorial&media=art&name=Your+business&accent=%23c8452b&logo=YB&feat=booking%2Cquote%2Ccatalog%2Creviews"
+        }
+      ],
+      "apps": [
+        {
+          "name": "Your business",
+          "title": "Your business · Accounting and tax advisory",
+          "nav": [],
+          "background": "#f6f2ea",
+          "palette": {
+            "bg": "#f6f2ea",
+            "surface": "#fffdf9",
+            "ink": "#1b1712",
+            "accent": "#c8452b",
+            "display": "ui-serif, \"Iowan Old Style\", \"Palatino Linotype\", Palatino, Georgia, serif"
+          },
+          "displayFont": "ui-serif, \"Iowan Old Style\", \"Palatino Linotype\", Palatino, Georgia, serif",
+          "imageCount": 0,
+          "loadedImages": 0,
+          "failedImages": 0,
+          "cards": [],
+          "text": "YB PROFESSIONAL SERVICES Services SERVICES 5 Showing 5 of 5 services All Compliance Advisory COMPLIANCE 3 Annual accounts Limited company, filed PER YEAR $950 Self assessment One director, one property $320 Payroll Up to ten staff PER MONTH $45 ADVISORY 2 Business plan Forecasts and funding pack $1,200 Quarterly review Two hours with a partner $600 HOME SERVICES MORE BOOK AN INTRO CALL ENQUIRY"
+        },
+        {
+          "name": "Your business",
+          "title": "Your business · Accounting and tax advisory",
+          "nav": [],
+          "background": "#fbfaf7",
+          "palette": {
+            "bg": "#fbfaf7",
+            "surface": "#ffffff",
+            "ink": "#151515",
+            "accent": "#c8452b",
+            "display": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", system-ui, \"Helvetica Neue\", sans-serif"
+          },
+          "displayFont": "-apple-system, \"system-ui\", \"Segoe UI\", system-ui, \"Helvetica Neue\", sans-serif",
+          "imageCount": 0,
+          "loadedImages": 0,
+          "failedImages": 0,
+          "cards": [],
+          "text": "YB PROFESSIONAL SERVICES Services SERVICES 5 Showing 5 of 5 services All Compliance Advisory COMPLIANCE 3 Annual accounts Limited company, filed per year $950 Self assessment One director, one property $320 Payroll Up to ten staff per month $45 ADVISORY 2 Business plan Forecasts and funding pack $1,200 Quarterly review Two hours with a partner $600 HOME SERVICES MORE BOOK AN INTRO CALL ENQUIRY"
+        },
+        {
+          "name": "Your business",
+          "title": "Your business · Accounting and tax advisory",
+          "nav": [],
+          "background": "#f3ede2",
+          "palette": {
+            "bg": "#f3ede2",
+            "surface": "#fdf9f1",
+            "ink": "#241d15",
+            "accent": "#c8452b",
+            "display": "\"Avenir Next Condensed\", \"Roboto Condensed\", \"Helvetica Neue Condensed\", \"Arial Narrow\", Arial, sans-serif"
+          },
+          "displayFont": "\"Avenir Next Condensed\", \"Roboto Condensed\", \"Helvetica Neue Condensed\", \"Arial Narrow\", Arial, sans-serif",
+          "imageCount": 0,
+          "loadedImages": 0,
+          "failedImages": 0,
+          "cards": [],
+          "text": "YB PROFESSIONAL SERVICES Services SERVICES 5 Showing 5 of 5 services All Compliance Advisory COMPLIANCE 3 Annual accounts Limited company, filed PER YEAR $950 Self assessment One director, one property $320 Payroll Up to ten staff PER MONTH $45 ADVISORY 2 Business plan Forecasts and funding pack $1,200 Quarterly review Two hours with a partner $600 Home Services More Book an intro call Enquiry"
+        }
+      ],
+      "different": {
+        "name": false,
+        "background": true,
+        "accent": false,
+        "displayFont": true,
+        "nav": false,
+        "textOrder": true
+      },
+      "different13": {
+        "name": false,
+        "background": true,
+        "accent": false,
+        "displayFont": true,
+        "nav": false,
+        "textOrder": false
+      },
+      "screenshots": {
+        "desktop": [
+          "docs/qa/p0-identity-2026-11-22/professional-kochi-1-professional-kochi-desktop.png",
+          "docs/qa/p0-identity-2026-11-22/professional-kochi-2-professional-kochi-desktop.png",
+          "docs/qa/p0-identity-2026-11-22/professional-kochi-3-professional-kochi-desktop.png"
+        ],
+        "mobile": [
+          "docs/qa/p0-identity-2026-11-22/professional-kochi-1-professional-kochi-mobile.png",
+          "docs/qa/p0-identity-2026-11-22/professional-kochi-2-professional-kochi-mobile.png",
+          "docs/qa/p0-identity-2026-11-22/professional-kochi-3-professional-kochi-mobile.png"
+        ]
+      },
+      "mustShow": {
+        "words": [
+          "account|advisory|fees|services"
+        ],
+        "missing": []
+      },
+      "mustNotShow": {
+        "words": [
+          "GeeStores",
+          "Saree",
+          "Jhumka",
+          "Reserve a table"
+        ],
+        "leaked": []
+      },
+      "saved": {
+        "url": "http://127.0.0.1:5173/p/d69ed6ccb133f743e6732fbc",
+        "titleBefore": "Kochi Ledger Partners · build v1",
+        "titleAfter": "Kochi Ledger Partners · build v1",
+        "stable": true,
+        "excerpt": "p\nplattr\nHow it works\nLive example\nConcepts\nStudio\nBuild from a URL\n← Studio\nKochi Ledger Partners\nReady for review\nProfessional services\nBuild v1\nMobile web app (PWA)\n+1 555 0156\nCopy review link\nCustomise my app\nBusiness dashboard\nPreview application ↗\n\nLive build v1 — this is the app, not a mockup.\n\nBefore you approve\nReady for your review\n\nWe built this from the details you gave us. Nothing is public until you publish it.\n\nWhat we found. 5 items read and ready to check. Review what we read.\nWhat is missing. Nothing is missing from the source. Check the list or edit the details.\nThe catalog"
+      },
+      "exceptions": []
+    }
+  ],
+  "isolation": {
+    "twoTabs": {
+      "one": {
+        "url": "http://127.0.0.1:5173/p/4582e96c7d41f37dde587ade",
+        "title": "GeeStores · build v2"
+      },
+      "two": {
+        "url": "http://127.0.0.1:5173/p/d69ed6ccb133f743e6732fbc",
+        "title": "Kochi Ledger Partners · build v1"
+      },
+      "sameUrl": false,
+      "firstNameLeaksIntoSecond": false,
+      "secondNameLeaksIntoFirst": false,
+      "oneExcerpt": "p\nplattr\nBuild from a URL\n← Studio\nGeeStores\nReady for review\nJewellery shop\nShop & retail shape\nBuild v2\nRead from their site ↗\nMobile web app (PWA)\n918075257652\nCopy review link\nCustomise my app\nBusiness dashboard\nPreview application ↗\n\nLive build v2 — this is the app, not a mockup.\n\nBefore you ap",
+      "twoExcerpt": "p\nplattr\nBuild from a URL\n← Studio\nKochi Ledger Partners\nReady for review\nProfessional services\nBuild v1\nMobile web app (PWA)\n+1 555 0156\nCopy review link\nCustomise my app\nBusiness dashboard\nPreview application ↗\n\nLive build v1 — this is the app, not a mockup.\n\nBefore you approve\nReady for your revi"
+    }
+  },
+  "limitations": [],
+  "draftRestore": {
+    "imported": {
+      "name": "GeeStores",
+      "category": "Jewellery shop",
+      "wish": "An app for Jewellery shop — catalog, ordering, delivery",
+      "concepts": 3
+    },
+    "onReload": {
+      "bannerVisible": true,
+      "bannerText": "Unfinished brief found — GeeStores. · 22/11/2026, 23:04:53 Nothing has been loaded into this page yet. Restore it Start a new brief",
+      "name": "",
+      "wish": "",
+      "concepts": 0
+    },
+    "afterExplicitRestore": {
+      "name": "GeeStores",
+      "category": "Jewellery shop",
+      "wish": "",
+      "concepts": 3
+    },
+    "autoApplied": false,
+    "restoredCorrectly": true
+  },
+  "finishedAt": "2026-11-22T17:34:57.602Z"
+}

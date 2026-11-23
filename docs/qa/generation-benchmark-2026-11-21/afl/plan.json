@@ -1,0 +1,65 @@
+{
+  "site": {
+    "id": "afl",
+    "url": "https://www.architectureforlondon.com/",
+    "model": "Professional / service business",
+    "why": "Architecture practice with services, projects and consultation-led enquiry"
+  },
+  "diversity": {
+    "ok": true,
+    "pairs": [
+      {
+        "a": "classic",
+        "b": "minimal",
+        "score": 0.25,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same tabs",
+          "same block set"
+        ]
+      },
+      {
+        "a": "classic",
+        "b": "editorial",
+        "score": 0.25,
+        "sameInitial": true,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same opening screen",
+          "same block set"
+        ]
+      },
+      {
+        "a": "minimal",
+        "b": "editorial",
+        "score": 0.1,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same block set"
+        ]
+      }
+    ]
+  },
+  "concepts": [
+    {
+      "id": "classic",
+      "name": "Classic counsel",
+      "note": "Understated, serif, fixed fees · Narrative lead"
+    },
+    {
+      "id": "minimal",
+      "name": "Modern advisory",
+      "note": "Plain, precise, list-led · Catalogue first"
+    },
+    {
+      "id": "editorial",
+      "name": "Editorial practice",
+      "note": "Warm authority, long-form · Image first"
+    }
+  ]
+}

@@ -439,6 +439,10 @@ export type AppSpec = {
   structure?: SiteStructure
   /** Present when the brief was read off an existing website. */
   website?: string
+  /** The catalogue is a sample supplied for a prompt-described business, not
+   *  a source read. A sample build never borrows this trade's stock
+   *  photography for its product cards. */
+  sample?: boolean
   email?: string
   currency?: string
   socials?: SocialLink[]

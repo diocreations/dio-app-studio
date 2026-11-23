@@ -1,0 +1,126 @@
+{
+  "generatedAt": "2026-11-22T05:11:57.807Z",
+  "started": "2026-11-22T05:11:57.620Z",
+  "api": "http://127.0.0.1:5173",
+  "app": {
+    "site": "yarmouth",
+    "token": "6facab527c619139d419882e",
+    "item": "Yarmouth Oilskins Gift Card",
+    "oldPrice": 2600,
+    "newPrice": 2737
+  },
+  "passed": 22,
+  "failed": 0,
+  "results": [
+    {
+      "name": "a wrong owner key is refused",
+      "ok": true,
+      "detail": "401"
+    },
+    {
+      "name": "the real owner login creates a session",
+      "ok": true,
+      "detail": "303"
+    },
+    {
+      "name": "the real session opens the dashboard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the dashboard carries the version and update marker",
+      "ok": true,
+      "detail": "49"
+    },
+    {
+      "name": "an imported field is corrected through the owner API",
+      "ok": true,
+      "detail": "200 v50"
+    },
+    {
+      "name": "the application logout redirects",
+      "ok": true,
+      "detail": "303"
+    },
+    {
+      "name": "the old session cannot open the dashboard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the old session cannot read the owner API",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a fresh real login succeeds",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the correction survives a real logout and login",
+      "ok": true,
+      "detail": "2737"
+    },
+    {
+      "name": "the owner provenance survives a real login",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the original website reading is still available",
+      "ok": true,
+      "detail": "5.00"
+    },
+    {
+      "name": "the item is not silently upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the dashboard still reports the same build version",
+      "ok": true,
+      "detail": "50"
+    },
+    {
+      "name": "the other owner signs in to their own project",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "another owner session cannot read this dashboard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "another owner session cannot open this dashboard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "another project’s owner key is refused here",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a second live session exists",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sign out everywhere redirects",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the first live session is revoked",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the second live session is revoked",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

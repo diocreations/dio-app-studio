@@ -2,9 +2,11 @@
 
 Date: 20 November 2026
 
-Nothing is deployed, so nothing is being monitored yet. This is the recommended
-setup, sized for launch: it watches the failures that actually cost money or
-data, and it costs nothing beyond what Cloudflare already bills.
+Production is deployed at `https://plattr-studio-67t93q.freebuff.page`, but no
+external monitor, alert destination or backup heartbeat is configured yet. This
+is the recommended setup, sized for launch: it watches the failures that
+actually cost money or data, and it costs nothing beyond what Cloudflare already
+bills.
 
 A service search for Workers error monitoring and alerting returned no suitable
 provider in the catalogue — the entries were notification orchestrators, proxies
@@ -99,7 +101,7 @@ retention if an incident needs it.
 
 ## Open items
 
-1. Nothing is configured: no origin, no Slack webhook, no heartbeat URL yet.
+1. No external monitor, Slack/webhook URL or heartbeat URL is configured yet.
 2. The heartbeat and failure webhook are implemented in
    `scripts/offsite-backup.mjs` but have only been exercised locally (the failure
    path printed its message; no real webhook was called).

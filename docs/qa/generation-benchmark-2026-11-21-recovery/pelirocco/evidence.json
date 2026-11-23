@@ -1,0 +1,349 @@
+{
+  "site": "pelirocco",
+  "trade": "hotel",
+  "source": "https://www.hotelpelirocco.co.uk/",
+  "sourceKind": "saved crawl report, 21 November 2026 (no network request)",
+  "before": {
+    "items": 9,
+    "priced": 0,
+    "withImage": 0,
+    "sections": [
+      [
+        "Hotel & guesthouse",
+        9
+      ]
+    ],
+    "missing": [
+      "contact details",
+      "address"
+    ]
+  },
+  "after": {
+    "items": 0,
+    "priced": 0,
+    "withImage": 0,
+    "payload": "room",
+    "status": "empty",
+    "pricingBasis": "unknown",
+    "requirements": {
+      "met": [],
+      "missing": [
+        "price",
+        "image",
+        "occupancy"
+      ]
+    },
+    "inventoryPagesRead": [
+      "/",
+      "/rooms",
+      "/stay"
+    ],
+    "currency": {
+      "value": "",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "missing": [
+      "room list",
+      "contact details",
+      "address",
+      "room price, image, occupancy"
+    ],
+    "questions": [
+      {
+        "field": "name",
+        "why": "We only read the name as “Hotel Pelirocco”, from the web address. Is that how the business writes it?",
+        "kind": "confirm"
+      },
+      {
+        "field": "catalogue",
+        "why": "No rooms could be read as commercial inventory — the pages the crawler reached were policies, articles, locations or navigation. Add them, or point us at the page that lists your rooms.",
+        "kind": "confirm"
+      },
+      {
+        "field": "contact",
+        "why": "No phone or email was published.",
+        "kind": "confirm"
+      }
+    ],
+    "conflicts": []
+  },
+  "name": {
+    "value": "Hotel Pelirocco",
+    "source": "host",
+    "confidence": "likely"
+  },
+  "contact": {
+    "phone": {
+      "value": "",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "email": {
+      "value": "",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "evidence": {}
+  },
+  "pages": [
+    {
+      "path": "/",
+      "role": "inventory"
+    },
+    {
+      "path": "/rooms",
+      "role": "inventory"
+    },
+    {
+      "path": "/stay",
+      "role": "inventory"
+    },
+    {
+      "path": "/pelirocco-privacy-policy/",
+      "role": "location"
+    },
+    {
+      "path": "/rocco-regulars-loyalty-club/",
+      "role": "location"
+    },
+    {
+      "path": "/event-venue-hire/",
+      "role": "promotion"
+    },
+    {
+      "path": "/business-hire/",
+      "role": "location"
+    },
+    {
+      "path": "/peliblog/",
+      "role": "location"
+    },
+    {
+      "path": "/press-quotes-over-the-years/",
+      "role": "article"
+    },
+    {
+      "path": "/private-hire/",
+      "role": "location"
+    },
+    {
+      "path": "/peli-party-venue-hire/",
+      "role": "location"
+    },
+    {
+      "path": "/peli-packages/",
+      "role": "location"
+    }
+  ],
+  "rejected": [
+    {
+      "name": "pelirocco privacy policy",
+      "section": "Hotel & guesthouse",
+      "payload": "policy",
+      "reason": "policy-page"
+    },
+    {
+      "name": "rocco regulars loyalty club",
+      "section": "Hotel & guesthouse",
+      "payload": "promotion",
+      "reason": "not-a-room"
+    },
+    {
+      "name": "Event Venue Hire",
+      "section": "Hotel & guesthouse",
+      "payload": "promotion",
+      "reason": "not-a-room"
+    },
+    {
+      "name": "Business Hire",
+      "section": "Hotel & guesthouse",
+      "payload": "promotion",
+      "reason": "not-a-room"
+    },
+    {
+      "name": "Welcome to the Peli Blog",
+      "section": "Hotel & guesthouse",
+      "payload": "article",
+      "reason": "article-page"
+    },
+    {
+      "name": "press quotes over the years",
+      "section": "Hotel & guesthouse",
+      "payload": "article",
+      "reason": "article-page"
+    },
+    {
+      "name": "private hire",
+      "section": "Hotel & guesthouse",
+      "payload": "promotion",
+      "reason": "not-a-room"
+    },
+    {
+      "name": "Private Party Venue Brighton",
+      "section": "Hotel & guesthouse",
+      "payload": "promotion",
+      "reason": "not-a-room"
+    },
+    {
+      "name": "Packages",
+      "section": "Hotel & guesthouse",
+      "payload": "promotion",
+      "reason": "not-a-room"
+    }
+  ],
+  "accepted": [],
+  "checks": [
+    {
+      "name": "no policy rows published",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "no editorial rows published",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "no navigation or location rows published",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "real inventory retained",
+      "ok": true,
+      "detail": "0 of a required 0"
+    },
+    {
+      "name": "every published price carries validated evidence",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "every item carries a source",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "currency is stated wherever a price is published",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "every photograph is attached to an item, not shared between them",
+      "ok": true,
+      "detail": "0 photographs, 0 distinct"
+    },
+    {
+      "name": "an empty catalogue is disclosed, not filled",
+      "ok": true,
+      "detail": [
+        "name",
+        "catalogue",
+        "contact"
+      ]
+    },
+    {
+      "name": "business name keeps the source casing",
+      "ok": true,
+      "detail": "Hotel Pelirocco"
+    },
+    {
+      "name": "all three concepts are structurally distinct",
+      "ok": true,
+      "detail": [
+        {
+          "pair": "luxe/editorial",
+          "different": [
+            "screen and navigation architecture",
+            "section types and composition",
+            "catalogue presentation",
+            "detail-page interaction",
+            "primary customer journey"
+          ],
+          "insufficient": [
+            "trade-specific functionality"
+          ],
+          "reasons": [
+            "same opening screen",
+            "same block set",
+            "same trade functionality"
+          ]
+        },
+        {
+          "pair": "luxe/minimal",
+          "different": [
+            "screen and navigation architecture",
+            "section types and composition",
+            "catalogue presentation",
+            "detail-page interaction",
+            "primary customer journey"
+          ],
+          "insufficient": [
+            "trade-specific functionality"
+          ],
+          "reasons": [
+            "same block set",
+            "same trade functionality"
+          ]
+        },
+        {
+          "pair": "editorial/minimal",
+          "different": [
+            "screen and navigation architecture",
+            "section types and composition",
+            "catalogue presentation",
+            "detail-page interaction",
+            "primary customer journey"
+          ],
+          "insufficient": [
+            "trade-specific functionality"
+          ],
+          "reasons": [
+            "same tabs",
+            "same block set",
+            "same trade functionality"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "no delivery fee is invented",
+      "ok": true,
+      "detail": [
+        {
+          "options": [
+            "At the guesthouse"
+          ],
+          "source": "default"
+        },
+        {
+          "options": [
+            "At the guesthouse"
+          ],
+          "source": "default"
+        },
+        {
+          "options": [
+            "At the guesthouse"
+          ],
+          "source": "default"
+        }
+      ]
+    },
+    {
+      "name": "every catalogue row the trade refused is recorded",
+      "ok": true,
+      "detail": "9 dropped / 9 recorded"
+    }
+  ]
+}

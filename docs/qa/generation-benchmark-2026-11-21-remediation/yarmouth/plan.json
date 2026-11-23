@@ -1,0 +1,68 @@
+{
+  "site": {
+    "id": "yarmouth",
+    "url": "https://yarmouthoilskins.com/",
+    "trade": "retail",
+    "minimum": 70
+  },
+  "diversity": {
+    "ok": true,
+    "pairs": [
+      {
+        "a": "minimal",
+        "b": "editorial",
+        "score": 0.1,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same block set"
+        ]
+      },
+      {
+        "a": "minimal",
+        "b": "lifestyle",
+        "score": 0.25,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same tabs",
+          "same block set"
+        ]
+      },
+      {
+        "a": "editorial",
+        "b": "lifestyle",
+        "score": 0.25,
+        "sameInitial": true,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same opening screen",
+          "same block set"
+        ]
+      }
+    ]
+  },
+  "concepts": [
+    {
+      "id": "minimal",
+      "name": "Minimal boutique",
+      "note": "Hairlines, list rows, quiet type · Catalogue first",
+      "architecture": "minimal"
+    },
+    {
+      "id": "editorial",
+      "name": "Gallery retail",
+      "note": "One piece per row, large imagery, editorial pacing · Image first",
+      "architecture": "editorial"
+    },
+    {
+      "id": "lifestyle",
+      "name": "Contemporary lifestyle",
+      "note": "Soft, photographic, roomy · Narrative lead",
+      "architecture": "lifestyle"
+    }
+  ]
+}

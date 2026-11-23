@@ -1,0 +1,340 @@
+{
+  "thesis": "The catalogue is the product, so each concept is an argument about how much ceremony a piece deserves before a price is read. One treats a piece as an exhibit, one as stock, one as a gift.",
+  "concepts": [
+    {
+      "id": "vault",
+      "name": "The Vault",
+      "oneLine": "Dark, ceremonial, one piece at a time.",
+      "architecture": {
+        "header": "masthead",
+        "catalog": "journal",
+        "cards": "editorial",
+        "detail": "feature",
+        "type": "serif",
+        "imagery": "portrait"
+      },
+      "rationale": {
+        "for": "A first-time gift buyer who needs the piece to feel considered before they trust the price.",
+        "whyThisBusiness": "Most catalogue entries have their own photograph, so a one-piece-per-screen journal uses the evidence the read actually supplied instead of shrinking it into a grid.",
+        "tradeOff": "Fewer pieces per screen: a returning buyer scans more slowly."
+      },
+      "type": {
+        "direction": "editorial",
+        "display": "Playfair Display",
+        "body": "Inter",
+        "priceFont": "display",
+        "weight": 500,
+        "tracking": "-0.02em"
+      },
+      "palette": {
+        "bg": "#101110",
+        "surface": "#181a18",
+        "surface2": "#22251f",
+        "ink": "#f4f1e9",
+        "muted": "#a09b8f",
+        "accent": "#b8863f",
+        "onAccent": "#14100b",
+        "dark": true
+      },
+      "radius": 22,
+      "nav": {
+        "model": "floating",
+        "initialScreen": "home",
+        "tabs": ["home", "catalog", "more"],
+        "labels": [
+          { "screen": "home", "label": "Home" },
+          { "screen": "catalog", "label": "Collection" },
+          { "screen": "more", "label": "More" }
+        ]
+      },
+      "home": {
+        "composition": "title-first",
+        "hero": "image",
+        "heroScale": "tall",
+        "density": "roomy",
+        "blocks": [
+          { "role": "lead", "variant": "shop-title", "layout": "split" },
+          { "role": "discovery", "variant": "shop-products", "layout": "list" },
+          { "role": "action", "variant": "shop-all", "layout": "list" },
+          { "role": "utility", "variant": "shop-search", "layout": "grid" }
+        ]
+      },
+      "catalogue": {
+        "presentation": "one piece per row, portrait photograph, name then price",
+        "card": "editorial",
+        "columns": 1,
+        "aspect": "portrait",
+        "priceTreatment": "quiet",
+        "imageFit": "cover"
+      },
+      "components": { "buttons": "soft", "cards": "soft", "dividers": "hairline" },
+      "rhythm": { "density": "roomy", "sectionGap": "large", "blockPadding": 2 },
+      "content": {
+        "headings": [
+          { "slot": "discovery", "text": "One piece at a time", "basis": "structural" },
+          { "slot": "lead", "text": "The collection", "basis": "structural" },
+          { "slot": "action", "text": "See every piece", "basis": "structural" }
+        ],
+        "notes": []
+      },
+      "differentiation": {
+        "against": ["counter", "festival"],
+        "axes": [
+          { "axis": "typography", "value": "serif display over humanist body, display-set prices" },
+          { "axis": "palette", "value": "near-black ground, warm metallic accent" },
+          { "axis": "navigation", "value": "floating tab bar over content" },
+          { "axis": "hero", "value": "title, then one tall portrait photograph" },
+          { "axis": "hierarchy", "value": "lead > discovery > action > utility" },
+          { "axis": "productPresentation", "value": "1-up journal rows" },
+          { "axis": "screenStructure", "value": "home-first, collection second" },
+          { "axis": "componentDesign", "value": "soft cards, hairline rules, no badges" },
+          { "axis": "rhythm", "value": "roomy, large section gaps" }
+        ]
+      }
+    },
+    {
+      "id": "counter",
+      "name": "The Counter",
+      "oneLine": "Paper light, dense, priced to compare.",
+      "architecture": {
+        "header": "utility",
+        "catalog": "index",
+        "cards": "compact",
+        "detail": "spec",
+        "type": "grotesk",
+        "imagery": "square"
+      },
+      "rationale": {
+        "for": "A repeat or local buyer who already knows the shop and wants to compare pieces and prices quickly.",
+        "whyThisBusiness": "The read found 101 priced entries in one currency, so the honest advantage of this concept is comparison: square thumbnails, two columns, tabular prices, search first.",
+        "tradeOff": "Less atmosphere: a first-time gift buyer gets no ceremony."
+      },
+      "type": {
+        "direction": "modern",
+        "display": "Space Grotesk",
+        "body": "Inter",
+        "priceFont": "body",
+        "weight": 700,
+        "tracking": "-0.035em"
+      },
+      "palette": {
+        "bg": "#fbfaf7",
+        "surface": "#ffffff",
+        "surface2": "#f2f0ea",
+        "ink": "#151515",
+        "muted": "#6f6c65",
+        "accent": "#8a1c2b",
+        "onAccent": "#ffffff",
+        "dark": false
+      },
+      "radius": 8,
+      "nav": {
+        "model": "dock",
+        "initialScreen": "catalog",
+        "tabs": ["catalog", "home", "more"],
+        "labels": [
+          { "screen": "catalog", "label": "Shop" },
+          { "screen": "home", "label": "Home" },
+          { "screen": "more", "label": "More" }
+        ]
+      },
+      "home": {
+        "composition": "catalogue-first",
+        "hero": "split",
+        "heroScale": "compact",
+        "density": "cozy",
+        "blocks": [
+          { "role": "utility", "variant": "shop-search", "layout": "grid" },
+          { "role": "discovery", "variant": "shop-products", "layout": "grid" },
+          { "role": "action", "variant": "shop-all", "layout": "grid" },
+          { "role": "lead", "variant": "shop-title", "layout": "split" }
+        ]
+      },
+      "catalogue": {
+        "presentation": "two-up square grid with tabular prices",
+        "card": "compact",
+        "columns": 2,
+        "aspect": "square",
+        "priceTreatment": "tabular",
+        "imageFit": "cover"
+      },
+      "components": { "buttons": "square", "cards": "square", "dividers": "none" },
+      "rhythm": { "density": "cozy", "sectionGap": "small", "blockPadding": 0 },
+      "content": {
+        "headings": [
+          { "slot": "discovery", "text": "All pieces", "basis": "structural" },
+          { "slot": "lead", "text": "Browse", "basis": "structural" },
+          { "slot": "action", "text": "Open the catalogue", "basis": "structural" }
+        ],
+        "notes": []
+      },
+      "differentiation": {
+        "against": ["vault", "festival"],
+        "axes": [
+          { "axis": "typography", "value": "grotesk display and body, tabular figures" },
+          { "axis": "palette", "value": "paper white with a deep red accent" },
+          { "axis": "navigation", "value": "bottom dock, catalogue is the opening screen" },
+          { "axis": "hero", "value": "compact split: search and two-up pieces first" },
+          { "axis": "hierarchy", "value": "utility > discovery > action > lead" },
+          { "axis": "productPresentation", "value": "2-up square grid" },
+          { "axis": "screenStructure", "value": "catalogue-first" },
+          { "axis": "componentDesign", "value": "square cards, no dividers, square buttons" },
+          { "axis": "rhythm", "value": "cozy, tight section gaps" }
+        ]
+      }
+    },
+    {
+      "id": "festival",
+      "name": "Festival",
+      "oneLine": "Warm, narrative, built around an occasion.",
+      "architecture": {
+        "header": "overlay",
+        "catalog": "stories",
+        "cards": "campaign",
+        "detail": "story",
+        "type": "display",
+        "imagery": "wide"
+      },
+      "rationale": {
+        "for": "A wedding, festive or milestone buyer who is shopping for a moment rather than a single item.",
+        "whyThisBusiness": "The catalogue's own photography is the strongest asset and the site publishes no occasion copy, so this concept supplies the occasion frame in structure and rhythm while leaving every product claim to the catalogue.",
+        "tradeOff": "The most decorative of the three; the least efficient for a buyer who already knows the exact piece."
+      },
+      "type": {
+        "direction": "compact",
+        "display": "Avenir Next Condensed",
+        "body": "Space Grotesk",
+        "priceFont": "mono",
+        "weight": 800,
+        "tracking": "0em"
+      },
+      "palette": {
+        "bg": "#f3ede2",
+        "surface": "#fdf9f1",
+        "surface2": "#e7dece",
+        "ink": "#241d15",
+        "muted": "#7c6d5b",
+        "accent": "#1f4f45",
+        "onAccent": "#ffffff",
+        "dark": false
+      },
+      "radius": 26,
+      "nav": {
+        "model": "bar",
+        "initialScreen": "home",
+        "tabs": ["home", "catalog", "search", "more"],
+        "labels": [
+          { "screen": "home", "label": "Home" },
+          { "screen": "catalog", "label": "Pieces" },
+          { "screen": "search", "label": "Search" },
+          { "screen": "more", "label": "More" }
+        ]
+      },
+      "home": {
+        "composition": "image-first",
+        "hero": "image",
+        "heroScale": "immersive",
+        "density": "roomy",
+        "blocks": [
+          { "role": "discovery", "variant": "shop-products", "layout": "strip" },
+          { "role": "lead", "variant": "shop-title", "layout": "split" },
+          { "role": "utility", "variant": "shop-search", "layout": "grid" },
+          { "role": "action", "variant": "shop-all", "layout": "list" }
+        ]
+      },
+      "catalogue": {
+        "presentation": "staggered 2-up with wide, story-led cards",
+        "card": "campaign",
+        "columns": 2,
+        "aspect": "wide",
+        "priceTreatment": "quiet",
+        "imageFit": "cover"
+      },
+      "components": { "buttons": "round", "cards": "round", "dividers": "none" },
+      "rhythm": { "density": "roomy", "sectionGap": "large", "blockPadding": 2 },
+      "content": {
+        "headings": [
+          { "slot": "discovery", "text": "For the occasion", "basis": "structural" },
+          { "slot": "lead", "text": "Pieces", "basis": "structural" },
+          { "slot": "action", "text": "See the collection", "basis": "structural" }
+        ],
+        "notes": []
+      },
+      "differentiation": {
+        "against": ["vault", "counter"],
+        "axes": [
+          { "axis": "typography", "value": "condensed display over grotesk body, mono prices" },
+          { "axis": "palette", "value": "warm sand with a deep green accent" },
+          { "axis": "navigation", "value": "top bar with search as a first-class tab" },
+          { "axis": "hero", "value": "photograph first, words after" },
+          { "axis": "hierarchy", "value": "discovery > lead > utility > action" },
+          { "axis": "productPresentation", "value": "staggered 2-up, wide cards" },
+          { "axis": "screenStructure", "value": "image-first home, search in the bar" },
+          { "axis": "componentDesign", "value": "round cards and buttons, no dividers" },
+          { "axis": "rhythm", "value": "roomy with large gaps, immersive opening" }
+        ]
+      }
+    }
+  ],
+  "diversityClaim": [
+    {
+      "pair": ["vault", "counter"],
+      "different": [
+        "typography",
+        "palette",
+        "navigation",
+        "hero",
+        "hierarchy",
+        "productPresentation",
+        "screenStructure",
+        "componentDesign",
+        "rhythm"
+      ]
+    },
+    {
+      "pair": ["vault", "festival"],
+      "different": [
+        "typography",
+        "palette",
+        "navigation",
+        "hero",
+        "hierarchy",
+        "productPresentation",
+        "screenStructure",
+        "componentDesign",
+        "rhythm"
+      ]
+    },
+    {
+      "pair": ["counter", "festival"],
+      "different": [
+        "typography",
+        "palette",
+        "navigation",
+        "hero",
+        "hierarchy",
+        "productPresentation",
+        "screenStructure",
+        "componentDesign",
+        "rhythm"
+      ]
+    }
+  ],
+  "rejectedAlternatives": [
+    {
+      "proposal": "A fourth concept that opened with 'Hand-finished in Jaipur'.",
+      "rejectedBy": "ungrounded_claim",
+      "why": "No sentence on the read says this. A design may not introduce a material, place or craft claim, however plausible."
+    },
+    {
+      "proposal": "A concept that printed 'From ₹2,499' under the hero.",
+      "rejectedBy": "schema_forbidden_field",
+      "why": "Prices are not in the design schema at all. The renderer reads the catalogue and formats the real figure, so a model can never state one."
+    },
+    {
+      "proposal": "A concept proposing a Visit screen.",
+      "rejectedBy": "screen_unavailable",
+      "why": "No address or opening hours were established, so the screen would be empty. Missing information is a question for the owner, not a screen."
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "v": 2,
+  "accent": "#007aff",
+  "design": {
+    "direction": "classic",
+    "nav": "bar"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_pro_title",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-title",
+          "title": "Architecture for London",
+          "text": "Architecture for London are RIBA Chartered architects specialising in residential…",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          },
+          "layout": "split"
+        },
+        {
+          "id": "sec_fx_pro_index",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-index",
+          "title": "Services",
+          "layout": "list"
+        },
+        {
+          "id": "sec_fx_pro_actions",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-actions",
+          "title": "Book a consultation",
+          "cta": {
+            "label": "Book a consultation",
+            "screen": "scr_book"
+          },
+          "layout": "list"
+        },
+        {
+          "id": "sec_fx_pro_intro",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-intro",
+          "title": "How we can help",
+          "text": "Architecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…"
+        },
+        {
+          "id": "sec_fx_pro_team",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-team",
+          "title": "The people you'll work with"
+        },
+        {
+          "id": "sec_fx_pro_facts",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "pro-facts",
+          "title": "Mon–Fri 09:00–18:30",
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Consult",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_quote",
+      "kind": "quote",
+      "name": "Enquire",
+      "icon": "quote",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Contact",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

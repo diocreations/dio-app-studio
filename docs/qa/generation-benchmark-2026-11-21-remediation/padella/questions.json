@@ -1,0 +1,20 @@
+{
+  "blockers": [],
+  "confirmations": [
+    {
+      "field": "name",
+      "why": "We only read the name as “Padella”, from the web address. Is that how the business writes it?",
+      "kind": "confirm"
+    },
+    {
+      "field": "catalogue",
+      "why": "No dishs could be read as commercial inventory — the pages the crawler reached were policies, articles, locations or navigation. Add them, or point us at the page that lists your dishs.",
+      "kind": "confirm"
+    },
+    {
+      "field": "contact",
+      "why": "No phone or email was published.",
+      "kind": "confirm"
+    }
+  ]
+}

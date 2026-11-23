@@ -1,0 +1,158 @@
+{
+  "id": "pelirocco",
+  "url": "https://www.hotelpelirocco.co.uk/",
+  "model": "Hotel / accommodation",
+  "why": "Independent themed hotel with rooms, capacity language and direct booking",
+  "source": "https://www.hotelpelirocco.co.uk/",
+  "host": "hotelpelirocco.co.uk",
+  "images": {
+    "products": 9,
+    "withImage": 0,
+    "withoutImage": 9,
+    "methods": {},
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 9,
+    "kept": 9,
+    "dropped": [],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "Hotel & guesthouse"
+    ]
+  },
+  "pages": 12,
+  "site": {
+    "name": "Hotel Pelirocco",
+    "tagline": "Discover this quirky hotel in Brighton, UK Hotel Pelirocco.",
+    "story": "Discover this quirky hotel in Brighton, UK Hotel Pelirocco. Book this cool boutique hotel with themed rooms for an unforgettable experience.",
+    "vertical": "hotel",
+    "verticalConfidence": "detected",
+    "category": "Hotel & guesthouse",
+    "categoryBasis": "the nearest trade, from “hotel”",
+    "accent": "#de4528",
+    "logo": "",
+    "logoImage": {
+      "url": "https://www.hotelpelirocco.co.uk/wp-content/uploads/2015/04/logo-slanted.png",
+      "alt": "Hotel Pelirocco logo"
+    },
+    "phone": "",
+    "email": "",
+    "address": "",
+    "hours": "",
+    "website": "https://www.hotelpelirocco.co.uk",
+    "currency": "",
+    "socials": [],
+    "menu": [
+      {
+        "name": "Hotel & guesthouse",
+        "items": [
+          {
+            "name": "pelirocco privacy policy",
+            "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+            "price": 0
+          },
+          {
+            "name": "rocco regulars loyalty club",
+            "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+            "price": 0
+          },
+          {
+            "name": "Event Venue Hire",
+            "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+            "price": 0
+          },
+          {
+            "name": "Business Hire",
+            "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+            "price": 0
+          },
+          {
+            "name": "Welcome to the Peli Blog",
+            "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+            "price": 0
+          },
+          {
+            "name": "press quotes over the years",
+            "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+            "price": 0
+          },
+          {
+            "name": "private hire",
+            "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+            "price": 0
+          },
+          {
+            "name": "Private Party Venue Brighton",
+            "desc": "Find the ideal private party venue in Brighton at Hotel Pelirocco. Host your next…",
+            "price": 0
+          },
+          {
+            "name": "Packages",
+            "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+            "price": 0
+          }
+        ]
+      }
+    ],
+    "features": [
+      "catalog",
+      "ordering",
+      "booking"
+    ],
+    "design": {
+      "bg": "#0e1c17",
+      "surface": "#1c2a25",
+      "surface2": "#26332e",
+      "ink": "#f4eee2",
+      "muted": "#afafa5",
+      "radius": 10,
+      "display": "\"Indie Flower\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+      "fontLabel": "Indie Flower",
+      "dark": true,
+      "palette": false,
+      "basis": "Indie Flower · 10px corners"
+    }
+  },
+  "found": [
+    "9 catalogue entries in 1 section, read from 12 pages",
+    "their sitemap listed the product pages the home page did not link to",
+    "name: Hotel Pelirocco",
+    "their logo — taken from the image the site itself declares as its mark",
+    "category: Hotel & guesthouse — from the nearest trade, from “hotel”",
+    "a one-line description",
+    "brand colour #de4528",
+    "their look: Indie Flower · 10px corners"
+  ],
+  "missing": [
+    "phone number",
+    "email",
+    "address",
+    "opening hours",
+    "9 product photographs — the site publishes none for those items"
+  ],
+  "notes": [
+    "The crawl is capped at 10 pages to keep the brief quick, so a large shop may still have aisles left — add anything missing in the app editor.",
+    "The site lists items without prices, so they appear as “Ask on request” until you set one.",
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded."
+  ],
+  "pagesRead": [
+    "/",
+    "/rooms",
+    "/stay",
+    "/pelirocco-privacy-policy/",
+    "/rocco-regulars-loyalty-club/",
+    "/event-venue-hire/",
+    "/business-hire/",
+    "/peliblog/",
+    "/press-quotes-over-the-years/",
+    "/private-hire/",
+    "/peli-party-venue-hire/",
+    "/peli-packages/"
+  ],
+  "pagesFailed": [],
+  "usedSitemap": true
+}

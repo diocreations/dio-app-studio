@@ -1,0 +1,1138 @@
+{
+  "generatedAt": "2026-11-22T07:06:22.779Z",
+  "origin": "http://127.0.0.1:5173",
+  "apps": 5,
+  "screens": 37,
+  "networkFailures": [
+    "net::ERR_CONNECTION_CLOSED"
+  ],
+  "consoleErrors": [
+    "ReferenceError: mediaMark is not defined\n    at missingMedia (http://127.0.0.1:5173/p/d43590eb7d912f9dc1de2199/app:5655:113)\n    at retailDetailHtml (http://127.0.0.1:5173/p/d43590eb7d912f9dc1de2199/app:6051:77)\n    at openDetail (http://127.0.0.1:5173/p/d43590eb7d912f9dc1de2199/app:6096:11)\n    at HTMLDocument.<anonymous> (http://127.0.0.1:5173/p/d43590eb7d912f9dc1de2199/app:6981:39)\n    at <anonymous>:1:130\n    at <anonymous>:1:153",
+    "ReferenceError: mediaMark is not defined\n    at missingMedia (http://127.0.0.1:5173/p/c90031c2480a2a13d57d4b59/app:5196:113)\n    at detailHtml (http://127.0.0.1:5173/p/c90031c2480a2a13d57d4b59/app:5513:111)\n    at openDetail (http://127.0.0.1:5173/p/c90031c2480a2a13d57d4b59/app:5638:11)\n    at HTMLDocument.<anonymous> (http://127.0.0.1:5173/p/c90031c2480a2a13d57d4b59/app:6522:39)\n    at <anonymous>:1:130\n    at <anonymous>:1:153",
+    "ReferenceError: mediaMark is not defined\n    at missingMedia (http://127.0.0.1:5173/p/86c94346ed0aea93b7c63af1/app:5035:113)\n    at detailHtml (http://127.0.0.1:5173/p/86c94346ed0aea93b7c63af1/app:5352:111)\n    at openDetail (http://127.0.0.1:5173/p/86c94346ed0aea93b7c63af1/app:5477:11)\n    at HTMLDocument.<anonymous> (http://127.0.0.1:5173/p/86c94346ed0aea93b7c63af1/app:6361:39)\n    at <anonymous>:1:130\n    at <anonymous>:1:153"
+  ],
+  "report": [
+    {
+      "site": "yarmouth",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 390,
+      "file": "yarmouth--editorial--home--390",
+      "active": "home",
+      "title": "yarmouthoilskins",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "missing": 0,
+      "cards": 4,
+      "cardWidths": [
+        354
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 280,
+      "navLabels": [],
+      "issues": []
+    },
+    {
+      "site": "yarmouth",
+      "direction": "editorial",
+      "screen": "catalog",
+      "width": 390,
+      "file": "yarmouth--editorial--catalog--390",
+      "active": "catalog",
+      "title": "Shop",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "missing": 0,
+      "cards": 66,
+      "cardWidths": [
+        276
+      ],
+      "clipped": [
+        "chips"
+      ],
+      "failedImages": [],
+      "heroHeight": 0,
+      "navLabels": [],
+      "issues": [
+        "clipped: chips"
+      ]
+    },
+    {
+      "site": "yarmouth",
+      "direction": "editorial",
+      "screen": "detail",
+      "width": 390,
+      "file": "yarmouth--editorial--detail--390",
+      "active": "catalog",
+      "title": "Shop",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "missing": 0,
+      "cards": 66,
+      "cardWidths": [
+        276
+      ],
+      "clipped": [
+        "chips"
+      ],
+      "failedImages": [],
+      "heroHeight": 0,
+      "navLabels": [],
+      "issues": [
+        "clipped: chips",
+        "detail did not open (active catalog)"
+      ]
+    },
+    {
+      "site": "padella",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 390,
+      "file": "padella--editorial--home--390",
+      "active": "home",
+      "title": "Padella",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 12,
+        "right": 378,
+        "width": 366
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 406,
+      "navLabels": [
+        "Dine",
+        "Menu",
+        "Search",
+        "Reserve",
+        "Visit"
+      ],
+      "issues": []
+    },
+    {
+      "site": "padella",
+      "direction": "editorial",
+      "screen": "catalog",
+      "width": 390,
+      "file": "padella--editorial--catalog--390",
+      "active": "catalog",
+      "title": "Menu",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 12,
+        "right": 378,
+        "width": 366
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 0,
+      "navLabels": [
+        "Dine",
+        "Menu",
+        "Search",
+        "Reserve",
+        "Visit"
+      ],
+      "issues": []
+    },
+    {
+      "site": "padella",
+      "direction": "editorial",
+      "screen": "detail",
+      "width": 390,
+      "skipped": "no catalogue item"
+    },
+    {
+      "site": "padella",
+      "direction": "editorial",
+      "screen": "detail",
+      "width": 390,
+      "file": "padella--editorial--detail--390",
+      "active": "catalog",
+      "title": "Menu",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 12,
+        "right": 378,
+        "width": 366
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 0,
+      "navLabels": [
+        "Dine",
+        "Menu",
+        "Search",
+        "Reserve",
+        "Visit"
+      ],
+      "issues": [
+        "detail did not open (active catalog)"
+      ]
+    },
+    {
+      "site": "pelirocco",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 390,
+      "file": "pelirocco--editorial--home--390",
+      "active": "home",
+      "title": "Hotel Pelirocco",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 0,
+        "right": 390,
+        "width": 390
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 209,
+      "navLabels": [
+        "Stay",
+        "Rooms",
+        "Dates",
+        "More"
+      ],
+      "issues": []
+    },
+    {
+      "site": "pelirocco",
+      "direction": "editorial",
+      "screen": "catalog",
+      "width": 390,
+      "file": "pelirocco--editorial--catalog--390",
+      "active": "catalog",
+      "title": "Rooms",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 0,
+        "right": 390,
+        "width": 390
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 0,
+      "navLabels": [
+        "Stay",
+        "Rooms",
+        "Dates",
+        "More"
+      ],
+      "issues": []
+    },
+    {
+      "site": "pelirocco",
+      "direction": "editorial",
+      "screen": "detail",
+      "width": 390,
+      "skipped": "no catalogue item"
+    },
+    {
+      "site": "pelirocco",
+      "direction": "editorial",
+      "screen": "detail",
+      "width": 390,
+      "file": "pelirocco--editorial--detail--390",
+      "active": "catalog",
+      "title": "Rooms",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 0,
+        "right": 390,
+        "width": 390
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 0,
+      "navLabels": [
+        "Stay",
+        "Rooms",
+        "Dates",
+        "More"
+      ],
+      "issues": [
+        "detail did not open (active catalog)"
+      ]
+    },
+    {
+      "site": "bluetit",
+      "direction": "luxe",
+      "screen": "home",
+      "width": 390,
+      "file": "bluetit--luxe--home--390",
+      "active": "home",
+      "title": "Blue Tit London",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 12,
+        "right": 378,
+        "width": 366
+      },
+      "missing": 4,
+      "cards": 4,
+      "cardWidths": [
+        171
+      ],
+      "clipped": [
+        "SPAN",
+        "SPAN",
+        "SPAN",
+        "SPAN"
+      ],
+      "failedImages": [],
+      "heroHeight": 92,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Search",
+        "Book",
+        "Visit"
+      ],
+      "issues": [
+        "clipped: SPAN, SPAN, SPAN, SPAN",
+        "4 missing-art fields"
+      ]
+    },
+    {
+      "site": "bluetit",
+      "direction": "luxe",
+      "screen": "catalog",
+      "width": 390,
+      "file": "bluetit--luxe--catalog--390",
+      "active": "catalog",
+      "title": "Services",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 12,
+        "right": 378,
+        "width": 366
+      },
+      "missing": 0,
+      "cards": 12,
+      "cardWidths": [
+        290
+      ],
+      "clipped": [
+        "DIV"
+      ],
+      "failedImages": [],
+      "heroHeight": 0,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Search",
+        "Book",
+        "Visit"
+      ],
+      "issues": [
+        "clipped: DIV"
+      ]
+    },
+    {
+      "site": "bluetit",
+      "direction": "luxe",
+      "screen": "detail",
+      "width": 390,
+      "file": "bluetit--luxe--detail--390",
+      "active": "catalog",
+      "title": "Services",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 12,
+        "right": 378,
+        "width": 366
+      },
+      "missing": 0,
+      "cards": 12,
+      "cardWidths": [
+        290
+      ],
+      "clipped": [
+        "DIV"
+      ],
+      "failedImages": [],
+      "heroHeight": 0,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Search",
+        "Book",
+        "Visit"
+      ],
+      "issues": [
+        "clipped: DIV",
+        "detail did not open (active catalog)"
+      ]
+    },
+    {
+      "site": "afl",
+      "direction": "classic",
+      "screen": "home",
+      "width": 390,
+      "file": "afl--classic--home--390",
+      "active": "home",
+      "title": "Architecture for London",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 0,
+        "right": 390,
+        "width": 390
+      },
+      "missing": 0,
+      "cards": 1,
+      "cardWidths": [
+        346
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 128,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Consult",
+        "Enquire",
+        "Contact"
+      ],
+      "issues": []
+    },
+    {
+      "site": "afl",
+      "direction": "classic",
+      "screen": "catalog",
+      "width": 390,
+      "file": "afl--classic--catalog--390",
+      "active": "catalog",
+      "title": "Services",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 0,
+        "right": 390,
+        "width": 390
+      },
+      "missing": 0,
+      "cards": 1,
+      "cardWidths": [
+        346
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 0,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Consult",
+        "Enquire",
+        "Contact"
+      ],
+      "issues": []
+    },
+    {
+      "site": "afl",
+      "direction": "classic",
+      "screen": "detail",
+      "width": 390,
+      "file": "afl--classic--detail--390",
+      "active": "catalog",
+      "title": "Services",
+      "bodyOverflow": 0,
+      "scrollHeight": 844,
+      "tabbar": {
+        "left": 0,
+        "right": 390,
+        "width": 390
+      },
+      "missing": 0,
+      "cards": 1,
+      "cardWidths": [
+        346
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 0,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Consult",
+        "Enquire",
+        "Contact"
+      ],
+      "issues": [
+        "detail did not open (active catalog)"
+      ]
+    },
+    {
+      "site": "yarmouth",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 320,
+      "file": "yarmouth--editorial--home--320",
+      "active": "home",
+      "title": "yarmouthoilskins",
+      "bodyOverflow": 0,
+      "scrollHeight": 700,
+      "tabbar": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "missing": 0,
+      "cards": 4,
+      "cardWidths": [
+        284
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 280,
+      "navLabels": [],
+      "issues": []
+    },
+    {
+      "site": "padella",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 320,
+      "file": "padella--editorial--home--320",
+      "active": "home",
+      "title": "Padella",
+      "bodyOverflow": 0,
+      "scrollHeight": 700,
+      "tabbar": {
+        "left": 12,
+        "right": 308,
+        "width": 296
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 404,
+      "navLabels": [
+        "Dine",
+        "Menu",
+        "Search",
+        "Reserve",
+        "Visit"
+      ],
+      "issues": []
+    },
+    {
+      "site": "pelirocco",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 320,
+      "file": "pelirocco--editorial--home--320",
+      "active": "home",
+      "title": "Hotel Pelirocco",
+      "bodyOverflow": 0,
+      "scrollHeight": 700,
+      "tabbar": {
+        "left": 0,
+        "right": 320,
+        "width": 320
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 208,
+      "navLabels": [
+        "Stay",
+        "Rooms",
+        "Dates",
+        "More"
+      ],
+      "issues": []
+    },
+    {
+      "site": "bluetit",
+      "direction": "luxe",
+      "screen": "home",
+      "width": 320,
+      "file": "bluetit--luxe--home--320",
+      "active": "home",
+      "title": "Blue Tit London",
+      "bodyOverflow": 0,
+      "scrollHeight": 700,
+      "tabbar": {
+        "left": 12,
+        "right": 308,
+        "width": 296
+      },
+      "missing": 4,
+      "cards": 4,
+      "cardWidths": [
+        136
+      ],
+      "clipped": [
+        "SPAN",
+        "SPAN",
+        "SPAN",
+        "SPAN"
+      ],
+      "failedImages": [],
+      "heroHeight": 92,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Search",
+        "Book",
+        "Visit"
+      ],
+      "issues": [
+        "clipped: SPAN, SPAN, SPAN, SPAN",
+        "4 missing-art fields"
+      ]
+    },
+    {
+      "site": "afl",
+      "direction": "classic",
+      "screen": "home",
+      "width": 320,
+      "file": "afl--classic--home--320",
+      "active": "home",
+      "title": "Architecture for London",
+      "bodyOverflow": 0,
+      "scrollHeight": 700,
+      "tabbar": {
+        "left": 0,
+        "right": 320,
+        "width": 320
+      },
+      "missing": 0,
+      "cards": 1,
+      "cardWidths": [
+        276
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 122,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Consult",
+        "Enquire",
+        "Contact"
+      ],
+      "issues": []
+    },
+    {
+      "site": "yarmouth",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 430,
+      "file": "yarmouth--editorial--home--430",
+      "active": "home",
+      "title": "yarmouthoilskins",
+      "bodyOverflow": 0,
+      "scrollHeight": 932,
+      "tabbar": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "missing": 0,
+      "cards": 4,
+      "cardWidths": [
+        394
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 280,
+      "navLabels": [],
+      "issues": []
+    },
+    {
+      "site": "padella",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 430,
+      "file": "padella--editorial--home--430",
+      "active": "home",
+      "title": "Padella",
+      "bodyOverflow": 0,
+      "scrollHeight": 932,
+      "tabbar": {
+        "left": 12,
+        "right": 418,
+        "width": 406
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 412,
+      "navLabels": [
+        "Dine",
+        "Menu",
+        "Search",
+        "Reserve",
+        "Visit"
+      ],
+      "issues": []
+    },
+    {
+      "site": "pelirocco",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 430,
+      "file": "pelirocco--editorial--home--430",
+      "active": "home",
+      "title": "Hotel Pelirocco",
+      "bodyOverflow": 0,
+      "scrollHeight": 932,
+      "tabbar": {
+        "left": 0,
+        "right": 430,
+        "width": 430
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 213,
+      "navLabels": [
+        "Stay",
+        "Rooms",
+        "Dates",
+        "More"
+      ],
+      "issues": []
+    },
+    {
+      "site": "bluetit",
+      "direction": "luxe",
+      "screen": "home",
+      "width": 430,
+      "file": "bluetit--luxe--home--430",
+      "active": "home",
+      "title": "Blue Tit London",
+      "bodyOverflow": 0,
+      "scrollHeight": 932,
+      "tabbar": {
+        "left": 12,
+        "right": 418,
+        "width": 406
+      },
+      "missing": 4,
+      "cards": 4,
+      "cardWidths": [
+        191
+      ],
+      "clipped": [
+        "SPAN",
+        "SPAN",
+        "SPAN",
+        "SPAN"
+      ],
+      "failedImages": [],
+      "heroHeight": 92,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Search",
+        "Book",
+        "Visit"
+      ],
+      "issues": [
+        "clipped: SPAN, SPAN, SPAN, SPAN",
+        "4 missing-art fields"
+      ]
+    },
+    {
+      "site": "afl",
+      "direction": "classic",
+      "screen": "home",
+      "width": 430,
+      "file": "afl--classic--home--430",
+      "active": "home",
+      "title": "Architecture for London",
+      "bodyOverflow": 0,
+      "scrollHeight": 932,
+      "tabbar": {
+        "left": 0,
+        "right": 430,
+        "width": 430
+      },
+      "missing": 0,
+      "cards": 1,
+      "cardWidths": [
+        386
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 136,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Consult",
+        "Enquire",
+        "Contact"
+      ],
+      "issues": []
+    },
+    {
+      "site": "yarmouth",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 768,
+      "file": "yarmouth--editorial--home--768",
+      "active": "home",
+      "title": "yarmouthoilskins",
+      "bodyOverflow": 0,
+      "scrollHeight": 1024,
+      "tabbar": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "missing": 0,
+      "cards": 4,
+      "cardWidths": [
+        331
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 280,
+      "navLabels": [],
+      "issues": []
+    },
+    {
+      "site": "padella",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 768,
+      "file": "padella--editorial--home--768",
+      "active": "home",
+      "title": "Padella",
+      "bodyOverflow": 0,
+      "scrollHeight": 1024,
+      "tabbar": {
+        "left": 36,
+        "right": 732,
+        "width": 696
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 428,
+      "navLabels": [
+        "Dine",
+        "Menu",
+        "Search",
+        "Reserve",
+        "Visit"
+      ],
+      "issues": []
+    },
+    {
+      "site": "pelirocco",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 768,
+      "file": "pelirocco--editorial--home--768",
+      "active": "home",
+      "title": "Hotel Pelirocco",
+      "bodyOverflow": 0,
+      "scrollHeight": 1024,
+      "tabbar": {
+        "left": 24,
+        "right": 744,
+        "width": 720
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 227,
+      "navLabels": [
+        "Stay",
+        "Rooms",
+        "Dates",
+        "More"
+      ],
+      "issues": []
+    },
+    {
+      "site": "bluetit",
+      "direction": "luxe",
+      "screen": "home",
+      "width": 768,
+      "file": "bluetit--luxe--home--768",
+      "active": "home",
+      "title": "Blue Tit London",
+      "bodyOverflow": 0,
+      "scrollHeight": 1024,
+      "tabbar": {
+        "left": 36,
+        "right": 732,
+        "width": 696
+      },
+      "missing": 4,
+      "cards": 4,
+      "cardWidths": [
+        336
+      ],
+      "clipped": [
+        "SPAN",
+        "SPAN",
+        "SPAN",
+        "SPAN"
+      ],
+      "failedImages": [],
+      "heroHeight": 92,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Search",
+        "Book",
+        "Visit"
+      ],
+      "issues": [
+        "clipped: SPAN, SPAN, SPAN, SPAN",
+        "4 missing-art fields"
+      ]
+    },
+    {
+      "site": "afl",
+      "direction": "classic",
+      "screen": "home",
+      "width": 768,
+      "file": "afl--classic--home--768",
+      "active": "home",
+      "title": "Architecture for London",
+      "bodyOverflow": 0,
+      "scrollHeight": 1024,
+      "tabbar": {
+        "left": 24,
+        "right": 744,
+        "width": 720
+      },
+      "missing": 0,
+      "cards": 1,
+      "cardWidths": [
+        676
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 99,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Consult",
+        "Enquire",
+        "Contact"
+      ],
+      "issues": []
+    },
+    {
+      "site": "yarmouth",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 1280,
+      "file": "yarmouth--editorial--home--1280",
+      "active": "home",
+      "title": "yarmouthoilskins",
+      "bodyOverflow": 0,
+      "scrollHeight": 900,
+      "tabbar": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "missing": 0,
+      "cards": 4,
+      "cardWidths": [
+        217
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 280,
+      "navLabels": [],
+      "issues": []
+    },
+    {
+      "site": "padella",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 1280,
+      "file": "padella--editorial--home--1280",
+      "active": "home",
+      "title": "Padella",
+      "bodyOverflow": 0,
+      "scrollHeight": 900,
+      "tabbar": {
+        "left": 162,
+        "right": 1118,
+        "width": 956
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 428,
+      "navLabels": [
+        "Dine",
+        "Menu",
+        "Search",
+        "Reserve",
+        "Visit"
+      ],
+      "issues": []
+    },
+    {
+      "site": "pelirocco",
+      "direction": "editorial",
+      "screen": "home",
+      "width": 1280,
+      "file": "pelirocco--editorial--home--1280",
+      "active": "home",
+      "title": "Hotel Pelirocco",
+      "bodyOverflow": 0,
+      "scrollHeight": 900,
+      "tabbar": {
+        "left": 150,
+        "right": 1130,
+        "width": 980
+      },
+      "missing": 0,
+      "cards": 0,
+      "cardWidths": [],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 227,
+      "navLabels": [
+        "Stay",
+        "Rooms",
+        "Dates",
+        "More"
+      ],
+      "issues": []
+    },
+    {
+      "site": "bluetit",
+      "direction": "luxe",
+      "screen": "home",
+      "width": 1280,
+      "file": "bluetit--luxe--home--1280",
+      "active": "home",
+      "title": "Blue Tit London",
+      "bodyOverflow": 0,
+      "scrollHeight": 900,
+      "tabbar": {
+        "left": 162,
+        "right": 1118,
+        "width": 956
+      },
+      "missing": 4,
+      "cards": 4,
+      "cardWidths": [
+        466
+      ],
+      "clipped": [
+        "SPAN",
+        "SPAN",
+        "SPAN",
+        "SPAN"
+      ],
+      "failedImages": [],
+      "heroHeight": 92,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Search",
+        "Book",
+        "Visit"
+      ],
+      "issues": [
+        "clipped: SPAN, SPAN, SPAN, SPAN",
+        "4 missing-art fields"
+      ]
+    },
+    {
+      "site": "afl",
+      "direction": "classic",
+      "screen": "home",
+      "width": 1280,
+      "file": "afl--classic--home--1280",
+      "active": "home",
+      "title": "Architecture for London",
+      "bodyOverflow": 0,
+      "scrollHeight": 900,
+      "tabbar": {
+        "left": 150,
+        "right": 1130,
+        "width": 980
+      },
+      "missing": 0,
+      "cards": 1,
+      "cardWidths": [
+        936
+      ],
+      "clipped": [],
+      "failedImages": [],
+      "heroHeight": 99,
+      "navLabels": [
+        "Home",
+        "Services",
+        "Consult",
+        "Enquire",
+        "Contact"
+      ],
+      "issues": []
+    }
+  ],
+  "issueCount": 12
+}

@@ -1,6 +1,6 @@
 import type { AppSpec } from './types'
 import { directionsFor } from './directions'
-import type { Doc, DocNode, ScreenKind } from './doc'
+import type { ConceptStructure, Doc, DocNode, ScreenKind, ScreenNode } from './doc'
 
 /**
  * Structural blueprints.
@@ -21,6 +21,9 @@ import type { Doc, DocNode, ScreenKind } from './doc'
  */
 
 export type BlueprintId = 'lead' | 'index' | 'immersive'
+/** A blueprint a document carries itself is `generated`; the three named ones
+ *  remain the fallback grammar and what a trade ships without a concept. */
+export type ConceptBlueprintId = BlueprintId | 'generated'
 
 /** What a block does for the customer, independent of what it is called. */
 export type BlockRole = 'lead' | 'discovery' | 'proof' | 'action' | 'visit' | 'utility' | 'note'
@@ -44,7 +47,7 @@ export type ConceptArchitecture = {
 }
 
 export type Blueprint = {
-  id: BlueprintId
+  id: ConceptBlueprintId
   label: string
   thesis: string
   /** Home blocks, in order. A role absent from the list is left off home. */
@@ -113,6 +116,26 @@ const BLUEPRINTS: Record<BlueprintId, Blueprint> = {
       imagery: 'wide',
     },
   },
+}
+
+/**
+ * A structure a generator authored for this business. The three blueprints stay
+ * as fallbacks and as the vocabulary's own honest compositions; a document that
+ * carries a concept is judged and rendered on its own architecture instead of
+ * being mapped back onto one of them.
+ */
+export function blueprintFromStructure(structure: ConceptStructure): Blueprint {
+  return {
+    id: 'generated',
+    label: structure.name,
+    thesis: '',
+    home: structure.roleSequence,
+    nav: structure.nav,
+    initial: structure.initial,
+    density: 'standard',
+    hero: 'title-first',
+    architecture: structure.architecture,
+  }
 }
 
 /** Which flagship block plays which part for the five trades with a composition
@@ -339,6 +362,33 @@ export function composeScreens(spec: AppSpec, doc: Doc): { doc: Doc; blueprint: 
 
 /** Generation calls this once, after the trade's own blocks are built. */
 export function composeDoc(spec: AppSpec, doc: Doc): Doc {
+  const structure = doc.design?.concept?.structure
+  // A generated concept brings its own hierarchy, tabs and opening screen. The
+  // compiler wrote them; composition must not quietly reorder them back into
+  // one of the three blueprints the owner is being offered a departure from.
+  if (structure) {
+    const byKind = new Map<ScreenKind, ScreenNode>()
+    for (const screen of doc.screens) {
+      if (screen.hidden || screen.kind === 'detail') continue
+      if (!byKind.has(screen.kind)) byKind.set(screen.kind, screen)
+    }
+    const visible: string[] = []
+    for (const kind of structure.nav) {
+      const screen = byKind.get(kind)
+      if (!screen || visible.includes(screen.id)) continue
+      visible.push(screen.id)
+      if (visible.length === 5) break
+    }
+    const home = doc.screens.find((screen) => screen.kind === 'home')
+    if (home && !visible.includes(home.id)) visible.push(home.id)
+    for (const screen of doc.screens) screen.nav = visible.includes(screen.id)
+    doc.initialScreen =
+      structure.initial === 'catalog'
+        ? byKind.get('catalog')?.id ?? doc.initialScreen
+        : home?.id ?? doc.initialScreen
+    doc.design = { ...(doc.design ?? {}), nav: structure.navModel }
+    return doc
+  }
   const home = doc.screens.find((screen) => screen.kind === 'home')
   if (home) {
     const composed = composeHome(spec, home.sections)
@@ -358,7 +408,7 @@ export type Structure = {
   roles: BlockRole[]
   /** How each home component arranges its own children. */
   layouts: string[]
-  concept: BlueprintId
+  concept: ConceptBlueprintId
   architecture: ConceptArchitecture
   count: number
 }
@@ -376,10 +426,13 @@ export function structureOf(spec: AppSpec, doc: Doc): Structure {
   // Read the architecture from the saved document, not from whichever spec
   // happened to build the first concept. A review link, editor and validator
   // must all see the same direction the app renders.
-  const blueprint = blueprintFor({
-    ...spec,
-    direction: doc.design?.direction ?? spec.direction,
-  })
+  const authored = doc.design?.concept?.structure
+  const blueprint = authored
+    ? blueprintFromStructure(authored)
+    : blueprintFor({
+        ...spec,
+        direction: doc.design?.direction ?? spec.direction,
+      })
   return {
     initial: doc.screens.find((screen) => screen.id === doc.initialScreen)?.kind ?? 'home',
     nav: doc.screens.filter((screen) => screen.nav).map((screen) => screen.kind),

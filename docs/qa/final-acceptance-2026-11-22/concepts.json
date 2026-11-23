@@ -1,0 +1,1139 @@
+{
+  "generatedAt": "2026-11-22T06:34:17.922Z",
+  "source": "docs/qa/generation-benchmark-2026-11-21-recovery",
+  "built": "saved-documents",
+  "sites": {
+    "yarmouth": {
+      "concepts": [
+        {
+          "concept": "editorial",
+          "accent": "#2a5a8f",
+          "direction": "editorial",
+          "navModel": "floating",
+          "initial": "scr_home",
+          "screens": [
+            "home",
+            "catalog",
+            "search",
+            "more",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "home",
+            "catalog",
+            "search",
+            "more"
+          ],
+          "home": [
+            "shop-products",
+            "shop-title",
+            "shop-search",
+            "shop-all"
+          ],
+          "functional": [
+            "shop-search"
+          ]
+        },
+        {
+          "concept": "lifestyle",
+          "accent": "#2a5a8f",
+          "direction": "lifestyle",
+          "navModel": "bar",
+          "initial": "scr_home",
+          "screens": [
+            "home",
+            "catalog",
+            "more",
+            "search",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "home",
+            "catalog",
+            "more"
+          ],
+          "home": [
+            "shop-title",
+            "shop-products",
+            "shop-all",
+            "shop-search"
+          ],
+          "functional": [
+            "shop-search"
+          ]
+        },
+        {
+          "concept": "minimal",
+          "accent": "#2a5a8f",
+          "direction": "minimal",
+          "navModel": "dock",
+          "initial": "scr_catalog",
+          "screens": [
+            "catalog",
+            "home",
+            "more",
+            "search",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "catalog",
+            "home",
+            "more"
+          ],
+          "home": [
+            "shop-search",
+            "shop-products",
+            "shop-all",
+            "shop-title"
+          ],
+          "functional": [
+            "shop-search"
+          ]
+        }
+      ],
+      "pairs": [
+        {
+          "a": "editorial",
+          "b": "lifestyle",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same opening screen",
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.25
+        },
+        {
+          "a": "editorial",
+          "b": "minimal",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.1
+        },
+        {
+          "a": "lifestyle",
+          "b": "minimal",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same tabs",
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.25
+        }
+      ],
+      "validatorOk": true,
+      "allPairsStructural": true,
+      "failingPairs": []
+    },
+    "padella": {
+      "concepts": [
+        {
+          "concept": "editorial",
+          "accent": "#c8452b",
+          "direction": "editorial",
+          "navModel": "floating",
+          "initial": "scr_home",
+          "screens": [
+            "home",
+            "catalog",
+            "search",
+            "book",
+            "more",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "home",
+            "catalog",
+            "search",
+            "book",
+            "more"
+          ],
+          "home": [
+            "dine-title",
+            "dine-actions"
+          ],
+          "functional": [
+            "dine-actions"
+          ]
+        },
+        {
+          "concept": "luxe",
+          "accent": "#c8452b",
+          "direction": "luxe",
+          "navModel": "bar",
+          "initial": "scr_home",
+          "screens": [
+            "home",
+            "catalog",
+            "book",
+            "more",
+            "search",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "home",
+            "catalog",
+            "book",
+            "more"
+          ],
+          "home": [
+            "dine-title",
+            "dine-actions"
+          ],
+          "functional": [
+            "dine-actions"
+          ]
+        },
+        {
+          "concept": "modern",
+          "accent": "#c8452b",
+          "direction": "modern",
+          "navModel": "dock",
+          "initial": "scr_catalog",
+          "screens": [
+            "catalog",
+            "home",
+            "book",
+            "more",
+            "search",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "catalog",
+            "home",
+            "book",
+            "more"
+          ],
+          "home": [
+            "dine-actions",
+            "dine-title"
+          ],
+          "functional": [
+            "dine-actions"
+          ]
+        }
+      ],
+      "pairs": [
+        {
+          "a": "editorial",
+          "b": "luxe",
+          "styling": true,
+          "layout": false,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": false
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same sections in the same order",
+            "same opening screen",
+            "same block set",
+            "same section composition",
+            "same trade functionality"
+          ],
+          "validatorOk": false,
+          "score": 0.55
+        },
+        {
+          "a": "editorial",
+          "b": "modern",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.1
+        },
+        {
+          "a": "luxe",
+          "b": "modern",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same tabs",
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.25
+        }
+      ],
+      "validatorOk": false,
+      "allPairsStructural": false,
+      "failingPairs": [
+        "editorial/luxe"
+      ]
+    },
+    "pelirocco": {
+      "concepts": [
+        {
+          "concept": "editorial",
+          "accent": "#de4528",
+          "direction": "editorial",
+          "navModel": "bar",
+          "initial": "scr_home",
+          "screens": [
+            "home",
+            "catalog",
+            "book",
+            "more",
+            "search",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "home",
+            "catalog",
+            "book",
+            "more"
+          ],
+          "home": [
+            "hotel-cover",
+            "hotel-rooms",
+            "hotel-stay",
+            "hotel-facts"
+          ],
+          "functional": [
+            "hotel-stay"
+          ]
+        },
+        {
+          "concept": "luxe",
+          "accent": "#de4528",
+          "direction": "luxe",
+          "navModel": "floating",
+          "initial": "scr_home",
+          "screens": [
+            "home",
+            "catalog",
+            "search",
+            "book",
+            "more",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "home",
+            "catalog",
+            "search",
+            "book",
+            "more"
+          ],
+          "home": [
+            "hotel-rooms",
+            "hotel-cover",
+            "hotel-facts",
+            "hotel-stay"
+          ],
+          "functional": [
+            "hotel-stay"
+          ]
+        },
+        {
+          "concept": "minimal",
+          "accent": "#de4528",
+          "direction": "minimal",
+          "navModel": "dock",
+          "initial": "scr_catalog",
+          "screens": [
+            "catalog",
+            "home",
+            "book",
+            "more",
+            "search",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "catalog",
+            "home",
+            "book",
+            "more"
+          ],
+          "home": [
+            "hotel-rooms",
+            "hotel-stay",
+            "hotel-facts",
+            "hotel-cover"
+          ],
+          "functional": [
+            "hotel-stay"
+          ]
+        }
+      ],
+      "pairs": [
+        {
+          "a": "editorial",
+          "b": "luxe",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same opening screen",
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.25
+        },
+        {
+          "a": "editorial",
+          "b": "minimal",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same tabs",
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.25
+        },
+        {
+          "a": "luxe",
+          "b": "minimal",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.1
+        }
+      ],
+      "validatorOk": true,
+      "allPairsStructural": true,
+      "failingPairs": []
+    },
+    "bluetit": {
+      "concepts": [
+        {
+          "concept": "editorial",
+          "accent": "#0d6efd",
+          "direction": "editorial",
+          "navModel": "floating",
+          "initial": "scr_home",
+          "screens": [
+            "home",
+            "catalog",
+            "search",
+            "book",
+            "more",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "home",
+            "catalog",
+            "search",
+            "book",
+            "more"
+          ],
+          "home": [
+            "salon-services",
+            "salon-title",
+            "salon-staff",
+            "salon-dates",
+            "salon-action"
+          ],
+          "functional": [
+            "salon-dates",
+            "salon-action"
+          ]
+        },
+        {
+          "concept": "luxe",
+          "accent": "#0d6efd",
+          "direction": "luxe",
+          "navModel": "bar",
+          "initial": "scr_home",
+          "screens": [
+            "home",
+            "catalog",
+            "book",
+            "more",
+            "search",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "home",
+            "catalog",
+            "book",
+            "more"
+          ],
+          "home": [
+            "salon-title",
+            "salon-services",
+            "salon-action",
+            "salon-dates",
+            "salon-staff"
+          ],
+          "functional": [
+            "salon-action",
+            "salon-dates"
+          ]
+        },
+        {
+          "concept": "minimal",
+          "accent": "#0d6efd",
+          "direction": "minimal",
+          "navModel": "dock",
+          "initial": "scr_catalog",
+          "screens": [
+            "catalog",
+            "home",
+            "book",
+            "more",
+            "search",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "catalog",
+            "home",
+            "book",
+            "more"
+          ],
+          "home": [
+            "salon-dates",
+            "salon-services",
+            "salon-action",
+            "salon-staff",
+            "salon-title"
+          ],
+          "functional": [
+            "salon-dates",
+            "salon-action"
+          ]
+        }
+      ],
+      "pairs": [
+        {
+          "a": "editorial",
+          "b": "luxe",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": true
+            }
+          ],
+          "reasons": [
+            "same opening screen",
+            "same block set"
+          ],
+          "validatorOk": true,
+          "score": 0.25
+        },
+        {
+          "a": "editorial",
+          "b": "minimal",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.1
+        },
+        {
+          "a": "luxe",
+          "b": "minimal",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": true
+            }
+          ],
+          "reasons": [
+            "same tabs",
+            "same block set"
+          ],
+          "validatorOk": true,
+          "score": 0.25
+        }
+      ],
+      "validatorOk": true,
+      "allPairsStructural": true,
+      "failingPairs": []
+    },
+    "afl": {
+      "concepts": [
+        {
+          "concept": "editorial",
+          "accent": "#007aff",
+          "direction": "editorial",
+          "navModel": "floating",
+          "initial": "scr_home",
+          "screens": [
+            "home",
+            "catalog",
+            "search",
+            "book",
+            "more",
+            "saved",
+            "detail",
+            "quote"
+          ],
+          "tabs": [
+            "home",
+            "catalog",
+            "search",
+            "book",
+            "more"
+          ],
+          "home": [
+            "pro-index",
+            "pro-title",
+            "pro-team",
+            "pro-facts",
+            "pro-intro",
+            "pro-actions"
+          ],
+          "functional": [
+            "pro-actions"
+          ]
+        },
+        {
+          "concept": "minimal",
+          "accent": "#007aff",
+          "direction": "minimal",
+          "navModel": "dock",
+          "initial": "scr_catalog",
+          "screens": [
+            "catalog",
+            "home",
+            "book",
+            "quote",
+            "more",
+            "search",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "catalog",
+            "home",
+            "book",
+            "quote",
+            "more"
+          ],
+          "home": [
+            "pro-index",
+            "pro-actions",
+            "pro-team",
+            "pro-facts",
+            "pro-title",
+            "pro-intro"
+          ],
+          "functional": [
+            "pro-actions"
+          ]
+        },
+        {
+          "concept": "classic",
+          "accent": "#007aff",
+          "direction": "classic",
+          "navModel": "bar",
+          "initial": "scr_home",
+          "screens": [
+            "home",
+            "catalog",
+            "book",
+            "quote",
+            "more",
+            "search",
+            "saved",
+            "detail"
+          ],
+          "tabs": [
+            "home",
+            "catalog",
+            "book",
+            "quote",
+            "more"
+          ],
+          "home": [
+            "pro-title",
+            "pro-index",
+            "pro-actions",
+            "pro-intro",
+            "pro-team",
+            "pro-facts"
+          ],
+          "functional": [
+            "pro-actions"
+          ]
+        }
+      ],
+      "pairs": [
+        {
+          "a": "editorial",
+          "b": "minimal",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.1
+        },
+        {
+          "a": "editorial",
+          "b": "classic",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same opening screen",
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.25
+        },
+        {
+          "a": "minimal",
+          "b": "classic",
+          "styling": true,
+          "layout": true,
+          "informationArchitecture": true,
+          "journey": true,
+          "dimensions": [
+            {
+              "name": "screen and navigation architecture",
+              "different": true
+            },
+            {
+              "name": "section types and composition",
+              "different": true
+            },
+            {
+              "name": "catalogue presentation",
+              "different": true
+            },
+            {
+              "name": "detail-page interaction",
+              "different": true
+            },
+            {
+              "name": "primary customer journey",
+              "different": true
+            },
+            {
+              "name": "trade-specific functionality",
+              "different": false
+            }
+          ],
+          "reasons": [
+            "same tabs",
+            "same block set",
+            "same trade functionality"
+          ],
+          "validatorOk": true,
+          "score": 0.25
+        }
+      ],
+      "validatorOk": true,
+      "allPairsStructural": true,
+      "failingPairs": []
+    }
+  }
+}

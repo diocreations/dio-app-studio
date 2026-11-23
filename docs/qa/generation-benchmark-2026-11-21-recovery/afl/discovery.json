@@ -1,0 +1,212 @@
+{
+  "url": "https://architectureforlondon.com/",
+  "host": "architectureforlondon.com",
+  "pages": {
+    "read": [
+      "/",
+      "/project/stone-house/",
+      "/project/peckham-house/",
+      "/project/barnsbury-house/",
+      "/project/low-energy-house/",
+      "/project/heritage-projects/",
+      "/project/hampstead-house-extension/",
+      "/project/brook-green-house-extension/",
+      "/project/hammersmith-house-extension/",
+      "/project/georgian-house-refurbishment/",
+      "/projects/interior-design/",
+      "/projects/public/",
+      "/projects/housing/",
+      "/projects/workplace/",
+      "/projects/furniture/",
+      "/project/fisher-paykel-showroom/",
+      "/projects/interior-design/page/2/",
+      "/instagram/bloomsbury-flat-progress-visuals-a-place-to-read-think-and-write/",
+      "/instagram/this-mews-house-extension-in-hackney-east-london-transforms-a-compact-mid-19th-century-georgian-property-into-a-contem/",
+      "/instagram/in-the-front-reception-rooms-the-original-pine-floorboards-were-sanded-and-refinished-with-a-contemporary-white-soap-fi/"
+    ],
+    "failed": [],
+    "usedSitemap": true
+  },
+  "business": {
+    "name": {
+      "value": "Architecture for London",
+      "source": "https://architectureforlondon.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "category": {
+      "value": "Professional services",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "tagline": {
+      "value": "Architecture for London are RIBA Chartered architects specialising in residential…",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "story": {
+      "value": "Architecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "trade": {
+      "value": "professional",
+      "source": "https://architectureforlondon.com/",
+      "method": "inferred",
+      "confidence": "verified"
+    },
+    "accent": {
+      "value": "#007aff",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "logo": {
+      "value": {
+        "url": "https://architectureforlondon.com/apple-touch-icon.png",
+        "alt": "Architecture for London logo"
+      },
+      "source": "https://architectureforlondon.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "hours": {
+      "value": "Mon–Fri 09:00–18:30 · Sat–Sun 00:00–00:00",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "phone": {
+      "value": "+442036374236",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "email": {
+      "value": "mail@architectureforlondon.com",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "address": {
+      "value": "",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    }
+  },
+  "commerce": {
+    "currency": {
+      "value": "GBP",
+      "source": "https://architectureforlondon.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "sections": [
+      {
+        "name": "Professional services",
+        "source": "https://architectureforlondon.com/",
+        "items": [
+          {
+            "name": "Build",
+            "desc": "AFL Build: a sustainable builder in London with a unique design and build service. A…",
+            "price": 0,
+            "evidence": {
+              "payload": "service",
+              "source": "https://architectureforlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "products": 1,
+    "priced": 0,
+    "withImage": 0,
+    "payload": "service",
+    "status": "complete",
+    "rejected": [
+      {
+        "name": "Bloomsbury Flat, progress visuals. A place to read, think…",
+        "section": "Journal",
+        "payload": "article",
+        "reason": "article-section"
+      },
+      {
+        "name": "This mews house extension in Hackney, East London,…",
+        "section": "Journal",
+        "payload": "article",
+        "reason": "article-section"
+      },
+      {
+        "name": "In the front reception rooms, the original pine floorboards…",
+        "section": "Journal",
+        "payload": "article",
+        "reason": "article-section"
+      },
+      {
+        "name": "A refurbishment and extension of an early Victorian house…",
+        "section": "Journal",
+        "payload": "article",
+        "reason": "article-section"
+      },
+      {
+        "name": "This early 19th-century Georgian house in Hampstead village…",
+        "section": "Journal",
+        "payload": "article",
+        "reason": "article-section"
+      },
+      {
+        "name": "Our refurbishment and extension of an early Victorian house…",
+        "section": "Journal",
+        "payload": "article",
+        "reason": "article-section"
+      },
+      {
+        "name": "Projects Archive",
+        "section": "Professional services",
+        "payload": "navigation",
+        "reason": "navigation"
+      }
+    ],
+    "requirements": {
+      "met": [],
+      "missing": [
+        "price"
+      ]
+    },
+    "pricingBasis": "quote"
+  },
+  "conflicts": [],
+  "missing": [
+    "address",
+    "service photographs",
+    "service price"
+  ],
+  "questions": [
+    {
+      "field": "name",
+      "why": "We only read the name as “Architecture for London”, from the web address. Is that how the business writes it?",
+      "kind": "confirm"
+    }
+  ],
+  "tradeCandidates": [
+    {
+      "id": "professional",
+      "score": 0.9,
+      "evidence": [
+        "the nearest trade, from “chartered”",
+        "Professional services"
+      ]
+    }
+  ],
+  "clientRendered": false
+}

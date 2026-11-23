@@ -1,0 +1,1582 @@
+{
+  "site": "yarmouth",
+  "trade": "retail",
+  "source": "https://yarmouthoilskins.com/",
+  "sourceKind": "saved crawl report, 21 November 2026 (no network request)",
+  "before": {
+    "items": 90,
+    "priced": 74,
+    "withImage": 74,
+    "sections": [
+      [
+        "Clothing shop",
+        16
+      ],
+      [
+        "Catalogue",
+        20
+      ],
+      [
+        "Hats",
+        4
+      ],
+      [
+        "Jackets",
+        5
+      ],
+      [
+        "Trousers",
+        9
+      ],
+      [
+        "Shirts",
+        12
+      ],
+      [
+        "Knitwear",
+        1
+      ],
+      [
+        "Smocks",
+        3
+      ],
+      [
+        "coats",
+        3
+      ],
+      [
+        "Bags",
+        1
+      ],
+      [
+        "Shorts",
+        8
+      ],
+      [
+        "Vests",
+        2
+      ],
+      [
+        "Oilskins",
+        4
+      ],
+      [
+        "Dungarees",
+        2
+      ]
+    ],
+    "missing": [
+      "contact details",
+      "address"
+    ]
+  },
+  "after": {
+    "items": 74,
+    "priced": 74,
+    "withImage": 74,
+    "payload": "product",
+    "status": "complete",
+    "pricingBasis": "published",
+    "requirements": {
+      "met": [
+        "price",
+        "image",
+        "variant"
+      ],
+      "missing": []
+    },
+    "inventoryPagesRead": [
+      "/",
+      "/products.json?limit=250&page=1"
+    ],
+    "currency": {
+      "value": "GBP",
+      "source": "https://yarmouthoilskins.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "missing": [
+      "contact details",
+      "address"
+    ],
+    "questions": [
+      {
+        "field": "name",
+        "why": "We only read the name as “yarmouthoilskins”, from the web address. Is that how the business writes it?",
+        "kind": "confirm"
+      },
+      {
+        "field": "contact",
+        "why": "No phone or email was published.",
+        "kind": "confirm"
+      }
+    ],
+    "conflicts": []
+  },
+  "name": {
+    "value": "yarmouthoilskins",
+    "source": "host",
+    "confidence": "likely"
+  },
+  "contact": {
+    "phone": {
+      "value": "",
+      "source": "https://yarmouthoilskins.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "email": {
+      "value": "",
+      "source": "https://yarmouthoilskins.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://yarmouthoilskins.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "evidence": {}
+  },
+  "pages": [
+    {
+      "path": "/",
+      "role": "inventory"
+    },
+    {
+      "path": "/products.json?limit=250&page=1",
+      "role": "inventory"
+    }
+  ],
+  "rejected": [
+    {
+      "name": "Gift Cards",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "View Now",
+      "section": "Clothing shop",
+      "payload": "navigation",
+      "reason": "navigation"
+    },
+    {
+      "name": "Shop Now",
+      "section": "Clothing shop",
+      "payload": "navigation",
+      "reason": "navigation"
+    },
+    {
+      "name": "The Travelling Mac - Olive",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Travelling Mac - Khaki",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Fly Fishing Jacket - Olive",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Fly Fishing Jacket - Slate",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Engineer Jacket - Navy",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Engineer Jacket - Khaki",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Engineer Jacket - Black",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Engineer Jacket - Natural",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Classic Smock - Navy",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Classic Smock - Natural",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Classic Smock - Black",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Classic Smock - Ticking Stripe",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    },
+    {
+      "name": "The Hooded Smock - Mustard",
+      "section": "Clothing shop",
+      "payload": "unknown",
+      "reason": "no-commercial-evidence"
+    }
+  ],
+  "accepted": [
+    {
+      "section": "Catalogue",
+      "name": "Yarmouth Oilskins Gift Card",
+      "price": 500,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Champion Jacket - Navy",
+      "price": 60000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The All English Tee",
+      "price": 6500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Maritime Overshirt - Ginger",
+      "price": 25000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Maritime Overshirt - Light Blue",
+      "price": 25000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Maritime Overshirt - Lightweight Navy",
+      "price": 25000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Yarmouth Apron - Navy",
+      "price": 13000,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Champion Jacket - Sand",
+      "price": 60000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Champion Jacket - Crimson",
+      "price": 60000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "'Sea Air' Garment Refresher 300ml",
+      "price": 1450,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "Yarmouth Oilskins Badge",
+      "price": 1500,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Norfolk Sea Cape - Navy",
+      "price": 33000,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Maritime Overshirt - Ticking Stripe",
+      "price": 26500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Maritime Overshirt - Natural",
+      "price": 25000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Yarmouth Apron - Moss",
+      "price": 13000,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Yarmouth Apron - Khaki",
+      "price": 13000,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Maritime Overshirt - Navy Moleskin",
+      "price": 28000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Norfolk Sea Cape - Forest",
+      "price": 33000,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "The Bib and Brace - Natural",
+      "price": 20000,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Catalogue",
+      "name": "Eco Wax Proofing Spray 200ml",
+      "price": 1100,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Hats",
+      "name": "The Winter Watchcap",
+      "price": 4500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Hats",
+      "name": "The Original Sou'wester Hat",
+      "price": 10500,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Hats",
+      "name": "The Original Sou'wester Hat - Navy",
+      "price": 10500,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Hats",
+      "name": "The Watchcap - Navy Wool Melton",
+      "price": 8500,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Jackets",
+      "name": "The Drivers Jacket - Natural",
+      "price": 25000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Jackets",
+      "name": "The Drivers Jacket - Navy",
+      "price": 25000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Jackets",
+      "name": "The Drivers Jacket - Khaki",
+      "price": 25000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Jackets",
+      "name": "The Deck Jacket - Indigo",
+      "price": 19000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Jackets",
+      "name": "The Deck Jacket - Olive",
+      "price": 19000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Trousers",
+      "name": "The Steadfast Trousers - Natural",
+      "price": 20000,
+      "variants": 6,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Trousers",
+      "name": "The Steadfast Trousers - Khaki",
+      "price": 20000,
+      "variants": 6,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Trousers",
+      "name": "The Steadfast Trousers - Olive",
+      "price": 20000,
+      "variants": 6,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Trousers",
+      "name": "The Deck Trousers - Tobacco",
+      "price": 16000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Trousers",
+      "name": "The Deck Trousers - Indigo",
+      "price": 16000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Trousers",
+      "name": "The Work Trousers - Black",
+      "price": 18500,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Trousers",
+      "name": "The Work Trousers - Natural",
+      "price": 18500,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Trousers",
+      "name": "The Work Trousers - Khaki",
+      "price": 18500,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Trousers",
+      "name": "The Work Trousers - Navy",
+      "price": 18500,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Deck Shirt - Stripe",
+      "price": 16000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Deck Shirt - Navy",
+      "price": 16000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Admiralty Shirt - Ginger",
+      "price": 17500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Admiralty Shirt - Olive",
+      "price": 17500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Admiralty Shirt - Navy",
+      "price": 17500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Yarmouth Shirt - Olive",
+      "price": 20500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Yarmouth Shirt - Navy",
+      "price": 20500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Yarmouth Shirt - White",
+      "price": 20500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Yarmouth Shirt - Blue",
+      "price": 20500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Deck Shirt - Chambray",
+      "price": 16000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Admiralty Shirt - White",
+      "price": 17500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shirts",
+      "name": "The Admiralty Shirt - Light Blue",
+      "price": 17500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Knitwear",
+      "name": "The 'Industry' Submariner Knit - Navy",
+      "price": 19500,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Smocks",
+      "name": "The Shawl Collar Smock - Ecru",
+      "price": 19000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Smocks",
+      "name": "The Shawl Collar Smock - Indigo",
+      "price": 19000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Smocks",
+      "name": "The Deck Trousers - Olive",
+      "price": 16000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "coats",
+      "name": "The Captain's Coat - Navy",
+      "price": 31000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "coats",
+      "name": "The Captain's Coat - Tan",
+      "price": 31000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "coats",
+      "name": "The 'NZ' Jacket - Dark Olive",
+      "price": 52500,
+      "variants": 8,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Bags",
+      "name": "The Market Bag",
+      "price": 17000,
+      "variants": 1,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shorts",
+      "name": "The Drill Shorts - Natural",
+      "price": 15000,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shorts",
+      "name": "The Explorer Shorts - Navy",
+      "price": 15000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shorts",
+      "name": "The Explorer Shorts - Fern",
+      "price": 15000,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shorts",
+      "name": "The Deck Shorts - Indigo",
+      "price": 14500,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shorts",
+      "name": "The Deck Shorts - Tobacco",
+      "price": 14500,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shorts",
+      "name": "The Deck Shorts - Olive",
+      "price": 14500,
+      "variants": 4,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shorts",
+      "name": "The Drill Shorts - Khaki",
+      "price": 15000,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Shorts",
+      "name": "The Drill Shorts - Navy",
+      "price": 15000,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Vests",
+      "name": "The Reversible Vest - Fern",
+      "price": 26000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Vests",
+      "name": "The Reversible Vest - Navy",
+      "price": 26000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Oilskins",
+      "name": "The Explorer Smock - Peat",
+      "price": 55000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Oilskins",
+      "name": "The Explorer Smock - Fern",
+      "price": 55000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Oilskins",
+      "name": "The Hooded Smock - Forest",
+      "price": 32000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Oilskins",
+      "name": "The Hooded Smock - Navy",
+      "price": 32000,
+      "variants": 5,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Dungarees",
+      "name": "The Bib and Brace - Navy",
+      "price": 20000,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Dungarees",
+      "name": "The Bib and Brace - Khaki",
+      "price": 20000,
+      "variants": 7,
+      "image": "source photograph",
+      "evidence": {
+        "payload": "product",
+        "source": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": []
+      },
+      "priceEvidence": "validated"
+    }
+  ],
+  "checks": [
+    {
+      "name": "no policy rows published",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "no editorial rows published",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "no navigation or location rows published",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "real inventory retained",
+      "ok": true,
+      "detail": "74 of a required 70"
+    },
+    {
+      "name": "every published price carries validated evidence",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "every item carries a source",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "currency is stated wherever a price is published",
+      "ok": true,
+      "detail": "GBP"
+    },
+    {
+      "name": "every photograph is attached to an item, not shared between them",
+      "ok": true,
+      "detail": "74 photographs, 74 distinct"
+    },
+    {
+      "name": "an empty catalogue is disclosed, not filled",
+      "ok": true,
+      "detail": [
+        "name",
+        "contact"
+      ]
+    },
+    {
+      "name": "business name keeps the source casing",
+      "ok": true,
+      "detail": "yarmouthoilskins"
+    },
+    {
+      "name": "all three concepts are structurally distinct",
+      "ok": true,
+      "detail": [
+        {
+          "pair": "minimal/editorial",
+          "different": [
+            "screen and navigation architecture",
+            "section types and composition",
+            "catalogue presentation",
+            "detail-page interaction",
+            "primary customer journey"
+          ],
+          "insufficient": [
+            "trade-specific functionality"
+          ],
+          "reasons": [
+            "same block set",
+            "same trade functionality"
+          ]
+        },
+        {
+          "pair": "minimal/lifestyle",
+          "different": [
+            "screen and navigation architecture",
+            "section types and composition",
+            "catalogue presentation",
+            "detail-page interaction",
+            "primary customer journey"
+          ],
+          "insufficient": [
+            "trade-specific functionality"
+          ],
+          "reasons": [
+            "same tabs",
+            "same block set",
+            "same trade functionality"
+          ]
+        },
+        {
+          "pair": "editorial/lifestyle",
+          "different": [
+            "screen and navigation architecture",
+            "section types and composition",
+            "catalogue presentation",
+            "detail-page interaction",
+            "primary customer journey"
+          ],
+          "insufficient": [
+            "trade-specific functionality"
+          ],
+          "reasons": [
+            "same opening screen",
+            "same block set",
+            "same trade functionality"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "no delivery fee is invented",
+      "ok": true,
+      "detail": [
+        {
+          "options": [
+            "Pickup",
+            "Delivery"
+          ],
+          "source": "default"
+        },
+        {
+          "options": [
+            "Pickup",
+            "Delivery"
+          ],
+          "source": "default"
+        },
+        {
+          "options": [
+            "Pickup",
+            "Delivery"
+          ],
+          "source": "default"
+        }
+      ]
+    },
+    {
+      "name": "every catalogue row the trade refused is recorded",
+      "ok": true,
+      "detail": "16 dropped / 16 recorded"
+    }
+  ]
+}

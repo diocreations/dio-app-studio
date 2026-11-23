@@ -1,0 +1,149 @@
+{
+  "site": {
+    "id": "afl",
+    "url": "https://www.architectureforlondon.com/",
+    "trade": "professional",
+    "minimum": 1
+  },
+  "diversity": {
+    "ok": true,
+    "pairs": [
+      {
+        "a": "classic",
+        "b": "minimal",
+        "score": 0.25,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same tabs",
+          "same block set",
+          "same trade functionality"
+        ]
+      },
+      {
+        "a": "classic",
+        "b": "editorial",
+        "score": 0.25,
+        "sameInitial": true,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same opening screen",
+          "same block set",
+          "same trade functionality"
+        ]
+      },
+      {
+        "a": "minimal",
+        "b": "editorial",
+        "score": 0.1,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same block set",
+          "same trade functionality"
+        ]
+      }
+    ]
+  },
+  "concepts": [
+    {
+      "id": "classic",
+      "name": "Classic counsel",
+      "note": "Understated, serif, fixed fees · Narrative lead",
+      "architecture": "classic"
+    },
+    {
+      "id": "minimal",
+      "name": "Modern advisory",
+      "note": "Plain, precise, list-led · Catalogue first",
+      "architecture": "minimal"
+    },
+    {
+      "id": "editorial",
+      "name": "Editorial practice",
+      "note": "Warm authority, long-form · Image first",
+      "architecture": "editorial"
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "site": {
+    "id": "pelirocco",
+    "url": "https://www.hotelpelirocco.co.uk/",
+    "trade": "hotel",
+    "minimum": 0
+  },
+  "diversity": {
+    "ok": true,
+    "pairs": [
+      {
+        "a": "luxe",
+        "b": "editorial",
+        "score": 0.25,
+        "sameInitial": true,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same opening screen",
+          "same block set",
+          "same trade functionality"
+        ]
+      },
+      {
+        "a": "luxe",
+        "b": "minimal",
+        "score": 0.1,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same block set",
+          "same trade functionality"
+        ]
+      },
+      {
+        "a": "editorial",
+        "b": "minimal",
+        "score": 0.25,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same tabs",
+          "same block set",
+          "same trade functionality"
+        ]
+      }
+    ]
+  },
+  "concepts": [
+    {
+      "id": "luxe",
+      "name": "Coastal luxury",
+      "note": "Dark, quiet, rooms first · Image first",
+      "architecture": "luxe"
+    },
+    {
+      "id": "editorial",
+      "name": "Editorial stay",
+      "note": "Warm serif, place-led · Narrative lead",
+      "architecture": "editorial"
+    },
+    {
+      "id": "minimal",
+      "name": "Quiet modern",
+      "note": "Light, restrained, direct booking · Catalogue first",
+      "architecture": "minimal"
+    }
+  ]
+}

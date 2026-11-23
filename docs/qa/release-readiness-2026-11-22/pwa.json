@@ -1,0 +1,135 @@
+{
+  "token": "016a48c6dcfc967170066e94",
+  "generatedAt": "2026-11-22T06:08:34.259Z",
+  "checks": [
+    {
+      "name": "the app links its manifest",
+      "ok": true,
+      "detail": "http://127.0.0.1:5173/p/016a48c6dcfc967170066e94/manifest.webmanifest"
+    },
+    {
+      "name": "the manifest is served as a web app manifest",
+      "ok": true,
+      "detail": "{\"status\":200,\"type\":\"application/manifest+json\"}"
+    },
+    {
+      "name": "the manifest is standalone",
+      "ok": true,
+      "detail": "standalone"
+    },
+    {
+      "name": "the manifest has a scoped start URL",
+      "ok": true,
+      "detail": "/p/016a48c6dcfc967170066e94/app / /p/016a48c6dcfc967170066e94/"
+    },
+    {
+      "name": "the manifest has name and icons",
+      "ok": true,
+      "detail": "yarmouthoilskins — Clothing shop · 2 icons"
+    },
+    {
+      "name": "Chrome reports no installability errors",
+      "ok": true,
+      "detail": "{\"installabilityErrors\":[]}"
+    },
+    {
+      "name": "the service worker is registered and active",
+      "ok": true,
+      "detail": "{\"scope\":\"http://127.0.0.1:5173/p/016a48c6dcfc967170066e94/\",\"active\":\"activated\"}"
+    },
+    {
+      "name": "catalogue navigation opens the catalogue",
+      "ok": true,
+      "detail": "home -> catalog"
+    },
+    {
+      "name": "a catalogue item opens its detail screen",
+      "ok": true,
+      "detail": "catalog -> detail"
+    },
+    {
+      "name": "the in-app back control is visible on detail",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the in-app back control returns to the catalogue",
+      "ok": true,
+      "detail": "catalog"
+    },
+    {
+      "name": "browser back returns to the previous app screen",
+      "ok": true,
+      "detail": "catalog"
+    },
+    {
+      "name": "the first reload is controlled by the service worker",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the app document is available offline",
+      "ok": true,
+      "detail": "Offline — showing what is already stored\nNEW IN · PILOT\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom 5 · 7 options\nThe Champion Jacket - Navy\n600\nThe All English Tee\n65\nThe Marit"
+    },
+    {
+      "name": "the offline banner is shown when offline",
+      "ok": true,
+      "detail": "{\"banner\":true,\"active\":\"home\"}"
+    },
+    {
+      "name": "the offline document is controlled by the service worker",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "errors": [],
+  "offline": {
+    "title": "yarmouthoilskins · Clothing shop",
+    "body": "Offline — showing what is already stored\nNEW IN · PILOT\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom 5 · 7 options\nThe Champion Jacket - Navy\n600\nThe All English Tee\n65\nThe Maritime Overshirt - Ginger\n250\nCLOTHING SHOP\nYarmouth Oilskins Est.\nBrowse everything\n→\nYour bag\nNothing here yet.\nAdd something from the shop.\nWhere to\nHome\nShop\nSearch\nMore\nOur story",
+    "banner": true,
+    "active": "home",
+    "cacheNames": [
+      "plattr-v18"
+    ],
+    "controller": true
+  },
+  "manifest": {
+    "status": 200,
+    "type": "application/manifest+json",
+    "body": {
+      "name": "yarmouthoilskins — Clothing shop",
+      "short_name": "yarmouthoils",
+      "description": "Yarmouth Oilskins Est.",
+      "start_url": "/p/016a48c6dcfc967170066e94/app",
+      "scope": "/p/016a48c6dcfc967170066e94/",
+      "display": "standalone",
+      "orientation": "portrait",
+      "background_color": "#f3f3ef",
+      "theme_color": "#f3f3ef",
+      "icons": [
+        {
+          "src": "./icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml",
+          "purpose": "any"
+        },
+        {
+          "src": "./icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml",
+          "purpose": "maskable"
+        }
+      ],
+      "lang": "en",
+      "dir": "ltr"
+    }
+  },
+  "installability": {
+    "installabilityErrors": []
+  },
+  "serviceWorker": {
+    "scope": "http://127.0.0.1:5173/p/016a48c6dcfc967170066e94/",
+    "active": "activated"
+  }
+}

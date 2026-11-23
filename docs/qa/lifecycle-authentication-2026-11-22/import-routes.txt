@@ -1,0 +1,17 @@
+bun test v1.3.0 (b0a6feca)
+
+tests/lifecycleAudit.test.ts:
+(pass) real owner authentication lifecycle > login, correction, logout, fresh login and provenance survive [23.43ms]
+(pass) real owner authentication lifecycle > an expired session and a revoked-everywhere session are refused [3.88ms]
+(pass) real owner authentication lifecycle > a session and a key from one owner cannot open another owner project [5.37ms]
+(pass) real /import/check and /import/apply lifecycle > a conflict is shown, kept as the owner value, then explicitly source-resolved [11.72ms]
+(pass) real /import/check and /import/apply lifecycle > no change, an ordinary new value, removal, restoration and duplicate adds [11.28ms]
+(pass) real /import/check and /import/apply lifecycle > a second owner correction keeps the first source reading [3.37ms]
+(pass) concurrency and bulk safeguards > a stale owner save is refused and the newer value survives [3.36ms]
+(pass) concurrency and bulk safeguards > catalogue saves and import applies use the copy the owner inspected [4.60ms]
+(pass) concurrency and bulk safeguards > bulk portfolio publishing needs confirmation and cannot leak suggestions [10.84ms]
+
+ 9 pass
+ 0 fail
+ 106 expect() calls
+Ran 9 tests across 1 file. [105.00ms]

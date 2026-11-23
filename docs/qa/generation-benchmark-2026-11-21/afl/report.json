@@ -1,0 +1,222 @@
+{
+  "id": "afl",
+  "url": "https://www.architectureforlondon.com/",
+  "model": "Professional / service business",
+  "why": "Architecture practice with services, projects and consultation-led enquiry",
+  "source": "https://architectureforlondon.com/",
+  "host": "architectureforlondon.com",
+  "images": {
+    "products": 8,
+    "withImage": 0,
+    "withoutImage": 8,
+    "methods": {},
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 8,
+    "kept": 8,
+    "dropped": [],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "Journal",
+      "Professional services"
+    ]
+  },
+  "pages": 26,
+  "site": {
+    "name": "Architecture for London",
+    "tagline": "Architecture for London are RIBA Chartered architects specialising in residential…",
+    "story": "Architecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…",
+    "vertical": "professional",
+    "verticalConfidence": "detected",
+    "category": "Professional services",
+    "categoryBasis": "the nearest trade, from “chartered”",
+    "accent": "#007aff",
+    "logo": "",
+    "logoImage": {
+      "url": "https://architectureforlondon.com/apple-touch-icon.png",
+      "alt": "Architecture for London logo"
+    },
+    "phone": "+442036374236",
+    "email": "mail@architectureforlondon.com",
+    "address": "",
+    "hours": "Mon–Fri 09:00–18:30 · Sat–Sun 00:00–00:00",
+    "website": "https://architectureforlondon.com",
+    "currency": "GBP",
+    "currencyEvidence": {
+      "code": "GBP",
+      "method": "json-ld",
+      "source": "https://architectureforlondon.com/",
+      "raw": "GBP"
+    },
+    "currencyCandidates": [
+      {
+        "code": "GBP",
+        "method": "json-ld",
+        "source": "https://architectureforlondon.com/",
+        "raw": "GBP"
+      }
+    ],
+    "socials": [
+      {
+        "label": "Facebook",
+        "url": "https://www.facebook.com/ArchitectureForLondon/"
+      },
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/architectureforlondon/"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/company/architecture-for-london/"
+      },
+      {
+        "label": "Pinterest",
+        "url": "https://www.pinterest.co.uk/aflarchitects/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/channel/UCKUBuI6j1X5TB1Hb2UvTQPA"
+      }
+    ],
+    "menu": [
+      {
+        "name": "Journal",
+        "items": [
+          {
+            "name": "Bloomsbury Flat, progress visuals. A place to read, think…",
+            "desc": "Bloomsbury Flat, progress visuals. A place to read, think and write.",
+            "price": 0
+          },
+          {
+            "name": "This mews house extension in Hackney, East London,…",
+            "desc": "This mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…",
+            "price": 0
+          },
+          {
+            "name": "In the front reception rooms, the original pine floorboards…",
+            "desc": "In the front reception rooms, the original pine floorboards were sanded and refinished…",
+            "price": 0
+          },
+          {
+            "name": "A refurbishment and extension of an early Victorian house…",
+            "desc": "A refurbishment and extension of an early Victorian house in London Fields, Hackney. A…",
+            "price": 0
+          },
+          {
+            "name": "This early 19th-century Georgian house in Hampstead village…",
+            "desc": "This early 19th-century Georgian house in Hampstead village was refurbished and…",
+            "price": 0
+          },
+          {
+            "name": "Our refurbishment and extension of an early Victorian house…",
+            "desc": "Our refurbishment and extension of an early Victorian house in London Fields, Hackney,…",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "name": "Professional services",
+        "items": [
+          {
+            "name": "Build",
+            "desc": "AFL Build: a sustainable builder in London with a unique design and build service. A…",
+            "price": 0
+          },
+          {
+            "name": "Projects Archive",
+            "desc": "Our architects design house extensions, conversions, conservation builds, housing, and…",
+            "price": 0
+          }
+        ]
+      }
+    ],
+    "features": [
+      "catalog",
+      "classes",
+      "quote",
+      "offers"
+    ],
+    "pwa": {
+      "manifest": "https://architectureforlondon.com/site.webmanifest",
+      "name": "",
+      "display": "standalone",
+      "themeColor": "#ffffff",
+      "backgroundColor": "#ffffff",
+      "icon": "https://architectureforlondon.com/android-chrome-192x192.png",
+      "serviceWorker": false
+    },
+    "design": {
+      "bg": "#ffffff",
+      "surface": "#f5f5f5",
+      "surface2": "#ebebeb",
+      "ink": "#111111",
+      "muted": "#626262",
+      "radius": 4,
+      "display": "\"Arial\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+      "fontLabel": "Arial",
+      "dark": false,
+      "palette": true,
+      "basis": "splash colour #ffffff with a neutral ink · Arial · 4px corners · light"
+    },
+    "structure": {
+      "nav": "tabs",
+      "stickyHeader": false,
+      "navLabels": [],
+      "hero": "split",
+      "basis": "nav in a row · hero split"
+    }
+  },
+  "found": [
+    "8 catalogue entries in 2 sections, read from 26 pages",
+    "their sitemap listed the product pages the home page did not link to",
+    "name: Architecture for London",
+    "their logo — taken from the image the site itself declares as its mark",
+    "category: Professional services — from the nearest trade, from “chartered”",
+    "a one-line description",
+    "brand colour #007aff",
+    "their look: splash colour #ffffff with a neutral ink · Arial · 4px corners · light",
+    "their layout: nav in a row · hero split",
+    "PWA manifest — standalone display, theme #ffffff, splash #ffffff",
+    "phone +442036374236",
+    "email mail@architectureforlondon.com",
+    "opening hours",
+    "5 social links"
+  ],
+  "missing": [
+    "address",
+    "8 product photographs — the site publishes none for those items"
+  ],
+  "notes": [
+    "The crawl is capped at 10 pages to keep the brief quick, so a large shop may still have aisles left — add anything missing in the app editor.",
+    "The site lists items without prices, so they appear as “Ask on request” until you set one.",
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded."
+  ],
+  "pagesRead": [
+    "/",
+    "/project/stone-house/",
+    "/project/peckham-house/",
+    "/project/barnsbury-house/",
+    "/project/low-energy-house/",
+    "/project/heritage-projects/",
+    "/project/hampstead-house-extension/",
+    "/project/brook-green-house-extension/",
+    "/project/hammersmith-house-extension/",
+    "/project/georgian-house-refurbishment/",
+    "/projects/interior-design/",
+    "/projects/public/",
+    "/projects/housing/",
+    "/projects/workplace/",
+    "/projects/furniture/",
+    "/project/fisher-paykel-showroom/",
+    "/projects/interior-design/page/2/",
+    "/instagram/bloomsbury-flat-progress-visuals-a-place-to-read-think-and-write/",
+    "/instagram/this-mews-house-extension-in-hackney-east-london-transforms-a-compact-mid-19th-century-georgian-property-into-a-contem/",
+    "/instagram/in-the-front-reception-rooms-the-original-pine-floorboards-were-sanded-and-refinished-with-a-contemporary-white-soap-fi/"
+  ],
+  "pagesFailed": [],
+  "usedSitemap": true
+}

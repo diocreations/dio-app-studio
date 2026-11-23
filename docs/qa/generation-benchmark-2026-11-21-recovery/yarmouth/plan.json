@@ -1,0 +1,149 @@
+{
+  "site": {
+    "id": "yarmouth",
+    "url": "https://yarmouthoilskins.com/",
+    "trade": "retail",
+    "minimum": 70
+  },
+  "diversity": {
+    "ok": true,
+    "pairs": [
+      {
+        "a": "minimal",
+        "b": "editorial",
+        "score": 0.1,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same block set",
+          "same trade functionality"
+        ]
+      },
+      {
+        "a": "minimal",
+        "b": "lifestyle",
+        "score": 0.25,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same tabs",
+          "same block set",
+          "same trade functionality"
+        ]
+      },
+      {
+        "a": "editorial",
+        "b": "lifestyle",
+        "score": 0.25,
+        "sameInitial": true,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same opening screen",
+          "same block set",
+          "same trade functionality"
+        ]
+      }
+    ]
+  },
+  "concepts": [
+    {
+      "id": "minimal",
+      "name": "Minimal boutique",
+      "note": "Hairlines, list rows, quiet type · Catalogue first",
+      "architecture": "minimal"
+    },
+    {
+      "id": "editorial",
+      "name": "Gallery retail",
+      "note": "One piece per row, large imagery, editorial pacing · Image first",
+      "architecture": "editorial"
+    },
+    {
+      "id": "lifestyle",
+      "name": "Contemporary lifestyle",
+      "note": "Soft, photographic, roomy · Narrative lead",
+      "architecture": "lifestyle"
+    }
+  ]
+}

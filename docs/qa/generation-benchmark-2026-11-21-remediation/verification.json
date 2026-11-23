@@ -1,0 +1,466 @@
+[
+  {
+    "name": "yarmouth: no policy rows published",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "name": "yarmouth: no editorial rows published",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "yarmouth: no navigation or location rows published",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "yarmouth: real inventory retained",
+    "ok": true,
+    "detail": "74 of a required 70"
+  },
+  {
+    "name": "yarmouth: every published price carries validated evidence",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "yarmouth: every item carries a source",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "yarmouth: currency is stated wherever a price is published",
+    "ok": true,
+    "detail": "GBP"
+  },
+  {
+    "name": "yarmouth: every photograph is attached to an item, not shared between them",
+    "ok": true,
+    "detail": "74 photographs, 74 distinct"
+  },
+  {
+    "name": "yarmouth: an empty catalogue is disclosed, not filled",
+    "ok": true,
+    "detail": [
+      "name",
+      "contact"
+    ]
+  },
+  {
+    "name": "yarmouth: business name keeps the source casing",
+    "ok": true,
+    "detail": "yarmouthoilskins"
+  },
+  {
+    "name": "yarmouth: all three concepts are structurally distinct",
+    "ok": true,
+    "detail": [
+      "minimal/editorial:7",
+      "minimal/lifestyle:7",
+      "editorial/lifestyle:7"
+    ]
+  },
+  {
+    "name": "yarmouth: no delivery fee is invented",
+    "ok": true,
+    "detail": [
+      {
+        "options": [
+          "Pickup",
+          "Delivery"
+        ],
+        "source": "default"
+      },
+      {
+        "options": [
+          "Pickup",
+          "Delivery"
+        ],
+        "source": "default"
+      },
+      {
+        "options": [
+          "Pickup",
+          "Delivery"
+        ],
+        "source": "default"
+      }
+    ]
+  },
+  {
+    "name": "yarmouth: every catalogue row the trade refused is recorded",
+    "ok": true,
+    "detail": "16 dropped / 16 recorded"
+  },
+  {
+    "name": "padella: no policy rows published",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "name": "padella: no editorial rows published",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "padella: no navigation or location rows published",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "padella: real inventory retained",
+    "ok": true,
+    "detail": "0 of a required 0"
+  },
+  {
+    "name": "padella: every published price carries validated evidence",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "padella: every item carries a source",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "padella: currency is stated wherever a price is published",
+    "ok": true,
+    "detail": "GBP"
+  },
+  {
+    "name": "padella: every photograph is attached to an item, not shared between them",
+    "ok": true,
+    "detail": "0 photographs, 0 distinct"
+  },
+  {
+    "name": "padella: an empty catalogue is disclosed, not filled",
+    "ok": true,
+    "detail": [
+      "name",
+      "catalogue",
+      "contact"
+    ]
+  },
+  {
+    "name": "padella: business name keeps the source casing",
+    "ok": true,
+    "detail": "Padella"
+  },
+  {
+    "name": "padella: all three concepts are structurally distinct",
+    "ok": false,
+    "detail": [
+      "editorial/modern:7",
+      "editorial/luxe:7",
+      "modern/luxe:7"
+    ]
+  },
+  {
+    "name": "padella: no delivery fee is invented",
+    "ok": true,
+    "detail": [
+      {
+        "options": [
+          "Pickup",
+          "Delivery",
+          "At a table"
+        ],
+        "source": "default"
+      },
+      {
+        "options": [
+          "Pickup",
+          "Delivery",
+          "At a table"
+        ],
+        "source": "default"
+      },
+      {
+        "options": [
+          "Pickup",
+          "Delivery",
+          "At a table"
+        ],
+        "source": "default"
+      }
+    ]
+  },
+  {
+    "name": "padella: every catalogue row the trade refused is recorded",
+    "ok": true,
+    "detail": "5 dropped / 5 recorded"
+  },
+  {
+    "name": "pelirocco: no policy rows published",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "name": "pelirocco: no editorial rows published",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "pelirocco: no navigation or location rows published",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "pelirocco: real inventory retained",
+    "ok": true,
+    "detail": "0 of a required 0"
+  },
+  {
+    "name": "pelirocco: every published price carries validated evidence",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "pelirocco: every item carries a source",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "pelirocco: currency is stated wherever a price is published",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "pelirocco: every photograph is attached to an item, not shared between them",
+    "ok": true,
+    "detail": "0 photographs, 0 distinct"
+  },
+  {
+    "name": "pelirocco: an empty catalogue is disclosed, not filled",
+    "ok": true,
+    "detail": [
+      "name",
+      "catalogue",
+      "contact"
+    ]
+  },
+  {
+    "name": "pelirocco: business name keeps the source casing",
+    "ok": true,
+    "detail": "Hotel Pelirocco"
+  },
+  {
+    "name": "pelirocco: all three concepts are structurally distinct",
+    "ok": true,
+    "detail": [
+      "luxe/editorial:7",
+      "luxe/minimal:7",
+      "editorial/minimal:7"
+    ]
+  },
+  {
+    "name": "pelirocco: no delivery fee is invented",
+    "ok": true,
+    "detail": [
+      {
+        "options": [
+          "At the guesthouse"
+        ],
+        "source": "default"
+      },
+      {
+        "options": [
+          "At the guesthouse"
+        ],
+        "source": "default"
+      },
+      {
+        "options": [
+          "At the guesthouse"
+        ],
+        "source": "default"
+      }
+    ]
+  },
+  {
+    "name": "pelirocco: every catalogue row the trade refused is recorded",
+    "ok": true,
+    "detail": "9 dropped / 9 recorded"
+  },
+  {
+    "name": "bluetit: no policy rows published",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "name": "bluetit: no editorial rows published",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "bluetit: no navigation or location rows published",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "bluetit: real inventory retained",
+    "ok": true,
+    "detail": "82 of a required 80"
+  },
+  {
+    "name": "bluetit: every published price carries validated evidence",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "bluetit: every item carries a source",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "bluetit: currency is stated wherever a price is published",
+    "ok": true,
+    "detail": "GBP"
+  },
+  {
+    "name": "bluetit: every photograph is attached to an item, not shared between them",
+    "ok": true,
+    "detail": "0 photographs, 0 distinct"
+  },
+  {
+    "name": "bluetit: an empty catalogue is disclosed, not filled",
+    "ok": true,
+    "detail": [
+      "name"
+    ]
+  },
+  {
+    "name": "bluetit: business name keeps the source casing",
+    "ok": true,
+    "detail": "Blue Tit London"
+  },
+  {
+    "name": "bluetit: all three concepts are structurally distinct",
+    "ok": true,
+    "detail": [
+      "luxe/minimal:7",
+      "luxe/editorial:7",
+      "minimal/editorial:7"
+    ]
+  },
+  {
+    "name": "bluetit: no delivery fee is invented",
+    "ok": true,
+    "detail": [
+      {
+        "options": [
+          "In salon"
+        ],
+        "source": "default"
+      },
+      {
+        "options": [
+          "In salon"
+        ],
+        "source": "default"
+      },
+      {
+        "options": [
+          "In salon"
+        ],
+        "source": "default"
+      }
+    ]
+  },
+  {
+    "name": "bluetit: every catalogue row the trade refused is recorded",
+    "ok": true,
+    "detail": "0 dropped / 0 recorded"
+  },
+  {
+    "name": "afl: no policy rows published",
+    "ok": true,
+    "detail": []
+  },
+  {
+    "name": "afl: no editorial rows published",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "afl: no navigation or location rows published",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "afl: real inventory retained",
+    "ok": true,
+    "detail": "1 of a required 1"
+  },
+  {
+    "name": "afl: every published price carries validated evidence",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "afl: every item carries a source",
+    "ok": true,
+    "detail": 0
+  },
+  {
+    "name": "afl: currency is stated wherever a price is published",
+    "ok": true,
+    "detail": "GBP"
+  },
+  {
+    "name": "afl: every photograph is attached to an item, not shared between them",
+    "ok": true,
+    "detail": "0 photographs, 0 distinct"
+  },
+  {
+    "name": "afl: an empty catalogue is disclosed, not filled",
+    "ok": true,
+    "detail": [
+      "name"
+    ]
+  },
+  {
+    "name": "afl: business name keeps the source casing",
+    "ok": true,
+    "detail": "Architecture for London"
+  },
+  {
+    "name": "afl: all three concepts are structurally distinct",
+    "ok": true,
+    "detail": [
+      "classic/minimal:7",
+      "classic/editorial:7",
+      "minimal/editorial:7"
+    ]
+  },
+  {
+    "name": "afl: no delivery fee is invented",
+    "ok": true,
+    "detail": [
+      {
+        "options": [
+          "Online"
+        ],
+        "source": "default"
+      },
+      {
+        "options": [
+          "Online"
+        ],
+        "source": "default"
+      },
+      {
+        "options": [
+          "Online"
+        ],
+        "source": "default"
+      }
+    ]
+  },
+  {
+    "name": "afl: every catalogue row the trade refused is recorded",
+    "ok": true,
+    "detail": "7 dropped / 7 recorded"
+  }
+]

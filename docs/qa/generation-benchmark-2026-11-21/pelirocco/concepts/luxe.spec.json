@@ -1,0 +1,124 @@
+{
+  "name": "Hotel Pelirocco",
+  "kind": "Hotel & guesthouse",
+  "tagline": "Discover this quirky hotel in Brighton, UK Hotel Pelirocco.",
+  "story": "Discover this quirky hotel in Brighton, UK Hotel Pelirocco. Book this cool boutique hotel with themed rooms for an unforgettable experience.",
+  "accent": "#de4528",
+  "logo": "HP",
+  "logoImage": {
+    "url": "https://www.hotelpelirocco.co.uk/wp-content/uploads/2015/04/logo-slanted.png",
+    "alt": "Hotel Pelirocco logo"
+  },
+  "hours": "",
+  "phone": "",
+  "address": "",
+  "vertical": "hotel",
+  "features": [
+    "catalog",
+    "ordering",
+    "booking"
+  ],
+  "menu": [
+    {
+      "name": "Hotel & guesthouse",
+      "items": [
+        {
+          "id": "itm_f2c432e7",
+          "name": "pelirocco privacy policy",
+          "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+          "price": 0
+        },
+        {
+          "id": "itm_a9a41d82",
+          "name": "rocco regulars loyalty club",
+          "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+          "price": 0
+        },
+        {
+          "id": "itm_31965cd0",
+          "name": "Event Venue Hire",
+          "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+          "price": 0
+        },
+        {
+          "id": "itm_77907f1d",
+          "name": "Business Hire",
+          "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+          "price": 0
+        },
+        {
+          "id": "itm_12daa40d",
+          "name": "Welcome to the Peli Blog",
+          "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+          "price": 0
+        },
+        {
+          "id": "itm_1b400f06",
+          "name": "press quotes over the years",
+          "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+          "price": 0
+        },
+        {
+          "id": "itm_24b6c580",
+          "name": "private hire",
+          "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+          "price": 0
+        },
+        {
+          "id": "itm_8821ea6a",
+          "name": "Private Party Venue Brighton",
+          "desc": "Find the ideal private party venue in Brighton at Hotel Pelirocco. Host your next…",
+          "price": 0
+        },
+        {
+          "id": "itm_b10a01ae",
+          "name": "Packages",
+          "desc": "Hotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+          "price": 0
+        }
+      ]
+    }
+  ],
+  "importSummary": {
+    "source": "https://www.hotelpelirocco.co.uk/",
+    "importedAt": "2026-11-21T12:14:35.823Z",
+    "products": 9,
+    "withImage": 0,
+    "priced": 0,
+    "currency": "",
+    "categories": [
+      "Hotel & guesthouse"
+    ]
+  },
+  "offers": [],
+  "loyalty": {
+    "goal": 0,
+    "reward": ""
+  },
+  "sampleContent": {
+    "menu": false,
+    "contact": true,
+    "story": false,
+    "offers": false,
+    "team": false,
+    "staff": false,
+    "tagline": false
+  },
+  "custom": "",
+  "direction": "luxe",
+  "category": "Hotel & guesthouse",
+  "design": {
+    "bg": "#0e1c17",
+    "ink": "#f4eee2",
+    "surface": "#1c2a25",
+    "surface2": "#26332e",
+    "muted": "#afafa5",
+    "radius": 10,
+    "display": "\"Indie Flower\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+    "fontLabel": "Indie Flower",
+    "dark": true,
+    "palette": false,
+    "basis": ""
+  },
+  "website": "https://www.hotelpelirocco.co.uk/"
+}

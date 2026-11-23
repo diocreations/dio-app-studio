@@ -127,9 +127,11 @@ export function briefPage(): string {
           <span class="pill" data-step-dot="3">4 Delivery</span>
         </div>
         <div class="notice" data-draft hidden style="margin-bottom:14px">
-          <strong>Unfinished brief restored.</strong>
+          <strong>Unfinished brief found<span data-draft-name></span>.</strong>
           <span class="tiny" data-draft-when></span>
-          <button type="button" class="linkish" data-draft-discard>Discard it and start again</button>
+          <span class="tiny">Nothing has been loaded into this page yet.</span>
+          <button type="button" class="btn ghost small" data-draft-restore>Restore it</button>
+          <button type="button" class="linkish" data-draft-discard>Start a new brief</button>
           <span class="tiny" data-draft-status aria-live="polite"></span>
         </div>
         <div class="notice" data-draft-gone hidden style="margin-bottom:14px">
@@ -478,6 +480,9 @@ function briefScript(verticals: string): string {
   }
 
   function applyImport(data) {
+    // A read site replaces the business, not just the catalogue. Fields, the
+    // old prompt and any concepts on screen belong to the previous one.
+    resetBusinessState()
     const site = data.site || {}
     imported = site
     document.getElementById('name').value = site.name || ''
@@ -533,11 +538,13 @@ function briefScript(verticals: string): string {
         }
       })
       show(0)
-      if (wishInput.value.trim().length < 3)
-        wishInput.value =
-          'An app for ' + (site.category || site.name) + ' — ' +
-          (chosen.length ? chosen.slice(0, 3).join(', ') : 'their catalogue and enquiries')
-      readWish()
+      // The prompt is rewritten from *this* read every time. Leaving an older
+      // sentence in the box made the next read classify the new site as the old
+      // trade — a florist's or café's navigation around a jeweller's catalogue.
+      wishInput.value =
+        'An app for ' + (site.category || site.name) + ' — ' +
+        (chosen.length ? chosen.slice(0, 3).join(', ') : 'their catalogue and enquiries')
+      readWish({ fromImport: true })
     }
     queueDraft()
   }
@@ -545,6 +552,11 @@ function briefScript(verticals: string): string {
   async function runImport(rawUrl) {
     const url = String(rawUrl || '').trim()
     if (!url) return toast('Paste the website address first')
+    // A new address is a new business. Clear the old one first so a failed or
+    // slow read can never leave its name, catalogue or concepts on screen.
+    resetBusinessState()
+    pendingDraft = null
+    fetch('/api/brief/draft', { method: 'DELETE' }).catch(function () {})
     importButton.disabled = true
     importButton.textContent = 'Reading…'
     importStatus.textContent = 'Reading ' + url + ' and its shop pages — up to 20 seconds.'
@@ -628,15 +640,39 @@ function briefScript(verticals: string): string {
    *  form. A preview is capped so the URL stays short; the built app has all. */
   function previewItems() {
     const menu = (imported && imported.menu) || []
-    const out = []
-    for (const section of menu) {
+    return encodePreviewSections(menu)
+  }
+
+  /** Sections are part of the identity too: a florist's occasions and a
+   *  jeweller's sarees must not all arrive in one anonymous "Popular" shelf.
+   *  Each section is encoded as name::rows; sections are joined with ||. */
+  function encodePreviewSections(menu) {
+    const sections = []
+    let count = 0
+    for (const section of menu || []) {
+      const rows = []
       for (const item of section.items || []) {
-        if (out.length >= 8) return out.join(';')
+        if (count >= 10) break
         if (!item || !item.name) continue
-        out.push(item.name + '~' + (item.price > 0 ? item.price / 100 : ''))
+        const picture = item.image && (typeof item.image === 'string' ? item.image : item.image.url)
+        rows.push(
+          item.name + '~' + (item.price > 0 ? item.price / 100 : '') +
+            '~' + (picture ? encodeURIComponent(picture) : '')
+        )
+        count += 1
       }
+      if (rows.length) {
+        sections.push(encodeURIComponent(section.name || 'Popular') + '::' + rows.join(';'))
+      }
+      if (count >= 10) break
     }
-    return out.join(';')
+    return sections.join('||')
+  }
+
+  /** The sample rows of a prompt-described business (a florist's flowers, not
+   *  the homeware seed) in the preview's compact name~price~image form. */
+  function previewSampleItems() {
+    return encodePreviewSections(promptSample || [])
   }
 
   /** The owner's own identity, appended to a design preview URL. */
@@ -646,12 +682,23 @@ function briefScript(verticals: string): string {
       if (value) url.searchParams.set(key, value)
       else url.searchParams.delete(key)
     }
-    set('name', document.getElementById('name').value.trim())
+    const businessName = document.getElementById('name').value.trim()
+    // With no name yet, a concept is the owner's own business un-named — never
+    // a demo shop's brand. The name they enter replaces it everywhere.
+    set('name', businessName || 'Your business')
     set('tag', tagline.value.trim())
     set('cat', document.getElementById('category').value.trim())
     set('accent', accent.value)
-    set('logo', document.getElementById('logo').value.trim())
-    set('items', previewItems())
+    set('logo', document.getElementById('logo').value.trim() || (businessName ? '' : 'YB'))
+    // Words alone are not photographs. A prompt business is previewed with
+    // artwork, never the trade's stock photography posing as its own products.
+    if (!imported) url.searchParams.set('media', 'art')
+    // Catalogue rows travel to the preview only when the trade being previewed
+    // is the trade they were read for. A café card must never be handed a
+    // jeweller's products just because both are in the same form. A prompt
+    // business gets its own sample rows (flowers), not the trade seed.
+    const sameTrade = Boolean(imported && read && imported.vertical === read.vertical)
+    set('items', sameTrade ? previewItems() : promptSample ? previewSampleItems() : '')
     set('feat', Array.from(document.querySelectorAll('[data-feature]:checked')).map((input) => input.dataset.feature).join(','))
     return url.pathname + url.search
   }
@@ -705,6 +752,9 @@ function briefScript(verticals: string): string {
 
   function useRead(data, options) {
     applyReadFeatures(data)
+    if (data.category) document.getElementById('category').value = data.category
+    if (data.accent && /^#[0-9a-f]{6}$/i.test(data.accent)) accent.value = data.accent
+    if (Array.isArray(data.sample) && data.sample.length) promptSample = data.sample
     // Concepts are the trade's own directions, each previewed on the real
     // application document. One list drives both the cards and the picker: the
     // prompt route names its concepts (editorial, modern, luxe) separately from
@@ -745,9 +795,12 @@ function briefScript(verticals: string): string {
     if (scroll !== false) designsEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  async function readWish() {
+  async function readWish(options) {
     const prompt = wishInput.value.trim()
     if (prompt.length < 3) return toast('Say what the business needs first')
+    // Typed words describe a business; they do not describe the site that was
+    // read before them. Only the import's own follow-up keeps that site.
+    if (!(options && options.fromImport)) resetBusinessState()
     wishButton.disabled = true
     wishButton.textContent = 'Reading…'
     wishStatus.textContent = 'Reading “' + prompt + '”.'
@@ -1004,14 +1057,50 @@ function briefScript(verticals: string): string {
     }
   }
 
-  function restoreConcepts(concepts, label) {
+  function restoreConcepts(concepts, label, trade) {
     if (!Array.isArray(concepts) || !concepts.length) return
-    read = { label: label || '', designs: concepts }
+    read = { label: label || '', designs: concepts, vertical: trade || (imported && imported.vertical) }
     renderConcepts(concepts, label || '', false)
+  }
+
+  let pendingDraft = null
+  let promptSample = null
+
+  /** Back to one blank business. A new prompt or a new website is a new
+   *  business: nothing from the previous one may survive into its concepts. */
+  function resetBusinessState() {
+    imported = null
+    lastImport = null
+    promptSample = null
+    read = null
+    chosenDesign = null
+    priceDecisions.clear()
+    elementTouched.clear()
+    Object.keys(elementChoice).forEach(function (key) { delete elementChoice[key] })
+    designGrid.innerHTML = ''
+    designsEl.hidden = true
+    designPick.hidden = true
+    elementsEl.hidden = true
+    wishRead.hidden = true
+    wishStatus.textContent = ''
+    importReport.hidden = true
+    importReport.innerHTML = ''
+    importStatus.textContent = ''
+    draftBanner.hidden = true
+    draftGone.hidden = true
+    ;['name', 'tagline', 'category', 'custom', 'logo', 'contact', 'email'].forEach(function (id) {
+      const field = document.getElementById(id)
+      if (field) field.value = ''
+    })
+    const trade = VERTICALS[vertical()]
+    if (trade && trade.accent) accent.value = trade.accent
+    renderConflicts()
+    refresh()
   }
 
   function applyDraft(data, updatedAt) {
     if (!data || typeof data !== 'object') return false
+    resetBusinessState()
     const fields = data.fields || {}
     if (data.import && data.site) {
       imported = data.site
@@ -1021,7 +1110,7 @@ function briefScript(verticals: string): string {
       const readItems = (data.site.menu || []).reduce(function (total, section) { return total + (section.items || []).length }, 0)
       importStatus.textContent = 'Restored from ' + (data.import.host || 'your draft') + ' — ' + readItems + ' items. Nothing was read again.'
       renderConflicts()
-      restoreConcepts(data.concepts, data.label)
+      restoreConcepts(data.concepts, data.label, fields.vertical)
     }
     for (const id of ['name', 'tagline', 'category', 'custom', 'accent', 'logo', 'contact', 'email']) {
       const field = document.getElementById(id)
@@ -1065,11 +1154,26 @@ function briefScript(verticals: string): string {
         return
       }
       if (!body.draft || !body.draft.data) return
-      applyDraft(body.draft.data, body.draft.updatedAt)
+      // A saved draft belongs to an earlier session. Restoring it without the
+      // customer asking is how one business's name and catalogue end up inside
+      // another business's concepts. Offer it; never apply it silently.
+      pendingDraft = { data: body.draft.data, updatedAt: body.draft.updatedAt }
+      const fields = body.draft.data.fields || {}
+      const label = String(fields.name || '').trim()
+      draftBanner.querySelector('[data-draft-name]').textContent = label ? ' — ' + label : ''
+      draftBanner.hidden = false
+      draftWhen.textContent = '· ' + new Date(body.draft.updatedAt || body.draft.data.savedAt || Date.now()).toLocaleString()
     } catch (error) {
       // No draft is a normal state: the page works without one.
     }
   }
+
+  document.querySelector('[data-draft-restore]').addEventListener('click', function () {
+    if (!pendingDraft) return
+    const draft = pendingDraft
+    pendingDraft = null
+    applyDraft(draft.data, draft.updatedAt)
+  })
 
   async function discardDraft() {
     try {
@@ -1079,7 +1183,7 @@ function briefScript(verticals: string): string {
   }
 
   document.querySelector('[data-draft-discard]').addEventListener('click', function () {
-    if (window.confirm('Discard this unfinished brief? The build you may already have made is not touched.')) discardDraft()
+    if (window.confirm('Start a new brief? The unfinished draft is discarded. A build you already made is not touched.')) discardDraft()
   })
 
   document.querySelector('[data-draft-fresh]').addEventListener('click', discardDraft)
@@ -1128,7 +1232,14 @@ function briefScript(verticals: string): string {
             priceConflicts: conflicts(),
             priceDecisions: Array.from(priceDecisions.values()),
           }
-        : imported,
+        : {
+            ...(promptSample ? { menu: promptSample } : {}),
+            vertical: vertical(),
+            category: document.getElementById('category').value,
+            // A brief filled in from words has no source photographs; its
+            // catalogue is the trade's sample, and the app says so.
+            sample: true,
+          },
     }
   }
 

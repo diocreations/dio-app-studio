@@ -197,6 +197,43 @@ const WARM: Archetype = {
   options: { variant: 2, density: 'standard', cards: 'round', buttons: 'round', nav: 'floating' },
 }
 
+/** A third type system for the café: condensed shop-sign headings with a serif
+ *  reading face. Without it two of the three concepts share the same serif and
+ *  the choice is composition only, not typography. */
+const BAKERY: Archetype = {
+  ...WARM,
+  theme: {
+    ...WARM.theme,
+    display: CONDENSED,
+    body: SERIF,
+    weight: 700,
+    tracking: '0.003em',
+    accentStyle: 'block',
+  },
+}
+
+/** Serif headings over a grotesk reading face: the same warmth as EDITORIAL,
+ *  a different typographic argument from the serif-body directions beside it. */
+const EDITORIAL_SANS: Archetype = {
+  ...EDITORIAL,
+  theme: { ...EDITORIAL.theme, body: GROTESK },
+}
+
+/** The practice's long-form direction: condensed authority over a serif reading
+ *  face on warm sand, distinct from the ivory serif counsel and the paper
+ *  humanist advisory beside it. */
+const PRACTICE_EDITORIAL: Archetype = {
+  ...EDITORIAL,
+  palette: SAND,
+  theme: {
+    ...EDITORIAL.theme,
+    display: CONDENSED,
+    body: SERIF,
+    weight: 600,
+    tracking: '0.003em',
+  },
+}
+
 const CLINICAL: Archetype = {
   theme: {
     layout: 'rows',
@@ -350,7 +387,7 @@ export const DIRECTIONS: Record<VerticalId, Direction[]> = {
   cafe: [
     direction('editorial', 'Daylight editorial', 'Airy, tactile, slow mornings', EDITORIAL),
     direction('modern', 'Counter service', 'Quick ordering, clean grid', MODERN),
-    direction('warm', 'Neighbourhood bakery', 'Warm surfaces, rounded cards', WARM),
+    direction('warm', 'Neighbourhood bakery', 'Condensed signage, serif reading, rounded cards', BAKERY),
   ],
   shop: [
     direction('minimal', 'Minimal boutique', 'Hairlines, list rows, quiet type', MINIMAL),
@@ -360,7 +397,7 @@ export const DIRECTIONS: Record<VerticalId, Direction[]> = {
   salon: [
     direction('luxe', 'Luxury beauty', 'Dark, poised, appointment-led', LUXE),
     direction('minimal', 'Modern minimal', 'Calm list, no decoration', MINIMAL),
-    direction('editorial', 'Editorial wellness', 'Warm serif, generous spacing', EDITORIAL),
+    direction('editorial', 'Editorial wellness', 'Warm serif headings, grotesk reading, generous spacing', EDITORIAL_SANS),
   ],
   gym: [
     direction('performance', 'Performance', 'Dark, condensed, numbers first', PERFORMANCE),
@@ -380,7 +417,7 @@ export const DIRECTIONS: Record<VerticalId, Direction[]> = {
   professional: [
     direction('classic', 'Classic counsel', 'Understated, serif, fixed fees', CLASSIC),
     direction('minimal', 'Modern advisory', 'Plain, precise, list-led', MINIMAL),
-    direction('editorial', 'Editorial practice', 'Warm authority, long-form', EDITORIAL),
+    direction('editorial', 'Editorial practice', 'Condensed authority, serif reading, warm long-form', PRACTICE_EDITORIAL),
   ],
   property: [
     direction('editorial', 'Editorial property', 'Listings as stories, large media', EDITORIAL),

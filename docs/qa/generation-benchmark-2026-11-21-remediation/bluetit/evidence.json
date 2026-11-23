@@ -1,0 +1,1775 @@
+{
+  "site": "bluetit",
+  "trade": "appointments",
+  "source": "https://bluetitlondon.com/",
+  "sourceKind": "saved crawl report, 21 November 2026 (no network request)",
+  "before": {
+    "items": 82,
+    "priced": 7,
+    "withImage": 0,
+    "sections": [
+      [
+        "Salon & spa",
+        82
+      ]
+    ],
+    "missing": [
+      "address"
+    ]
+  },
+  "after": {
+    "items": 82,
+    "priced": 7,
+    "withImage": 0,
+    "payload": "treatment",
+    "status": "complete",
+    "pricingBasis": "published",
+    "requirements": {
+      "met": [
+        "price",
+        "duration"
+      ],
+      "missing": []
+    },
+    "inventoryPagesRead": [
+      "/",
+      "/services/",
+      "/service-type/cutting/",
+      "/service-type/styling/",
+      "/service-type/colouring/",
+      "/service-type/hair-treatments/",
+      "/services/rebuilding/",
+      "/services/rebalancing/",
+      "/services/hair-loss/",
+      "/services/herbs-clay-peeling-cleansing/",
+      "/services/soothing/",
+      "/services/oway-flowerfall-treatment/",
+      "/services/purifying/",
+      "/services/blow-dry/",
+      "/services/brazilian-blow-dry/"
+    ],
+    "currency": {
+      "value": "GBP",
+      "source": "https://bluetitlondon.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "missing": [
+      "address",
+      "treatment or service photographs"
+    ],
+    "questions": [
+      {
+        "field": "name",
+        "why": "We only read the name as “Blue Tit London”, from the web address. Is that how the business writes it?",
+        "kind": "confirm"
+      }
+    ],
+    "conflicts": []
+  },
+  "name": {
+    "value": "Blue Tit London",
+    "source": "host",
+    "confidence": "likely"
+  },
+  "contact": {
+    "phone": {
+      "value": "01702412486",
+      "source": "https://bluetitlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "email": {
+      "value": "",
+      "source": "https://bluetitlondon.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://bluetitlondon.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "evidence": {}
+  },
+  "pages": [
+    {
+      "path": "/",
+      "role": "inventory"
+    },
+    {
+      "path": "/services/",
+      "role": "inventory"
+    },
+    {
+      "path": "/service-type/cutting/",
+      "role": "inventory"
+    },
+    {
+      "path": "/service-type/styling/",
+      "role": "inventory"
+    },
+    {
+      "path": "/service-type/colouring/",
+      "role": "inventory"
+    },
+    {
+      "path": "/service-type/hair-treatments/",
+      "role": "inventory"
+    },
+    {
+      "path": "/services/rebuilding/",
+      "role": "inventory"
+    },
+    {
+      "path": "/services/rebalancing/",
+      "role": "inventory"
+    },
+    {
+      "path": "/services/hair-loss/",
+      "role": "inventory"
+    },
+    {
+      "path": "/services/herbs-clay-peeling-cleansing/",
+      "role": "inventory"
+    },
+    {
+      "path": "/services/soothing/",
+      "role": "inventory"
+    },
+    {
+      "path": "/services/oway-flowerfall-treatment/",
+      "role": "inventory"
+    },
+    {
+      "path": "/services/purifying/",
+      "role": "inventory"
+    },
+    {
+      "path": "/services/blow-dry/",
+      "role": "inventory"
+    },
+    {
+      "path": "/services/brazilian-blow-dry/",
+      "role": "inventory"
+    }
+  ],
+  "rejected": [],
+  "accepted": [
+    {
+      "section": "Salon & spa",
+      "name": "Rebuilding M+",
+      "price": 2600,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/rebuilding/",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": [
+          "duration"
+        ]
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Back to Back Highlights - Full Head",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Back to Back Highlights - Half Head",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Highlights - Full Head",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Highlights - Half Head",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Highlights - T-Section",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Face Framing",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Balayage - Full Head",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Balayage - Half Head",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Balayage - T-section",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Reverse Balayage",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Root Tint – Balayage Add-on",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Virgin Bleach - Long/thick",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Virgin Bleach - Medium",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Virgin Bleach - Short",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Bleach Roots - 8 weeks+",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Bleach Roots - 6 to 8 weeks",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Bleach Panel",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Full Head Tint - Long/Thick",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Full Head Tint - Medium",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Full Head Tint - Short",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Full Head HNectar",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Root Tint",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Root Tint HNectar",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Full Head Gloss",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "HNectar Toner",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Toner",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Creative Toner",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Root Blend Toner",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "CC - Lightening",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "CC - Darkening",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Cut & Finish",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Cut & Finish - Long/Thick",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Cut & Finish - Restyle",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Cut & Finish - Type 3c to 4c Hair",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Cut & Finish – Type 3c to 4c Hair – Restyle",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Short Cut",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Back & Sides – Refresh",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Short Cut – Type 3c to 4c Hair",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Back & Sides – Type 3c to 4c Hair – Refresh",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Child’s Cut",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Child’s Cut – Type 3c to 4c Hair",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Toddler's Cut",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Fringe Trim",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "RebuildingM+ Deep Reconstruction Treatment",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/rebuilding/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Oway Tailored Treatment",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "RebuildingM+ Express Treatment",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/rebuilding/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Olaplex Treatment",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Bonds – Full Head",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Bonds – Half Head",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Bonds – Thickening",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Bonds - Removal",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Tapes - Full Head",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Tapes - Half Head",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Tapes - Thickening",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Tapes - Removal & Retape",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Tapes - Removal",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Blow Dry",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/blow-dry/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Twist Out",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Flexi Rod Set",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Silk Press",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Texture Release - Elongation, Versatile or Ultimate Straight",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Texture Release - Elongation",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Brazilian Blow Dry",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/brazilian-blow-dry/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Extension Blow Dry",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/blow-dry/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Olaplex Blow Dry",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/blow-dry/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Hair Therapy Blow Dry",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/blow-dry/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Scalp Therapy Blow Dry",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/blow-dry/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Hair Up",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Colour Cleanse",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Hair Therapy",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Scalp Therapy",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Oway Treatment",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price",
+          "duration"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Blow Dry after Colour",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/blow-dry/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Silk Press after Cut or Colour",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Quick dry after Colour",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Rebalancing",
+      "price": 4000,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/rebalancing/",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": [
+          "duration"
+        ]
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Hair loss",
+      "price": 4000,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/hair-loss/",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": [
+          "duration"
+        ]
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Herbs & clay peeling cleansing",
+      "price": 4000,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/herbs-clay-peeling-cleansing/",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": [
+          "duration"
+        ]
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Soothing",
+      "price": 4000,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/soothing/",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": [
+          "duration"
+        ]
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Oway Flowerfall treatment",
+      "price": 4000,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/oway-flowerfall-treatment/",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": [
+          "duration"
+        ]
+      },
+      "priceEvidence": "validated"
+    },
+    {
+      "section": "Salon & spa",
+      "name": "Purifying",
+      "price": 4000,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "treatment",
+        "source": "https://bluetitlondon.com/services/purifying/",
+        "method": "structured-data",
+        "confidence": "verified",
+        "status": "verified",
+        "missing": [
+          "duration"
+        ]
+      },
+      "priceEvidence": "validated"
+    }
+  ],
+  "checks": [
+    {
+      "name": "no policy rows published",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "no editorial rows published",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "no navigation or location rows published",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "real inventory retained",
+      "ok": true,
+      "detail": "82 of a required 80"
+    },
+    {
+      "name": "every published price carries validated evidence",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "every item carries a source",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "currency is stated wherever a price is published",
+      "ok": true,
+      "detail": "GBP"
+    },
+    {
+      "name": "every photograph is attached to an item, not shared between them",
+      "ok": true,
+      "detail": "0 photographs, 0 distinct"
+    },
+    {
+      "name": "an empty catalogue is disclosed, not filled",
+      "ok": true,
+      "detail": [
+        "name"
+      ]
+    },
+    {
+      "name": "business name keeps the source casing",
+      "ok": true,
+      "detail": "Blue Tit London"
+    },
+    {
+      "name": "all three concepts are structurally distinct",
+      "ok": true,
+      "detail": [
+        "luxe/minimal:7",
+        "luxe/editorial:7",
+        "minimal/editorial:7"
+      ]
+    },
+    {
+      "name": "no delivery fee is invented",
+      "ok": true,
+      "detail": [
+        {
+          "options": [
+            "In salon"
+          ],
+          "source": "default"
+        },
+        {
+          "options": [
+            "In salon"
+          ],
+          "source": "default"
+        },
+        {
+          "options": [
+            "In salon"
+          ],
+          "source": "default"
+        }
+      ]
+    },
+    {
+      "name": "every catalogue row the trade refused is recorded",
+      "ok": true,
+      "detail": "0 dropped / 0 recorded"
+    }
+  ]
+}

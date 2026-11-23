@@ -1,0 +1,10 @@
+{
+  "blockers": [],
+  "confirmations": [
+    {
+      "field": "name",
+      "why": "We only read the name as “Blue Tit London”, from the web address. Is that how the business writes it?",
+      "kind": "confirm"
+    }
+  ]
+}

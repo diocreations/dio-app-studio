@@ -1,0 +1,4897 @@
+{
+  "generatedAt": "2026-11-22T05:19:49.569Z",
+  "api": "http://127.0.0.1:5173",
+  "fixtures": ".chrome-qa/generation-benchmark-apps-audit.json",
+  "evidenceRoot": "docs/qa/generation-benchmark-2026-11-21-recovery",
+  "checks": [
+    {
+      "site": "yarmouth",
+      "name": "owner review page renders",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "74 items"
+    },
+    {
+      "site": "yarmouth",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "website reading is kept beside the correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "original evidence keeps its own validated flag",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "review shows the earlier website reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "40.37"
+    },
+    {
+      "site": "yarmouth",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "5"
+    },
+    {
+      "site": "yarmouth",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "customer payload exists for minimal",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "variant options reach the customer app",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "variant pricing is published",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "source photography is published",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "cart and fulfilment controls are present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "an order is accepted",
+      "ok": true,
+      "detail": "201"
+    },
+    {
+      "site": "yarmouth",
+      "name": "the order keeps the variant price",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the order reaches the owner dashboard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "business information correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "business information survives the session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "74 items"
+    },
+    {
+      "site": "yarmouth",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "website reading is kept beside the correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "original evidence keeps its own validated flag",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "review shows the earlier website reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "39.00"
+    },
+    {
+      "site": "yarmouth",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "5"
+    },
+    {
+      "site": "yarmouth",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "customer payload exists for editorial",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "74 items"
+    },
+    {
+      "site": "yarmouth",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "website reading is kept beside the correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "original evidence keeps its own validated flag",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "review shows the earlier website reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "39.00"
+    },
+    {
+      "site": "yarmouth",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "5"
+    },
+    {
+      "site": "yarmouth",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "customer payload exists for lifestyle",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "yarmouth",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner review page renders",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "0 items"
+    },
+    {
+      "site": "padella",
+      "name": "an empty catalogue states the recovery honestly",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner can add content to an empty catalogue",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a row with no website reading invents none",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "16.00"
+    },
+    {
+      "site": "padella",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "16"
+    },
+    {
+      "site": "padella",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "customer payload exists for editorial",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "kept restaurant information is reachable",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner-created dishes reach the customer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "reservation controls are present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a reservation request is accepted",
+      "ok": true,
+      "detail": "201"
+    },
+    {
+      "site": "padella",
+      "name": "the reservation reaches the dashboard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "business information correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "business information survives the session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "0 items"
+    },
+    {
+      "site": "padella",
+      "name": "an empty catalogue states the recovery honestly",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner can add content to an empty catalogue",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a row with no website reading invents none",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "16.00"
+    },
+    {
+      "site": "padella",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "16"
+    },
+    {
+      "site": "padella",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "customer payload exists for modern",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "0 items"
+    },
+    {
+      "site": "padella",
+      "name": "an empty catalogue states the recovery honestly",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner can add content to an empty catalogue",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a row with no website reading invents none",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "16.00"
+    },
+    {
+      "site": "padella",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "16"
+    },
+    {
+      "site": "padella",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "customer payload exists for luxe",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "padella",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner review page renders",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "0 items"
+    },
+    {
+      "site": "pelirocco",
+      "name": "an empty catalogue states the recovery honestly",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner can add content to an empty catalogue",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a row with no website reading invents none",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "167.50"
+    },
+    {
+      "site": "pelirocco",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "167.50"
+    },
+    {
+      "site": "pelirocco",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "customer payload exists for minimal",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "hotel policies and press stay as information",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner-created rooms reach the customer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a stay request is accepted",
+      "ok": true,
+      "detail": "201"
+    },
+    {
+      "site": "pelirocco",
+      "name": "the stay is priced from the saved room rate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the stay records two nights",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the stay reaches the dashboard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "business information correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "business information survives the session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "0 items"
+    },
+    {
+      "site": "pelirocco",
+      "name": "an empty catalogue states the recovery honestly",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner can add content to an empty catalogue",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a row with no website reading invents none",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "167.50"
+    },
+    {
+      "site": "pelirocco",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "167.50"
+    },
+    {
+      "site": "pelirocco",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "customer payload exists for editorial",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "0 items"
+    },
+    {
+      "site": "pelirocco",
+      "name": "an empty catalogue states the recovery honestly",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner can add content to an empty catalogue",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a row with no website reading invents none",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "167.50"
+    },
+    {
+      "site": "pelirocco",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "167.50"
+    },
+    {
+      "site": "pelirocco",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "customer payload exists for luxe",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "pelirocco",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "owner review page renders",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "82 items"
+    },
+    {
+      "site": "bluetit",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "website reading is kept beside the correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "original evidence keeps its own validated flag",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "review shows the earlier website reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "60.00"
+    },
+    {
+      "site": "bluetit",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "60"
+    },
+    {
+      "site": "bluetit",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "customer payload exists for minimal",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the 82-treatment catalogue is present",
+      "ok": true,
+      "detail": "82"
+    },
+    {
+      "site": "bluetit",
+      "name": "the unverified price gaps remain unpriced",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "missing treatment imagery stays missing, not stock",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "every treatment reaches the app",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the owner can upload a treatment photo",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "site": "bluetit",
+      "name": "the owner’s treatment photo reaches the customer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the review still marks the price as the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "business information correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "business information survives the session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "82 items"
+    },
+    {
+      "site": "bluetit",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "website reading is kept beside the correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "original evidence keeps its own validated flag",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "review shows the earlier website reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "60.00"
+    },
+    {
+      "site": "bluetit",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "60"
+    },
+    {
+      "site": "bluetit",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "customer payload exists for editorial",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "82 items"
+    },
+    {
+      "site": "bluetit",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "website reading is kept beside the correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "original evidence keeps its own validated flag",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "review shows the earlier website reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "60.00"
+    },
+    {
+      "site": "bluetit",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "60"
+    },
+    {
+      "site": "bluetit",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "customer payload exists for luxe",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "bluetit",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "owner review page renders",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "1 items"
+    },
+    {
+      "site": "afl",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a row with no website reading invents none",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "44.00"
+    },
+    {
+      "site": "afl",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "44"
+    },
+    {
+      "site": "afl",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "customer payload exists for classic",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the build service is a service",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "six website projects are suggestions until the owner publishes them",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "an unpublishing suggestion never reaches the customer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the owner can publish all six projects",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the portfolio now reports six live entries",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "an owner can edit a project title",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the title saves and is marked owner-provided",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the portfolio title reaches the customer",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "portfolio work is never priced or booked",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "services and portfolio are separate blocks",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a proposal enquiry is accepted",
+      "ok": true,
+      "detail": "201"
+    },
+    {
+      "site": "afl",
+      "name": "the enquiry reaches the dashboard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "business information correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "business information survives the session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "1 items"
+    },
+    {
+      "site": "afl",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a row with no website reading invents none",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "44.00"
+    },
+    {
+      "site": "afl",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "44"
+    },
+    {
+      "site": "afl",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "customer payload exists for minimal",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "saved catalogue is readable",
+      "ok": true,
+      "detail": "1 items"
+    },
+    {
+      "site": "afl",
+      "name": "owner correction saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "correction is recorded as owner data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "correction is not upgraded to website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "dated source trail is stored",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a row with no website reading invents none",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "review states the correction is the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "customer app carries no provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the customer payload publishes the owner’s value",
+      "ok": true,
+      "detail": "44.00"
+    },
+    {
+      "site": "afl",
+      "name": "the rendered customer card shows the published value",
+      "ok": true,
+      "detail": "44"
+    },
+    {
+      "site": "afl",
+      "name": "saving twice adds no duplicate",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "saving twice keeps the first correction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a repeated edit keeps the first source reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a repeated edit updates the owner time",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "an owner-created row is entirely the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "deleting a row removes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "restoring the row keeps owner provenance",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the closed session is rejected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a fresh session opens the review",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the catalogue survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the correction survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "owner provenance survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the original evidence survives a fresh session",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "the item is still not website-verified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "fresh review shows the correction and its date",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "a concept preview writes nothing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "customer payload exists for editorial",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "concept payload carries no evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "concept HTML exposes no internal review wording",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "site": "afl",
+      "name": "rejected rows are not customer catalogue rows",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "passed": 526,
+  "failed": 0,
+  "summary": {
+    "yarmouth": {
+      "label": "Yarmouth Oilskins",
+      "items": 74,
+      "priced": 74,
+      "validated": 74,
+      "unvalidated": 0,
+      "unpriced": 0,
+      "imaged": 74,
+      "variants": 74,
+      "rejected": 16,
+      "rejectedNames": [
+        "Gift Cards",
+        "View Now",
+        "Shop Now",
+        "The Travelling Mac - Olive",
+        "The Travelling Mac - Khaki",
+        "The Fly Fishing Jacket - Olive",
+        "The Fly Fishing Jacket - Slate",
+        "The Engineer Jacket - Navy",
+        "The Engineer Jacket - Khaki",
+        "The Engineer Jacket - Black",
+        "The Engineer Jacket - Natural",
+        "The Classic Smock - Navy",
+        "The Classic Smock - Natural",
+        "The Classic Smock - Black",
+        "The Classic Smock - Ticking Stripe",
+        "The Hooded Smock - Mustard"
+      ],
+      "projects": 0,
+      "wasEmpty": false,
+      "emptyCopyOk": true,
+      "accepted": true,
+      "details": true
+    },
+    "padella": {
+      "label": "Padella",
+      "items": 3,
+      "priced": 3,
+      "validated": 3,
+      "unvalidated": 0,
+      "unpriced": 0,
+      "imaged": 0,
+      "variants": 0,
+      "rejected": 5,
+      "rejectedNames": [
+        "Cookie Policy",
+        "Privacy Policy",
+        "Padella Shoreditch",
+        "Padella Borough Market",
+        "Padella Soho"
+      ],
+      "projects": 0,
+      "wasEmpty": true,
+      "emptyCopyOk": true,
+      "accepted": true,
+      "details": true
+    },
+    "pelirocco": {
+      "label": "Hotel Pelirocco",
+      "items": 2,
+      "priced": 2,
+      "validated": 2,
+      "unvalidated": 0,
+      "unpriced": 0,
+      "imaged": 0,
+      "variants": 0,
+      "rejected": 9,
+      "rejectedNames": [
+        "pelirocco privacy policy",
+        "rocco regulars loyalty club",
+        "Event Venue Hire",
+        "Business Hire",
+        "Welcome to the Peli Blog",
+        "press quotes over the years",
+        "private hire",
+        "Private Party Venue Brighton",
+        "Packages"
+      ],
+      "projects": 0,
+      "wasEmpty": true,
+      "emptyCopyOk": true,
+      "accepted": true,
+      "details": true
+    },
+    "bluetit": {
+      "label": "Blue Tit",
+      "items": 82,
+      "priced": 7,
+      "validated": 7,
+      "unvalidated": 0,
+      "unpriced": 75,
+      "imaged": 0,
+      "variants": 0,
+      "rejected": 0,
+      "rejectedNames": [],
+      "projects": 0,
+      "wasEmpty": false,
+      "emptyCopyOk": true,
+      "accepted": true,
+      "details": true
+    },
+    "afl": {
+      "label": "Architecture for London",
+      "items": 1,
+      "priced": 1,
+      "validated": 1,
+      "unvalidated": 0,
+      "unpriced": 0,
+      "imaged": 0,
+      "variants": 0,
+      "rejected": 7,
+      "rejectedNames": [
+        "Bloomsbury Flat, progress visuals. A place to read, think…",
+        "This mews house extension in Hackney, East London,…",
+        "In the front reception rooms, the original pine floorboards…",
+        "A refurbishment and extension of an early Victorian house…",
+        "This early 19th-century Georgian house in Hampstead village…",
+        "Our refurbishment and extension of an early Victorian house…",
+        "Projects Archive"
+      ],
+      "projects": 6,
+      "wasEmpty": false,
+      "emptyCopyOk": true,
+      "accepted": true,
+      "details": true
+    }
+  },
+  "concepts": {
+    "yarmouth": {
+      "rows": [
+        {
+          "direction": "minimal",
+          "signature": {
+            "attrs": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "2"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "saved",
+              "home",
+              "more",
+              "book",
+              "quote"
+            ]
+          }
+        },
+        {
+          "direction": "editorial",
+          "signature": {
+            "attrs": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "saved",
+              "home",
+              "search",
+              "more",
+              "book",
+              "quote"
+            ]
+          }
+        },
+        {
+          "direction": "lifestyle",
+          "signature": {
+            "attrs": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "0"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "saved",
+              "home",
+              "more",
+              "book",
+              "quote"
+            ]
+          }
+        }
+      ],
+      "pairs": [
+        {
+          "a": "minimal",
+          "b": "editorial",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "b": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        },
+        {
+          "a": "minimal",
+          "b": "lifestyle",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": true,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "b": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        },
+        {
+          "a": "editorial",
+          "b": "lifestyle",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            },
+            "b": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        }
+      ],
+      "allPairsDifferStructurally": true
+    },
+    "padella": {
+      "rows": [
+        {
+          "direction": "editorial",
+          "signature": {
+            "attrs": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "book",
+              "saved",
+              "home",
+              "search",
+              "more",
+              "quote"
+            ]
+          }
+        },
+        {
+          "direction": "modern",
+          "signature": {
+            "attrs": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "0"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "book",
+              "saved",
+              "home",
+              "more",
+              "quote"
+            ]
+          }
+        },
+        {
+          "direction": "luxe",
+          "signature": {
+            "attrs": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "book",
+              "saved",
+              "home",
+              "more",
+              "quote"
+            ]
+          }
+        }
+      ],
+      "pairs": [
+        {
+          "a": "editorial",
+          "b": "modern",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            },
+            "b": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        },
+        {
+          "a": "editorial",
+          "b": "luxe",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            },
+            "b": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        },
+        {
+          "a": "modern",
+          "b": "luxe",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": true,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "b": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        }
+      ],
+      "allPairsDifferStructurally": true
+    },
+    "pelirocco": {
+      "rows": [
+        {
+          "direction": "minimal",
+          "signature": {
+            "attrs": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "2"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "book",
+              "saved",
+              "home",
+              "more",
+              "quote"
+            ]
+          }
+        },
+        {
+          "direction": "editorial",
+          "signature": {
+            "attrs": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "book",
+              "saved",
+              "home",
+              "more",
+              "quote"
+            ]
+          }
+        },
+        {
+          "direction": "luxe",
+          "signature": {
+            "attrs": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "book",
+              "saved",
+              "home",
+              "search",
+              "more",
+              "quote"
+            ]
+          }
+        }
+      ],
+      "pairs": [
+        {
+          "a": "minimal",
+          "b": "editorial",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": true,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "b": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        },
+        {
+          "a": "minimal",
+          "b": "luxe",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "b": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        },
+        {
+          "a": "editorial",
+          "b": "luxe",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            },
+            "b": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        }
+      ],
+      "allPairsDifferStructurally": true
+    },
+    "bluetit": {
+      "rows": [
+        {
+          "direction": "minimal",
+          "signature": {
+            "attrs": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "2"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "book",
+              "catalog",
+              "saved",
+              "home",
+              "more",
+              "quote"
+            ]
+          }
+        },
+        {
+          "direction": "editorial",
+          "signature": {
+            "attrs": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "book",
+              "saved",
+              "home",
+              "search",
+              "more",
+              "quote"
+            ]
+          }
+        },
+        {
+          "direction": "luxe",
+          "signature": {
+            "attrs": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "catalog",
+              "book",
+              "saved",
+              "home",
+              "more",
+              "quote"
+            ]
+          }
+        }
+      ],
+      "pairs": [
+        {
+          "a": "minimal",
+          "b": "editorial",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "b": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        },
+        {
+          "a": "minimal",
+          "b": "luxe",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "b": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        },
+        {
+          "a": "editorial",
+          "b": "luxe",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            },
+            "b": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        }
+      ],
+      "allPairsDifferStructurally": true
+    },
+    "afl": {
+      "rows": [
+        {
+          "direction": "classic",
+          "signature": {
+            "attrs": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "2"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "quote",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "quote",
+              "catalog",
+              "saved",
+              "home",
+              "book",
+              "more"
+            ]
+          }
+        },
+        {
+          "direction": "minimal",
+          "signature": {
+            "attrs": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "2"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "quote",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "quote",
+              "catalog",
+              "saved",
+              "home",
+              "book",
+              "more"
+            ]
+          }
+        },
+        {
+          "direction": "editorial",
+          "signature": {
+            "attrs": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            },
+            "variants": [
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1",
+              "1",
+              "1",
+              "1",
+              "1",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "2",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "3",
+              "1"
+            ],
+            "screens": [
+              "catalog",
+              "home",
+              "search",
+              "more",
+              "saved",
+              "book",
+              "quote",
+              "detail",
+              "' + id + '",
+              "store"
+            ],
+            "nav": [
+              "quote",
+              "catalog",
+              "saved",
+              "home",
+              "search",
+              "book",
+              "more"
+            ]
+          }
+        }
+      ],
+      "pairs": [
+        {
+          "a": "classic",
+          "b": "minimal",
+          "sameArchitecture": false,
+          "sameSections": true,
+          "sameNav": true,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            },
+            "b": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        },
+        {
+          "a": "classic",
+          "b": "editorial",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "lead",
+              "header": "masthead",
+              "catalog": "journal",
+              "detail": "feature",
+              "imagery": "portrait",
+              "concept-type": "serif"
+            },
+            "b": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        },
+        {
+          "a": "minimal",
+          "b": "editorial",
+          "sameArchitecture": false,
+          "sameSections": false,
+          "sameNav": false,
+          "sameScreens": true,
+          "architecture": {
+            "a": {
+              "concept": "index",
+              "header": "utility",
+              "catalog": "index",
+              "detail": "spec",
+              "imagery": "square",
+              "concept-type": "grotesk"
+            },
+            "b": {
+              "concept": "immersive",
+              "header": "overlay",
+              "catalog": "stories",
+              "detail": "story",
+              "imagery": "wide",
+              "concept-type": "display"
+            }
+          },
+          "sectionCounts": {
+            "a": 40,
+            "b": 40
+          }
+        }
+      ],
+      "allPairsDifferStructurally": true
+    }
+  },
+  "notes": []
+}

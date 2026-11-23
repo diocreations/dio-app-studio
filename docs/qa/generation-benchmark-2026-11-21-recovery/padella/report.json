@@ -1,0 +1,163 @@
+{
+  "id": "padella",
+  "url": "https://www.padella.co/",
+  "trade": "restaurant",
+  "minimum": 0,
+  "model": "Restaurant",
+  "why": "Fresh-pasta restaurant with HTML menus, prices, locations and walk-in workflow",
+  "source": "https://www.padella.co/",
+  "host": "padella.co",
+  "images": {
+    "products": 5,
+    "withImage": 0,
+    "withoutImage": 5,
+    "methods": {},
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 5,
+    "kept": 0,
+    "dropped": [
+      {
+        "name": "Cookie Policy",
+        "section": "Restaurant",
+        "reason": "policy-page"
+      },
+      {
+        "name": "Privacy Policy",
+        "section": "Restaurant",
+        "reason": "policy-page"
+      },
+      {
+        "name": "Padella Shoreditch",
+        "section": "Restaurant",
+        "reason": "location-page"
+      },
+      {
+        "name": "Padella Borough Market",
+        "section": "Restaurant",
+        "reason": "location-page"
+      },
+      {
+        "name": "Padella Soho",
+        "section": "Restaurant",
+        "reason": "location-page"
+      }
+    ],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": []
+  },
+  "pages": 8,
+  "site": {
+    "name": "Padella",
+    "tagline": "Searching for an Italian restaurant in Shoreditch, Borough Market or Soho?",
+    "story": "Searching for an Italian restaurant in Shoreditch, Borough Market or Soho? Padella serves authentic, handmade pasta daily. Come and discover why we're one of London's most-loved pasta restaurants.",
+    "vertical": "restaurant",
+    "verticalConfidence": "detected",
+    "category": "Restaurant",
+    "categoryBasis": "the nearest trade, from “restaurant”",
+    "accent": "#c8452b",
+    "logo": "",
+    "logoImage": {
+      "url": "https://www.padella.co/wp-content/uploads/2025/05/padella-org-logo.avif",
+      "alt": "Padella logo"
+    },
+    "phone": "",
+    "email": "",
+    "address": "",
+    "hours": "",
+    "website": "https://www.padella.co",
+    "currency": "GBP",
+    "socials": [
+      {
+        "label": "X",
+        "url": "https://x.com/padella_pasta"
+      },
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/padella_pasta"
+      }
+    ],
+    "menu": [],
+    "features": [
+      "catalog",
+      "ordering",
+      "booking"
+    ],
+    "design": {
+      "bg": "#f7f1e6",
+      "surface": "#eee8dd",
+      "surface2": "#e4ded4",
+      "ink": "#191310",
+      "muted": "#645e59",
+      "radius": 4,
+      "display": "",
+      "fontLabel": "",
+      "dark": false,
+      "palette": false,
+      "basis": "4px corners"
+    },
+    "structure": {
+      "nav": "tabs",
+      "stickyHeader": false,
+      "navLabels": [
+        "Vouchers",
+        "Careers",
+        "Borough Market",
+        "Shoreditch",
+        "Soho"
+      ],
+      "hero": "split",
+      "basis": "nav in a row · Vouchers, Careers, Borough Market · hero split"
+    },
+    "nameSource": "host"
+  },
+  "found": [
+    "5 catalogue entries in 1 section, read from 8 pages",
+    "their sitemap listed the product pages the home page did not link to",
+    "name: Padella",
+    "their logo — taken from the image the site itself declares as its mark",
+    "category: Restaurant — from the nearest trade, from “restaurant”",
+    "a one-line description",
+    "their look: 4px corners",
+    "their layout: nav in a row · Vouchers, Careers, Borough Market · hero split",
+    "2 social links"
+  ],
+  "missing": [
+    "phone number",
+    "email",
+    "address",
+    "opening hours",
+    "brand colour — using the trade default for now",
+    "5 product photographs — the site publishes none for those items"
+  ],
+  "notes": [
+    "The site lists items without prices, so they appear as “Ask on request” until you set one.",
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded.",
+    "Cleared 1 price that looked like a reading error, so the item shows no price until you set one: Padella Soho at 3."
+  ],
+  "pagesRead": [
+    "/",
+    "/menus",
+    "/menu",
+    "/cookie-policy/",
+    "/privacy-policy/",
+    "/shoreditch/",
+    "/borough-market/",
+    "/soho/"
+  ],
+  "pagesFailed": [
+    {
+      "url": "/cdn-cgi/l/email-protection",
+      "reason": "www.padella.co answered 404. If the site blocks bots, paste the details in by hand."
+    },
+    {
+      "url": "/food",
+      "reason": "www.padella.co answered 404. If the site blocks bots, paste the details in by hand."
+    }
+  ],
+  "usedSitemap": true
+}

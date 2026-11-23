@@ -1,0 +1,69 @@
+{
+  "site": {
+    "id": "padella",
+    "url": "https://www.padella.co/",
+    "trade": "restaurant",
+    "minimum": 0
+  },
+  "diversity": {
+    "ok": false,
+    "pairs": [
+      {
+        "a": "editorial",
+        "b": "modern",
+        "score": 0.1,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same block set"
+        ]
+      },
+      {
+        "a": "editorial",
+        "b": "luxe",
+        "score": 0.55,
+        "sameInitial": true,
+        "sameOrder": true,
+        "axesDifferent": 7,
+        "reasons": [
+          "same sections in the same order",
+          "same opening screen",
+          "same block set"
+        ]
+      },
+      {
+        "a": "modern",
+        "b": "luxe",
+        "score": 0.25,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same tabs",
+          "same block set"
+        ]
+      }
+    ]
+  },
+  "concepts": [
+    {
+      "id": "editorial",
+      "name": "Editorial dining",
+      "note": "Photo-led, generous, serif-led · Image first",
+      "architecture": "editorial"
+    },
+    {
+      "id": "modern",
+      "name": "Modern casual",
+      "note": "Fast, friendly, two-column menu · Catalogue first",
+      "architecture": "modern"
+    },
+    {
+      "id": "luxe",
+      "name": "Premium luxury",
+      "note": "Dark, quiet, reservations first · Narrative lead",
+      "architecture": "luxe"
+    }
+  ]
+}

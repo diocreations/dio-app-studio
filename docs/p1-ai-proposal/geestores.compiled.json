@@ -1,0 +1,492 @@
+{
+  "businessId": "geestores",
+  "note": "What the compiler emits for each concept. `specPatch` and `doc` use only fields the current build persists and sanitises today, so the sample can be validated against the shipping normaliser. `requiresP1` is the additive document field proposed in the architecture document; without it the renderer can only resolve one of the three registered per-trade directions.",
+  "concepts": [
+    {
+      "id": "vault",
+      "registeredDirection": "editorial",
+      "specPatch": {
+        "accent": "#b8863f",
+        "layout": {
+          "variant": 3,
+          "density": "roomy",
+          "corners": "soft",
+          "hero": "image",
+          "order": "catalog",
+          "heroScale": "tall",
+          "buttons": "soft",
+          "cards": "soft"
+        },
+        "structure": {
+          "nav": "tabs",
+          "stickyHeader": true,
+          "navLabels": ["Home", "Collection", "More"],
+          "hero": "image",
+          "basis": "AI concept vault"
+        },
+        "design": {
+          "bg": "#101110",
+          "surface": "#181a18",
+          "surface2": "#22251f",
+          "ink": "#f4f1e9",
+          "muted": "#a09b8f",
+          "radius": 22,
+          "display": "\"Playfair Display\", ui-serif, Georgia, serif",
+          "fontLabel": "Playfair Display",
+          "dark": true,
+          "palette": true,
+          "basis": "AI concept vault"
+        }
+      },
+      "doc": {
+        "accent": "#b8863f",
+        "design": {
+          "direction": "editorial",
+          "typography": "editorial",
+          "buttons": "soft",
+          "cards": "soft",
+          "nav": "floating",
+          "density": "roomy"
+        },
+        "initialScreen": "scr_home",
+        "screens": [
+          {
+            "id": "scr_home",
+            "kind": "home",
+            "name": "Home",
+            "icon": "home",
+            "nav": true,
+            "hidden": false,
+            "sections": [
+              {
+                "id": "sec_ai_vault_title",
+                "kind": "flagship",
+                "variant": "shop-title",
+                "title": "GeeStores",
+                "text": "The collection",
+                "layout": "split",
+                "style": { "paddingY": 2 },
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              },
+              {
+                "id": "sec_ai_vault_products",
+                "kind": "flagship",
+                "variant": "shop-products",
+                "title": "One piece at a time",
+                "layout": "list",
+                "style": {},
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              },
+              {
+                "id": "sec_ai_vault_all",
+                "kind": "flagship",
+                "variant": "shop-all",
+                "title": "See every piece",
+                "cta": { "label": "See every piece", "screen": "scr_catalog" },
+                "layout": "list",
+                "style": {},
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              },
+              {
+                "id": "sec_ai_vault_search",
+                "kind": "flagship",
+                "variant": "shop-search",
+                "title": "Search the collection",
+                "layout": "grid",
+                "style": {},
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              }
+            ]
+          },
+          {
+            "id": "scr_catalog",
+            "kind": "catalog",
+            "name": "Collection",
+            "icon": "catalog",
+            "nav": true,
+            "hidden": false,
+            "sections": []
+          },
+          {
+            "id": "scr_detail",
+            "kind": "detail",
+            "name": "Piece",
+            "icon": "chevron",
+            "nav": false,
+            "hidden": false,
+            "sections": []
+          },
+          {
+            "id": "scr_more",
+            "kind": "more",
+            "name": "More",
+            "icon": "dots",
+            "nav": true,
+            "hidden": false,
+            "sections": []
+          }
+        ]
+      },
+      "requiresP1": {
+        "architecture": {
+          "header": "masthead",
+          "catalog": "journal",
+          "cards": "editorial",
+          "detail": "feature",
+          "type": "serif",
+          "imagery": "portrait"
+        },
+        "roleSequence": ["lead", "discovery", "action", "utility"],
+        "tokens": {
+          "display": "\"Playfair Display\", ui-serif, Georgia, serif",
+          "body": "ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+          "weight": 500,
+          "tracking": "-0.02em",
+          "accentStyle": "underline",
+          "motif": "arches",
+          "palette": {
+            "bg": "#101110",
+            "surface": "#181a18",
+            "surface2": "#22251f",
+            "ink": "#f4f1e9",
+            "muted": "#a09b8f",
+            "accent": "#b8863f",
+            "onAccent": "#14100b",
+            "dark": true
+          }
+        }
+      }
+    },
+    {
+      "id": "counter",
+      "registeredDirection": "minimal",
+      "specPatch": {
+        "accent": "#8a1c2b",
+        "layout": {
+          "variant": 0,
+          "density": "cozy",
+          "corners": "sharp",
+          "hero": "split",
+          "order": "offers",
+          "heroScale": "compact",
+          "buttons": "square",
+          "cards": "square"
+        },
+        "structure": {
+          "nav": "drawer",
+          "stickyHeader": true,
+          "navLabels": ["Shop", "Home", "More"],
+          "hero": "split",
+          "basis": "AI concept counter"
+        },
+        "design": {
+          "bg": "#fbfaf7",
+          "surface": "#ffffff",
+          "surface2": "#f2f0ea",
+          "ink": "#151515",
+          "muted": "#6f6c65",
+          "radius": 8,
+          "display": "\"Space Grotesk\", ui-sans-serif, system-ui, Arial, sans-serif",
+          "fontLabel": "Space Grotesk",
+          "dark": false,
+          "palette": true,
+          "basis": "AI concept counter"
+        }
+      },
+      "doc": {
+        "accent": "#8a1c2b",
+        "design": {
+          "direction": "minimal",
+          "typography": "modern",
+          "buttons": "square",
+          "cards": "square",
+          "nav": "dock",
+          "density": "cozy"
+        },
+        "initialScreen": "scr_catalog",
+        "screens": [
+          {
+            "id": "scr_home",
+            "kind": "home",
+            "name": "Home",
+            "icon": "home",
+            "nav": true,
+            "hidden": false,
+            "sections": [
+              {
+                "id": "sec_ai_counter_search",
+                "kind": "flagship",
+                "variant": "shop-search",
+                "title": "Search the collection",
+                "layout": "grid",
+                "style": {},
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              },
+              {
+                "id": "sec_ai_counter_products",
+                "kind": "flagship",
+                "variant": "shop-products",
+                "title": "All pieces",
+                "layout": "grid",
+                "style": {},
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              },
+              {
+                "id": "sec_ai_counter_all",
+                "kind": "flagship",
+                "variant": "shop-all",
+                "title": "Open the catalogue",
+                "cta": { "label": "Open the catalogue", "screen": "scr_catalog" },
+                "layout": "grid",
+                "style": {},
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              },
+              {
+                "id": "sec_ai_counter_title",
+                "kind": "flagship",
+                "variant": "shop-title",
+                "title": "GeeStores",
+                "text": "Browse",
+                "layout": "split",
+                "style": { "paddingY": 0 },
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              }
+            ]
+          },
+          {
+            "id": "scr_catalog",
+            "kind": "catalog",
+            "name": "Shop",
+            "icon": "catalog",
+            "nav": true,
+            "hidden": false,
+            "sections": []
+          },
+          {
+            "id": "scr_detail",
+            "kind": "detail",
+            "name": "Piece",
+            "icon": "chevron",
+            "nav": false,
+            "hidden": false,
+            "sections": []
+          },
+          {
+            "id": "scr_more",
+            "kind": "more",
+            "name": "More",
+            "icon": "dots",
+            "nav": true,
+            "hidden": false,
+            "sections": []
+          }
+        ]
+      },
+      "requiresP1": {
+        "architecture": {
+          "header": "utility",
+          "catalog": "index",
+          "cards": "compact",
+          "detail": "spec",
+          "type": "grotesk",
+          "imagery": "square"
+        },
+        "roleSequence": ["utility", "discovery", "action", "lead"],
+        "tokens": {
+          "display": "\"Space Grotesk\", ui-sans-serif, system-ui, Arial, sans-serif",
+          "body": "ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+          "weight": 700,
+          "tracking": "-0.035em",
+          "accentStyle": "solid",
+          "motif": "grid",
+          "palette": {
+            "bg": "#fbfaf7",
+            "surface": "#ffffff",
+            "surface2": "#f2f0ea",
+            "ink": "#151515",
+            "muted": "#6f6c65",
+            "accent": "#8a1c2b",
+            "onAccent": "#ffffff",
+            "dark": false
+          }
+        }
+      }
+    },
+    {
+      "id": "festival",
+      "registeredDirection": "lifestyle",
+      "specPatch": {
+        "accent": "#1f4f45",
+        "layout": {
+          "variant": 1,
+          "density": "roomy",
+          "corners": "round",
+          "hero": "image",
+          "order": "visit",
+          "heroScale": "immersive",
+          "buttons": "round",
+          "cards": "round"
+        },
+        "structure": {
+          "nav": "tabs",
+          "stickyHeader": false,
+          "navLabels": ["Home", "Pieces", "Search", "More"],
+          "hero": "image",
+          "basis": "AI concept festival"
+        },
+        "design": {
+          "bg": "#f3ede2",
+          "surface": "#fdf9f1",
+          "surface2": "#e7dece",
+          "ink": "#241d15",
+          "muted": "#7c6d5b",
+          "radius": 26,
+          "display": "\"Avenir Next Condensed\", \"Roboto Condensed\", Arial, sans-serif",
+          "fontLabel": "Avenir Next Condensed",
+          "dark": false,
+          "palette": true,
+          "basis": "AI concept festival"
+        }
+      },
+      "doc": {
+        "accent": "#1f4f45",
+        "design": {
+          "direction": "lifestyle",
+          "typography": "compact",
+          "buttons": "round",
+          "cards": "round",
+          "nav": "bar",
+          "density": "roomy"
+        },
+        "initialScreen": "scr_home",
+        "screens": [
+          {
+            "id": "scr_home",
+            "kind": "home",
+            "name": "Home",
+            "icon": "home",
+            "nav": true,
+            "hidden": false,
+            "sections": [
+              {
+                "id": "sec_ai_festival_products",
+                "kind": "flagship",
+                "variant": "shop-products",
+                "title": "For the occasion",
+                "layout": "strip",
+                "style": {},
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              },
+              {
+                "id": "sec_ai_festival_title",
+                "kind": "flagship",
+                "variant": "shop-title",
+                "title": "GeeStores",
+                "text": "Pieces",
+                "layout": "split",
+                "style": { "paddingY": 2 },
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              },
+              {
+                "id": "sec_ai_festival_search",
+                "kind": "flagship",
+                "variant": "shop-search",
+                "title": "Search the collection",
+                "layout": "grid",
+                "style": {},
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              },
+              {
+                "id": "sec_ai_festival_all",
+                "kind": "flagship",
+                "variant": "shop-all",
+                "title": "See the collection",
+                "cta": { "label": "See the collection", "screen": "scr_catalog" },
+                "layout": "list",
+                "style": {},
+                "responsive": { "hideOn": [] },
+                "hidden": false
+              }
+            ]
+          },
+          {
+            "id": "scr_catalog",
+            "kind": "catalog",
+            "name": "Pieces",
+            "icon": "catalog",
+            "nav": true,
+            "hidden": false,
+            "sections": []
+          },
+          {
+            "id": "scr_search",
+            "kind": "search",
+            "name": "Search",
+            "icon": "search",
+            "nav": true,
+            "hidden": false,
+            "sections": []
+          },
+          {
+            "id": "scr_detail",
+            "kind": "detail",
+            "name": "Piece",
+            "icon": "chevron",
+            "nav": false,
+            "hidden": false,
+            "sections": []
+          },
+          {
+            "id": "scr_more",
+            "kind": "more",
+            "name": "More",
+            "icon": "dots",
+            "nav": true,
+            "hidden": false,
+            "sections": []
+          }
+        ]
+      },
+      "requiresP1": {
+        "architecture": {
+          "header": "overlay",
+          "catalog": "stories",
+          "cards": "campaign",
+          "detail": "story",
+          "type": "display",
+          "imagery": "wide"
+        },
+        "roleSequence": ["discovery", "lead", "utility", "action"],
+        "tokens": {
+          "display": "\"Avenir Next Condensed\", \"Roboto Condensed\", Arial, sans-serif",
+          "body": "\"Space Grotesk\", ui-sans-serif, system-ui, Arial, sans-serif",
+          "weight": 800,
+          "tracking": "0em",
+          "accentStyle": "block",
+          "motif": "circle",
+          "palette": {
+            "bg": "#f3ede2",
+            "surface": "#fdf9f1",
+            "surface2": "#e7dece",
+            "ink": "#241d15",
+            "muted": "#7c6d5b",
+            "accent": "#1f4f45",
+            "onAccent": "#ffffff",
+            "dark": false
+          }
+        }
+      }
+    }
+  ]
+}

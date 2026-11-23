@@ -8,13 +8,17 @@ procedure in `docs/BACKUP_AND_RECOVERY.md` covers restoring a snapshot on one
 machine. This document covers the production path: where copies live, who runs
 them, how often, how long recovery takes and what is still unproven.
 
-**Production is not deployed.** There is no production Plattr D1, R2 bucket or
-public origin. The path itself has now run against real Cloudflare resources in a
-separate staging environment (`docs/STAGING.md`): remote D1 export, scrubbing,
-remote media reads, upload to a separate bucket, read-back verification,
-retention, alerting, and a restore into an isolated environment that served
-pages and images over HTTPS. The evidence is `docs/qa/remote/REPORT.md`. What
-remains unproven is production itself, and the scheduler.
+**Production is deployed**, with a fresh D1 database, a private R2 bucket and the
+public origin `https://plattr-studio-67t93q.freebuff.page` (see
+`docs/PRODUCTION_RELEASE_2026-11-22.md`). No scheduled production backup has run:
+the Sites account is not the account authenticated in this workspace for the
+offsite job, and no scheduler, backup bucket or alert owner is configured. The
+path itself has run against real Cloudflare resources in a separate staging
+environment (`docs/STAGING.md`): remote D1 export, scrubbing, remote media reads,
+upload to a separate bucket, read-back verification, retention, alerting, and a
+restore into an isolated environment that served pages and images over HTTPS.
+The evidence is `docs/qa/remote/REPORT.md`. What remains unproven is a production
+backup/restore, and the scheduler.
 
 ## Rehearsed and not rehearsed
 

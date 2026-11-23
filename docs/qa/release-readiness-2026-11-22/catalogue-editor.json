@@ -1,0 +1,53 @@
+{
+  "generatedAt": "2026-11-22T05:57:00.016Z",
+  "token": "016a48c6dcfc967170066e94",
+  "first": {
+    "name": "Yarmouth Oilskins Gift Card",
+    "price": "210.00",
+    "target": "0:0",
+    "options": "Options: 7"
+  },
+  "variantBefore": "5.00",
+  "checks": [
+    {
+      "name": "the catalogue exposes a product with a base price",
+      "ok": true,
+      "detail": "{\"name\":\"Yarmouth Oilskins Gift Card\",\"price\":\"210.00\",\"target\":\"0:0\",\"options\":\"Options: 7\"}"
+    },
+    {
+      "name": "the variant editor exposes the price the customer sees",
+      "ok": true,
+      "detail": "Options: 7 · 5.00"
+    },
+    {
+      "name": "the selected variant remains the price the customer sees",
+      "ok": true,
+      "detail": "base row price and selected variant are separate; the app uses the variant"
+    },
+    {
+      "name": "base price field is not the customer-facing price for a variant item",
+      "ok": true,
+      "detail": "The row shows 210.00 but the selected variant is 5.00. The editor does not label the row value as a starting/base price."
+    },
+    {
+      "name": "the variant panel can be reopened after a base-price save",
+      "ok": true,
+      "detail": "{\"modal\":true,\"rows\":74,\"panel\":true}"
+    },
+    {
+      "name": "the variant save request succeeds",
+      "ok": true,
+      "detail": "{\"status\":200,\"body\":\"{\\\"ok\\\":true,\\\"menu\\\":[{\\\"name\\\":\\\"Catalogue\\\",\\\"items\\\":[{\\\"id\\\":\\\"itm_74b87e75\\\",\\\"ownerFields\\\":[\\\"price\\\"],\\\"priceEvidence\\\":{\\\"method\\\":\\\"owner\\\",\\\"source\\\":\\\"Owner entry\\\",\\\"raw\\\":\\\"99.99\\\",\\\"currency\\\":\\\"\\\",\\\"validated\\\":true},\\\"so"
+    },
+    {
+      "name": "the selected variant price is in the saved catalogue",
+      "ok": true,
+      "detail": "1234"
+    },
+    {
+      "name": "editing a variant price reaches the customer app data",
+      "ok": true,
+      "detail": "5.00 -> 12.34 (customer card may show the cheapest remaining option)"
+    }
+  ]
+}

@@ -1,0 +1,2506 @@
+[
+  {
+    "site": "padella",
+    "direction": "editorial",
+    "token": "5220795666d50b3456e0d89a",
+    "cookie": "plattr_owner_5220795666d5=own_2fde6cd415d4cb9673d2a0e8b676f3db7c9135035ed540a0",
+    "name": "Padella",
+    "vertical": "restaurant",
+    "widths": {
+      "390": {
+        "title": "Padella · Restaurant",
+        "body": "FROM THE KITCHEN\nCookie Policy\n\nLast updated November 04, 2025 This Cookie Policy explains how Padella (“Company,” “we,”…\n\nKITCHEN\nMENU · RESTAURANT\nPadella.\n\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nSee the menu\nReserve",
+        "screen": "home",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "See the menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Padella · Restaurant",
+        "body": "FROM THE KITCHEN\nCookie Policy\n\nLast updated November 04, 2025 This Cookie Policy explains how Padella (“Company,” “we,”…\n\nKITCHEN\nMENU · RESTAURANT\nPadella.\n\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nSee the menu\nReserve",
+        "screen": "home",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "See the menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Padella · Restaurant",
+        "body": "FROM THE KITCHEN\nCookie Policy\n\nLast updated November 04, 2025 This Cookie Policy explains how Padella (“Company,” “we,”…\n\nKITCHEN\nMENU · RESTAURANT\nPadella.\n\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nSee the menu\nReserve",
+        "screen": "home",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "See the menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Padella · Restaurant",
+        "body": "FROM THE KITCHEN\nCookie Policy\n\nLast updated November 04, 2025 This Cookie Policy explains how Padella (“Company,” “we,”…\n\nKITCHEN\nMENU · RESTAURANT\nPadella.\n\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nSee the menu\nReserve",
+        "screen": "home",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "See the menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "padella",
+    "direction": "modern",
+    "token": "2051894d3f3f3c4f8b42a445",
+    "cookie": "plattr_owner_2051894d3f3f=own_be3a654b613dfb7adb43e9c32c01367793e280b75f0a5d18",
+    "name": "Padella",
+    "vertical": "restaurant",
+    "widths": {
+      "390": {
+        "title": "Padella · Restaurant",
+        "body": "THE MENU\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nMENU\n5\nShowing 5 of 5 dishes\nAll\nRestaurant\nRESTAURANT\n5\nCookie Policy\nPrivacy Policy\nPadella Shoreditch\nPadella Borough Market\nPadella Soho",
+        "screen": "catalog",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Padella · Restaurant",
+        "body": "THE MENU\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nMENU\n5\nShowing 5 of 5 dishes\nAll\nRestaurant\nRESTAURANT\n5\nCookie Policy\nPrivacy Policy\nPadella Shoreditch\nPadella Borough Market\nPadella Soho",
+        "screen": "catalog",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Padella · Restaurant",
+        "body": "THE MENU\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nMENU\n5\nShowing 5 of 5 dishes\nAll\nRestaurant\nRESTAURANT\n5\nCookie Policy\nPrivacy Policy\nPadella Shoreditch\nPadella Borough Market\nPadella Soho",
+        "screen": "catalog",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Padella · Restaurant",
+        "body": "THE MENU\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nMENU\n5\nShowing 5 of 5 dishes\nAll\nRestaurant\nRESTAURANT\n5\nCookie Policy\nPrivacy Policy\nPadella Shoreditch\nPadella Borough Market\nPadella Soho",
+        "screen": "catalog",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "padella",
+    "direction": "luxe",
+    "token": "9186b1ba520b37987e5e6a83",
+    "cookie": "plattr_owner_9186b1ba520b=own_cd606147ce7941d6db7beda9763fe800a98f537240891e06",
+    "name": "Padella",
+    "vertical": "restaurant",
+    "widths": {
+      "390": {
+        "title": "Padella · Restaurant",
+        "body": "KITCHEN\nMENU · RESTAURANT\nPadella.\n\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nFROM THE KITCHEN\nCookie Policy\n\nLast updated November 04, 2025 This Cookie Policy explains how Padella (“Company,” “we,”…\n\nSee the menu\nReserve",
+        "screen": "home",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "See the menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Padella · Restaurant",
+        "body": "KITCHEN\nMENU · RESTAURANT\nPadella.\n\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nFROM THE KITCHEN\nCookie Policy\n\nLast updated November 04, 2025 This Cookie Policy explains how Padella (“Company,” “we,”…\n\nSee the menu\nReserve",
+        "screen": "home",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "See the menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Padella · Restaurant",
+        "body": "KITCHEN\nMENU · RESTAURANT\nPadella.\n\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nFROM THE KITCHEN\nCookie Policy\n\nLast updated November 04, 2025 This Cookie Policy explains how Padella (“Company,” “we,”…\n\nSee the menu\nReserve",
+        "screen": "home",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "See the menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Padella · Restaurant",
+        "body": "KITCHEN\nMENU · RESTAURANT\nPadella.\n\nSearching for an Italian restaurant in Shoreditch, Borough Market or Soho?\n\nFROM THE KITCHEN\nCookie Policy\n\nLast updated November 04, 2025 This Cookie Policy explains how Padella (“Company,” “we,”…\n\nSee the menu\nReserve",
+        "screen": "home",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 6,
+        "nav": [
+          [
+            "catalog",
+            "See the menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "home",
+            "Dine"
+          ],
+          [
+            "catalog",
+            "Menu"
+          ],
+          [
+            "book",
+            "Reserve"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "pelirocco",
+    "direction": "minimal",
+    "token": "e2816a0bf35c40e28f8a2640",
+    "cookie": "plattr_owner_e2816a0bf35c=own_d61fcb1187526da7bb25708776a587c90459f18a2f94ddd4",
+    "name": "Hotel Pelirocco",
+    "vertical": "hotel",
+    "widths": {
+      "390": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "ROOMS & SUITES\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\nRECEPTION\n9 ROOM TYPES\nCHECK DATES\nROOMS\n9\nShowing 9 of 9 rooms\nAll\nHotel & guesthouse\nHOTEL & GUESTHOUSE\n9\npelirocco privacy policy\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nrocco regulars loyalty club\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nEvent Venue Hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nBusiness Hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nWelcome to the Peli Blog\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\npress quotes over the years\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nprivate hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nPrivate Party Venue Brighton\nFind the ideal private party venue in Brighton at Hotel Pelirocco. Host your next…\nPackages\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+        "screen": "catalog",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "book",
+            "Check dates"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "ROOMS & SUITES\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\nRECEPTION\n9 ROOM TYPES\nCHECK DATES\nROOMS\n9\nShowing 9 of 9 rooms\nAll\nHotel & guesthouse\nHOTEL & GUESTHOUSE\n9\npelirocco privacy policy\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nrocco regulars loyalty club\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nEvent Venue Hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nBusiness Hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nWelcome to the Peli Blog\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\npress quotes over the years\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nprivate hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nPrivate Party Venue Brighton\nFind the ideal private party venue in Brighton at Hotel Pelirocco. Host your next…\nPackages\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+        "screen": "catalog",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "book",
+            "Check dates"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "ROOMS & SUITES\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\nRECEPTION\n9 ROOM TYPES\nCHECK DATES\nROOMS\n9\nShowing 9 of 9 rooms\nAll\nHotel & guesthouse\nHOTEL & GUESTHOUSE\n9\npelirocco privacy policy\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nrocco regulars loyalty club\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nEvent Venue Hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nBusiness Hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nWelcome to the Peli Blog\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\npress quotes over the years\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nprivate hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nPrivate Party Venue Brighton\nFind the ideal private party venue in Brighton at Hotel Pelirocco. Host your next…\nPackages\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+        "screen": "catalog",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "book",
+            "Check dates"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "ROOMS & SUITES\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\nRECEPTION\n9 ROOM TYPES\nCHECK DATES\nROOMS\n9\nShowing 9 of 9 rooms\nAll\nHotel & guesthouse\nHOTEL & GUESTHOUSE\n9\npelirocco privacy policy\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nrocco regulars loyalty club\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nEvent Venue Hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nBusiness Hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nWelcome to the Peli Blog\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\npress quotes over the years\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nprivate hire\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\nPrivate Party Venue Brighton\nFind the ideal private party venue in Brighton at Hotel Pelirocco. Host your next…\nPackages\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…",
+        "screen": "catalog",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "book",
+            "Check dates"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "pelirocco",
+    "direction": "editorial",
+    "token": "5481f05213d1957d8a3590b6",
+    "cookie": "plattr_owner_5481f05213d1=own_24fa9625e41b3d015ecdce98abc84fecf37b5b5f5d2a4eaf",
+    "name": "Hotel Pelirocco",
+    "vertical": "hotel",
+    "widths": {
+      "390": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "HOTEL & GUESTHOUSE\nHotel Pelirocco\n\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\n\nHOTEL & GUESTHOUSE\npelirocco privacy policy\nROOMS\nAll rooms\nHOTEL & GUESTHOUSE\npelirocco privacy policy\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nrocco regulars loyalty club\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nEvent Venue Hire\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nARRIVE\nLEAVE\nView rooms\n→\nReception\nCheck-in 15:00 · Check-out 11:00",
+        "screen": "home",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "catalog",
+            "Hotel & guesthousepe"
+          ],
+          [
+            "catalog",
+            "All rooms"
+          ],
+          [
+            "catalog",
+            "View rooms →"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "HOTEL & GUESTHOUSE\nHotel Pelirocco\n\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\n\nHOTEL & GUESTHOUSE\npelirocco privacy policy\nROOMS\nAll rooms\nHOTEL & GUESTHOUSE\npelirocco privacy policy\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nrocco regulars loyalty club\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nEvent Venue Hire\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nARRIVE\nLEAVE\nView rooms\n→\nReception\nCheck-in 15:00 · Check-out 11:00",
+        "screen": "home",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "catalog",
+            "Hotel & guesthousepe"
+          ],
+          [
+            "catalog",
+            "All rooms"
+          ],
+          [
+            "catalog",
+            "View rooms →"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "HOTEL & GUESTHOUSE\nHotel Pelirocco\n\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\n\nHOTEL & GUESTHOUSE\npelirocco privacy policy\nROOMS\nAll rooms\nHOTEL & GUESTHOUSE\npelirocco privacy policy\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nrocco regulars loyalty club\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nEvent Venue Hire\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nARRIVE\nLEAVE\nView rooms\n→\nReception\nCheck-in 15:00 · Check-out 11:00",
+        "screen": "home",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "catalog",
+            "Hotel & guesthousepe"
+          ],
+          [
+            "catalog",
+            "All rooms"
+          ],
+          [
+            "catalog",
+            "View rooms →"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "HOTEL & GUESTHOUSE\nHotel Pelirocco\n\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\n\nHOTEL & GUESTHOUSE\npelirocco privacy policy\nROOMS\nAll rooms\nHOTEL & GUESTHOUSE\npelirocco privacy policy\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nrocco regulars loyalty club\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nEvent Venue Hire\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nARRIVE\nLEAVE\nView rooms\n→\nReception\nCheck-in 15:00 · Check-out 11:00",
+        "screen": "home",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "catalog",
+            "Hotel & guesthousepe"
+          ],
+          [
+            "catalog",
+            "All rooms"
+          ],
+          [
+            "catalog",
+            "View rooms →"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "pelirocco",
+    "direction": "luxe",
+    "token": "2bfd6e7c88cae4b30d3e45bc",
+    "cookie": "plattr_owner_2bfd6e7c88ca=own_09727671b5f5c841a6730743eee59c2fcc22efcdbd579e5d",
+    "name": "Hotel Pelirocco",
+    "vertical": "hotel",
+    "widths": {
+      "390": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "ROOMS\nAll rooms\nHOTEL & GUESTHOUSE\npelirocco privacy policy\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nrocco regulars loyalty club\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nEvent Venue Hire\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nHotel Pelirocco\n\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\n\nHOTEL & GUESTHOUSE\npelirocco privacy policy\nReception\nCheck-in 15:00 · Check-out 11:00\nARRIVE\nLEAVE\nView rooms\n→",
+        "screen": "home",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "catalog",
+            "All rooms"
+          ],
+          [
+            "catalog",
+            "Hotel & guesthousepe"
+          ],
+          [
+            "catalog",
+            "View rooms →"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "ROOMS\nAll rooms\nHOTEL & GUESTHOUSE\npelirocco privacy policy\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nrocco regulars loyalty club\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nEvent Venue Hire\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nHotel Pelirocco\n\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\n\nHOTEL & GUESTHOUSE\npelirocco privacy policy\nReception\nCheck-in 15:00 · Check-out 11:00\nARRIVE\nLEAVE\nView rooms\n→",
+        "screen": "home",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "catalog",
+            "All rooms"
+          ],
+          [
+            "catalog",
+            "Hotel & guesthousepe"
+          ],
+          [
+            "catalog",
+            "View rooms →"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "ROOMS\nAll rooms\nHOTEL & GUESTHOUSE\npelirocco privacy policy\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nrocco regulars loyalty club\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nEvent Venue Hire\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nHotel Pelirocco\n\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\n\nHOTEL & GUESTHOUSE\npelirocco privacy policy\nReception\nCheck-in 15:00 · Check-out 11:00\nARRIVE\nLEAVE\nView rooms\n→",
+        "screen": "home",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "catalog",
+            "All rooms"
+          ],
+          [
+            "catalog",
+            "Hotel & guesthousepe"
+          ],
+          [
+            "catalog",
+            "View rooms →"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Hotel Pelirocco · Hotel & guesthouse",
+        "body": "ROOMS\nAll rooms\nHOTEL & GUESTHOUSE\npelirocco privacy policy\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nrocco regulars loyalty club\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nEvent Venue Hire\n\nHotel Pelirocco is the original, rock-n-roll, Brighton boutique hotel with 19…\n\nHOTEL & GUESTHOUSE\nHotel Pelirocco\n\nDiscover this quirky hotel in Brighton, UK Hotel Pelirocco.\n\nHOTEL & GUESTHOUSE\npelirocco privacy policy\nReception\nCheck-in 15:00 · Check-out 11:00\nARRIVE\nLEAVE\nView rooms\n→",
+        "screen": "home",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 0,
+        "totalImages": 0,
+        "items": 12,
+        "nav": [
+          [
+            "catalog",
+            "All rooms"
+          ],
+          [
+            "catalog",
+            "Hotel & guesthousepe"
+          ],
+          [
+            "catalog",
+            "View rooms →"
+          ],
+          [
+            "home",
+            "Stay"
+          ],
+          [
+            "catalog",
+            "Rooms"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Dates"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "bluetit",
+    "direction": "minimal",
+    "token": "00fc5e576eacdc414d84869c",
+    "cookie": "plattr_owner_00fc5e576eac=own_9b7a379929bf845bfab0e905fd31b0a5bf4835fe83afd5a4",
+    "name": "Blue Tit London",
+    "vertical": "salon",
+    "widths": {
+      "390": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "SERVICES\n82\nShowing 12 of 82 treatments\nAll\nSalon & spa\nSALON & SPA\n82\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nHighlights - Half Head\nColouring the top half of hair using foils. (2.5 hrs)\nHighlights - T-Section\nColouring the parting and hairline using foils. (1 hr 45min)\nFace Framing\nColouring the hairline to frame the face using foils. (1 hr 45min)\nBalayage - Full Head\nLightening the ends of a full head of hair creating a dark to light fade. (2hrs 30)\nBalayage - Half Head\nLightening the ends of the top section of hair creating a dark to light fade. (2hrs)\nBalayage - T-section\nLightening the ends of the parting and hairline creating a dark to light fade. (1hr 45)\nReverse Balayage\nDarkening the roots and fading colour into the ends (no lightening). (2hr)\nRoot Tint – Balayage Add-on\nTinting roots add-on in combination with our balayage services. (30 emins)\nShow 24 more\nShowing 12 of 82",
+        "screen": "catalog",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "SERVICES\n82\nShowing 12 of 82 treatments\nAll\nSalon & spa\nSALON & SPA\n82\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nHighlights - Half Head\nColouring the top half of hair using foils. (2.5 hrs)\nHighlights - T-Section\nColouring the parting and hairline using foils. (1 hr 45min)\nFace Framing\nColouring the hairline to frame the face using foils. (1 hr 45min)\nBalayage - Full Head\nLightening the ends of a full head of hair creating a dark to light fade. (2hrs 30)\nBalayage - Half Head\nLightening the ends of the top section of hair creating a dark to light fade. (2hrs)\nBalayage - T-section\nLightening the ends of the parting and hairline creating a dark to light fade. (1hr 45)\nReverse Balayage\nDarkening the roots and fading colour into the ends (no lightening). (2hr)\nRoot Tint – Balayage Add-on\nTinting roots add-on in combination with our balayage services. (30 emins)\nShow 24 more\nShowing 12 of 82",
+        "screen": "catalog",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "SERVICES\n82\nShowing 12 of 82 treatments\nAll\nSalon & spa\nSALON & SPA\n82\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nHighlights - Half Head\nColouring the top half of hair using foils. (2.5 hrs)\nHighlights - T-Section\nColouring the parting and hairline using foils. (1 hr 45min)\nFace Framing\nColouring the hairline to frame the face using foils. (1 hr 45min)\nBalayage - Full Head\nLightening the ends of a full head of hair creating a dark to light fade. (2hrs 30)\nBalayage - Half Head\nLightening the ends of the top section of hair creating a dark to light fade. (2hrs)\nBalayage - T-section\nLightening the ends of the parting and hairline creating a dark to light fade. (1hr 45)\nReverse Balayage\nDarkening the roots and fading colour into the ends (no lightening). (2hr)\nRoot Tint – Balayage Add-on\nTinting roots add-on in combination with our balayage services. (30 emins)\nShow 24 more\nShowing 12 of 82",
+        "screen": "catalog",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "SERVICES\n82\nShowing 12 of 82 treatments\nAll\nSalon & spa\nSALON & SPA\n82\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nHighlights - Half Head\nColouring the top half of hair using foils. (2.5 hrs)\nHighlights - T-Section\nColouring the parting and hairline using foils. (1 hr 45min)\nFace Framing\nColouring the hairline to frame the face using foils. (1 hr 45min)\nBalayage - Full Head\nLightening the ends of a full head of hair creating a dark to light fade. (2hrs 30)\nBalayage - Half Head\nLightening the ends of the top section of hair creating a dark to light fade. (2hrs)\nBalayage - T-section\nLightening the ends of the parting and hairline creating a dark to light fade. (1hr 45)\nReverse Balayage\nDarkening the roots and fading colour into the ends (no lightening). (2hr)\nRoot Tint – Balayage Add-on\nTinting roots add-on in combination with our balayage services. (30 emins)\nShow 24 more\nShowing 12 of 82",
+        "screen": "catalog",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "bluetit",
+    "direction": "editorial",
+    "token": "5139619f8e5e3e215691f624",
+    "cookie": "plattr_owner_5139619f8e5e=own_21ce05ff66ed09f4ca9e7d70978989ed0c835194fddf27d2",
+    "name": "Blue Tit London",
+    "vertical": "salon",
+    "widths": {
+      "390": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "CHOOSE A TREATMENT\nAll services\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nSALON & SPA\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nSALON & SPA\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nSALON & SPA\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nSALON & SPA\nSALON & SPA\nBlue Tit is a group of award-winning boutique hair salons in\n\nBlue Tit London\n\nWith\nthe team\nBook an appointment\n→",
+        "screen": "home",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "All services"
+          ],
+          [
+            "book",
+            "Book an appointment "
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "CHOOSE A TREATMENT\nAll services\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nSALON & SPA\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nSALON & SPA\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nSALON & SPA\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nSALON & SPA\nSALON & SPA\nBlue Tit is a group of award-winning boutique hair salons in\n\nBlue Tit London\n\nWith\nthe team\nBook an appointment\n→",
+        "screen": "home",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "All services"
+          ],
+          [
+            "book",
+            "Book an appointment "
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "CHOOSE A TREATMENT\nAll services\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nSALON & SPA\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nSALON & SPA\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nSALON & SPA\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nSALON & SPA\nSALON & SPA\nBlue Tit is a group of award-winning boutique hair salons in\n\nBlue Tit London\n\nWith\nthe team\nBook an appointment\n→",
+        "screen": "home",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "All services"
+          ],
+          [
+            "book",
+            "Book an appointment "
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "CHOOSE A TREATMENT\nAll services\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nSALON & SPA\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nSALON & SPA\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nSALON & SPA\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nSALON & SPA\nSALON & SPA\nBlue Tit is a group of award-winning boutique hair salons in\n\nBlue Tit London\n\nWith\nthe team\nBook an appointment\n→",
+        "screen": "home",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "All services"
+          ],
+          [
+            "book",
+            "Book an appointment "
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "bluetit",
+    "direction": "luxe",
+    "token": "4e287ddd74771d2ce9365c45",
+    "cookie": "plattr_owner_4e287ddd7477=own_afdc6da4e4be05efef0bad86ab3dcf620eadf6c2f717d159",
+    "name": "Blue Tit London",
+    "vertical": "salon",
+    "widths": {
+      "390": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "SALON & SPA\nBlue Tit is a group of award-winning boutique hair salons in\n\nBlue Tit London\n\nCHOOSE A TREATMENT\nAll services\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nSALON & SPA\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nSALON & SPA\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nSALON & SPA\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nSALON & SPA\nBook an appointment\n→\nCHOOSE A DAY\nTODAY\n21\nTOMORROW\n22\nMON\n23\nTUE\n24\nWith\nthe team",
+        "screen": "home",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "All services"
+          ],
+          [
+            "book",
+            "Book an appointment "
+          ],
+          [
+            "book",
+            "Today21"
+          ],
+          [
+            "book",
+            "Tomorrow22"
+          ],
+          [
+            "book",
+            "Mon23"
+          ],
+          [
+            "book",
+            "Tue24"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "SALON & SPA\nBlue Tit is a group of award-winning boutique hair salons in\n\nBlue Tit London\n\nCHOOSE A TREATMENT\nAll services\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nSALON & SPA\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nSALON & SPA\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nSALON & SPA\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nSALON & SPA\nBook an appointment\n→\nCHOOSE A DAY\nTODAY\n21\nTOMORROW\n22\nMON\n23\nTUE\n24\nWith\nthe team",
+        "screen": "home",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "All services"
+          ],
+          [
+            "book",
+            "Book an appointment "
+          ],
+          [
+            "book",
+            "Today21"
+          ],
+          [
+            "book",
+            "Tomorrow22"
+          ],
+          [
+            "book",
+            "Mon23"
+          ],
+          [
+            "book",
+            "Tue24"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "SALON & SPA\nBlue Tit is a group of award-winning boutique hair salons in\n\nBlue Tit London\n\nCHOOSE A TREATMENT\nAll services\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nSALON & SPA\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nSALON & SPA\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nSALON & SPA\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nSALON & SPA\nBook an appointment\n→\nCHOOSE A DAY\nTODAY\n21\nTOMORROW\n22\nMON\n23\nTUE\n24\nWith\nthe team",
+        "screen": "home",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "All services"
+          ],
+          [
+            "book",
+            "Book an appointment "
+          ],
+          [
+            "book",
+            "Today21"
+          ],
+          [
+            "book",
+            "Tomorrow22"
+          ],
+          [
+            "book",
+            "Mon23"
+          ],
+          [
+            "book",
+            "Tue24"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Blue Tit London · Salon & spa",
+        "body": "SALON & SPA\nBlue Tit is a group of award-winning boutique hair salons in\n\nBlue Tit London\n\nCHOOSE A TREATMENT\nAll services\nRebuilding M+\nOWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…\n£26\nSALON & SPA\nBack to Back Highlights - Full Head\nColouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)\nSALON & SPA\nBack to Back Highlights - Half Head\nColouring the top half of hair using a back-to-back foiling technique for maximum…\nSALON & SPA\nHighlights - Full Head\nColouring a full head of hair using foils. (2.5 hrs)\nSALON & SPA\nBook an appointment\n→\nCHOOSE A DAY\nTODAY\n21\nTOMORROW\n22\nMON\n23\nTUE\n24\nWith\nthe team",
+        "screen": "home",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 16,
+        "nav": [
+          [
+            "catalog",
+            "All services"
+          ],
+          [
+            "book",
+            "Book an appointment "
+          ],
+          [
+            "book",
+            "Today21"
+          ],
+          [
+            "book",
+            "Tomorrow22"
+          ],
+          [
+            "book",
+            "Mon23"
+          ],
+          [
+            "book",
+            "Tue24"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "book",
+            "Book"
+          ],
+          [
+            "more",
+            "Visit"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "afl",
+    "direction": "classic",
+    "token": "8ededdb9bb97ce5f99eebe0d",
+    "cookie": "plattr_owner_8ededdb9bb97=own_89ed7d53e71dc104aa995151359d469b411d5eae9db5a69a",
+    "name": "Architecture for London",
+    "vertical": "professional",
+    "widths": {
+      "390": {
+        "title": "Architecture for London · Professional services",
+        "body": "PROFESSIONAL SERVICES\nArchitecture for London\n\nArchitecture for London are RIBA Chartered architects specialising in residential…\n\nSERVICES\n01\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\n02\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\n03\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\n04\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\n05\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nRequest a proposal\nCall\nHOW WE CAN HELP\n\nArchitecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…\n\nMon–Fri 09:00–18:30",
+        "screen": "home",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "quote",
+            "Request a proposal"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "quote",
+            "Enquire"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Architecture for London · Professional services",
+        "body": "PROFESSIONAL SERVICES\nArchitecture for London\n\nArchitecture for London are RIBA Chartered architects specialising in residential…\n\nSERVICES\n01\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\n02\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\n03\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\n04\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\n05\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nRequest a proposal\nCall\nHOW WE CAN HELP\n\nArchitecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…\n\nMon–Fri 09:00–18:30",
+        "screen": "home",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "quote",
+            "Request a proposal"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "quote",
+            "Enquire"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Architecture for London · Professional services",
+        "body": "PROFESSIONAL SERVICES\nArchitecture for London\n\nArchitecture for London are RIBA Chartered architects specialising in residential…\n\nSERVICES\n01\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\n02\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\n03\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\n04\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\n05\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nRequest a proposal\nCall\nHOW WE CAN HELP\n\nArchitecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…\n\nMon–Fri 09:00–18:30",
+        "screen": "home",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "quote",
+            "Request a proposal"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "quote",
+            "Enquire"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Architecture for London · Professional services",
+        "body": "PROFESSIONAL SERVICES\nArchitecture for London\n\nArchitecture for London are RIBA Chartered architects specialising in residential…\n\nSERVICES\n01\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\n02\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\n03\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\n04\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\n05\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nRequest a proposal\nCall\nHOW WE CAN HELP\n\nArchitecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…\n\nMon–Fri 09:00–18:30",
+        "screen": "home",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "quote",
+            "Request a proposal"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "quote",
+            "Enquire"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "afl",
+    "direction": "minimal",
+    "token": "f782d22f88d7f1eefbfec58b",
+    "cookie": "plattr_owner_f782d22f88d7=own_9df095383d26913f38fe35fddab5e0401e24e54e5bfb142e",
+    "name": "Architecture for London",
+    "vertical": "professional",
+    "widths": {
+      "390": {
+        "title": "Architecture for London · Professional services",
+        "body": "SERVICES\n8\nShowing 8 of 8 services\nAll\nJournal\nProfessional services\nJOURNAL\n6\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nOur refurbishment and extension of an early Victorian house…\nOur refurbishment and extension of an early Victorian house in London Fields, Hackney,…\nPROFESSIONAL SERVICES\n2\nBuild\nAFL Build: a sustainable builder in London with a unique design and build service. A…\nProjects Archive\nOur architects design house extensions, conversions, conservation builds, housing, and…",
+        "screen": "catalog",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "quote",
+            "Enquire"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Architecture for London · Professional services",
+        "body": "SERVICES\n8\nShowing 8 of 8 services\nAll\nJournal\nProfessional services\nJOURNAL\n6\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nOur refurbishment and extension of an early Victorian house…\nOur refurbishment and extension of an early Victorian house in London Fields, Hackney,…\nPROFESSIONAL SERVICES\n2\nBuild\nAFL Build: a sustainable builder in London with a unique design and build service. A…\nProjects Archive\nOur architects design house extensions, conversions, conservation builds, housing, and…",
+        "screen": "catalog",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "quote",
+            "Enquire"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Architecture for London · Professional services",
+        "body": "SERVICES\n8\nShowing 8 of 8 services\nAll\nJournal\nProfessional services\nJOURNAL\n6\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nOur refurbishment and extension of an early Victorian house…\nOur refurbishment and extension of an early Victorian house in London Fields, Hackney,…\nPROFESSIONAL SERVICES\n2\nBuild\nAFL Build: a sustainable builder in London with a unique design and build service. A…\nProjects Archive\nOur architects design house extensions, conversions, conservation builds, housing, and…",
+        "screen": "catalog",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "quote",
+            "Enquire"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Architecture for London · Professional services",
+        "body": "SERVICES\n8\nShowing 8 of 8 services\nAll\nJournal\nProfessional services\nJOURNAL\n6\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nOur refurbishment and extension of an early Victorian house…\nOur refurbishment and extension of an early Victorian house in London Fields, Hackney,…\nPROFESSIONAL SERVICES\n2\nBuild\nAFL Build: a sustainable builder in London with a unique design and build service. A…\nProjects Archive\nOur architects design house extensions, conversions, conservation builds, housing, and…",
+        "screen": "catalog",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "quote",
+            "Enquire"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "afl",
+    "direction": "editorial",
+    "token": "d5fe8fda6873684c7c23262e",
+    "cookie": "plattr_owner_d5fe8fda6873=own_2dbc90b2d89996826c26418e90c6555909772e4607a2b1cf",
+    "name": "Architecture for London",
+    "vertical": "professional",
+    "widths": {
+      "390": {
+        "title": "Architecture for London · Professional services",
+        "body": "SERVICES\n01\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\n02\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\n03\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\n04\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\n05\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nPROFESSIONAL SERVICES\nArchitecture for London\n\nArchitecture for London are RIBA Chartered architects specialising in residential…\n\nMon–Fri 09:00–18:30\nHOW WE CAN HELP\n\nArchitecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…\n\nRequest a proposal\nCall",
+        "screen": "home",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "quote",
+            "Request a proposal"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      },
+      "430": {
+        "title": "Architecture for London · Professional services",
+        "body": "SERVICES\n01\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\n02\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\n03\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\n04\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\n05\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nPROFESSIONAL SERVICES\nArchitecture for London\n\nArchitecture for London are RIBA Chartered architects specialising in residential…\n\nMon–Fri 09:00–18:30\nHOW WE CAN HELP\n\nArchitecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…\n\nRequest a proposal\nCall",
+        "screen": "home",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "quote",
+            "Request a proposal"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      },
+      "768": {
+        "title": "Architecture for London · Professional services",
+        "body": "SERVICES\n01\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\n02\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\n03\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\n04\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\n05\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nPROFESSIONAL SERVICES\nArchitecture for London\n\nArchitecture for London are RIBA Chartered architects specialising in residential…\n\nMon–Fri 09:00–18:30\nHOW WE CAN HELP\n\nArchitecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…\n\nRequest a proposal\nCall",
+        "screen": "home",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "quote",
+            "Request a proposal"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "Architecture for London · Professional services",
+        "body": "SERVICES\n01\nBloomsbury Flat, progress visuals. A place to read, think…\nBloomsbury Flat, progress visuals. A place to read, think and write.\n02\nThis mews house extension in Hackney, East London,…\nThis mews house extension in Hackney, East London, transforms a compact mid‑19th‑century…\n03\nIn the front reception rooms, the original pine floorboards…\nIn the front reception rooms, the original pine floorboards were sanded and refinished…\n04\nA refurbishment and extension of an early Victorian house…\nA refurbishment and extension of an early Victorian house in London Fields, Hackney. A…\n05\nThis early 19th-century Georgian house in Hampstead village…\nThis early 19th-century Georgian house in Hampstead village was refurbished and…\nPROFESSIONAL SERVICES\nArchitecture for London\n\nArchitecture for London are RIBA Chartered architects specialising in residential…\n\nMon–Fri 09:00–18:30\nHOW WE CAN HELP\n\nArchitecture for London are RIBA Chartered architects specialising in residential projects in London, such as house extensions, refurbishments and interiors. We have a combined design and construction service with our building company, AFL…\n\nRequest a proposal\nCall",
+        "screen": "home",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 0,
+        "loadedImages": 1,
+        "totalImages": 1,
+        "items": 13,
+        "nav": [
+          [
+            "quote",
+            "Request a proposal"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Services"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "book",
+            "Consult"
+          ],
+          [
+            "more",
+            "Contact"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "yarmouth",
+    "direction": "minimal",
+    "token": "057de9ae4ebc6422bd1bf470",
+    "cookie": "plattr_owner_057de9ae4ebc=own_7232a7a7fde854682e12f1951772483499112986a3a1d969",
+    "name": "yarmouthoilskins",
+    "vertical": "shop",
+    "widths": {
+      "390": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "THE COLLECTION\nYarmouth Oilskins Est.\n74 pieces\nShowing 66 of 74 pieces\nALL\nCATALOGUE\nHATS\nJACKETS\nTROUSERS\nSHIRTS\nKNITWEAR\nSMOCKS\nCOATS\nBAGS\nSHORTS\nVESTS\nOILSKINS\nDUNGAREES\nCATALOGUE\n20\nYarmouth Oilskins Gift Card\n7 options\nFrom £5\nThe Champion Jacket - Navy\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n5 options\n£600\nThe All English Tee\nA t-shirt designed, woven and made right here in England; sounds simple but it's taken 18…\n5 options\n£65\nThe Maritime Overshirt - Ginger\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Maritime Overshirt - Light Blue\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Maritime Overshirt - Lightweight Navy\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Yarmouth Apron - Navy\nThe Story Yarmouth Stores have made aprons for all different trades since 1898. The…\n£130\nThe Champion Jacket - Sand\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n5 options\n£600\nThe Champion Jacket - Crimson\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n4 options\n£600\n'Sea Air' Garment Refresher 300ml\nOur refresher isn’t just ’any spray,’ Norfolk Natural Living use all natural ingredients…\n£14.50\nYarmouth Oilskins Badge\nEmbroidered Yarmouth Oilskins Badge. Stitched to the left shoulder of your",
+        "screen": "catalog",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 56,
+        "loadedImages": 15,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "430": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "THE COLLECTION\nYarmouth Oilskins Est.\n74 pieces\nShowing 66 of 74 pieces\nALL\nCATALOGUE\nHATS\nJACKETS\nTROUSERS\nSHIRTS\nKNITWEAR\nSMOCKS\nCOATS\nBAGS\nSHORTS\nVESTS\nOILSKINS\nDUNGAREES\nCATALOGUE\n20\nYarmouth Oilskins Gift Card\n7 options\nFrom £5\nThe Champion Jacket - Navy\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n5 options\n£600\nThe All English Tee\nA t-shirt designed, woven and made right here in England; sounds simple but it's taken 18…\n5 options\n£65\nThe Maritime Overshirt - Ginger\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Maritime Overshirt - Light Blue\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Maritime Overshirt - Lightweight Navy\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Yarmouth Apron - Navy\nThe Story Yarmouth Stores have made aprons for all different trades since 1898. The…\n£130\nThe Champion Jacket - Sand\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n5 options\n£600\nThe Champion Jacket - Crimson\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n4 options\n£600\n'Sea Air' Garment Refresher 300ml\nOur refresher isn’t just ’any spray,’ Norfolk Natural Living use all natural ingredients…\n£14.50\nYarmouth Oilskins Badge\nEmbroidered Yarmouth Oilskins Badge. Stitched to the left shoulder of your",
+        "screen": "catalog",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 55,
+        "loadedImages": 16,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "768": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "THE COLLECTION\nYarmouth Oilskins Est.\n74 pieces\nShowing 66 of 74 pieces\nALL\nCATALOGUE\nHATS\nJACKETS\nTROUSERS\nSHIRTS\nKNITWEAR\nSMOCKS\nCOATS\nBAGS\nSHORTS\nVESTS\nOILSKINS\nDUNGAREES\nCATALOGUE\n20\nYarmouth Oilskins Gift Card\n7 options\nFrom £5\nThe Champion Jacket - Navy\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n5 options\n£600\nThe All English Tee\nA t-shirt designed, woven and made right here in England; sounds simple but it's taken 18…\n5 options\n£65\nThe Maritime Overshirt - Ginger\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Maritime Overshirt - Light Blue\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Maritime Overshirt - Lightweight Navy\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Yarmouth Apron - Navy\nThe Story Yarmouth Stores have made aprons for all different trades since 1898. The…\n£130\nThe Champion Jacket - Sand\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n5 options\n£600\nThe Champion Jacket - Crimson\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n4 options\n£600\n'Sea Air' Garment Refresher 300ml\nOur refresher isn’t just ’any spray,’ Norfolk Natural Living use all natural ingredients…\n£14.50\nYarmouth Oilskins Badge\nEmbroidered Yarmouth Oilskins Badge. Stitched to the left shoulder of your",
+        "screen": "catalog",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 54,
+        "loadedImages": 17,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "THE COLLECTION\nYarmouth Oilskins Est.\n74 pieces\nShowing 66 of 74 pieces\nALL\nCATALOGUE\nHATS\nJACKETS\nTROUSERS\nSHIRTS\nKNITWEAR\nSMOCKS\nCOATS\nBAGS\nSHORTS\nVESTS\nOILSKINS\nDUNGAREES\nCATALOGUE\n20\nYarmouth Oilskins Gift Card\n7 options\nFrom £5\nThe Champion Jacket - Navy\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n5 options\n£600\nThe All English Tee\nA t-shirt designed, woven and made right here in England; sounds simple but it's taken 18…\n5 options\n£65\nThe Maritime Overshirt - Ginger\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Maritime Overshirt - Light Blue\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Maritime Overshirt - Lightweight Navy\nA lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…\n5 options\n£250\nThe Yarmouth Apron - Navy\nThe Story Yarmouth Stores have made aprons for all different trades since 1898. The…\n£130\nThe Champion Jacket - Sand\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n5 options\n£600\nThe Champion Jacket - Crimson\nThe Champion Coat is the ultimate piece for colder weather, taking advantage of the…\n4 options\n£600\n'Sea Air' Garment Refresher 300ml\nOur refresher isn’t just ’any spray,’ Norfolk Natural Living use all natural ingredients…\n£14.50\nYarmouth Oilskins Badge\nEmbroidered Yarmouth Oilskins Badge. Stitched to the left shoulder of your",
+        "screen": "catalog",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 54,
+        "loadedImages": 17,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "yarmouth",
+    "direction": "editorial",
+    "token": "942deee4857399325c3befac",
+    "cookie": "plattr_owner_942deee48573=own_6e13562fa690bc1a7c1315ee29a30193279c0c7f0b798932",
+    "name": "yarmouthoilskins",
+    "vertical": "shop",
+    "widths": {
+      "390": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "NEW IN\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom £5 · 7 options\nThe Champion Jacket - Navy\n£600\nThe All English Tee\n£65\nThe Maritime Overshirt - Ginger\n£250\nCLOTHING SHOP\nYarmouth Oilskins Est.\nBrowse everything\n→",
+        "screen": "home",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 42,
+        "loadedImages": 29,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "All 74 pieces"
+          ],
+          [
+            "catalog",
+            "Browse everything →"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "430": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "NEW IN\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom £5 · 7 options\nThe Champion Jacket - Navy\n£600\nThe All English Tee\n£65\nThe Maritime Overshirt - Ginger\n£250\nCLOTHING SHOP\nYarmouth Oilskins Est.\nBrowse everything\n→",
+        "screen": "home",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 42,
+        "loadedImages": 29,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "All 74 pieces"
+          ],
+          [
+            "catalog",
+            "Browse everything →"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "768": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "NEW IN\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom £5 · 7 options\nThe Champion Jacket - Navy\n£600\nThe All English Tee\n£65\nThe Maritime Overshirt - Ginger\n£250\nCLOTHING SHOP\nYarmouth Oilskins Est.\nBrowse everything\n→",
+        "screen": "home",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 42,
+        "loadedImages": 29,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "All 74 pieces"
+          ],
+          [
+            "catalog",
+            "Browse everything →"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "NEW IN\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom £5 · 7 options\nThe Champion Jacket - Navy\n£600\nThe All English Tee\n£65\nThe Maritime Overshirt - Ginger\n£250\nCLOTHING SHOP\nYarmouth Oilskins Est.\nBrowse everything\n→",
+        "screen": "home",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 42,
+        "loadedImages": 29,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "All 74 pieces"
+          ],
+          [
+            "catalog",
+            "Browse everything →"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "search",
+            "Search"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  },
+  {
+    "site": "yarmouth",
+    "direction": "lifestyle",
+    "token": "cd7eb9e7ff2c03e823cec8c9",
+    "cookie": "plattr_owner_cd7eb9e7ff2c=own_5c76d42c585501d395477559a358a3aa4bff0601c38e2540",
+    "name": "yarmouthoilskins",
+    "vertical": "shop",
+    "widths": {
+      "390": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "CLOTHING SHOP\nYarmouth Oilskins Est.\nNEW IN\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom £5 · 7 options\nThe Champion Jacket - Navy\n£600\nThe All English Tee\n£65\nThe Maritime Overshirt - Ginger\n£250\nBrowse everything\n→",
+        "screen": "home",
+        "viewport": 390,
+        "scrollWidth": 390,
+        "overflow": false,
+        "images": 42,
+        "loadedImages": 29,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "All 74 pieces"
+          ],
+          [
+            "catalog",
+            "Browse everything →"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "430": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "CLOTHING SHOP\nYarmouth Oilskins Est.\nNEW IN\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom £5 · 7 options\nThe Champion Jacket - Navy\n£600\nThe All English Tee\n£65\nThe Maritime Overshirt - Ginger\n£250\nBrowse everything\n→",
+        "screen": "home",
+        "viewport": 430,
+        "scrollWidth": 430,
+        "overflow": false,
+        "images": 42,
+        "loadedImages": 29,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "All 74 pieces"
+          ],
+          [
+            "catalog",
+            "Browse everything →"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "768": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "CLOTHING SHOP\nYarmouth Oilskins Est.\nNEW IN\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom £5 · 7 options\nThe Champion Jacket - Navy\n£600\nThe All English Tee\n£65\nThe Maritime Overshirt - Ginger\n£250\nBrowse everything\n→",
+        "screen": "home",
+        "viewport": 768,
+        "scrollWidth": 768,
+        "overflow": false,
+        "images": 42,
+        "loadedImages": 29,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "All 74 pieces"
+          ],
+          [
+            "catalog",
+            "Browse everything →"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      },
+      "1280": {
+        "title": "yarmouthoilskins · Clothing shop",
+        "body": "CLOTHING SHOP\nYarmouth Oilskins Est.\nNEW IN\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom £5 · 7 options\nThe Champion Jacket - Navy\n£600\nThe All English Tee\n£65\nThe Maritime Overshirt - Ginger\n£250\nBrowse everything\n→",
+        "screen": "home",
+        "viewport": 1280,
+        "scrollWidth": 1280,
+        "overflow": false,
+        "images": 42,
+        "loadedImages": 29,
+        "totalImages": 71,
+        "items": 70,
+        "nav": [
+          [
+            "catalog",
+            "All 74 pieces"
+          ],
+          [
+            "catalog",
+            "Browse everything →"
+          ],
+          [
+            "home",
+            "Home"
+          ],
+          [
+            "catalog",
+            "Shop"
+          ],
+          [
+            "more",
+            "More"
+          ]
+        ]
+      }
+    },
+    "screens": {
+      "catalog": true,
+      "detail": true
+    },
+    "consoleErrors": [],
+    "networkFailures": []
+  }
+]

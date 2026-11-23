@@ -1,0 +1,65 @@
+{
+  "site": {
+    "id": "pelirocco",
+    "url": "https://www.hotelpelirocco.co.uk/",
+    "model": "Hotel / accommodation",
+    "why": "Independent themed hotel with rooms, capacity language and direct booking"
+  },
+  "diversity": {
+    "ok": true,
+    "pairs": [
+      {
+        "a": "luxe",
+        "b": "editorial",
+        "score": 0.25,
+        "sameInitial": true,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same opening screen",
+          "same block set"
+        ]
+      },
+      {
+        "a": "luxe",
+        "b": "minimal",
+        "score": 0.1,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same block set"
+        ]
+      },
+      {
+        "a": "editorial",
+        "b": "minimal",
+        "score": 0.25,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same tabs",
+          "same block set"
+        ]
+      }
+    ]
+  },
+  "concepts": [
+    {
+      "id": "luxe",
+      "name": "Coastal luxury",
+      "note": "Dark, quiet, rooms first · Image first"
+    },
+    {
+      "id": "editorial",
+      "name": "Editorial stay",
+      "note": "Warm serif, place-led · Narrative lead"
+    },
+    {
+      "id": "minimal",
+      "name": "Quiet modern",
+      "note": "Light, restrained, direct booking · Catalogue first"
+    }
+  ]
+}

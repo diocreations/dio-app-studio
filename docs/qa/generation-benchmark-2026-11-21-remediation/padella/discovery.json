@@ -1,0 +1,194 @@
+{
+  "url": "https://www.padella.co/",
+  "host": "www.padella.co",
+  "pages": {
+    "read": [
+      "/",
+      "/menus",
+      "/menu",
+      "/cookie-policy/",
+      "/privacy-policy/",
+      "/shoreditch/",
+      "/borough-market/",
+      "/soho/"
+    ],
+    "failed": [
+      {
+        "url": "/cdn-cgi/l/email-protection",
+        "reason": "www.padella.co answered 404. If the site blocks bots, paste the details in by hand."
+      },
+      {
+        "url": "/food",
+        "reason": "www.padella.co answered 404. If the site blocks bots, paste the details in by hand."
+      }
+    ],
+    "usedSitemap": true
+  },
+  "business": {
+    "name": {
+      "value": "Padella",
+      "source": "https://www.padella.co/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "category": {
+      "value": "Restaurant",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "tagline": {
+      "value": "Searching for an Italian restaurant in Shoreditch, Borough Market or Soho?",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "story": {
+      "value": "Searching for an Italian restaurant in Shoreditch, Borough Market or Soho? Padella serves authentic, handmade pasta daily. Come and discover why we're one of London's most-loved pasta restaurants.",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "trade": {
+      "value": "restaurant",
+      "source": "https://www.padella.co/",
+      "method": "inferred",
+      "confidence": "verified"
+    },
+    "accent": {
+      "value": "#c8452b",
+      "source": "https://www.padella.co/",
+      "method": "inferred",
+      "confidence": "likely"
+    },
+    "logo": {
+      "value": {
+        "url": "https://www.padella.co/wp-content/uploads/2025/05/padella-org-logo.avif",
+        "alt": "Padella logo"
+      },
+      "source": "https://www.padella.co/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "hours": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "phone": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "email": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "guess"
+    }
+  },
+  "commerce": {
+    "currency": {
+      "value": "GBP",
+      "source": "https://www.padella.co/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "sections": [],
+    "products": 0,
+    "priced": 0,
+    "withImage": 0,
+    "payload": "dish",
+    "status": "empty",
+    "rejected": [
+      {
+        "name": "Cookie Policy",
+        "section": "Restaurant",
+        "payload": "policy",
+        "reason": "policy-page"
+      },
+      {
+        "name": "Privacy Policy",
+        "section": "Restaurant",
+        "payload": "policy",
+        "reason": "policy-page"
+      },
+      {
+        "name": "Padella Shoreditch",
+        "section": "Restaurant",
+        "payload": "location",
+        "reason": "location-page"
+      },
+      {
+        "name": "Padella Borough Market",
+        "section": "Restaurant",
+        "payload": "location",
+        "reason": "location-page"
+      },
+      {
+        "name": "Padella Soho",
+        "section": "Restaurant",
+        "payload": "location",
+        "reason": "location-page"
+      }
+    ],
+    "requirements": {
+      "met": [],
+      "missing": [
+        "price",
+        "image"
+      ]
+    },
+    "pricingBasis": "unknown"
+  },
+  "conflicts": [],
+  "missing": [
+    "dish list",
+    "contact details",
+    "address",
+    "dish price, image"
+  ],
+  "questions": [
+    {
+      "field": "name",
+      "why": "We only read the name as “Padella”, from the web address. Is that how the business writes it?",
+      "kind": "confirm"
+    },
+    {
+      "field": "catalogue",
+      "why": "No dishs could be read as commercial inventory — the pages the crawler reached were policies, articles, locations or navigation. Add them, or point us at the page that lists your dishs.",
+      "kind": "confirm"
+    },
+    {
+      "field": "contact",
+      "why": "No phone or email was published.",
+      "kind": "confirm"
+    }
+  ],
+  "tradeCandidates": [
+    {
+      "id": "restaurant",
+      "score": 0.9,
+      "evidence": [
+        "the nearest trade, from “restaurant”",
+        "Restaurant"
+      ]
+    },
+    {
+      "id": "marketplace",
+      "score": 0.45,
+      "evidence": [
+        "vendor"
+      ]
+    }
+  ],
+  "clientRendered": false
+}

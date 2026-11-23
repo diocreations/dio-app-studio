@@ -1,0 +1,31 @@
+{
+  "token": "b2b50193683a82f40d25ecd5",
+  "data": {
+    "booking": null,
+    "ordering": null,
+    "vertical": null,
+    "addLabel": null,
+    "hasData": false
+  },
+  "itemOpened": true,
+  "detail": {
+    "active": "detail",
+    "add": "",
+    "checkin": true,
+    "datesTab": true
+  },
+  "cart": {
+    "open": true,
+    "checkinInCart": false,
+    "checkinVisibleInCart": false,
+    "checkoutInCart": false,
+    "checkoutVisibleInCart": false,
+    "body": "The Dolly Parton room\n168.50\n−\n1\n+"
+  },
+  "dates": {
+    "active": "book",
+    "checkinVisible": true,
+    "bookingButton": "Request booking"
+  },
+  "generatedAt": "2026-11-22T06:15:11.830Z"
+}

@@ -1,0 +1,374 @@
+{
+  "site": "afl",
+  "trade": "professional",
+  "source": "https://architectureforlondon.com/",
+  "sourceKind": "saved crawl report, 21 November 2026 (no network request)",
+  "before": {
+    "items": 8,
+    "priced": 0,
+    "withImage": 0,
+    "sections": [
+      [
+        "Journal",
+        6
+      ],
+      [
+        "Professional services",
+        2
+      ]
+    ],
+    "missing": [
+      "address"
+    ]
+  },
+  "after": {
+    "items": 1,
+    "priced": 0,
+    "withImage": 0,
+    "payload": "service",
+    "status": "complete",
+    "pricingBasis": "quote",
+    "requirements": {
+      "met": [],
+      "missing": [
+        "price"
+      ]
+    },
+    "inventoryPagesRead": [
+      "/"
+    ],
+    "currency": {
+      "value": "GBP",
+      "source": "https://architectureforlondon.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "missing": [
+      "address",
+      "service photographs",
+      "service price"
+    ],
+    "questions": [
+      {
+        "field": "name",
+        "why": "We only read the name as “Architecture for London”, from the web address. Is that how the business writes it?",
+        "kind": "confirm"
+      }
+    ],
+    "conflicts": []
+  },
+  "name": {
+    "value": "Architecture for London",
+    "source": "host",
+    "confidence": "likely"
+  },
+  "contact": {
+    "phone": {
+      "value": "+442036374236",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "email": {
+      "value": "mail@architectureforlondon.com",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "address": {
+      "value": "",
+      "source": "https://architectureforlondon.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "evidence": {}
+  },
+  "pages": [
+    {
+      "path": "/",
+      "role": "inventory"
+    },
+    {
+      "path": "/project/stone-house/",
+      "role": "article"
+    },
+    {
+      "path": "/project/peckham-house/",
+      "role": "article"
+    },
+    {
+      "path": "/project/barnsbury-house/",
+      "role": "article"
+    },
+    {
+      "path": "/project/low-energy-house/",
+      "role": "article"
+    },
+    {
+      "path": "/project/heritage-projects/",
+      "role": "article"
+    },
+    {
+      "path": "/project/hampstead-house-extension/",
+      "role": "article"
+    },
+    {
+      "path": "/project/brook-green-house-extension/",
+      "role": "article"
+    },
+    {
+      "path": "/project/hammersmith-house-extension/",
+      "role": "article"
+    },
+    {
+      "path": "/project/georgian-house-refurbishment/",
+      "role": "article"
+    },
+    {
+      "path": "/projects/interior-design/",
+      "role": "article"
+    },
+    {
+      "path": "/projects/public/",
+      "role": "article"
+    },
+    {
+      "path": "/projects/housing/",
+      "role": "article"
+    },
+    {
+      "path": "/projects/workplace/",
+      "role": "article"
+    },
+    {
+      "path": "/projects/furniture/",
+      "role": "article"
+    },
+    {
+      "path": "/project/fisher-paykel-showroom/",
+      "role": "article"
+    },
+    {
+      "path": "/projects/interior-design/page/2/",
+      "role": "article"
+    },
+    {
+      "path": "/instagram/bloomsbury-flat-progress-visuals-a-place-to-read-think-and-write/",
+      "role": "article"
+    },
+    {
+      "path": "/instagram/this-mews-house-extension-in-hackney-east-london-transforms-a-compact-mid-19th-century-georgian-property-into-a-contem/",
+      "role": "article"
+    },
+    {
+      "path": "/instagram/in-the-front-reception-rooms-the-original-pine-floorboards-were-sanded-and-refinished-with-a-contemporary-white-soap-fi/",
+      "role": "article"
+    }
+  ],
+  "rejected": [
+    {
+      "name": "Bloomsbury Flat, progress visuals. A place to read, think…",
+      "section": "Journal",
+      "payload": "article",
+      "reason": "article-section"
+    },
+    {
+      "name": "This mews house extension in Hackney, East London,…",
+      "section": "Journal",
+      "payload": "article",
+      "reason": "article-section"
+    },
+    {
+      "name": "In the front reception rooms, the original pine floorboards…",
+      "section": "Journal",
+      "payload": "article",
+      "reason": "article-section"
+    },
+    {
+      "name": "A refurbishment and extension of an early Victorian house…",
+      "section": "Journal",
+      "payload": "article",
+      "reason": "article-section"
+    },
+    {
+      "name": "This early 19th-century Georgian house in Hampstead village…",
+      "section": "Journal",
+      "payload": "article",
+      "reason": "article-section"
+    },
+    {
+      "name": "Our refurbishment and extension of an early Victorian house…",
+      "section": "Journal",
+      "payload": "article",
+      "reason": "article-section"
+    },
+    {
+      "name": "Projects Archive",
+      "section": "Professional services",
+      "payload": "navigation",
+      "reason": "navigation"
+    }
+  ],
+  "accepted": [
+    {
+      "section": "Professional services",
+      "name": "Build",
+      "price": 0,
+      "variants": 0,
+      "image": "",
+      "evidence": {
+        "payload": "service",
+        "source": "https://architectureforlondon.com/",
+        "method": "visible-text",
+        "confidence": "guess",
+        "status": "incomplete",
+        "missing": [
+          "price"
+        ]
+      },
+      "priceEvidence": "absent"
+    }
+  ],
+  "checks": [
+    {
+      "name": "no policy rows published",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "no editorial rows published",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "no navigation or location rows published",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "real inventory retained",
+      "ok": true,
+      "detail": "1 of a required 1"
+    },
+    {
+      "name": "every published price carries validated evidence",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "every item carries a source",
+      "ok": true,
+      "detail": 0
+    },
+    {
+      "name": "currency is stated wherever a price is published",
+      "ok": true,
+      "detail": "GBP"
+    },
+    {
+      "name": "every photograph is attached to an item, not shared between them",
+      "ok": true,
+      "detail": "0 photographs, 0 distinct"
+    },
+    {
+      "name": "an empty catalogue is disclosed, not filled",
+      "ok": true,
+      "detail": [
+        "name"
+      ]
+    },
+    {
+      "name": "business name keeps the source casing",
+      "ok": true,
+      "detail": "Architecture for London"
+    },
+    {
+      "name": "all three concepts are structurally distinct",
+      "ok": true,
+      "detail": [
+        {
+          "pair": "classic/minimal",
+          "different": [
+            "screen and navigation architecture",
+            "section types and composition",
+            "catalogue presentation",
+            "detail-page interaction",
+            "primary customer journey"
+          ],
+          "insufficient": [
+            "trade-specific functionality"
+          ],
+          "reasons": [
+            "same tabs",
+            "same block set",
+            "same trade functionality"
+          ]
+        },
+        {
+          "pair": "classic/editorial",
+          "different": [
+            "screen and navigation architecture",
+            "section types and composition",
+            "catalogue presentation",
+            "detail-page interaction",
+            "primary customer journey"
+          ],
+          "insufficient": [
+            "trade-specific functionality"
+          ],
+          "reasons": [
+            "same opening screen",
+            "same block set",
+            "same trade functionality"
+          ]
+        },
+        {
+          "pair": "minimal/editorial",
+          "different": [
+            "screen and navigation architecture",
+            "section types and composition",
+            "catalogue presentation",
+            "detail-page interaction",
+            "primary customer journey"
+          ],
+          "insufficient": [
+            "trade-specific functionality"
+          ],
+          "reasons": [
+            "same block set",
+            "same trade functionality"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "no delivery fee is invented",
+      "ok": true,
+      "detail": [
+        {
+          "options": [
+            "Online"
+          ],
+          "source": "default"
+        },
+        {
+          "options": [
+            "Online"
+          ],
+          "source": "default"
+        },
+        {
+          "options": [
+            "Online"
+          ],
+          "source": "default"
+        }
+      ]
+    },
+    {
+      "name": "every catalogue row the trade refused is recorded",
+      "ok": true,
+      "detail": "7 dropped / 7 recorded"
+    }
+  ]
+}

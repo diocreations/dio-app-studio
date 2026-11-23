@@ -1,7 +1,7 @@
 import { directionsFor } from './directions'
 import { detectVertical } from './importer'
 import { FEATURES, normalizeFeatures } from './pricing'
-import type { ElementShape, FeatureId, LayoutChoice, VerticalId } from './types'
+import type { ElementShape, FeatureId, LayoutChoice, MenuSection, VerticalId } from './types'
 import { VERTICALS } from './verticals'
 
 /**
@@ -111,16 +111,75 @@ export type PromptRead = {
   evidence: string[]
   features: FeatureId[]
   suggestions: FeatureSuggestion[]
+  /** The business's own name for what it does, when the prompt says it more
+   *  precisely than the trade does (a florist is a kind of shop). */
+  category?: string
+  /** A clearly-sample catalogue for a prompt-described business whose trade
+   *  seed would contradict the words (flowers, not ceramics). */
+  sample?: MenuSection[]
+  accent?: string
 }
+
+/** A prompt can name a business the 27 trades describe only as "shop". The
+ *  words still decide the content: a florist gets flowers on the sample shelf,
+ *  not the homeware seed. It is sample data, labelled as such by the build. */
+const PROMPT_PRESETS: {
+  words: string[]
+  vertical: VerticalId
+  label: string
+  category: string
+  accent: string
+  sample: MenuSection[]
+}[] = [
+  {
+    words: ['florist', 'floristry', 'flower shop', 'flowers', 'bouquet', 'bouquets', 'flower delivery'],
+    vertical: 'shop',
+    label: 'Florist',
+    category: 'Florist',
+    accent: '#7a3f5a',
+    sample: [
+      {
+        name: 'Bouquets',
+        items: [
+          { name: 'Seasonal hand-tied bouquet', desc: 'Grower’s choice, wrapped in paper', price: 4500, tag: 'Bestseller' },
+          { name: 'Rose and eucalyptus bunch', desc: 'Scented roses with soft greenery', price: 3800 },
+          { name: 'Market posy', desc: 'A small bunch of the week’s best', price: 2400 },
+        ],
+      },
+      {
+        name: 'Occasions',
+        items: [
+          { name: 'Birthday arrangement', desc: 'Bright, gift-wrapped, card included', price: 5200 },
+          { name: 'Wedding flowers', desc: 'Ceremony and table flowers, planned at a visit', price: 12000 },
+          { name: 'Sympathy tribute', desc: 'Quiet whites and greens, delivered', price: 6000 },
+        ],
+      },
+      {
+        name: 'Plants & gifts',
+        items: [
+          { name: 'Potted orchid', desc: 'In a ceramic pot, care card included', price: 3400 },
+          { name: 'Dried arrangement', desc: 'Lasts beyond the season', price: 2900 },
+          { name: 'Local delivery', desc: 'Same-day within the city, cut-off 2pm', price: 900 },
+        ],
+      },
+    ],
+  },
+]
 
 export function readPrompt(input: unknown): PromptRead {
   const prompt = cleanPrompt(input)
   const noun = tradeFromPrompt(prompt)
+  const preset = PROMPT_PRESETS.find((entry) => entry.words.some((word) => mentions(prompt, word) >= 0))
+  const presetHit = preset ? preset.words.find((word) => mentions(prompt, word) >= 0) ?? '' : ''
   let vertical: VerticalId
   let confidence: 'detected' | 'guessed'
   let evidence: string[]
 
-  if (noun) {
+  if (preset) {
+    vertical = preset.vertical
+    confidence = 'detected'
+    evidence = [presetHit]
+  } else if (noun) {
     vertical = noun.id
     confidence = 'detected'
     evidence = noun.evidence
@@ -151,11 +210,12 @@ export function readPrompt(input: unknown): PromptRead {
   return {
     prompt,
     vertical,
-    label: trade.label,
+    label: preset ? preset.label : trade.label,
     glyph: trade.glyph,
     confidence,
     evidence,
     features,
+    ...(preset ? { category: preset.category, sample: preset.sample, accent: preset.accent } : {}),
     suggestions: features.map((id) => ({
       id,
       label: FEATURES.find((feature) => feature.id === id)?.label ?? id,

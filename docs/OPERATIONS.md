@@ -59,9 +59,10 @@ by this action.
   the audit index live in the backup bucket. The full procedure, the RPO/RTO
   targets, monitoring and the remaining gaps are in
   `docs/PRODUCTION_DISASTER_RECOVERY.md`.
-- That job is **not running**: this repository has no git remote, no production
-  D1/R2 exists, and `--remote` has never been executed. It is rehearsed against
-  local Wrangler state only.
+- Production D1/R2 now exists, but that job is **not running**: this repository
+  has no git remote, production `--remote` has not been executed against the
+  Sites account, and no scheduler or alert owner is configured. It is rehearsed
+  against local Wrangler state and the separate staging environment only.
 
 ## Owner access
 

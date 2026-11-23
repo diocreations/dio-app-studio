@@ -1,0 +1,207 @@
+{
+  "url": "https://www.hotelpelirocco.co.uk/",
+  "host": "www.hotelpelirocco.co.uk",
+  "pages": {
+    "read": [
+      "/",
+      "/rooms",
+      "/stay",
+      "/pelirocco-privacy-policy/",
+      "/rocco-regulars-loyalty-club/",
+      "/event-venue-hire/",
+      "/business-hire/",
+      "/peliblog/",
+      "/press-quotes-over-the-years/",
+      "/private-hire/",
+      "/peli-party-venue-hire/",
+      "/peli-packages/"
+    ],
+    "failed": [],
+    "usedSitemap": true
+  },
+  "business": {
+    "name": {
+      "value": "Hotel Pelirocco",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "category": {
+      "value": "Hotel & guesthouse",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "tagline": {
+      "value": "Discover this quirky hotel in Brighton, UK Hotel Pelirocco.",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "story": {
+      "value": "Discover this quirky hotel in Brighton, UK Hotel Pelirocco. Book this cool boutique hotel with themed rooms for an unforgettable experience.",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "trade": {
+      "value": "hotel",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "inferred",
+      "confidence": "verified"
+    },
+    "accent": {
+      "value": "#de4528",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "inferred",
+      "confidence": "likely"
+    },
+    "logo": {
+      "value": {
+        "url": "https://www.hotelpelirocco.co.uk/wp-content/uploads/2015/04/logo-slanted.png",
+        "alt": "Hotel Pelirocco logo"
+      },
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "hours": {
+      "value": "",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "phone": {
+      "value": "",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "email": {
+      "value": "",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "visible-text",
+      "confidence": "guess"
+    }
+  },
+  "commerce": {
+    "currency": {
+      "value": "",
+      "source": "https://www.hotelpelirocco.co.uk/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "sections": [],
+    "products": 0,
+    "priced": 0,
+    "withImage": 0,
+    "payload": "room",
+    "status": "empty",
+    "rejected": [
+      {
+        "name": "pelirocco privacy policy",
+        "section": "Hotel & guesthouse",
+        "payload": "policy",
+        "reason": "policy-page"
+      },
+      {
+        "name": "rocco regulars loyalty club",
+        "section": "Hotel & guesthouse",
+        "payload": "promotion",
+        "reason": "not-a-room"
+      },
+      {
+        "name": "Event Venue Hire",
+        "section": "Hotel & guesthouse",
+        "payload": "promotion",
+        "reason": "not-a-room"
+      },
+      {
+        "name": "Business Hire",
+        "section": "Hotel & guesthouse",
+        "payload": "promotion",
+        "reason": "not-a-room"
+      },
+      {
+        "name": "Welcome to the Peli Blog",
+        "section": "Hotel & guesthouse",
+        "payload": "article",
+        "reason": "article-page"
+      },
+      {
+        "name": "press quotes over the years",
+        "section": "Hotel & guesthouse",
+        "payload": "article",
+        "reason": "article-page"
+      },
+      {
+        "name": "private hire",
+        "section": "Hotel & guesthouse",
+        "payload": "promotion",
+        "reason": "not-a-room"
+      },
+      {
+        "name": "Private Party Venue Brighton",
+        "section": "Hotel & guesthouse",
+        "payload": "promotion",
+        "reason": "not-a-room"
+      },
+      {
+        "name": "Packages",
+        "section": "Hotel & guesthouse",
+        "payload": "promotion",
+        "reason": "not-a-room"
+      }
+    ],
+    "requirements": {
+      "met": [],
+      "missing": [
+        "price",
+        "image",
+        "occupancy"
+      ]
+    },
+    "pricingBasis": "unknown"
+  },
+  "conflicts": [],
+  "missing": [
+    "room list",
+    "contact details",
+    "address",
+    "room price, image, occupancy"
+  ],
+  "questions": [
+    {
+      "field": "name",
+      "why": "We only read the name as “Hotel Pelirocco”, from the web address. Is that how the business writes it?",
+      "kind": "confirm"
+    },
+    {
+      "field": "catalogue",
+      "why": "No rooms could be read as commercial inventory — the pages the crawler reached were policies, articles, locations or navigation. Add them, or point us at the page that lists your rooms.",
+      "kind": "confirm"
+    },
+    {
+      "field": "contact",
+      "why": "No phone or email was published.",
+      "kind": "confirm"
+    }
+  ],
+  "tradeCandidates": [
+    {
+      "id": "hotel",
+      "score": 0.9,
+      "evidence": [
+        "the nearest trade, from “hotel”",
+        "Hotel & guesthouse"
+      ]
+    }
+  ],
+  "clientRendered": false
+}

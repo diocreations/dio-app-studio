@@ -1,0 +1,1425 @@
+{
+  "url": "https://bluetitlondon.com/",
+  "host": "bluetitlondon.com",
+  "pages": {
+    "read": [
+      "/",
+      "/services/",
+      "/service-type/cutting/",
+      "/service-type/styling/",
+      "/service-type/colouring/",
+      "/service-type/hair-treatments/",
+      "/services/rebuilding/",
+      "/services/rebalancing/",
+      "/services/hair-loss/",
+      "/services/herbs-clay-peeling-cleansing/",
+      "/services/soothing/",
+      "/services/oway-flowerfall-treatment/",
+      "/services/purifying/",
+      "/services/blow-dry/",
+      "/services/brazilian-blow-dry/"
+    ],
+    "failed": [],
+    "usedSitemap": true
+  },
+  "business": {
+    "name": {
+      "value": "Blue Tit London",
+      "source": "https://bluetitlondon.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "category": {
+      "value": "Salon & spa",
+      "source": "https://bluetitlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "tagline": {
+      "value": "Blue Tit is a group of award-winning boutique hair salons in London.",
+      "source": "https://bluetitlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "story": {
+      "value": "Blue Tit is a group of award-winning boutique hair salons in London. We believe your haircut should be an experience, make us your London hairdressers.",
+      "source": "https://bluetitlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "trade": {
+      "value": "salon",
+      "source": "https://bluetitlondon.com/",
+      "method": "inferred",
+      "confidence": "verified"
+    },
+    "accent": {
+      "value": "#0d6efd",
+      "source": "https://bluetitlondon.com/",
+      "method": "inferred",
+      "confidence": "likely"
+    },
+    "logo": {
+      "value": {
+        "url": "https://bluetitlondon.com/wp-content/uploads/2022/09/Blue-Tit-Sticker-Logo.png",
+        "alt": "Blue Tit London logo"
+      },
+      "source": "https://bluetitlondon.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "hours": {
+      "value": "",
+      "source": "https://bluetitlondon.com/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "phone": {
+      "value": "01702412486",
+      "source": "https://bluetitlondon.com/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "email": {
+      "value": "",
+      "source": "https://bluetitlondon.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://bluetitlondon.com/",
+      "method": "visible-text",
+      "confidence": "guess"
+    }
+  },
+  "commerce": {
+    "currency": {
+      "value": "GBP",
+      "source": "https://bluetitlondon.com/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "sections": [
+      {
+        "name": "Salon & spa",
+        "source": "https://bluetitlondon.com/",
+        "items": [
+          {
+            "name": "Rebuilding M+",
+            "desc": "OWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…",
+            "price": 2600,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/rebuilding/",
+              "method": "structured-data",
+              "confidence": "verified",
+              "status": "verified",
+              "missing": [
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Back to Back Highlights - Full Head",
+            "desc": "Colouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Back to Back Highlights - Half Head",
+            "desc": "Colouring the top half of hair using a back-to-back foiling technique for maximum…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Highlights - Full Head",
+            "desc": "Colouring a full head of hair using foils. (2.5 hrs)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Highlights - Half Head",
+            "desc": "Colouring the top half of hair using foils. (2.5 hrs)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Highlights - T-Section",
+            "desc": "Colouring the parting and hairline using foils. (1 hr 45min)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Face Framing",
+            "desc": "Colouring the hairline to frame the face using foils. (1 hr 45min)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Balayage - Full Head",
+            "desc": "Lightening the ends of a full head of hair creating a dark to light fade. (2hrs 30)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Balayage - Half Head",
+            "desc": "Lightening the ends of the top section of hair creating a dark to light fade. (2hrs)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Balayage - T-section",
+            "desc": "Lightening the ends of the parting and hairline creating a dark to light fade. (1hr 45)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Reverse Balayage",
+            "desc": "Darkening the roots and fading colour into the ends (no lightening). (2hr)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Root Tint – Balayage Add-on",
+            "desc": "Tinting roots add-on in combination with our balayage services. (30 emins)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Virgin Bleach - Long/thick",
+            "desc": "Bleaching a full head of natural or partly lightened hair, that is thick or below the…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Virgin Bleach - Medium",
+            "desc": "Bleaching a full head of natural or partly lightened hair that is shoulder length. (2hr…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Virgin Bleach - Short",
+            "desc": "Bleaching a full head of natural or partly lightened hair, that is above the shoulder in…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Bleach Roots - 8 weeks+",
+            "desc": "Bleaching roots that are over 8 weeks long.",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Bleach Roots - 6 to 8 weeks",
+            "desc": "Bleaching roots that are 6 – 8 weeks long (we do not recommend doing so in under 6…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Bleach Panel",
+            "desc": "Bleaching a section of the hair. (2hr)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Full Head Tint - Long/Thick",
+            "desc": "Applying permanent colour to coloured or natural hair that is thick or below the shoulder…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Full Head Tint - Medium",
+            "desc": "Applying permanent colour to coloured or natural hair that is shoulder length, to enhance…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Full Head Tint - Short",
+            "desc": "Applying permanent colour to coloured or natural hair that is above the shoulder in…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Full Head HNectar",
+            "desc": "A luxury, ammonia-free alternative to our regular Full Head Tint that plumps, hydrates…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Root Tint",
+            "desc": "Applying permanent colour to roots 6 – 12 weeks long (any later and we recommend a full…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Root Tint HNectar",
+            "desc": "A luxury, ammonia-free alternative to our regular Root Tint that plumps, hydrates and…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Full Head Gloss",
+            "desc": "Applying semi-permanent colour to coloured or natural hair, and add volume, nourishment…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "HNectar Toner",
+            "desc": "A luxury, ammonia-free alternative to our regular toner that plumps, hydrates and…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Toner",
+            "desc": "Our signature colour-balancing service using Hcolor or Agricolor to neutralise tones and…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Creative Toner",
+            "desc": "Applying Hmelt vivid semi-permanent colour to pre-lightened hair. (30 mins)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Root Blend Toner",
+            "desc": "Applying a semi-permanent root shadow to pre-lightened hair. (30 mins)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "CC - Lightening",
+            "desc": "Lightning pre-coloured hair. (3hr)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "CC - Darkening",
+            "desc": "Darkening pre-lightened hair. (2hr)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Cut & Finish",
+            "desc": "The perfect way to freshen up your style while keeping the shape you love. We’ll refine…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Cut & Finish - Long/Thick",
+            "desc": "For those with extra length or volume, we take the time to cut your hair in a way that…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Cut & Finish - Restyle",
+            "desc": "If you’re ready for a change, this one’s for you. With every big transformation, we’ll…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Cut & Finish - Type 3c to 4c Hair",
+            "desc": "Whether you want to define your shape, remove weight, or enhance your natural texture, we…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Cut & Finish – Type 3c to 4c Hair – Restyle",
+            "desc": "If you’re ready for a change, this one’s for you. With every big transformation, we’ll…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Short Cut",
+            "desc": "A tailored cut for hair clean above the ear, using a combination of scissor and clipper…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Back & Sides – Refresh",
+            "desc": "A quick tidy-up for the back and sides of your existing short haircut, keeping everything…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Short Cut – Type 3c to 4c Hair",
+            "desc": "A precision cut for short curly or coily hair, shaped to enhance your natural texture…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Back & Sides – Type 3c to 4c Hair – Refresh",
+            "desc": "A refresh of the back and sides for curly or coily hair, maintaining your shape while…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Child’s Cut",
+            "desc": "A cut for clients under 13 years old. (45 mins)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Child’s Cut – Type 3c to 4c Hair",
+            "desc": "A cut for clients under 13 years old. (1hr 15)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Toddler's Cut",
+            "desc": "A cut for clients under 5 years old. (30 mins)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Fringe Trim",
+            "desc": "A trim of an existing fringe, not bookable online. Please note, we offer this as a…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "RebuildingM+ Deep Reconstruction Treatment",
+            "desc": "An intensive rebuilding treatment designed to restore strength, structure, and vitality…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/rebuilding/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Oway Tailored Treatment",
+            "desc": "A personalised scalp and hair treatment that begins with an in-depth analysis, followed…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "RebuildingM+ Express Treatment",
+            "desc": "A quick yet powerful boost that delivers instant cosmetic results and structural support.…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/rebuilding/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Olaplex Treatment",
+            "desc": "A strengthening, rebuilding and protective treatment for colour-treated or heat-damaged…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Bonds – Full Head",
+            "desc": "A full-head application of Great Lengths keratin bond extensions. This service provides…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Bonds – Half Head",
+            "desc": "A half-head application of Great Lengths keratin bond extensions. This service provides…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Bonds – Thickening",
+            "desc": "Additional Great Lengths keratin bonds applied to existing extensions to add extra…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Bonds - Removal",
+            "desc": "Safe removal of Great Lengths keratin bond extensions, followed by a wash and condition,…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Tapes - Full Head",
+            "desc": "A full-head application of Great Lengths tape extensions. This service provides immediate…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Tapes - Half Head",
+            "desc": "A half-head application of Great Lengths tape extensions. This service provides immediate…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Tapes - Thickening",
+            "desc": "A full-head application of Great Lengths tape extensions. This service provides immediate…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Tapes - Removal & Retape",
+            "desc": "Safe removal of Great Lengths tape extensions, and reapplying of tape adhesive ready for…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Tapes - Removal",
+            "desc": "Safe removal of Great Lengths tape extensions, followed by a wash, condition and quick…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Blow Dry",
+            "desc": "Smoothing, volumising, curl-enhancing and heat styling. (from 45 mins)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/blow-dry/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Twist Out",
+            "desc": "Wash and style designed for type 3 and 4 hair textures to help with curl definition and…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Flexi Rod Set",
+            "desc": "Wash and style designed for any hair type using flexi rods. (1hr 30)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Silk Press",
+            "desc": "Wash, conditioning treatment, smoothing and heat styling for any hair type. (1hr 30)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Texture Release - Elongation, Versatile or Ultimate Straight",
+            "desc": "Wash, conditioning treatment, smoothing and heat styling. (3hr 15)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Texture Release - Elongation",
+            "desc": "Heat activated moisturising treatment. (2hr 30)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Brazilian Blow Dry",
+            "desc": "Chemical smoothening treatment (available in Brixton, East Village, Streatham, Woolwich,…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/brazilian-blow-dry/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Extension Blow Dry",
+            "desc": "Smoothing, volumising and heat styling hair with extensions. (1hr)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/blow-dry/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Olaplex Blow Dry",
+            "desc": "A strengthening, rebuilding and protective treatment for colour-treated or heat-damaged…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/blow-dry/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Hair Therapy Blow Dry",
+            "desc": "Our most intensive and restorative treatment, tailored to your specific hair needs and…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/blow-dry/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Scalp Therapy Blow Dry",
+            "desc": "A rebalancing and soothing treatment tailored to those experiencing hair loss, dryness,…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/blow-dry/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Hair Up",
+            "desc": "Styling hair up, i.e. with pins, in a bun or with braiding. (1hr)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Colour Cleanse",
+            "desc": "Removing old tones or colour build-up. (30 mins)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Hair Therapy",
+            "desc": "Our most intensive and restorative treatment, tailored to your specific hair needs and…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Scalp Therapy",
+            "desc": "A rebalancing and soothing treatment tailored to those experiencing hair loss, dryness,…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Oway Treatment",
+            "desc": "A protective and hydrating treatment, keeping hair moisturised and adding softness to all…",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price",
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Blow Dry after Colour",
+            "desc": "Smoothing, volumising, curl-enhancing and heat styling. (45 mins)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/blow-dry/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Silk Press after Cut or Colour",
+            "desc": "Wash, conditioning treatment, smoothing and heat styling for any hair type. (1hr 15)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Quick dry after Colour",
+            "desc": "Encouraging the hair’s natural texture. (15 mins)",
+            "price": 0,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/",
+              "method": "visible-text",
+              "confidence": "guess",
+              "status": "incomplete",
+              "missing": [
+                "price"
+              ]
+            }
+          },
+          {
+            "name": "Rebalancing",
+            "desc": "OWAY Rebalancing is a treatment for greasy hair. This 20-minute greasy hair treatment…",
+            "price": 4000,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/rebalancing/",
+              "method": "structured-data",
+              "confidence": "verified",
+              "status": "verified",
+              "missing": [
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Hair loss",
+            "desc": "OWAY Hair Loss is a treatment for thinning hair. This 20-minute hair treatment involves…",
+            "price": 4000,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/hair-loss/",
+              "method": "structured-data",
+              "confidence": "verified",
+              "status": "verified",
+              "missing": [
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Herbs & clay peeling cleansing",
+            "desc": "Oway Herbs & Clay Peeling Cleanser is a holistic beauty and wellness detox treatment for…",
+            "price": 4000,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/herbs-clay-peeling-cleansing/",
+              "method": "structured-data",
+              "confidence": "verified",
+              "status": "verified",
+              "missing": [
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Soothing",
+            "desc": "OWAY Soothing is a treatment for a sensitive scalp. This 20-minute hair treatment…",
+            "price": 4000,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/soothing/",
+              "method": "structured-data",
+              "confidence": "verified",
+              "status": "verified",
+              "missing": [
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Oway Flowerfall treatment",
+            "desc": "Deeply rooted in traditional Ayurvedic medicine. Hydro-dhara provides a gentle flow of…",
+            "price": 4000,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/oway-flowerfall-treatment/",
+              "method": "structured-data",
+              "confidence": "verified",
+              "status": "verified",
+              "missing": [
+                "duration"
+              ]
+            }
+          },
+          {
+            "name": "Purifying",
+            "desc": "OWAY Purifying is a scalp treatment for dandruff. This 20-minute hair treatment involves…",
+            "price": 4000,
+            "evidence": {
+              "payload": "treatment",
+              "source": "https://bluetitlondon.com/services/purifying/",
+              "method": "structured-data",
+              "confidence": "verified",
+              "status": "verified",
+              "missing": [
+                "duration"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "products": 82,
+    "priced": 7,
+    "withImage": 0,
+    "payload": "treatment",
+    "status": "complete",
+    "rejected": [],
+    "requirements": {
+      "met": [
+        "price",
+        "duration"
+      ],
+      "missing": []
+    },
+    "pricingBasis": "published"
+  },
+  "conflicts": [],
+  "missing": [
+    "address",
+    "treatment or service photographs"
+  ],
+  "questions": [
+    {
+      "field": "name",
+      "why": "We only read the name as “Blue Tit London”, from the web address. Is that how the business writes it?",
+      "kind": "confirm"
+    }
+  ],
+  "tradeCandidates": [
+    {
+      "id": "salon",
+      "score": 0.9,
+      "evidence": [
+        "the nearest trade, from “salon”",
+        "Salon & spa"
+      ]
+    }
+  ],
+  "clientRendered": false
+}

@@ -1,0 +1,128 @@
+{
+  "v": 2,
+  "accent": "#de4528",
+  "design": {
+    "direction": "luxe",
+    "nav": "floating"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Stay",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_hotel_rooms",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "hotel-rooms",
+          "title": "Rooms",
+          "layout": "strip"
+        },
+        {
+          "id": "sec_fx_hotel_cover",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "hotel-cover",
+          "title": "Hotel Pelirocco",
+          "text": "Discover this quirky hotel in Brighton, UK Hotel Pelirocco.",
+          "follows": {
+            "title": "name",
+            "text": "tagline"
+          },
+          "layout": "split"
+        },
+        {
+          "id": "sec_fx_hotel_facts",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "hotel-facts",
+          "title": "Reception",
+          "text": "Check-in 15:00 · Check-out 11:00",
+          "layout": "strip"
+        },
+        {
+          "id": "sec_fx_hotel_stay",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "hotel-stay",
+          "title": "View rooms"
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Rooms",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Dates",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "More",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

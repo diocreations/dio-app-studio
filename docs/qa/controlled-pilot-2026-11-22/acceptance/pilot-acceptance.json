@@ -1,0 +1,198 @@
+{
+  "generatedAt": "2026-11-22T07:32:17.104Z",
+  "origin": "http://127.0.0.1:5173",
+  "report": [
+    {
+      "trade": "shop",
+      "site": "yarmouth",
+      "direction": "editorial",
+      "token": "b8685ae41880bd0b9386135f",
+      "before": {
+        "status": 200,
+        "orders": 0,
+        "bookings": 0,
+        "enquiries": 0,
+        "app": null
+      },
+      "concepts": [
+        {
+          "direction": "minimal",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        },
+        {
+          "direction": "editorial",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        },
+        {
+          "direction": "lifestyle",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        }
+      ],
+      "workflow": {
+        "name": "Yarmouth Oilskins Gift Card",
+        "cart": "Yarmouth Oilskins Gift Card — £5.00\n5\n−\n1\n+",
+        "confirmation": "✓\nOrder #5005\n\nPickup · 5\nSent to yarmouthoilskins. They will confirm when it is ready.\n\nDone",
+        "state": {}
+      },
+      "after": {
+        "status": 200,
+        "orders": 1,
+        "bookings": 0,
+        "enquiries": 0,
+        "app": null
+      },
+      "ownerDashboard": true,
+      "dashboardRecorded": true,
+      "ok": true
+    },
+    {
+      "trade": "restaurant",
+      "site": "padella",
+      "direction": "editorial",
+      "token": "b299bd4edec1dd56d78852ca",
+      "before": {
+        "status": 200,
+        "orders": 0,
+        "bookings": 0,
+        "enquiries": 0,
+        "app": null
+      },
+      "concepts": [
+        {
+          "direction": "editorial",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        },
+        {
+          "direction": "modern",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        },
+        {
+          "direction": "luxe",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        }
+      ],
+      "workflow": {
+        "confirmation": "✓\nRequest sent\n\nTomorrow at 18:30 · 2 guests\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "state": {}
+      },
+      "after": {
+        "status": 200,
+        "orders": 0,
+        "bookings": 1,
+        "enquiries": 0,
+        "app": null
+      },
+      "ownerDashboard": true,
+      "dashboardRecorded": true,
+      "ok": true
+    },
+    {
+      "trade": "salon",
+      "site": "bluetit",
+      "direction": "editorial",
+      "token": "8dc80a3ef0694a458fa3965d",
+      "before": {
+        "status": 200,
+        "orders": 0,
+        "bookings": 0,
+        "enquiries": 0,
+        "app": null
+      },
+      "concepts": [
+        {
+          "direction": "minimal",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        },
+        {
+          "direction": "editorial",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        },
+        {
+          "direction": "luxe",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        }
+      ],
+      "workflow": {
+        "confirmation": "✓\nRequest sent\n\nTomorrow at 10:30 · 2 people\nThis is a request, not a confirmed reservation. The business will confirm it. You can check its status in More.\n\nDone",
+        "state": {}
+      },
+      "after": {
+        "status": 200,
+        "orders": 0,
+        "bookings": 1,
+        "enquiries": 0,
+        "app": null
+      },
+      "ownerDashboard": true,
+      "dashboardRecorded": true,
+      "ok": true
+    },
+    {
+      "trade": "professional",
+      "site": "afl",
+      "direction": "classic",
+      "token": "f639ea31ed9957772223b6fe",
+      "before": {
+        "status": 200,
+        "orders": 0,
+        "bookings": 0,
+        "enquiries": 0,
+        "app": null
+      },
+      "concepts": [
+        {
+          "direction": "classic",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        },
+        {
+          "direction": "minimal",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        },
+        {
+          "direction": "editorial",
+          "status": 200,
+          "concept": "lead",
+          "hasStructuredData": false
+        }
+      ],
+      "workflow": {
+        "heading": "Request sent",
+        "confirmation": "✓\nRequest sent\n\nThanks Pilot Client — the business will reply on pilot-client@example.com. Your request is now in their dashboard.\n\nDone"
+      },
+      "after": {
+        "status": 200,
+        "orders": 0,
+        "bookings": 0,
+        "enquiries": 1,
+        "app": null
+      },
+      "ownerDashboard": true,
+      "dashboardRecorded": true,
+      "ok": true
+    }
+  ],
+  "consoleErrors": [],
+  "networkFailures": []
+}

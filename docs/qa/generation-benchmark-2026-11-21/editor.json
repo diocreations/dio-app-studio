@@ -1,0 +1,420 @@
+[
+  {
+    "site": "yarmouth",
+    "direction": "minimal",
+    "token": "d44fb765199cccc48cb2bd22",
+    "cookie": "plattr_owner_d44fb765199c=own_21815663b57323e9d6e1212c6d7586e31cbdcfca32abdc4f",
+    "name": "yarmouthoilskins",
+    "vertical": "shop",
+    "pass": 7,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "SKIP base price — every item is variant-priced; variant price is checked instead",
+      "PASS variant price edit reaches the app — 5.00 -> 19.99",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 4,
+    "debug": [
+      [
+        "sec_fx_shop_search",
+        "Search the collection",
+        90,
+        true
+      ]
+    ],
+    "edited": "Search the collection · BQ"
+  },
+  {
+    "site": "yarmouth",
+    "direction": "editorial",
+    "token": "e6a41aa591282a3f84992728",
+    "cookie": "plattr_owner_e6a41aa59128=own_1a49339d840a28fd024badb90e84ad4301ca95b3a32cd92d",
+    "name": "yarmouthoilskins",
+    "vertical": "shop",
+    "pass": 7,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "SKIP base price — every item is variant-priced; variant price is checked instead",
+      "PASS variant price edit reaches the app — 5.00 -> 19.99",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 4,
+    "debug": [
+      [
+        "sec_fx_shop_products",
+        "New in",
+        90,
+        true
+      ]
+    ],
+    "edited": "New in · BQ"
+  },
+  {
+    "site": "yarmouth",
+    "direction": "lifestyle",
+    "token": "7b6869bcf2c1eb7cb1ba76bd",
+    "cookie": "plattr_owner_7b6869bcf2c1=own_3f71a2c2c5ab9a3202eb0767d35d58f648eb6c2e57887d4a",
+    "name": "yarmouthoilskins",
+    "vertical": "shop",
+    "pass": 7,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "SKIP base price — every item is variant-priced; variant price is checked instead",
+      "PASS variant price edit reaches the app — 5.00 -> 19.99",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 4,
+    "debug": [
+      [
+        "sec_fx_shop_title",
+        "Yarmouth Oilskins Est.",
+        90,
+        true
+      ]
+    ],
+    "edited": "Yarmouth Oilskins Est. · BQ"
+  },
+  {
+    "site": "padella",
+    "direction": "editorial",
+    "token": "88561789c7d43f02eee4a8e0",
+    "cookie": "plattr_owner_88561789c7d4=own_0657f9b2d79a961690705466fd66fb42c6c7f5613efc7ad7",
+    "name": "Padella",
+    "vertical": "restaurant",
+    "pass": 11,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS an empty catalogue explains why it is empty",
+      "PASS an empty catalogue offers a bulk list",
+      "PASS a pasted list fills and publishes the catalogue",
+      "PASS the review marks a pasted row as owner-provided",
+      "PASS the test entry is removed again",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 2,
+    "debug": [
+      [
+        "sec_fx_dine_title",
+        "Padella",
+        90,
+        true
+      ]
+    ],
+    "edited": "Padella · BQ"
+  },
+  {
+    "site": "padella",
+    "direction": "modern",
+    "token": "9081bdf3d33e2db873796e5d",
+    "cookie": "plattr_owner_9081bdf3d33e=own_5d5dc2adeb9ca7eecae6c6876dd3de86f66569f7d665a051",
+    "name": "Padella",
+    "vertical": "restaurant",
+    "pass": 6,
+    "fail": 0,
+    "log": [
+      "SKIP heading — this catalogue-first screen has no visible section title; its copy is in the catalogue",
+      "PASS an empty catalogue explains why it is empty",
+      "PASS an empty catalogue offers a bulk list",
+      "PASS a pasted list fills and publishes the catalogue",
+      "PASS the review marks a pasted row as owner-provided",
+      "PASS the test entry is removed again",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 2,
+    "debug": [
+      [
+        "sec_fx_dine_actions",
+        "no title field"
+      ],
+      [
+        "sec_fx_dine_title",
+        "no title field"
+      ]
+    ],
+    "edited": ""
+  },
+  {
+    "site": "padella",
+    "direction": "luxe",
+    "token": "ed2da54188854df004abdcad",
+    "cookie": "plattr_owner_ed2da5418885=own_7e905a06faa51427fd948defa58a81eec24464d8e336b325",
+    "name": "Padella",
+    "vertical": "restaurant",
+    "pass": 11,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS an empty catalogue explains why it is empty",
+      "PASS an empty catalogue offers a bulk list",
+      "PASS a pasted list fills and publishes the catalogue",
+      "PASS the review marks a pasted row as owner-provided",
+      "PASS the test entry is removed again",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 2,
+    "debug": [
+      [
+        "sec_fx_dine_title",
+        "Padella",
+        90,
+        true
+      ]
+    ],
+    "edited": "Padella · BQ"
+  },
+  {
+    "site": "pelirocco",
+    "direction": "minimal",
+    "token": "b8898f7b6506df477c5fae8a",
+    "cookie": "plattr_owner_b8898f7b6506=own_6bf71c5177b9689022388d7a4b2d45687cdf0ea52e9b974f",
+    "name": "Hotel Pelirocco",
+    "vertical": "hotel",
+    "pass": 11,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS an empty catalogue explains why it is empty",
+      "PASS an empty catalogue offers a bulk list",
+      "PASS a pasted list fills and publishes the catalogue",
+      "PASS the review marks a pasted row as owner-provided",
+      "PASS the test entry is removed again",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 4,
+    "debug": [
+      [
+        "sec_fx_hotel_rooms",
+        "Rooms",
+        90,
+        true
+      ]
+    ],
+    "edited": "Rooms · BQ"
+  },
+  {
+    "site": "pelirocco",
+    "direction": "editorial",
+    "token": "7e42ccff9589678d52ce7e85",
+    "cookie": "plattr_owner_7e42ccff9589=own_3d60f396cbe9fa0fc8fca367698446433a89bc04b32d3818",
+    "name": "Hotel Pelirocco",
+    "vertical": "hotel",
+    "pass": 11,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS an empty catalogue explains why it is empty",
+      "PASS an empty catalogue offers a bulk list",
+      "PASS a pasted list fills and publishes the catalogue",
+      "PASS the review marks a pasted row as owner-provided",
+      "PASS the test entry is removed again",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 4,
+    "debug": [
+      [
+        "sec_fx_hotel_cover",
+        "Hotel Pelirocco",
+        90,
+        true
+      ]
+    ],
+    "edited": "Hotel Pelirocco · BQ"
+  },
+  {
+    "site": "pelirocco",
+    "direction": "luxe",
+    "token": "30afc3d18ad6aed0ea34cfa0",
+    "cookie": "plattr_owner_30afc3d18ad6=own_13f90894b38ed20e58f2137a2e295e51e5c9a05a273c5399",
+    "name": "Hotel Pelirocco",
+    "vertical": "hotel",
+    "pass": 11,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS an empty catalogue explains why it is empty",
+      "PASS an empty catalogue offers a bulk list",
+      "PASS a pasted list fills and publishes the catalogue",
+      "PASS the review marks a pasted row as owner-provided",
+      "PASS the test entry is removed again",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 4,
+    "debug": [
+      [
+        "sec_fx_hotel_rooms",
+        "Rooms",
+        90,
+        true
+      ]
+    ],
+    "edited": "Rooms · BQ"
+  },
+  {
+    "site": "bluetit",
+    "direction": "minimal",
+    "token": "f7da82fe68730d97e36cb550",
+    "cookie": "plattr_owner_f7da82fe6873=own_83b5dc5c3a4d3cf911815be224359d750a92c19b6b8ae5e5",
+    "name": "Blue Tit London",
+    "vertical": "salon",
+    "pass": 6,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS catalogue price edit reaches the app — 26.00 -> 12.34",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 5
+  },
+  {
+    "site": "bluetit",
+    "direction": "editorial",
+    "token": "351f0d5e0a4564152b07f2d3",
+    "cookie": "plattr_owner_351f0d5e0a45=own_67d8e847803d9258ddbf16fb7a6fc1297d8d6a87c4386403",
+    "name": "Blue Tit London",
+    "vertical": "salon",
+    "pass": 6,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS catalogue price edit reaches the app — 26.00 -> 12.34",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 5
+  },
+  {
+    "site": "bluetit",
+    "direction": "luxe",
+    "token": "f0e01d48dab640d1c455ccc7",
+    "cookie": "plattr_owner_f0e01d48dab6=own_f164208b867cf0389cf6b13ac6918ebeebd0cf0b34ce6b39",
+    "name": "Blue Tit London",
+    "vertical": "salon",
+    "pass": 6,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS catalogue price edit reaches the app — 26.00 -> 12.34",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 5
+  },
+  {
+    "site": "afl",
+    "direction": "classic",
+    "token": "d19c8c30b66f5c9b29888c20",
+    "cookie": "plattr_owner_d19c8c30b66f=own_e1835e2760842554c3ed1378c8c0d3a9681350635cb6a6fc",
+    "name": "Architecture for London",
+    "vertical": "professional",
+    "pass": 6,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS catalogue price edit reaches the app — 0.00 -> 12.34",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 7
+  },
+  {
+    "site": "afl",
+    "direction": "minimal",
+    "token": "c0bcfa9581bc0a4316a10dce",
+    "cookie": "plattr_owner_c0bcfa9581bc=own_4ae6d5322d2b39729695afbc6443591831fb0bc95b99edd0",
+    "name": "Architecture for London",
+    "vertical": "professional",
+    "pass": 6,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS catalogue price edit reaches the app — 0.00 -> 12.34",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 7
+  },
+  {
+    "site": "afl",
+    "direction": "editorial",
+    "token": "f2a3db9b9c054e6b0e9def27",
+    "cookie": "plattr_owner_f2a3db9b9c05=own_fe8ea1ca5a1e5d2afb43472e8283ac6d417551803c62dc28",
+    "name": "Architecture for London",
+    "vertical": "professional",
+    "pass": 6,
+    "fail": 0,
+    "log": [
+      "PASS heading edit saves",
+      "PASS heading edit reaches the customer app",
+      "PASS heading undo restores the app",
+      "PASS heading redo restores the edit",
+      "PASS heading undo after redo restores the original",
+      "PASS catalogue price edit reaches the app — 0.00 -> 12.34",
+      "SKIP variants — catalogue has no variant prices",
+      "PASS editor reloads with its document"
+    ],
+    "reloadNodes": 7
+  }
+]

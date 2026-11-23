@@ -1,0 +1,3120 @@
+{
+  "name": "yarmouthoilskins",
+  "kind": "Clothing shop",
+  "tagline": "Yarmouth Oilskins Est.",
+  "story": "Yarmouth Oilskins Est. 1898 - Coastal Workwear made in Great Yarmouth, Great Britain and sold throughout the world. Unisex, handmade, wardrobe staples",
+  "accent": "#2a5a8f",
+  "logo": "YA",
+  "logoImage": {
+    "url": "https://yarmouthoilskins.com/cdn/shop/files/yos_logo_172x.png?v=1613720588",
+    "alt": "yarmouthoilskins logo"
+  },
+  "hours": "",
+  "phone": "",
+  "address": "",
+  "vertical": "shop",
+  "features": [
+    "catalog",
+    "ordering",
+    "delivery",
+    "offers",
+    "gallery"
+  ],
+  "menu": [
+    {
+      "name": "Catalogue",
+      "items": [
+        {
+          "id": "itm_74b87e75",
+          "sourceId": "15477639872886",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "Yarmouth Oilskins Gift Card",
+          "desc": "",
+          "price": 500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/YP-gift-card.jpg?v=1637437763",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "56824548589942",
+              "name": "£5.00",
+              "price": 500,
+              "selected": true
+            },
+            {
+              "id": "56795526660470",
+              "name": "£10.00",
+              "price": 1000
+            },
+            {
+              "id": "56795526693238",
+              "name": "£25.00",
+              "price": 2500
+            },
+            {
+              "id": "56795526726006",
+              "name": "£50.00",
+              "price": 5000
+            },
+            {
+              "id": "56795526758774",
+              "name": "£100.00",
+              "price": 10000
+            },
+            {
+              "id": "56795526791542",
+              "name": "£250.00",
+              "price": 25000
+            },
+            {
+              "id": "56795526824310",
+              "name": "£500.00",
+              "price": 50000
+            }
+          ]
+        },
+        {
+          "id": "itm_037a1b77",
+          "sourceId": "15440086761846",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Champion Jacket - Navy",
+          "desc": "The Champion Coat is the ultimate piece for colder weather, taking advantage of the…",
+          "price": 60000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF1067-copy.jpg?v=1762809909",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "56638354588022",
+              "name": "S",
+              "price": 60000,
+              "selected": true
+            },
+            {
+              "id": "56638354620790",
+              "name": "M",
+              "price": 60000
+            },
+            {
+              "id": "56638354653558",
+              "name": "L",
+              "price": 60000
+            },
+            {
+              "id": "56638354686326",
+              "name": "XL",
+              "price": 60000
+            },
+            {
+              "id": "56638359110006",
+              "name": "XXL",
+              "price": 60000
+            }
+          ]
+        },
+        {
+          "id": "itm_a2ded494",
+          "sourceId": "15409525260662",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The All English Tee",
+          "desc": "A t-shirt designed, woven and made right here in England; sounds simple but it's taken 18…",
+          "price": 6500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8881-copy.jpg?v=1761509773",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "56528523428214",
+              "name": "S",
+              "price": 6500,
+              "selected": true
+            },
+            {
+              "id": "56528523460982",
+              "name": "M",
+              "price": 6500
+            },
+            {
+              "id": "56528523493750",
+              "name": "L",
+              "price": 6500
+            },
+            {
+              "id": "56528523526518",
+              "name": "XL",
+              "price": 6500
+            },
+            {
+              "id": "56528523559286",
+              "name": "XXL",
+              "price": 6500
+            }
+          ]
+        },
+        {
+          "id": "itm_cc1612a0",
+          "sourceId": "15231657869686",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Maritime Overshirt - Ginger",
+          "desc": "A lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…",
+          "price": 25000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8899copy.jpg?v=1751060971",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55839838732662",
+              "name": "S",
+              "price": 25000,
+              "selected": true
+            },
+            {
+              "id": "55839838765430",
+              "name": "M",
+              "price": 25000
+            },
+            {
+              "id": "55839838798198",
+              "name": "L",
+              "price": 25000
+            },
+            {
+              "id": "55839838830966",
+              "name": "XL",
+              "price": 25000
+            },
+            {
+              "id": "55839838863734",
+              "name": "XXL",
+              "price": 25000
+            }
+          ]
+        },
+        {
+          "id": "itm_d9213538",
+          "sourceId": "15231652069750",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Maritime Overshirt - Light Blue",
+          "desc": "A lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…",
+          "price": 25000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8911copy.jpg?v=1751060428",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55839823757686",
+              "name": "S",
+              "price": 25000,
+              "selected": true
+            },
+            {
+              "id": "55839823790454",
+              "name": "M",
+              "price": 25000
+            },
+            {
+              "id": "55839823823222",
+              "name": "L",
+              "price": 25000
+            },
+            {
+              "id": "55839823855990",
+              "name": "XL",
+              "price": 25000
+            },
+            {
+              "id": "55839823888758",
+              "name": "XXL",
+              "price": 25000
+            }
+          ]
+        },
+        {
+          "id": "itm_053c8188",
+          "sourceId": "15231639683446",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Maritime Overshirt - Lightweight Navy",
+          "desc": "A lighter weight cotton/linen version of our Maritime Overshirt with Peter Pan style…",
+          "price": 25000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8905copy.jpg?v=1751060090",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55839791317366",
+              "name": "S",
+              "price": 25000,
+              "selected": true
+            },
+            {
+              "id": "55839791350134",
+              "name": "M",
+              "price": 25000
+            },
+            {
+              "id": "55839791382902",
+              "name": "L",
+              "price": 25000
+            },
+            {
+              "id": "55839791415670",
+              "name": "XL",
+              "price": 25000
+            },
+            {
+              "id": "55839791448438",
+              "name": "XXL",
+              "price": 25000
+            }
+          ]
+        },
+        {
+          "id": "itm_d8aea401",
+          "sourceId": "10353868177601",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Yarmouth Apron - Navy",
+          "desc": "The Story Yarmouth Stores have made aprons for all different trades since 1898. The…",
+          "price": 13000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF5761.jpg?v=1730823235",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "48154899054785",
+              "name": "One Size",
+              "price": 13000,
+              "selected": true
+            }
+          ]
+        },
+        {
+          "id": "itm_630ad711",
+          "sourceId": "10017442103489",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Champion Jacket - Sand",
+          "desc": "The Champion Coat is the ultimate piece for colder weather, taking advantage of the…",
+          "price": 60000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3989.jpg?v=1697302162",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "47277553615041",
+              "name": "S",
+              "price": 60000,
+              "selected": true
+            },
+            {
+              "id": "47277553647809",
+              "name": "M",
+              "price": 60000
+            },
+            {
+              "id": "47277553680577",
+              "name": "L",
+              "price": 60000
+            },
+            {
+              "id": "47277553713345",
+              "name": "XL",
+              "price": 60000
+            },
+            {
+              "id": "57359028289910",
+              "name": "XXL",
+              "price": 60000
+            }
+          ]
+        },
+        {
+          "id": "itm_7838c4dc",
+          "sourceId": "10017442234561",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Champion Jacket - Crimson",
+          "desc": "The Champion Coat is the ultimate piece for colder weather, taking advantage of the…",
+          "price": 60000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3995.jpg?v=1697302217",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "47277553909953",
+              "name": "S",
+              "price": 60000,
+              "selected": true
+            },
+            {
+              "id": "47277553942721",
+              "name": "M",
+              "price": 60000
+            },
+            {
+              "id": "47277553975489",
+              "name": "L",
+              "price": 60000
+            },
+            {
+              "id": "47277554008257",
+              "name": "XL",
+              "price": 60000
+            }
+          ]
+        },
+        {
+          "id": "itm_5d901661",
+          "sourceId": "7438188740801",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "'Sea Air' Garment Refresher 300ml",
+          "desc": "Our refresher isn’t just ’any spray,’ Norfolk Natural Living use all natural ingredients…",
+          "price": 1450,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF9691.jpg?v=1667384478",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42147297788097",
+              "name": "Default Title",
+              "price": 1450,
+              "selected": true
+            }
+          ]
+        },
+        {
+          "id": "itm_16f7cb1e",
+          "sourceId": "7226939474113",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "Yarmouth Oilskins Badge",
+          "desc": "Embroidered Yarmouth Oilskins Badge. Stitched to the left shoulder of your Hooded Smock.…",
+          "price": 1500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF71601.jpg?v=1652249115",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "41580381339841",
+              "name": "Default Title",
+              "price": 1500,
+              "selected": true
+            }
+          ]
+        },
+        {
+          "id": "itm_8b2f737f",
+          "sourceId": "7224769642689",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Norfolk Sea Cape - Navy",
+          "desc": "The Norfolk Sea Cape is a one-size utility cape perfect for unexpected wind and showers.…",
+          "price": 33000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/YarmouthOilskins2022-1405.jpg?v=1652076671",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "41574211354817",
+              "name": "One Size",
+              "price": 33000,
+              "selected": true
+            }
+          ]
+        },
+        {
+          "id": "itm_def2ec58",
+          "sourceId": "7224649384129",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Maritime Overshirt - Ticking Stripe",
+          "desc": "The Maritime Overshirt is a substantial overshirt with a Peter Pan style collar. As with…",
+          "price": 26500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/YarmouthOilskins2022-1393.jpg?v=1652045640",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "41573625036993",
+              "name": "S",
+              "price": 26500,
+              "selected": true
+            },
+            {
+              "id": "41573625069761",
+              "name": "M",
+              "price": 26500
+            },
+            {
+              "id": "41573625102529",
+              "name": "L",
+              "price": 26500
+            },
+            {
+              "id": "41573625135297",
+              "name": "XL",
+              "price": 26500
+            },
+            {
+              "id": "41573625168065",
+              "name": "XXL",
+              "price": 26500
+            }
+          ]
+        },
+        {
+          "id": "itm_b7f3d6c1",
+          "sourceId": "7224647549121",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Maritime Overshirt - Natural",
+          "desc": "The Maritime Overshirt is a substantial overshirt with a Peter Pan style collar. As with…",
+          "price": 25000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/YarmouthOilskins2022-1213.jpg?v=1652044627",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "41573612683457",
+              "name": "S",
+              "price": 25000,
+              "selected": true
+            },
+            {
+              "id": "41573612716225",
+              "name": "M",
+              "price": 25000
+            },
+            {
+              "id": "41573612748993",
+              "name": "L",
+              "price": 25000
+            },
+            {
+              "id": "41573612781761",
+              "name": "XL",
+              "price": 25000
+            },
+            {
+              "id": "41573612814529",
+              "name": "XXL",
+              "price": 25000
+            }
+          ]
+        },
+        {
+          "id": "itm_2b876283",
+          "sourceId": "7038756192449",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Yarmouth Apron - Moss",
+          "desc": "The Story Yarmouth Stores have made aprons for all different trades since 1898. The…",
+          "price": 13000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF7180.jpg?v=1652821184",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "41087346737345",
+              "name": "One Size",
+              "price": 13000,
+              "selected": true
+            }
+          ]
+        },
+        {
+          "id": "itm_bdd42489",
+          "sourceId": "7038749212865",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Yarmouth Apron - Khaki",
+          "desc": "The Story Yarmouth Stores have made aprons for all different trades since 1898. The…",
+          "price": 13000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF7082.jpg?v=1652821353",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "41087345426625",
+              "name": "One Size",
+              "price": 13000,
+              "selected": true
+            }
+          ]
+        },
+        {
+          "id": "itm_94f4fdc6",
+          "sourceId": "6999180476609",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Maritime Overshirt - Navy Moleskin",
+          "desc": "The Maritime Overshirt is a substantial overshirt with a Peter Pan style collar. As with…",
+          "price": 28000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF5137.jpg?v=1635782624",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "40967449444545",
+              "name": "S",
+              "price": 28000,
+              "selected": true
+            },
+            {
+              "id": "40967449477313",
+              "name": "M",
+              "price": 28000
+            },
+            {
+              "id": "40967449510081",
+              "name": "L",
+              "price": 28000
+            },
+            {
+              "id": "40967449542849",
+              "name": "XL",
+              "price": 28000
+            },
+            {
+              "id": "40967449575617",
+              "name": "XXL",
+              "price": 28000
+            }
+          ]
+        },
+        {
+          "id": "itm_f90a28fe",
+          "sourceId": "6999193419969",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Norfolk Sea Cape - Forest",
+          "desc": "The Norfolk Sea Cape is a one-size utility cape perfect for unexpected wind and showers.…",
+          "price": 33000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/IMG_4443.jpg?v=1635873152",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "40970950508737",
+              "name": "One Size",
+              "price": 33000,
+              "selected": true
+            }
+          ]
+        },
+        {
+          "id": "itm_e9716200",
+          "sourceId": "6275902931137",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Bib and Brace - Natural",
+          "desc": "The Story The 'Favourite' Bib and Brace Overall for all trades heralded 'to fit…",
+          "price": 20000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF8892-1.jpg?v=1612559578",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120688812225",
+              "name": "30",
+              "price": 20000,
+              "selected": true
+            },
+            {
+              "id": "38120688844993",
+              "name": "32",
+              "price": 20000
+            },
+            {
+              "id": "38120688877761",
+              "name": "34",
+              "price": 20000
+            },
+            {
+              "id": "38120688910529",
+              "name": "36",
+              "price": 20000
+            },
+            {
+              "id": "38120688943297",
+              "name": "38",
+              "price": 20000
+            },
+            {
+              "id": "38120688976065",
+              "name": "40",
+              "price": 20000
+            },
+            {
+              "id": "38120689008833",
+              "name": "42",
+              "price": 20000
+            }
+          ]
+        },
+        {
+          "id": "itm_e123cca5",
+          "sourceId": "6275905552577",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "Eco Wax Proofing Spray 200ml",
+          "desc": "This re-proofing spray will rejuvenate the original water-repellency of the fabric used…",
+          "price": 1100,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/image1.jpg?v=1612559715",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120697594049",
+              "name": "Default Title",
+              "price": 1100,
+              "selected": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hats",
+      "items": [
+        {
+          "id": "itm_f6eda302",
+          "sourceId": "15470577353078",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Winter Watchcap",
+          "desc": "A classic Merino Wool Watchcap, perfect for the colder month. Knitted for us in England…",
+          "price": 4500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/mustard.jpg?v=1764536398",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "56770360279414",
+              "name": "Mustard",
+              "price": 4500,
+              "selected": true
+            },
+            {
+              "id": "56770360312182",
+              "name": "Brick",
+              "price": 4500
+            },
+            {
+              "id": "56770360344950",
+              "name": "Navy",
+              "price": 4500
+            },
+            {
+              "id": "56770360377718",
+              "name": "Forest",
+              "price": 4500
+            },
+            {
+              "id": "56770360410486",
+              "name": "Grey",
+              "price": 4500
+            }
+          ]
+        },
+        {
+          "id": "itm_6da44cb6",
+          "sourceId": "10017430864065",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Original Sou'wester Hat",
+          "desc": "The Sou'wester, a classic maritime icon, takes inspiration from our archive…",
+          "price": 10500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF4035.jpg?v=1697301152",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "47277503512769",
+              "name": "One Size",
+              "price": 10500,
+              "selected": true
+            }
+          ]
+        },
+        {
+          "id": "itm_26dd0853",
+          "sourceId": "10017434599617",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Original Sou'wester Hat - Navy",
+          "desc": "The Sou'wester, a classic maritime icon, takes inspiration from our archive…",
+          "price": 10500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF4038.jpg?v=1697301438",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "47277525467329",
+              "name": "One Size",
+              "price": 10500,
+              "selected": true
+            }
+          ]
+        },
+        {
+          "id": "itm_a6e5cb42",
+          "sourceId": "6275904471233",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Watchcap - Navy Wool Melton",
+          "desc": "The Story The Watch cap in wool provides insulation and protection against the elements.…",
+          "price": 8500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/BLUE_FELT_HAT1-1024x683-1-1.jpg?v=1612559670",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "41087354077377",
+              "name": "One Size",
+              "price": 8500,
+              "selected": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Jackets",
+      "items": [
+        {
+          "id": "itm_f9d4cdb8",
+          "sourceId": "15242443325814",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Drivers Jacket - Natural",
+          "desc": "We have given our traditional Drivers Jacket an update. The characteristics are…",
+          "price": 25000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8953copy.jpg?v=1751788810",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55880269332854",
+              "name": "S",
+              "price": 25000,
+              "selected": true
+            },
+            {
+              "id": "55880269365622",
+              "name": "M",
+              "price": 25000
+            },
+            {
+              "id": "55880269398390",
+              "name": "L",
+              "price": 25000
+            },
+            {
+              "id": "55880269431158",
+              "name": "XL",
+              "price": 25000
+            },
+            {
+              "id": "55880269463926",
+              "name": "XXL",
+              "price": 25000
+            }
+          ]
+        },
+        {
+          "id": "itm_b66115e7",
+          "sourceId": "6275904078017",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Drivers Jacket - Navy",
+          "desc": "We have given our traditional Drivers Jacket an update. The characteristics are…",
+          "price": 25000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8926copy.jpg?v=1751788059",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120692580545",
+              "name": "S",
+              "price": 25000,
+              "selected": true
+            },
+            {
+              "id": "38120692613313",
+              "name": "M",
+              "price": 25000
+            },
+            {
+              "id": "38120692646081",
+              "name": "L",
+              "price": 25000
+            },
+            {
+              "id": "38120692678849",
+              "name": "XL",
+              "price": 25000
+            },
+            {
+              "id": "38120692711617",
+              "name": "XXL",
+              "price": 25000
+            }
+          ]
+        },
+        {
+          "id": "itm_cebcc2db",
+          "sourceId": "6275903094977",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Drivers Jacket - Khaki",
+          "desc": "We have given our traditional Drivers Jacket an update. The characteristics are…",
+          "price": 25000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8995copy.jpg?v=1751355381",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120689533121",
+              "name": "S",
+              "price": 25000,
+              "selected": true
+            },
+            {
+              "id": "38120689565889",
+              "name": "M",
+              "price": 25000
+            },
+            {
+              "id": "38120689598657",
+              "name": "L",
+              "price": 25000
+            },
+            {
+              "id": "38120689631425",
+              "name": "XL",
+              "price": 25000
+            },
+            {
+              "id": "38120689664193",
+              "name": "XXL",
+              "price": 25000
+            }
+          ]
+        },
+        {
+          "id": "itm_6f70cee9",
+          "sourceId": "7635676692673",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Jacket - Indigo",
+          "desc": "Our clean, super practical British chore jacket, that takes inspiration from the many…",
+          "price": 19000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3358-copy.jpg?v=1684650774",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42631964328129",
+              "name": "S",
+              "price": 19000,
+              "selected": true
+            },
+            {
+              "id": "42631964360897",
+              "name": "M",
+              "price": 19000
+            },
+            {
+              "id": "42631964393665",
+              "name": "L",
+              "price": 19000
+            },
+            {
+              "id": "42631964426433",
+              "name": "XL",
+              "price": 19000
+            },
+            {
+              "id": "42643502923969",
+              "name": "XXL",
+              "price": 19000
+            }
+          ]
+        },
+        {
+          "id": "itm_a803332a",
+          "sourceId": "7635678265537",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Jacket - Olive",
+          "desc": "Our clean, super practical British chore jacket, that takes inspiration from the many…",
+          "price": 19000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3324-copy.jpg?v=1684652386",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42631978352833",
+              "name": "S",
+              "price": 19000,
+              "selected": true
+            },
+            {
+              "id": "42631978385601",
+              "name": "M",
+              "price": 19000
+            },
+            {
+              "id": "42631978418369",
+              "name": "L",
+              "price": 19000
+            },
+            {
+              "id": "42631978451137",
+              "name": "XL",
+              "price": 19000
+            },
+            {
+              "id": "42643501023425",
+              "name": "XXL",
+              "price": 19000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Trousers",
+      "items": [
+        {
+          "id": "itm_9f96e01d",
+          "sourceId": "15234116813174",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Steadfast Trousers - Natural",
+          "desc": "Our steadfast trousers are a traditional utility style featuring externally sewed pockets…",
+          "price": 20000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8961copy.jpg?v=1751354528",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55852187418998",
+              "name": "32\"",
+              "price": 20000,
+              "selected": true
+            },
+            {
+              "id": "55852187451766",
+              "name": "34\"",
+              "price": 20000
+            },
+            {
+              "id": "55852187484534",
+              "name": "36\"",
+              "price": 20000
+            },
+            {
+              "id": "55852187517302",
+              "name": "38\"",
+              "price": 20000
+            },
+            {
+              "id": "55852187550070",
+              "name": "40\"",
+              "price": 20000
+            },
+            {
+              "id": "55852187582838",
+              "name": "42\"",
+              "price": 20000
+            }
+          ]
+        },
+        {
+          "id": "itm_887e2f26",
+          "sourceId": "15234111799670",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Steadfast Trousers - Khaki",
+          "desc": "Our steadfast trousers are a traditional utility style featuring externally sewed pockets…",
+          "price": 20000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8933copy.jpg?v=1751353780",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55852133319030",
+              "name": "32\"",
+              "price": 20000,
+              "selected": true
+            },
+            {
+              "id": "55852133351798",
+              "name": "34\"",
+              "price": 20000
+            },
+            {
+              "id": "55852133384566",
+              "name": "36\"",
+              "price": 20000
+            },
+            {
+              "id": "55852133417334",
+              "name": "38\"",
+              "price": 20000
+            },
+            {
+              "id": "55852133450102",
+              "name": "40\"",
+              "price": 20000
+            },
+            {
+              "id": "55852133482870",
+              "name": "42\"",
+              "price": 20000
+            }
+          ]
+        },
+        {
+          "id": "itm_f0eea04b",
+          "sourceId": "15232726565238",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Steadfast Trousers - Olive",
+          "desc": "Our steadfast trousers are a traditional utility style featuring externally sewed pockets…",
+          "price": 20000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF9003copy.jpg?v=1751178388",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55845133123958",
+              "name": "32\"",
+              "price": 20000,
+              "selected": true
+            },
+            {
+              "id": "55845133156726",
+              "name": "34\"",
+              "price": 20000
+            },
+            {
+              "id": "55845133189494",
+              "name": "36\"",
+              "price": 20000
+            },
+            {
+              "id": "55845133222262",
+              "name": "38\"",
+              "price": 20000
+            },
+            {
+              "id": "55852090130806",
+              "name": "40\"",
+              "price": 20000
+            },
+            {
+              "id": "55852090163574",
+              "name": "42\"",
+              "price": 20000
+            }
+          ]
+        },
+        {
+          "id": "itm_d24b6625",
+          "sourceId": "7634800935105",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Trousers - Tobacco",
+          "desc": "Our deck trousers are drawstring waisted and slightly tapered from the knee. Perfect for…",
+          "price": 16000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3345-copy.jpg?v=1684530306",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42630167986369",
+              "name": "S",
+              "price": 16000,
+              "selected": true
+            },
+            {
+              "id": "42630168019137",
+              "name": "M",
+              "price": 16000
+            },
+            {
+              "id": "42630168051905",
+              "name": "L",
+              "price": 16000
+            },
+            {
+              "id": "42630168084673",
+              "name": "XL",
+              "price": 16000
+            }
+          ]
+        },
+        {
+          "id": "itm_e296bec4",
+          "sourceId": "7634800378049",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Trousers - Indigo",
+          "desc": "Our deck trousers are drawstring waisted and slightly tapered from the knee. Perfect for…",
+          "price": 16000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3302-copy.jpg?v=1684530208",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42630161039553",
+              "name": "S",
+              "price": 16000,
+              "selected": true
+            },
+            {
+              "id": "42630161072321",
+              "name": "M",
+              "price": 16000
+            },
+            {
+              "id": "42630161105089",
+              "name": "L",
+              "price": 16000
+            },
+            {
+              "id": "42630161137857",
+              "name": "XL",
+              "price": 16000
+            }
+          ]
+        },
+        {
+          "id": "itm_f72b6605",
+          "sourceId": "6998702293185",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Work Trousers - Black",
+          "desc": "The Story These Work Trousers would have formed part of the many 'workwear suits' made by…",
+          "price": 18500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF5081.jpg?v=1635713338",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "40965353210049",
+              "name": "30",
+              "price": 18500,
+              "selected": true
+            },
+            {
+              "id": "40965353242817",
+              "name": "32",
+              "price": 18500
+            },
+            {
+              "id": "40965353275585",
+              "name": "34",
+              "price": 18500
+            },
+            {
+              "id": "40965353308353",
+              "name": "36",
+              "price": 18500
+            },
+            {
+              "id": "40965353341121",
+              "name": "38",
+              "price": 18500
+            },
+            {
+              "id": "40965353373889",
+              "name": "40",
+              "price": 18500
+            },
+            {
+              "id": "40965353406657",
+              "name": "42",
+              "price": 18500
+            }
+          ]
+        },
+        {
+          "id": "itm_d431b16f",
+          "sourceId": "6275904897217",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Work Trousers - Natural",
+          "desc": "The Story These Work Trousers would have formed part of the many 'workwear suits' made by…",
+          "price": 18500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF7537.jpg?v=1612559690",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120695496897",
+              "name": "30",
+              "price": 18500,
+              "selected": true
+            },
+            {
+              "id": "38120695529665",
+              "name": "32",
+              "price": 18500
+            },
+            {
+              "id": "38120695562433",
+              "name": "34",
+              "price": 18500
+            },
+            {
+              "id": "38120695595201",
+              "name": "36",
+              "price": 18500
+            },
+            {
+              "id": "38120695627969",
+              "name": "38",
+              "price": 18500
+            },
+            {
+              "id": "38120695660737",
+              "name": "40",
+              "price": 18500
+            },
+            {
+              "id": "38120695693505",
+              "name": "42",
+              "price": 18500
+            }
+          ]
+        },
+        {
+          "id": "itm_b353efc8",
+          "sourceId": "6275904798913",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Work Trousers - Khaki",
+          "desc": "The Story These Work Trousers would have formed part of the many 'workwear suits' made by…",
+          "price": 18500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF7535.jpg?v=1612559669",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120695070913",
+              "name": "30",
+              "price": 18500,
+              "selected": true
+            },
+            {
+              "id": "38120695103681",
+              "name": "32",
+              "price": 18500
+            },
+            {
+              "id": "38120695136449",
+              "name": "34",
+              "price": 18500
+            },
+            {
+              "id": "38120695169217",
+              "name": "36",
+              "price": 18500
+            },
+            {
+              "id": "38120695201985",
+              "name": "38",
+              "price": 18500
+            },
+            {
+              "id": "38120695234753",
+              "name": "40",
+              "price": 18500
+            },
+            {
+              "id": "38120695267521",
+              "name": "42",
+              "price": 18500
+            }
+          ]
+        },
+        {
+          "id": "itm_209a09fe",
+          "sourceId": "6275904766145",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Work Trousers - Navy",
+          "desc": "The Story These Work Trousers would have formed part of the many 'workwear suits' made by…",
+          "price": 18500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF7528.jpg?v=1612559677",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120694808769",
+              "name": "30",
+              "price": 18500,
+              "selected": true
+            },
+            {
+              "id": "38120694841537",
+              "name": "32",
+              "price": 18500
+            },
+            {
+              "id": "38120694874305",
+              "name": "34",
+              "price": 18500
+            },
+            {
+              "id": "38120694907073",
+              "name": "36",
+              "price": 18500
+            },
+            {
+              "id": "38120694939841",
+              "name": "38",
+              "price": 18500
+            },
+            {
+              "id": "38120694972609",
+              "name": "40",
+              "price": 18500
+            },
+            {
+              "id": "38120695005377",
+              "name": "42",
+              "price": 18500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shirts",
+      "items": [
+        {
+          "id": "itm_654f4428",
+          "sourceId": "15231893209462",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Shirt - Stripe",
+          "desc": "Our laid back take on a classic camp shirt. this edition is cut from a beautiful…",
+          "price": 16000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8916copy.jpg?v=1751088383",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55841342194038",
+              "name": "S",
+              "price": 16000,
+              "selected": true
+            },
+            {
+              "id": "55841342226806",
+              "name": "M",
+              "price": 16000
+            },
+            {
+              "id": "55841342259574",
+              "name": "L",
+              "price": 16000
+            },
+            {
+              "id": "55841342292342",
+              "name": "XL",
+              "price": 16000
+            }
+          ]
+        },
+        {
+          "id": "itm_51b37abd",
+          "sourceId": "15231890227574",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Shirt - Navy",
+          "desc": "Our laid back take on a classic camp shirt. this edition is cut from a beautiful…",
+          "price": 16000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8972copy.jpg?v=1751088008",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55841327120758",
+              "name": "S",
+              "price": 16000,
+              "selected": true
+            },
+            {
+              "id": "55841327153526",
+              "name": "M",
+              "price": 16000
+            },
+            {
+              "id": "55841327186294",
+              "name": "L",
+              "price": 16000
+            },
+            {
+              "id": "55841327219062",
+              "name": "XL",
+              "price": 16000
+            }
+          ]
+        },
+        {
+          "id": "itm_decf7813",
+          "sourceId": "15231677104502",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Admiralty Shirt - Ginger",
+          "desc": "The Admiralty Shirt is an ideal travel companion, the cotton linen mix is hard wearing…",
+          "price": 17500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8920copy.jpg?v=1751062005",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55839892373878",
+              "name": "S",
+              "price": 17500,
+              "selected": true
+            },
+            {
+              "id": "55839892406646",
+              "name": "M",
+              "price": 17500
+            },
+            {
+              "id": "55839892439414",
+              "name": "L",
+              "price": 17500
+            },
+            {
+              "id": "55839892472182",
+              "name": "XL",
+              "price": 17500
+            },
+            {
+              "id": "55839892504950",
+              "name": "XXL",
+              "price": 17500
+            }
+          ]
+        },
+        {
+          "id": "itm_af6e5936",
+          "sourceId": "15231673205110",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Admiralty Shirt - Olive",
+          "desc": "The Admiralty Shirt is an ideal travel companion, the cotton linen mix is hard wearing…",
+          "price": 17500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8943copy.jpg?v=1751061732",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55839881560438",
+              "name": "S",
+              "price": 17500,
+              "selected": true
+            },
+            {
+              "id": "55839881593206",
+              "name": "M",
+              "price": 17500
+            },
+            {
+              "id": "55839881625974",
+              "name": "L",
+              "price": 17500
+            },
+            {
+              "id": "55839881658742",
+              "name": "XL",
+              "price": 17500
+            },
+            {
+              "id": "55839881691510",
+              "name": "XXL",
+              "price": 17500
+            }
+          ]
+        },
+        {
+          "id": "itm_39ea9e97",
+          "sourceId": "15231665701238",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Admiralty Shirt - Navy",
+          "desc": "The Admiralty Shirt is an ideal travel companion, the cotton linen mix is hard wearing…",
+          "price": 17500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8968copy.jpg?v=1751061633",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55839857410422",
+              "name": "S",
+              "price": 17500,
+              "selected": true
+            },
+            {
+              "id": "55839857443190",
+              "name": "M",
+              "price": 17500
+            },
+            {
+              "id": "55839857475958",
+              "name": "L",
+              "price": 17500
+            },
+            {
+              "id": "55839857508726",
+              "name": "XL",
+              "price": 17500
+            },
+            {
+              "id": "55839857541494",
+              "name": "XXL",
+              "price": 17500
+            }
+          ]
+        },
+        {
+          "id": "itm_3aa1ad66",
+          "sourceId": "15231628018038",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Yarmouth Shirt - Olive",
+          "desc": "Our take on a classic Oxford shirt, The Yarmouth Shirt is ideal to be dressed up or down.…",
+          "price": 20500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8938copy.jpg?v=1751059178",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55839755501942",
+              "name": "S",
+              "price": 20500,
+              "selected": true
+            },
+            {
+              "id": "55839755534710",
+              "name": "M",
+              "price": 20500
+            },
+            {
+              "id": "55839755567478",
+              "name": "L",
+              "price": 20500
+            },
+            {
+              "id": "55839755600246",
+              "name": "XL",
+              "price": 20500
+            },
+            {
+              "id": "55839755633014",
+              "name": "XXL",
+              "price": 20500
+            }
+          ]
+        },
+        {
+          "id": "itm_9a59de07",
+          "sourceId": "15231614321014",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Yarmouth Shirt - Navy",
+          "desc": "Our take on a classic Oxford shirt, The Yarmouth Shirt is ideal to be dressed up or down.…",
+          "price": 20500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF8894copy.jpg?v=1751058488",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "55839708086646",
+              "name": "S",
+              "price": 20500,
+              "selected": true
+            },
+            {
+              "id": "55839708119414",
+              "name": "M",
+              "price": 20500
+            },
+            {
+              "id": "55839708152182",
+              "name": "L",
+              "price": 20500
+            },
+            {
+              "id": "55839708184950",
+              "name": "XL",
+              "price": 20500
+            },
+            {
+              "id": "55839708217718",
+              "name": "XXL",
+              "price": 20500
+            }
+          ]
+        },
+        {
+          "id": "itm_b97a89a4",
+          "sourceId": "10461339123905",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Yarmouth Shirt - White",
+          "desc": "Our take on a classic Oxford shirt, The Yarmouth Shirt is ideal to be dressed up or down.…",
+          "price": 20500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF4543.jpg?v=1718862029",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "48390521848001",
+              "name": "S",
+              "price": 20500,
+              "selected": true
+            },
+            {
+              "id": "48390521880769",
+              "name": "M",
+              "price": 20500
+            },
+            {
+              "id": "48390521913537",
+              "name": "L",
+              "price": 20500
+            },
+            {
+              "id": "48390521946305",
+              "name": "XL",
+              "price": 20500
+            },
+            {
+              "id": "48390521979073",
+              "name": "XXL",
+              "price": 20500
+            }
+          ]
+        },
+        {
+          "id": "itm_94cb516f",
+          "sourceId": "10461095395521",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Yarmouth Shirt - Blue",
+          "desc": "Our take on a classic Oxford shirt, The Yarmouth Shirt is ideal to be dressed up or down.…",
+          "price": 20500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF4515_356a2ab2-778c-46c4-8fbf-90aecad59b71.jpg?v=1718830683",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "48389642649793",
+              "name": "S",
+              "price": 20500,
+              "selected": true
+            },
+            {
+              "id": "48389642682561",
+              "name": "M",
+              "price": 20500
+            },
+            {
+              "id": "48389642715329",
+              "name": "L",
+              "price": 20500
+            },
+            {
+              "id": "48389642748097",
+              "name": "XL",
+              "price": 20500
+            },
+            {
+              "id": "48389642780865",
+              "name": "XXL",
+              "price": 20500
+            }
+          ]
+        },
+        {
+          "id": "itm_6e9fdd9e",
+          "sourceId": "7635005210817",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Shirt - Chambray",
+          "desc": "Our laid back take on a classic camp shirt is cut from a slubby linen / cotton yarn dyed…",
+          "price": 16000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3353-copy.jpg?v=1684567040",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42630484328641",
+              "name": "S",
+              "price": 16000,
+              "selected": true
+            },
+            {
+              "id": "42630484361409",
+              "name": "M",
+              "price": 16000
+            },
+            {
+              "id": "42630484394177",
+              "name": "L",
+              "price": 16000
+            },
+            {
+              "id": "42630484426945",
+              "name": "XL",
+              "price": 16000
+            }
+          ]
+        },
+        {
+          "id": "itm_95921194",
+          "sourceId": "7221844443329",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Admiralty Shirt - White",
+          "desc": "The Admiralty Shirt is an ideal travel companion, the cotton linen mix is hard wearing…",
+          "price": 17500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/YarmouthOilskins2022-1258.jpg?v=1652046542",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "41565501784257",
+              "name": "S",
+              "price": 17500,
+              "selected": true
+            },
+            {
+              "id": "41565501817025",
+              "name": "M",
+              "price": 17500
+            },
+            {
+              "id": "41565501849793",
+              "name": "L",
+              "price": 17500
+            },
+            {
+              "id": "41565501882561",
+              "name": "XL",
+              "price": 17500
+            },
+            {
+              "id": "41565501915329",
+              "name": "XXL",
+              "price": 17500
+            }
+          ]
+        },
+        {
+          "id": "itm_f2e6a42b",
+          "sourceId": "6733342769345",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Admiralty Shirt - Light Blue",
+          "desc": "The Admiralty Shirt is an ideal travel companion, the cotton linen mix is hard wearing…",
+          "price": 17500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF0849.jpg?v=1622216144",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "39999766233281",
+              "name": "S",
+              "price": 17500,
+              "selected": true
+            },
+            {
+              "id": "39999766266049",
+              "name": "M",
+              "price": 17500
+            },
+            {
+              "id": "39999766298817",
+              "name": "L",
+              "price": 17500
+            },
+            {
+              "id": "39999766331585",
+              "name": "XL",
+              "price": 17500
+            },
+            {
+              "id": "39999766364353",
+              "name": "XXL",
+              "price": 17500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Knitwear",
+      "items": [
+        {
+          "id": "itm_e3161b1e",
+          "sourceId": "14851255894390",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The 'Industry' Submariner Knit - Navy",
+          "desc": "The recreation of a sweater featured in our 1900 catalogue. This is a traditional…",
+          "price": 19500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF6583_24236388-73f0-428a-9400-6e52152ef851.jpg?v=1732299780",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "54819729572214",
+              "name": "S",
+              "price": 19500,
+              "selected": true
+            },
+            {
+              "id": "54819729604982",
+              "name": "M",
+              "price": 19500
+            },
+            {
+              "id": "54819729637750",
+              "name": "L",
+              "price": 19500
+            },
+            {
+              "id": "54819729670518",
+              "name": "XL",
+              "price": 19500
+            },
+            {
+              "id": "54819729703286",
+              "name": "XXL",
+              "price": 19500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Smocks",
+      "items": [
+        {
+          "id": "itm_b2bfc9c5",
+          "sourceId": "10461009248449",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Shawl Collar Smock - Ecru",
+          "desc": "This smock is a new style to the collection, designed as the reinvention of our collared…",
+          "price": 19000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF4526.jpg?v=1718818862",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "48389316542657",
+              "name": "S",
+              "price": 19000,
+              "selected": true
+            },
+            {
+              "id": "48389316575425",
+              "name": "M",
+              "price": 19000
+            },
+            {
+              "id": "48389316608193",
+              "name": "L",
+              "price": 19000
+            },
+            {
+              "id": "48389316640961",
+              "name": "XL",
+              "price": 19000
+            },
+            {
+              "id": "48389316673729",
+              "name": "XXL",
+              "price": 19000
+            }
+          ]
+        },
+        {
+          "id": "itm_97d01a26",
+          "sourceId": "7646429380801",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Shawl Collar Smock - Indigo",
+          "desc": "This smock is a new style to the collection, designed as the reinvention of our collared…",
+          "price": 19000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3364-copy.jpg?v=1686085689",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42657283276993",
+              "name": "S",
+              "price": 19000,
+              "selected": true
+            },
+            {
+              "id": "42657283309761",
+              "name": "M",
+              "price": 19000
+            },
+            {
+              "id": "42657283342529",
+              "name": "L",
+              "price": 19000
+            },
+            {
+              "id": "42657283375297",
+              "name": "XL",
+              "price": 19000
+            },
+            {
+              "id": "42658388345025",
+              "name": "XXL",
+              "price": 19000
+            }
+          ]
+        },
+        {
+          "id": "itm_43d80618",
+          "sourceId": "7230657528001",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Trousers - Olive",
+          "desc": "Our deck trousers are drawstring waisted and slightly tapered from the knee. Perfect for…",
+          "price": 16000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/YarmouthOilskins2022-1408.jpg?v=1652543638",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "41589963784385",
+              "name": "S",
+              "price": 16000,
+              "selected": true
+            },
+            {
+              "id": "41589963817153",
+              "name": "M",
+              "price": 16000
+            },
+            {
+              "id": "41589963849921",
+              "name": "L",
+              "price": 16000
+            },
+            {
+              "id": "41589963882689",
+              "name": "XL",
+              "price": 16000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "coats",
+      "items": [
+        {
+          "id": "itm_59834392",
+          "sourceId": "10461003907265",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Captain's Coat - Navy",
+          "desc": "The Captain's Coat is like a Swiss Army Knife, it's timeless, smart, practical, rugged,…",
+          "price": 31000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF4535.jpg?v=1718818500",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "48389271879873",
+              "name": "S",
+              "price": 31000,
+              "selected": true
+            },
+            {
+              "id": "48389271912641",
+              "name": "M",
+              "price": 31000
+            },
+            {
+              "id": "48389271945409",
+              "name": "L",
+              "price": 31000
+            },
+            {
+              "id": "48389271978177",
+              "name": "XL",
+              "price": 31000
+            }
+          ]
+        },
+        {
+          "id": "itm_9cf78309",
+          "sourceId": "7438118650049",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Captain's Coat - Tan",
+          "desc": "The Captain's Coat is like a Swiss Army Knife, it's timeless, smart, practical, rugged,…",
+          "price": 31000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/YarmouthOilskins_WoodsQuay_2022-1155.jpg?v=1667382740",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42147131392193",
+              "name": "S",
+              "price": 31000,
+              "selected": true
+            },
+            {
+              "id": "42147131424961",
+              "name": "M",
+              "price": 31000
+            },
+            {
+              "id": "42147131457729",
+              "name": "L",
+              "price": 31000
+            },
+            {
+              "id": "42147131523265",
+              "name": "XL",
+              "price": 31000
+            }
+          ]
+        },
+        {
+          "id": "itm_ea49a376",
+          "sourceId": "7461671796929",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The 'NZ' Jacket - Dark Olive",
+          "desc": "The NZ jacket is a significant part of Yarmouth Oilskins' history. This jacket has always…",
+          "price": 52500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/YarmouthOilskins_WoodsQuay_2022-1193.jpg?v=1769682315",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42206467817665",
+              "name": "S / No",
+              "price": 52500,
+              "selected": true
+            },
+            {
+              "id": "42205933633729",
+              "name": "S / Yes",
+              "price": 59000
+            },
+            {
+              "id": "42206467850433",
+              "name": "M / No",
+              "price": 52500
+            },
+            {
+              "id": "42205933666497",
+              "name": "M / Yes",
+              "price": 59000
+            },
+            {
+              "id": "42206467883201",
+              "name": "L / No",
+              "price": 52500
+            },
+            {
+              "id": "42205933699265",
+              "name": "L / Yes",
+              "price": 59000
+            },
+            {
+              "id": "42206467915969",
+              "name": "XL / No",
+              "price": 52500
+            },
+            {
+              "id": "42205933732033",
+              "name": "XL / Yes",
+              "price": 59000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bags",
+      "items": [
+        {
+          "id": "itm_5d08f7b1",
+          "sourceId": "10334301913281",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Market Bag",
+          "desc": "A 'made to last' tote style bag that is perfect for any occasion. Made entirely from…",
+          "price": 17000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/market-bag-1.jpg?v=1714199434",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "48118276686017",
+              "name": "Default Title",
+              "price": 17000,
+              "selected": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Shorts",
+      "items": [
+        {
+          "id": "itm_6efac645",
+          "sourceId": "10308864377025",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Drill Shorts - Natural",
+          "desc": "Dress them up or down, our Drill Shorts are a classic design that can be worn alone or as…",
+          "price": 15000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/drill-shorts-natural-1.jpg?v=1713546633",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "48069074354369",
+              "name": "30\"",
+              "price": 15000,
+              "selected": true
+            },
+            {
+              "id": "48069074387137",
+              "name": "32\"",
+              "price": 15000
+            },
+            {
+              "id": "48069074419905",
+              "name": "34\"",
+              "price": 15000
+            },
+            {
+              "id": "48069074452673",
+              "name": "36\"",
+              "price": 15000
+            },
+            {
+              "id": "48069074485441",
+              "name": "38\"",
+              "price": 15000
+            },
+            {
+              "id": "48069074518209",
+              "name": "40\"",
+              "price": 15000
+            },
+            {
+              "id": "48069074550977",
+              "name": "42\"",
+              "price": 15000
+            }
+          ]
+        },
+        {
+          "id": "itm_c21b69c0",
+          "sourceId": "7634974343361",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Explorer Shorts - Navy",
+          "desc": "The Explorer short is designed as a pair of ‘wear anywhere’ shorts. Cut from natural ,…",
+          "price": 15000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3371-copy.jpg?v=1684569549",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42630443172033",
+              "name": "S",
+              "price": 15000,
+              "selected": true
+            },
+            {
+              "id": "42630443204801",
+              "name": "M",
+              "price": 15000
+            },
+            {
+              "id": "42630443237569",
+              "name": "L",
+              "price": 15000
+            },
+            {
+              "id": "42630443270337",
+              "name": "XL",
+              "price": 15000
+            }
+          ]
+        },
+        {
+          "id": "itm_be7c3b35",
+          "sourceId": "7634956255425",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Explorer Shorts - Fern",
+          "desc": "The Explorer short is designed as a pair of ‘wear anywhere’ shorts. Cut from natural ,…",
+          "price": 15000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3379-copy.jpg?v=1684563737",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42630422921409",
+              "name": "S",
+              "price": 15000,
+              "selected": true
+            },
+            {
+              "id": "42630422954177",
+              "name": "M",
+              "price": 15000
+            },
+            {
+              "id": "42630422986945",
+              "name": "L",
+              "price": 15000
+            },
+            {
+              "id": "42630423019713",
+              "name": "XL",
+              "price": 15000
+            }
+          ]
+        },
+        {
+          "id": "itm_6d3c41c0",
+          "sourceId": "7634793595073",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Shorts - Indigo",
+          "desc": "The deck shorts are the perfect everyday short. An elasticated waist for ultra comfort…",
+          "price": 14500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3384-copy.jpg?v=1684528722",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42630104580289",
+              "name": "S",
+              "price": 14500,
+              "selected": true
+            },
+            {
+              "id": "42630104613057",
+              "name": "M",
+              "price": 14500
+            },
+            {
+              "id": "42630104645825",
+              "name": "L",
+              "price": 14500
+            },
+            {
+              "id": "42630104678593",
+              "name": "XL",
+              "price": 14500
+            }
+          ]
+        },
+        {
+          "id": "itm_0d87c9c1",
+          "sourceId": "7634792906945",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Shorts - Tobacco",
+          "desc": "The deck shorts are the perfect everyday short. An elasticated waist for ultra comfort…",
+          "price": 14500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3390copy.jpg?v=1684528387",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42630087475393",
+              "name": "S",
+              "price": 14500,
+              "selected": true
+            },
+            {
+              "id": "42630087508161",
+              "name": "M",
+              "price": 14500
+            },
+            {
+              "id": "42630087540929",
+              "name": "L",
+              "price": 14500
+            },
+            {
+              "id": "42630087573697",
+              "name": "XL",
+              "price": 14500
+            }
+          ]
+        },
+        {
+          "id": "itm_e0547831",
+          "sourceId": "7233063059649",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Deck Shorts - Olive",
+          "desc": "The deck shorts are the perfect everyday short. An elasticated waist for ultra comfort…",
+          "price": 14500,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF7188.jpg?v=1652820283",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "41596879405249",
+              "name": "S",
+              "price": 14500,
+              "selected": true
+            },
+            {
+              "id": "41596879438017",
+              "name": "M",
+              "price": 14500
+            },
+            {
+              "id": "41596879470785",
+              "name": "L",
+              "price": 14500
+            },
+            {
+              "id": "41596879503553",
+              "name": "XL",
+              "price": 14500
+            }
+          ]
+        },
+        {
+          "id": "itm_65a4a96e",
+          "sourceId": "6760381382849",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Drill Shorts - Khaki",
+          "desc": "Dress them up or down, our Drill Shorts are a classic design that can be worn alone or as…",
+          "price": 15000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF0923.jpg?v=1623409052",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "40087052812481",
+              "name": "30\"",
+              "price": 15000,
+              "selected": true
+            },
+            {
+              "id": "40087052845249",
+              "name": "32\"",
+              "price": 15000
+            },
+            {
+              "id": "40087052878017",
+              "name": "34\"",
+              "price": 15000
+            },
+            {
+              "id": "40087052910785",
+              "name": "36\"",
+              "price": 15000
+            },
+            {
+              "id": "40087052943553",
+              "name": "38\"",
+              "price": 15000
+            },
+            {
+              "id": "40087052976321",
+              "name": "40\"",
+              "price": 15000
+            },
+            {
+              "id": "40087053009089",
+              "name": "42\"",
+              "price": 15000
+            }
+          ]
+        },
+        {
+          "id": "itm_53126b08",
+          "sourceId": "6760379220161",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Drill Shorts - Navy",
+          "desc": "Dress them up or down, our Drill Shorts are a classic design that can be worn alone or as…",
+          "price": 15000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF0925.jpg?v=1623408883",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "40087046258881",
+              "name": "30\"",
+              "price": 15000,
+              "selected": true
+            },
+            {
+              "id": "40087046291649",
+              "name": "32\"",
+              "price": 15000
+            },
+            {
+              "id": "40087046324417",
+              "name": "34\"",
+              "price": 15000
+            },
+            {
+              "id": "40087046357185",
+              "name": "36\"",
+              "price": 15000
+            },
+            {
+              "id": "40087046389953",
+              "name": "38\"",
+              "price": 15000
+            },
+            {
+              "id": "40087046422721",
+              "name": "40\"",
+              "price": 15000
+            },
+            {
+              "id": "40087046488257",
+              "name": "42\"",
+              "price": 15000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vests",
+      "items": [
+        {
+          "id": "itm_94573b94",
+          "sourceId": "10017415495873",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Reversible Vest - Fern",
+          "desc": "The Reversible Vest is the ideal mid-layer for when you want that added warmth; equally…",
+          "price": 26000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3980.jpg?v=1769682150",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "47277440336065",
+              "name": "S",
+              "price": 26000,
+              "selected": true
+            },
+            {
+              "id": "47277440368833",
+              "name": "M",
+              "price": 26000
+            },
+            {
+              "id": "47277440401601",
+              "name": "L",
+              "price": 26000
+            },
+            {
+              "id": "47277440434369",
+              "name": "XL",
+              "price": 26000
+            },
+            {
+              "id": "57358999290230",
+              "name": "XXL",
+              "price": 26000
+            }
+          ]
+        },
+        {
+          "id": "itm_68b96111",
+          "sourceId": "7477791162561",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Reversible Vest - Navy",
+          "desc": "The Reversible Vest is the ideal mid-layer for when you want that added warmth; equally…",
+          "price": 26000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/YarmouthOilskins_WoodsQuay_2022-1229.jpg?v=1668602811",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42259860816065",
+              "name": "S",
+              "price": 26000,
+              "selected": true
+            },
+            {
+              "id": "42259860848833",
+              "name": "M",
+              "price": 26000
+            },
+            {
+              "id": "42259860881601",
+              "name": "L",
+              "price": 26000
+            },
+            {
+              "id": "42259860914369",
+              "name": "XL",
+              "price": 26000
+            },
+            {
+              "id": "57358975861110",
+              "name": "XXL",
+              "price": 26000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Oilskins",
+      "items": [
+        {
+          "id": "itm_cdd910d7",
+          "sourceId": "10017408483521",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Explorer Smock - Peat",
+          "desc": "The Explorer Smock pays homage to those worn by the great explorers from days gone by.…",
+          "price": 55000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/files/DSCF3968.jpg?v=1697299097",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "47277428048065",
+              "name": "S",
+              "price": 55000,
+              "selected": true
+            },
+            {
+              "id": "47277428080833",
+              "name": "M",
+              "price": 55000
+            },
+            {
+              "id": "47277428113601",
+              "name": "L",
+              "price": 55000
+            },
+            {
+              "id": "47277428146369",
+              "name": "XL",
+              "price": 55000
+            },
+            {
+              "id": "47277428179137",
+              "name": "XXL",
+              "price": 55000
+            }
+          ]
+        },
+        {
+          "id": "itm_13fffa18",
+          "sourceId": "7481893486785",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Explorer Smock - Fern",
+          "desc": "The Explorer Smock pays homage to those worn by the great explorers from days gone by.…",
+          "price": 55000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF9629.jpg?v=1669041694",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "42270416339137",
+              "name": "S",
+              "price": 55000,
+              "selected": true
+            },
+            {
+              "id": "42270416371905",
+              "name": "M",
+              "price": 55000
+            },
+            {
+              "id": "42270416404673",
+              "name": "L",
+              "price": 55000
+            },
+            {
+              "id": "42270416437441",
+              "name": "XL",
+              "price": 55000
+            },
+            {
+              "id": "42270416470209",
+              "name": "XXL",
+              "price": 55000
+            }
+          ]
+        },
+        {
+          "id": "itm_15ee2dc4",
+          "sourceId": "6275904700609",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Hooded Smock - Forest",
+          "desc": "The Story Yarmouth Stores have manufactured oilskin clothing for well over 100 years,…",
+          "price": 32000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF7457.jpg?v=1612559679",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120694481089",
+              "name": "S",
+              "price": 32000,
+              "selected": true
+            },
+            {
+              "id": "38120694513857",
+              "name": "M",
+              "price": 32000
+            },
+            {
+              "id": "38120694546625",
+              "name": "L",
+              "price": 32000
+            },
+            {
+              "id": "38120694579393",
+              "name": "XL",
+              "price": 32000
+            },
+            {
+              "id": "38120694612161",
+              "name": "XXL",
+              "price": 32000
+            }
+          ]
+        },
+        {
+          "id": "itm_547117c5",
+          "sourceId": "6275904635073",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Hooded Smock - Navy",
+          "desc": "The Story Yarmouth Stores have manufactured oilskin clothing for well over 100 years,…",
+          "price": 32000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF7450.jpg?v=1612559662",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120694284481",
+              "name": "S",
+              "price": 32000,
+              "selected": true
+            },
+            {
+              "id": "38120694317249",
+              "name": "M",
+              "price": 32000
+            },
+            {
+              "id": "38120694350017",
+              "name": "L",
+              "price": 32000
+            },
+            {
+              "id": "38120694382785",
+              "name": "XL",
+              "price": 32000
+            },
+            {
+              "id": "38120694415553",
+              "name": "XXL",
+              "price": 32000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dungarees",
+      "items": [
+        {
+          "id": "itm_f58432b6",
+          "sourceId": "6275903783105",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Bib and Brace - Navy",
+          "desc": "The Story The 'Favourite' Bib and Brace Overall for all trades heralded 'to fit…",
+          "price": 20000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF8874-1.jpg?v=1612559620",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120691433665",
+              "name": "30",
+              "price": 20000,
+              "selected": true
+            },
+            {
+              "id": "38120691466433",
+              "name": "32",
+              "price": 20000
+            },
+            {
+              "id": "38120691499201",
+              "name": "34",
+              "price": 20000
+            },
+            {
+              "id": "38120691531969",
+              "name": "36",
+              "price": 20000
+            },
+            {
+              "id": "38120691564737",
+              "name": "38",
+              "price": 20000
+            },
+            {
+              "id": "38120691597505",
+              "name": "40",
+              "price": 20000
+            },
+            {
+              "id": "38120691630273",
+              "name": "42",
+              "price": 20000
+            }
+          ]
+        },
+        {
+          "id": "itm_f8d75690",
+          "sourceId": "6275903684801",
+          "sourceUrl": "https://yarmouthoilskins.com/products.json?limit=250&page=1",
+          "sourceMethod": "structured-data",
+          "name": "The Bib and Brace - Khaki",
+          "desc": "The Story The 'Favourite' Bib and Brace Overall for all trades heralded 'to fit…",
+          "price": 20000,
+          "image": {
+            "url": "https://cdn.shopify.com/s/files/1/0540/9685/5233/products/DSCF8886-1.jpg?v=1612559621",
+            "method": "public-data",
+            "source": "website"
+          },
+          "variants": [
+            {
+              "id": "38120691171521",
+              "name": "30",
+              "price": 20000,
+              "selected": true
+            },
+            {
+              "id": "38120691204289",
+              "name": "32",
+              "price": 20000
+            },
+            {
+              "id": "38120691237057",
+              "name": "34",
+              "price": 20000
+            },
+            {
+              "id": "38120691269825",
+              "name": "36",
+              "price": 20000
+            },
+            {
+              "id": "38120691302593",
+              "name": "38",
+              "price": 20000
+            },
+            {
+              "id": "38120691335361",
+              "name": "40",
+              "price": 20000
+            },
+            {
+              "id": "38120691368129",
+              "name": "42",
+              "price": 20000
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "importSummary": {
+    "source": "https://yarmouthoilskins.com/",
+    "importedAt": "2026-11-21T16:43:16.464Z",
+    "products": 74,
+    "withImage": 74,
+    "priced": 74,
+    "currency": "GBP",
+    "categories": [
+      "Catalogue",
+      "Hats",
+      "Jackets",
+      "Trousers",
+      "Shirts",
+      "Knitwear",
+      "Smocks",
+      "coats",
+      "Bags",
+      "Shorts",
+      "Vests",
+      "Oilskins"
+    ]
+  },
+  "offers": [],
+  "loyalty": {
+    "goal": 0,
+    "reward": ""
+  },
+  "sampleContent": {
+    "menu": false,
+    "contact": true,
+    "story": false,
+    "offers": false,
+    "team": false,
+    "staff": false,
+    "tagline": false
+  },
+  "custom": "",
+  "direction": "editorial",
+  "category": "Clothing shop",
+  "design": {
+    "bg": "#f3f3ef",
+    "ink": "#16202a",
+    "surface": "#eaebe7",
+    "surface2": "#e0e1de",
+    "muted": "#61686d",
+    "radius": 1,
+    "display": "\"Old Standard TT\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+    "fontLabel": "Old Standard TT",
+    "dark": false,
+    "palette": false,
+    "basis": ""
+  },
+  "structure": {
+    "nav": "drawer",
+    "hero": "image",
+    "navLabels": [],
+    "stickyHeader": false,
+    "basis": "nav in a drawer · hero image"
+  },
+  "website": "https://yarmouthoilskins.com/",
+  "fulfilment": {
+    "options": [
+      "Pickup",
+      "Delivery"
+    ],
+    "source": "default"
+  },
+  "currency": "GBP",
+  "currencyCandidates": [
+    {
+      "code": "GBP",
+      "method": "shopify-analytics",
+      "source": "https://yarmouthoilskins.com/",
+      "raw": "ShopifyAnalytics = window.ShopifyAnalytics || {};\n  window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};\n "
+    },
+    {
+      "code": "GBP",
+      "method": "variant-labels",
+      "source": "https://yarmouthoilskins.com/products.json",
+      "raw": "£5.00 on 1 product"
+    }
+  ],
+  "socials": [
+    {
+      "label": "Facebook",
+      "url": "https://www.facebook.com/yarmouthstores/"
+    },
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/yarmouth_oilskins/"
+    }
+  ]
+}

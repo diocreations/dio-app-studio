@@ -1,0 +1,151 @@
+{
+  "site": {
+    "id": "padella",
+    "url": "https://www.padella.co/",
+    "trade": "restaurant",
+    "minimum": 0
+  },
+  "diversity": {
+    "ok": false,
+    "pairs": [
+      {
+        "a": "editorial",
+        "b": "modern",
+        "score": 0.1,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same block set",
+          "same trade functionality"
+        ]
+      },
+      {
+        "a": "editorial",
+        "b": "luxe",
+        "score": 0.55,
+        "sameInitial": true,
+        "sameOrder": true,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": false
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same sections in the same order",
+          "same opening screen",
+          "same block set",
+          "same section composition",
+          "same trade functionality"
+        ]
+      },
+      {
+        "a": "modern",
+        "b": "luxe",
+        "score": 0.25,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "dimensions": [
+          {
+            "name": "screen and navigation architecture",
+            "different": true
+          },
+          {
+            "name": "section types and composition",
+            "different": true
+          },
+          {
+            "name": "catalogue presentation",
+            "different": true
+          },
+          {
+            "name": "detail-page interaction",
+            "different": true
+          },
+          {
+            "name": "primary customer journey",
+            "different": true
+          },
+          {
+            "name": "trade-specific functionality",
+            "different": false
+          }
+        ],
+        "reasons": [
+          "same tabs",
+          "same block set",
+          "same trade functionality"
+        ]
+      }
+    ]
+  },
+  "concepts": [
+    {
+      "id": "editorial",
+      "name": "Editorial dining",
+      "note": "Photo-led, generous, serif-led · Image first",
+      "architecture": "editorial"
+    },
+    {
+      "id": "modern",
+      "name": "Modern casual",
+      "note": "Fast, friendly, two-column menu · Catalogue first",
+      "architecture": "modern"
+    },
+    {
+      "id": "luxe",
+      "name": "Premium luxury",
+      "note": "Dark, quiet, reservations first · Narrative lead",
+      "architecture": "luxe"
+    }
+  ]
+}

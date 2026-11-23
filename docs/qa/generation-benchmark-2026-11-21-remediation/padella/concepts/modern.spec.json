@@ -1,0 +1,85 @@
+{
+  "name": "Padella",
+  "kind": "Restaurant",
+  "tagline": "Searching for an Italian restaurant in Shoreditch, Borough Market or Soho?",
+  "story": "Searching for an Italian restaurant in Shoreditch, Borough Market or Soho? Padella serves authentic, handmade pasta daily. Come and discover why we're one of London's most-loved pasta restaurants.",
+  "accent": "#c8452b",
+  "logo": "PA",
+  "logoImage": {
+    "url": "https://www.padella.co/wp-content/uploads/2025/05/padella-org-logo.avif",
+    "alt": "Padella logo"
+  },
+  "hours": "",
+  "phone": "",
+  "address": "",
+  "vertical": "restaurant",
+  "features": [
+    "catalog",
+    "ordering",
+    "booking"
+  ],
+  "menu": [],
+  "offers": [],
+  "loyalty": {
+    "goal": 0,
+    "reward": ""
+  },
+  "sampleContent": {
+    "menu": false,
+    "contact": true,
+    "story": false,
+    "offers": false,
+    "team": false,
+    "staff": false,
+    "tagline": false
+  },
+  "custom": "",
+  "direction": "modern",
+  "category": "Restaurant",
+  "design": {
+    "bg": "#f7f1e6",
+    "ink": "#191310",
+    "surface": "#eee8dd",
+    "surface2": "#e4ded4",
+    "muted": "#645e59",
+    "radius": 4,
+    "display": "",
+    "fontLabel": "",
+    "dark": false,
+    "palette": false,
+    "basis": "4px corners"
+  },
+  "structure": {
+    "nav": "tabs",
+    "hero": "split",
+    "navLabels": [
+      "Vouchers",
+      "Careers",
+      "Borough Market",
+      "Shoreditch",
+      "Soho"
+    ],
+    "stickyHeader": false,
+    "basis": "nav in a row · Vouchers, Careers, Borough Market · hero split"
+  },
+  "website": "https://www.padella.co/",
+  "fulfilment": {
+    "options": [
+      "Pickup",
+      "Delivery",
+      "At a table"
+    ],
+    "source": "default"
+  },
+  "currency": "GBP",
+  "socials": [
+    {
+      "label": "X",
+      "url": "https://x.com/padella_pasta"
+    },
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/padella_pasta"
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "generatedAt": "2026-11-22T07:40:07.720Z",
+  "origin": "http://127.0.0.1:5173",
+  "app": {
+    "token": "f0e5f471f642a7a58474099f",
+    "name": "yarmouthoilskins",
+    "concept": "editorial",
+    "source": "https://yarmouthoilskins.com/"
+  },
+  "checks": [
+    {
+      "name": "the landing page opens",
+      "ok": true,
+      "detail": "A customer says they need an app.\nIt’s on their phone before the call ends."
+    },
+    {
+      "name": "the landing page has no horizontal overflow at 390",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the brief opens with its first step",
+      "ok": true,
+      "detail": "What kind of business is it?"
+    },
+    {
+      "name": "the saved website read fills the brief",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the read is not presented as a fresh crawl",
+      "ok": true,
+      "detail": "https://yarmouthoilskins.com/"
+    },
+    {
+      "name": "the price conflict is presented with both readings",
+      "ok": true,
+      "detail": "Prices that need your decision\n1\n\nTheir page and their product feed give different figures for these. Plattr proposes the page price and will not publish either until you choose.\n\nYarmouth Oilskins Gift Card\nNot decided "
+    },
+    {
+      "name": "the owner can choose the page reading",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the chosen price is confirmed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "three concepts are presented",
+      "ok": true,
+      "detail": "Minimal boutique / Gallery retail / Contemporary lifestyle"
+    },
+    {
+      "name": "the concept previews are not the same frame",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a concept can be selected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the read filled the business name",
+      "ok": true,
+      "detail": "yarmouthoilskins"
+    },
+    {
+      "name": "the brief builds the app",
+      "ok": true,
+      "detail": "/p/f0e5f471f642a7a58474099f"
+    },
+    {
+      "name": "the new build opens for its owner",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the chosen concept is saved to the build",
+      "ok": true,
+      "detail": "editorial"
+    },
+    {
+      "name": "the review names the source and evidence",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the review lists missing or unconfirmed information",
+      "ok": true,
+      "detail": "p\nplattr\nHow it works\nFormats\nPricing\nStudio\nStart a brief\n← Back to the editor\nSOURCE REVIEW\nWhat we read\n\nyarmouthoilskins · yarmouthoilskins.com\n\nEdit the app\nOpen the app\n74 items published. 73 with validated website price evidence · 0 with your corrections (kept as yours, never upgraded to webs"
+    },
+    {
+      "name": "the review lists catalogue rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the owner dashboard opens after the build",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "missing business information is editable in settings",
+      "ok": true,
+      "detail": "Saved. Customer app updated."
+    },
+    {
+      "name": "the visual editor loads its live preview",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the editor has a document with screens and components",
+      "ok": true,
+      "detail": "6 screens / 4 home components"
+    },
+    {
+      "name": "an action-only block exposes its button label and destination",
+      "ok": true,
+      "detail": "{\"title\":false,\"text\":true,\"quick\":true,\"label\":\"Browse everything\",\"target\":\"scr_catalog\"}"
+    },
+    {
+      "name": "selecting an action-only block does not throw",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a heading edit autosaves to the document",
+      "ok": true,
+      "detail": "New in -> New in · Pilot"
+    },
+    {
+      "name": "an element inside a block is selectable",
+      "ok": true,
+      "detail": "{\"key\":\"sec_fx_shop_products~div~0\",\"text\":\"New in · PilotAll 74 pieces\"}"
+    },
+    {
+      "name": "an element text edit is saved",
+      "ok": true,
+      "detail": "{\"sec_fx_shop_products~div~0\":{\"text\":\"New in · PilotAll 74 pieces · element\"}}"
+    },
+    {
+      "name": "the catalogue editor exposes product rows",
+      "ok": true,
+      "detail": "74 rows"
+    },
+    {
+      "name": "the media library accepts an image upload control",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the uploaded image appears in the owner library",
+      "ok": true,
+      "detail": "1 stored; Untitled photo\n96 × 96 · 1 KB · WebP\nAdd to screen\nReplace\nDelete"
+    },
+    {
+      "name": "a photograph can be applied to a block",
+      "ok": true,
+      "detail": "med_55e0bb7bf1036eb38440412a"
+    },
+    {
+      "name": "the applied photograph is served by the customer app",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a block background control saves",
+      "ok": true,
+      "detail": "sec_fx_shop_all"
+    },
+    {
+      "name": "a block visibility control saves",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a new navigation screen can be added and named",
+      "ok": true,
+      "detail": "Home / Shop / Search / More / Saved / Details / Our story"
+    },
+    {
+      "name": "the new screen can be added to bottom navigation",
+      "ok": true,
+      "detail": "checked"
+    },
+    {
+      "name": "the edited navigation is reflected in the customer app",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the editor reloads the saved document",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the owner can sign out through the application",
+      "ok": true,
+      "detail": "/p/f0e5f471f642a7a58474099f/dashboard/login"
+    },
+    {
+      "name": "the owner login form is reachable after logout",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the owner can sign in with the owner key",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the owned document survives a fresh login",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the customer preview renders the edited app",
+      "ok": true,
+      "detail": "NEW IN · PILOT\nAll 74 pieces\nYarmouth Oilskins Gift Card\nFrom 5 · 7 options\nThe Champion Jacket - Navy\n600\nThe All English Tee\n65\nThe Maritime Overshirt - Ginger\n250\nCLOTHING SHOP\n"
+    },
+    {
+      "name": "the customer app has no horizontal overflow at 1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the owner can approve the build locally",
+      "ok": true,
+      "detail": "{\"ok\":true,\"version\":1,\"status\":\"approved\",\"hidden\":[],\"restored\":[]}"
+    },
+    {
+      "name": "the build shows an approved/published-ready status",
+      "ok": true,
+      "detail": "p\nplattr\nHow it works\nFormats\nPricing\nStudio\nStart a brief\n← Studio\nyarmouthoilskins\nApproved · v1\nClothing shop\nShop & retail shape\nBuild v1\nRead from their site ↗\nMobile web app (PWA)\nMaya Rao · maya@example.com\nCopy r"
+    }
+  ],
+  "consoleErrors": [],
+  "networkFailures": [],
+  "mediaResponses": [
+    {
+      "status": 200,
+      "method": "",
+      "url": "http://127.0.0.1:5173/api/projects/f0e5f471f642a7a58474099f/media"
+    },
+    {
+      "status": 201,
+      "method": "",
+      "url": "http://127.0.0.1:5173/api/projects/f0e5f471f642a7a58474099f/media"
+    },
+    {
+      "status": 200,
+      "method": "",
+      "url": "http://127.0.0.1:5173/api/projects/f0e5f471f642a7a58474099f/media"
+    },
+    {
+      "status": 200,
+      "method": "",
+      "url": "http://127.0.0.1:5173/api/projects/f0e5f471f642a7a58474099f/media?at=1795333177699"
+    },
+    {
+      "status": 200,
+      "method": "",
+      "url": "http://127.0.0.1:5173/api/projects/f0e5f471f642a7a58474099f/media"
+    }
+  ],
+  "notes": [
+    "the build page does not name the selected concept; it shows the trade shape and build version. p\nplattr\nHow it works\nFormats\nPricing\nStudio\nStart a brief\n← Studio\nyarmouthoilskins\nReady for review\nClothing shop\nShop & retail shape\nBuil"
+  ],
+  "screens": {
+    "docScreens": 7,
+    "homeSections": 4,
+    "beforeScreens": 6
+  },
+  "approved": 200,
+  "projectAfter": [
+    "modules",
+    "summary",
+    "orders",
+    "bookings",
+    "enquiries",
+    "customers",
+    "notifications",
+    "topItems",
+    "payments"
+  ],
+  "passed": 46,
+  "failed": 0
+}

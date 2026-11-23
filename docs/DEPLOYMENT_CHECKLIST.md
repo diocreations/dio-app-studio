@@ -45,8 +45,8 @@ itself; production publishing needs explicit owner approval.
 - [ ] `/p/:token/app` returns 200 and a known build still renders.
 - [ ] `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` and
       `X-Robots-Tag` are present on HTML and media responses.
-- [ ] No CSP is claimed yet; inline styles/script mean hashes or nonces are still
-      required before enforcing one.
+- [ ] CSP is present and permits inline styles/scripts with `'unsafe-inline'`;
+      hashes or nonces are still required before that allowance can be removed.
 
 ## 4. Monitoring and limits
 

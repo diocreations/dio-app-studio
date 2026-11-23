@@ -1,0 +1,172 @@
+{
+  "url": "https://www.padella.co/",
+  "host": "www.padella.co",
+  "pages": {
+    "read": [
+      "/",
+      "/menus",
+      "/menu",
+      "/cookie-policy/",
+      "/privacy-policy/",
+      "/shoreditch/",
+      "/borough-market/",
+      "/soho/"
+    ],
+    "failed": [
+      {
+        "url": "/cdn-cgi/l/email-protection",
+        "reason": "www.padella.co answered 404. If the site blocks bots, paste the details in by hand."
+      },
+      {
+        "url": "/food",
+        "reason": "www.padella.co answered 404. If the site blocks bots, paste the details in by hand."
+      }
+    ],
+    "usedSitemap": true
+  },
+  "business": {
+    "name": {
+      "value": "Padella",
+      "source": "https://www.padella.co/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "category": {
+      "value": "Restaurant",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "tagline": {
+      "value": "Searching for an Italian restaurant in Shoreditch, Borough Market or Soho?",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "story": {
+      "value": "Searching for an Italian restaurant in Shoreditch, Borough Market or Soho? Padella serves authentic, handmade pasta daily. Come and discover why we're one of London's most-loved pasta restaurants.",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "likely"
+    },
+    "trade": {
+      "value": "restaurant",
+      "source": "https://www.padella.co/",
+      "method": "inferred",
+      "confidence": "verified"
+    },
+    "accent": {
+      "value": "#c8452b",
+      "source": "https://www.padella.co/",
+      "method": "inferred",
+      "confidence": "likely"
+    },
+    "logo": {
+      "value": {
+        "url": "https://www.padella.co/wp-content/uploads/2025/05/padella-org-logo.avif",
+        "alt": "Padella logo"
+      },
+      "source": "https://www.padella.co/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "hours": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "inferred",
+      "confidence": "guess"
+    },
+    "phone": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "email": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "guess"
+    },
+    "address": {
+      "value": "",
+      "source": "https://www.padella.co/",
+      "method": "visible-text",
+      "confidence": "guess"
+    }
+  },
+  "commerce": {
+    "currency": {
+      "value": "GBP",
+      "source": "https://www.padella.co/",
+      "method": "metadata",
+      "confidence": "likely"
+    },
+    "sections": [
+      {
+        "name": "Restaurant",
+        "source": "https://www.padella.co/",
+        "items": [
+          {
+            "name": "Cookie Policy",
+            "desc": "Last updated November 04, 2025 This Cookie Policy explains how Padella (“Company,” “we,”…",
+            "price": 0
+          },
+          {
+            "name": "Privacy Policy",
+            "desc": "We use cookies to let us know how the majority of people are accessing our site. We use…",
+            "price": 0
+          },
+          {
+            "name": "Padella Shoreditch",
+            "desc": "Hand-rolled pasta, Italian cocktails, and communal feasting in Shoreditch. Book a table…",
+            "price": 0
+          },
+          {
+            "name": "Padella Borough Market",
+            "desc": "The original Padella. Enjoy hand-rolled Italian pasta at London’s iconic Borough Market.…",
+            "price": 0
+          },
+          {
+            "name": "Padella Soho",
+            "desc": "Padella arrives in Soho with hand-rolled pasta, 1960s-inspired lounge dining, and West…",
+            "price": 0
+          }
+        ]
+      }
+    ],
+    "products": 5,
+    "priced": 0,
+    "withImage": 0
+  },
+  "conflicts": [],
+  "missing": [
+    "contact details",
+    "address"
+  ],
+  "questions": [
+    {
+      "field": "contact",
+      "why": "No phone or email was published.",
+      "kind": "confirm"
+    }
+  ],
+  "tradeCandidates": [
+    {
+      "id": "restaurant",
+      "score": 0.9,
+      "evidence": [
+        "the nearest trade, from “restaurant”",
+        "Restaurant"
+      ]
+    },
+    {
+      "id": "marketplace",
+      "score": 0.45,
+      "evidence": [
+        "vendor"
+      ]
+    }
+  ],
+  "clientRendered": false
+}

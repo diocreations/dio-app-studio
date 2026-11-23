@@ -1,0 +1,121 @@
+{
+  "generatedAt": "2026-11-22T04:48:34.453Z",
+  "app": "6facab527c619139d419882e",
+  "plan": {
+    "added": [
+      {
+        "section": "Shop",
+        "name": "A new jacket",
+        "price": 18500
+      }
+    ],
+    "removed": [],
+    "changed": [
+      {
+        "section": "Shop",
+        "name": "The Champion Jacket - Navy",
+        "changes": [
+          {
+            "field": "image",
+            "from": "",
+            "to": "https://cdn.example/jacket.jpg"
+          }
+        ],
+        "ownerEdited": true
+      }
+    ],
+    "conflicts": [
+      {
+        "section": "Shop",
+        "name": "The Champion Jacket - Navy",
+        "field": "price",
+        "original": "210.00",
+        "originalKnown": true,
+        "latest": "225.00",
+        "owner": "215.00",
+        "ownerAt": "2026-11-22T09:00:00.000Z"
+      },
+      {
+        "section": "Shop",
+        "name": "The Champion Jacket - Navy",
+        "field": "description",
+        "original": "Waxed cotton jacket",
+        "originalKnown": true,
+        "latest": "Waxed cotton jacket with a new lining",
+        "owner": "Waxed cotton, navy",
+        "ownerAt": "2026-11-22T09:00:00.000Z"
+      }
+    ],
+    "unchanged": 73,
+    "requiresApproval": true
+  },
+  "results": [
+    {
+      "name": "both owner conflicts are shown",
+      "ok": true,
+      "detail": "4 options"
+    },
+    {
+      "name": "neither side is preselected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "both choices exist for each conflict",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the owner value and both readings are visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the correction date is visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the owner-corrected fields are not approval checkboxes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the owner photo is kept without a checkbox",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "an ordinary addition is still pre-approved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "applying sends only the choice the owner made",
+      "ok": true,
+      "detail": "[{\"name\":\"The Champion Jacket - Navy\",\"field\":\"price\",\"choice\":\"owner\"}]"
+    },
+    {
+      "name": "the unresolved description is left as the owner’s",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the owner image is not in the approved changes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "taking the website value is its own explicit decision",
+      "ok": true,
+      "detail": "[{\"name\":\"The Champion Jacket - Navy\",\"field\":\"description\",\"choice\":\"source\"}]"
+    },
+    {
+      "name": "applying with no decision changes no owner field",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "passed": 13,
+  "failed": 0
+}

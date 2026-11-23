@@ -1,5 +1,6 @@
 import { sanitizeHex } from './pricing'
-import { composeDoc } from './blueprints'
+import { composeDoc, type BlockRole, type ConceptArchitecture } from './blueprints'
+import { contrast, hexOf, isKnownFontStack, mix } from './design'
 import { directionFor, directionsFor } from './directions'
 import type { AppSpec, ElementShape } from './types'
 import { themeFor } from './themes'
@@ -381,6 +382,47 @@ export type ScreenNode = {
  * the review link and the published app cannot drift apart. A direction is a
  * named visual system; the remaining fields are deliberate overrides.
  */
+/** A design system authored for one business rather than chosen from the
+ *  trade's three archetypes. It lives on the document so the preview, editor,
+ *  published app and exports resolve the same look after a reload. */
+export type ConceptTokens = {
+  display: string
+  body: string
+  priceFont: 'display' | 'mono' | 'body'
+  weight: number
+  tracking: string
+  accentStyle: 'solid' | 'block' | 'underline'
+  motif: 'circle' | 'arches' | 'stripes' | 'grid' | 'letter' | 'rings'
+  palette: {
+    bg: string
+    surface: string
+    surface2: string
+    ink: string
+    muted: string
+    accent: string
+    onAccent: string
+    dark: boolean
+  }
+  radius: number
+}
+
+/** How this concept is put together, independent of any one trade's blueprint. */
+export type ConceptStructure = {
+  id: string
+  name: string
+  architecture: ConceptArchitecture
+  roleSequence: BlockRole[]
+  nav: ScreenKind[]
+  navModel: 'bar' | 'floating' | 'dock'
+  initial: 'home' | 'catalog'
+}
+
+export type DocConcept = {
+  structure: ConceptStructure
+  tokens: ConceptTokens
+  source: 'ai' | 'preset'
+}
+
 export type DocDesign = {
   direction?: string
   typography?: 'editorial' | 'modern' | 'compact'
@@ -388,6 +430,9 @@ export type DocDesign = {
   cards?: ElementShape
   nav?: 'bar' | 'floating' | 'dock'
   density?: 'cozy' | 'standard' | 'roomy'
+  /** Present only when a generator authored the look. Absent on every document
+   *  written before it existed, which keeps their rendering unchanged. */
+  concept?: DocConcept
 }
 
 export type Doc = {
@@ -418,6 +463,126 @@ export type ComponentLibraryEntry = {
 const SHAPE = (value: unknown): ElementShape | undefined =>
   value === 'square' || value === 'soft' || value === 'round' ? value : undefined
 
+const CONCEPT_ROLES: readonly BlockRole[] = ['lead', 'discovery', 'proof', 'action', 'visit', 'utility', 'note']
+const CONCEPT_NAV: readonly ScreenKind[] = [
+  'home',
+  'catalog',
+  'search',
+  'saved',
+  'book',
+  'quote',
+  'more',
+  'contact',
+  'about',
+]
+const CONCEPT_ARCHITECTURE = {
+  header: ['masthead', 'utility', 'overlay'],
+  catalog: ['journal', 'index', 'stories'],
+  cards: ['editorial', 'compact', 'campaign'],
+  detail: ['feature', 'spec', 'story'],
+  type: ['serif', 'grotesk', 'display'],
+  imagery: ['portrait', 'square', 'wide'],
+} as const
+
+function oneOf<T extends string>(value: unknown, allowed: readonly T[]): T | undefined {
+  return typeof value === 'string' && (allowed as readonly string[]).includes(value)
+    ? (value as T)
+    : undefined
+}
+
+/**
+ * A generated concept is untrusted input. Colours must be readable, type must
+ * be a stack we know (never arbitrary CSS), every enum must be known, and the
+ * whole concept is dropped if any part is wrong: a half-applied design is worse
+ * than the trade's own system, which is always still there to fall back to.
+ */
+function cleanConcept(value: unknown): DocConcept | undefined {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined
+  const raw = value as Record<string, unknown>
+  const tokens = raw.tokens as Record<string, unknown> | undefined
+  const structure = raw.structure as Record<string, unknown> | undefined
+  const paletteRaw = tokens?.palette as Record<string, unknown> | undefined
+  const architectureRaw = structure?.architecture as Record<string, unknown> | undefined
+  if (!tokens || !structure || !paletteRaw || !architectureRaw) return undefined
+
+  const colour = (key: string): string =>
+    typeof paletteRaw[key] === 'string' ? hexOf(paletteRaw[key] as string) : ''
+  const bg = colour('bg')
+  const ink = colour('ink')
+  const accent = colour('accent')
+  const onAccent = colour('onAccent')
+  if (!bg || !ink || !accent || !onAccent) return undefined
+  if (contrast(bg, ink) < 4.5) return undefined
+  if (contrast(accent, onAccent) < 4.5) return undefined
+  const dark = paletteRaw.dark === true
+  const surface = colour('surface') || mix(bg, dark ? '#ffffff' : ink, 0.06)
+  const surface2 = colour('surface2') || mix(bg, dark ? '#ffffff' : ink, 0.1)
+  const muted = colour('muted') || ink
+  if (contrast(bg, muted) < 3) return undefined
+
+  const display = typeof tokens.display === 'string' ? tokens.display : ''
+  const body = typeof tokens.body === 'string' ? tokens.body : ''
+  if (!isKnownFontStack(display) || !isKnownFontStack(body)) return undefined
+  const priceFont = oneOf(tokens.priceFont, ['display', 'mono', 'body'] as const)
+  const accentStyle = oneOf(tokens.accentStyle, ['solid', 'block', 'underline'] as const)
+  const motif = oneOf(tokens.motif, ['circle', 'arches', 'stripes', 'grid', 'letter', 'rings'] as const)
+  const weight = Number(tokens.weight)
+  const radius = Number(tokens.radius)
+  const tracking = typeof tokens.tracking === 'string' ? tokens.tracking : ''
+  if (!priceFont || !accentStyle || !motif) return undefined
+  if (!Number.isFinite(weight) || weight < 300 || weight > 900) return undefined
+  if (!Number.isFinite(radius) || radius < 0 || radius > 26) return undefined
+  if (!/^-?\d?(\.\d{1,3})?em$/.test(tracking)) return undefined
+
+  const header = oneOf(architectureRaw.header, CONCEPT_ARCHITECTURE.header)
+  const catalog = oneOf(architectureRaw.catalog, CONCEPT_ARCHITECTURE.catalog)
+  const cards = oneOf(architectureRaw.cards, CONCEPT_ARCHITECTURE.cards)
+  const detail = oneOf(architectureRaw.detail, CONCEPT_ARCHITECTURE.detail)
+  const type = oneOf(architectureRaw.type, CONCEPT_ARCHITECTURE.type)
+  const imagery = oneOf(architectureRaw.imagery, CONCEPT_ARCHITECTURE.imagery)
+  if (!header || !catalog || !cards || !detail || !type || !imagery) return undefined
+
+  const roles = Array.isArray(structure.roleSequence)
+    ? structure.roleSequence.filter((role): role is BlockRole =>
+        CONCEPT_ROLES.includes(role as BlockRole),
+      )
+    : []
+  const nav = Array.isArray(structure.nav)
+    ? structure.nav.filter((kind): kind is ScreenKind => CONCEPT_NAV.includes(kind as ScreenKind))
+    : []
+  const navModel = oneOf(structure.navModel, ['bar', 'floating', 'dock'] as const)
+  const initial = oneOf(structure.initial, ['home', 'catalog'] as const)
+  const id =
+    typeof structure.id === 'string' && /^[a-z][a-z0-9-]{1,30}$/.test(structure.id) ? structure.id : ''
+  const name = typeof structure.name === 'string' ? structure.name.trim().slice(0, 40) : ''
+  if (roles.length < 3 || roles.length > 7 || nav.length < 2 || !navModel || !initial || !id || !name)
+    return undefined
+
+  return {
+    source: raw.source === 'preset' ? 'preset' : 'ai',
+    structure: {
+      id,
+      name,
+      architecture: { header, catalog, cards, detail, type, imagery },
+      roleSequence: roles,
+      nav: nav.slice(0, 5),
+      navModel,
+      initial,
+    },
+    tokens: {
+      display,
+      body,
+      priceFont,
+      weight: Math.round(weight),
+      tracking,
+      accentStyle,
+      motif,
+      palette: { bg, surface, surface2, ink, muted, accent, onAccent, dark },
+      radius: Math.round(radius),
+    },
+  }
+}
+
 function sanitizeDesign(value: unknown, spec: AppSpec): DocDesign | undefined {
   if (!value || typeof value !== 'object') return undefined
   const raw = value as Record<string, unknown>
@@ -434,6 +599,7 @@ function sanitizeDesign(value: unknown, spec: AppSpec): DocDesign | undefined {
     raw.density === 'cozy' || raw.density === 'standard' || raw.density === 'roomy'
       ? raw.density
       : undefined
+  const concept = cleanConcept(raw.concept)
   const design: DocDesign = {
     ...(direction ? { direction } : {}),
     ...(typography ? { typography } : {}),
@@ -441,6 +607,7 @@ function sanitizeDesign(value: unknown, spec: AppSpec): DocDesign | undefined {
     ...(SHAPE(raw.cards) ? { cards: SHAPE(raw.cards) } : {}),
     ...(nav ? { nav } : {}),
     ...(density ? { density } : {}),
+    ...(concept ? { concept } : {}),
   }
   return Object.keys(design).length ? design : undefined
 }

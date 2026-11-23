@@ -1,0 +1,5 @@
+session_id,business,owner_alias,date,status,moderator,device,t1_result,t1_minutes,t2_result,t2_minutes,t3_result,t3_minutes,t4_choice,t4_minutes,t5_result,t5_minutes,t6_result,t6_minutes,t7_result,t7_minutes,t8_result,t8_minutes,t9_result,t9_minutes,t10_result,t10_minutes,assistance_count,critical_issues,noncritical_issues,accuracy_corrections,preferred_concept,concept_reason,feature_requests,understood_workflow,independent_completion,trust_score,notes
+1,Yarmouth Oilskins,,,not_run,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+2,Padella,,,not_run,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+3,Blue Tit London,,,not_run,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+4,Architecture for London,,,not_run,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

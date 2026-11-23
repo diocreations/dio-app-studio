@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-11-22T07:46:17.133Z",
+  "hotel": {
+    "token": "4b5591e07e6a6545febb34ee",
+    "room": "Garden double",
+    "checkIn": "2026-11-23",
+    "checkOut": "2026-11-25",
+    "guests": 2,
+    "nightlyRate": 18000,
+    "total": 36000,
+    "currency": "USD",
+    "customer": "Hotel Pilot",
+    "status": "requested",
+    "confirmation": "Request sent — not a confirmed reservation"
+  },
+  "visual": {
+    "screens": 111,
+    "networkFailures": 0,
+    "consoleErrors": 0,
+    "flagged": 24
+  },
+  "acceptance": [
+    {
+      "trade": "shop",
+      "token": "3aef88f1dc49d834d9ade609",
+      "ok": true,
+      "concepts": [
+        "index",
+        "immersive",
+        "lead"
+      ],
+      "dashboard": true
+    },
+    {
+      "trade": "restaurant",
+      "token": "d947bf4d331034e18d7b06bc",
+      "ok": true,
+      "concepts": [
+        "immersive",
+        "index",
+        "lead"
+      ],
+      "dashboard": true
+    },
+    {
+      "trade": "salon",
+      "token": "b47ed1d52b052b9ab76b4850",
+      "ok": true,
+      "concepts": [
+        "index",
+        "lead",
+        "immersive"
+      ],
+      "dashboard": true
+    },
+    {
+      "trade": "professional",
+      "token": "89242d3ca802e8aaf03c2427",
+      "ok": true,
+      "concepts": [
+        "lead",
+        "index",
+        "immersive"
+      ],
+      "dashboard": true
+    }
+  ]
+}

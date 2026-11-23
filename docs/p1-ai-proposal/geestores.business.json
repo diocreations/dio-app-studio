@@ -1,0 +1,163 @@
+{
+  "version": "ai.business.v1",
+  "businessId": "geestores",
+  "generatedAt": "2026-11-23T10:12:00Z",
+  "source": {
+    "kind": "url",
+    "url": "https://geestores.com/",
+    "host": "geestores.com",
+    "pagesRead": 10,
+    "readAt": "2026-11-23T10:11:40Z",
+    "readStatus": "complete"
+  },
+  "identity": {
+    "name": {
+      "value": "GeeStores",
+      "basis": "verbatim",
+      "sourceRef": "json-ld:name",
+      "confidence": "verified"
+    },
+    "trade": {
+      "value": "shop",
+      "basis": "read",
+      "sourceRef": "visible-text:business category",
+      "confidence": "verified"
+    },
+    "category": {
+      "value": "Jewellery shop",
+      "basis": "verbatim",
+      "sourceRef": "visible-text:business category",
+      "confidence": "likely"
+    },
+    "summary": {
+      "value": "A jewellery shop selling priced pieces from an online catalogue in India.",
+      "basis": "structural",
+      "confidence": "likely",
+      "note": "Restates only what the read established: trade, currency, catalogue and photographs. Makes no claim about materials, craft, origin or ownership."
+    }
+  },
+  "audience": {
+    "primary": {
+      "value": "Phone-first gift and occasion buyers",
+      "basis": "inferred",
+      "confidence": "guess",
+      "evidence": [
+        "the storefront is mobile-first",
+        "prices are published in INR",
+        "no appointment, booking or consultation flow was found"
+      ]
+    },
+    "secondary": [
+      {
+        "value": "Repeat local customers checking what is new",
+        "basis": "inferred",
+        "confidence": "guess"
+      }
+    ],
+    "confirmed": false
+  },
+  "offer": {
+    "currency": {
+      "value": "INR",
+      "basis": "verbatim",
+      "sourceRef": "visible-text:currency beside prices",
+      "confidence": "likely"
+    },
+    "catalogueEntries": 101,
+    "pricedEntries": 101,
+    "entriesWithSourcePhotograph": 71,
+    "pricingBasis": "published",
+    "priceSpread": {
+      "value": "wide",
+      "basis": "read",
+      "confidence": "likely",
+      "note": "Recorded as a spread only. No affordability claim is made and no figure is reproduced in any design copy."
+    },
+    "workflows": [
+      {
+        "id": "browse",
+        "label": "Browse the collection",
+        "kind": "catalog",
+        "available": true,
+        "evidence": "101 catalogue entries across the read"
+      },
+      {
+        "id": "buy",
+        "label": "Add a piece to the bag",
+        "kind": "ordering",
+        "available": true,
+        "evidence": "cart and checkout affordances present on the storefront"
+      },
+      {
+        "id": "enquire",
+        "label": "Ask about a piece",
+        "kind": "quote",
+        "available": false,
+        "why": "no enquiry form, appointment flow or messaging link was found in the read"
+      },
+      {
+        "id": "visit",
+        "label": "Visit the shop",
+        "kind": "visit",
+        "available": false,
+        "why": "no street address was established with confidence"
+      }
+    ]
+  },
+  "brand": {
+    "designHypothesis": true,
+    "personality": [
+      { "value": "ceremonial", "basis": "inferred", "confidence": "guess" },
+      { "value": "ornate", "basis": "inferred", "confidence": "guess" },
+      { "value": "unhurried", "basis": "inferred", "confidence": "guess" }
+    ],
+    "formality": "formal",
+    "energy": "calm",
+    "note": "Personality is a design hypothesis offered to the owner, never presented as a fact about the business. It may be replaced without touching any extracted field."
+  },
+  "vocabulary": {
+    "catalog": "Collection",
+    "item": "Piece",
+    "buy": "Add to bag",
+    "enquire": "Ask about this piece"
+  },
+  "constraints": {
+    "mustNotInvent": [
+      "prices, currency conversions or discounts",
+      "materials, hallmarking, origin or craft claims",
+      "delivery, returns, warranty or privacy policy text",
+      "stock levels or availability",
+      "address, opening hours or staff names"
+    ],
+    "mustUseOwnPhotography": true,
+    "sampleCatalogue": false
+  },
+  "uncertainties": [
+    {
+      "field": "audience",
+      "why": "The site describes what it sells, not who buys it. Gift, bridal and repeat-local buyers need different hierarchies."
+    },
+    {
+      "field": "visit",
+      "why": "No address was established, so a Visit screen would be empty."
+    }
+  ],
+  "questionsForOwner": [
+    {
+      "id": "q_audience",
+      "question": "Who buys most often: gift buyers, wedding shoppers, or repeat local customers?",
+      "why": "It decides whether the first screen leads with one piece or the whole collection.",
+      "answerKind": "one-of",
+      "options": ["Gift buyers", "Wedding shoppers", "Repeat local customers", "A mix"],
+      "skippable": true
+    },
+    {
+      "id": "q_enquiry",
+      "question": "Should customers be able to ask about a piece, or only buy online?",
+      "why": "An enquiry screen is only built when the business actually answers enquiries.",
+      "answerKind": "one-of",
+      "options": ["Buy online only", "Ask about a piece as well"],
+      "skippable": true
+    }
+  ]
+}

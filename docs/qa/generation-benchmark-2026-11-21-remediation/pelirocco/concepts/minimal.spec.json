@@ -1,0 +1,59 @@
+{
+  "name": "Hotel Pelirocco",
+  "kind": "Hotel & guesthouse",
+  "tagline": "Discover this quirky hotel in Brighton, UK Hotel Pelirocco.",
+  "story": "Discover this quirky hotel in Brighton, UK Hotel Pelirocco. Book this cool boutique hotel with themed rooms for an unforgettable experience.",
+  "accent": "#de4528",
+  "logo": "HP",
+  "logoImage": {
+    "url": "https://www.hotelpelirocco.co.uk/wp-content/uploads/2015/04/logo-slanted.png",
+    "alt": "Hotel Pelirocco logo"
+  },
+  "hours": "",
+  "phone": "",
+  "address": "",
+  "vertical": "hotel",
+  "features": [
+    "catalog",
+    "ordering",
+    "booking"
+  ],
+  "menu": [],
+  "offers": [],
+  "loyalty": {
+    "goal": 0,
+    "reward": ""
+  },
+  "sampleContent": {
+    "menu": false,
+    "contact": true,
+    "story": false,
+    "offers": false,
+    "team": false,
+    "staff": false,
+    "tagline": false
+  },
+  "custom": "",
+  "direction": "minimal",
+  "category": "Hotel & guesthouse",
+  "design": {
+    "bg": "#0e1c17",
+    "ink": "#f4eee2",
+    "surface": "#1c2a25",
+    "surface2": "#26332e",
+    "muted": "#afafa5",
+    "radius": 10,
+    "display": "\"Indie Flower\", ui-sans-serif, system-ui, \"Helvetica Neue\", Arial, sans-serif",
+    "fontLabel": "Indie Flower",
+    "dark": true,
+    "palette": false,
+    "basis": ""
+  },
+  "website": "https://www.hotelpelirocco.co.uk/",
+  "fulfilment": {
+    "options": [
+      "At the guesthouse"
+    ],
+    "source": "default"
+  }
+}

@@ -2,10 +2,12 @@
 
 ## Current model
 
-- **Customer app capability:** `/p/:token/app` is public and carries only the
-  project token. The customer app calls public `/p/:token/orders`,
-  `/p/:token/bookings` and `/p/:token/enquiries`; those routes are rate-limited,
-  same-origin checked and scoped to that project.
+- **Customer app capability:** `/p/:token/app` is public only when the project
+  has `published_at` set; otherwise it is `404` unless the owner session is
+  present. It carries only the project token. The customer app calls public
+  `/p/:token/orders`, `/p/:token/bookings` and `/p/:token/enquiries`; those routes
+  are publication-gated, rate-limited, same-origin checked and scoped to that
+  project.
 - **Owner credential:** an owner key derived from the project token and
   `OWNER_SECRET` (HMAC, not stored in D1). It is exchanged at
   `/p/:token/dashboard/login` for a random `own_` session in `owner_sessions`.
@@ -66,8 +68,9 @@ disallows `/studio`, `/p/`, `/api/`, `/demo/` and `/health`.
 - The audit trail has no actor identity or IP because there is only one owner
   principal. It is an activity log, not a tamper-evident audit system.
 - CSRF uses origin checks and `SameSite=Lax` rather than per-form tokens.
-- There is no CSP yet; inline styles and scripts require nonces or hashes before
-  enforcing one.
+- A CSP is enforced, but it allows inline styles/scripts (`'unsafe-inline'`)
+  because the single-file editor and app use them. Nonces or hashes are still
+  needed before that allowance can be removed.
 - Sessions are stored in D1, so a D1 outage prevents owner sign-in. Customer app
   reads do not depend on sessions.
 - No production secret is configured in this workspace; production must supply

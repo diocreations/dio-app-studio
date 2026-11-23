@@ -104,6 +104,8 @@ export type ImportedSite = {
    *  can say where it came from. */
   contactEvidence?: { phone?: string; email?: string; address?: string; hours?: string }
   website: string
+  /** A prompt-supplied sample catalogue, not a website read. */
+  sample?: boolean
   /** The shop's currency, when one code is backed by the source. Empty when no
    *  signal was found, or when the signals disagree and the owner must choose. */
   currency: string
@@ -3375,6 +3377,16 @@ export function sanitizeImported(input: unknown): Partial<ImportedSite> | undefi
 
   return {
     name: str(source.name, 60),
+    // The trade the read established travels with the site, so a build can
+    // prove its chosen trade agrees with the source rather than trusting a
+    // browser to remember it correctly.
+    ...(typeof source.vertical === 'string' && source.vertical in VERTICALS
+      ? { vertical: source.vertical as VerticalId }
+      : {}),
+    ...(source.verticalConfidence === 'detected' || source.verticalConfidence === 'guessed'
+      ? { verticalConfidence: source.verticalConfidence }
+      : {}),
+    ...(source.sample === true ? { sample: true } : {}),
     ...(['structured-data', 'metadata', 'title', 'host'] as const).includes(
       source.nameSource as 'structured-data',
     )

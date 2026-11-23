@@ -1,0 +1,120 @@
+{
+  "v": 2,
+  "accent": "#2a5a8f",
+  "design": {
+    "direction": "minimal",
+    "nav": "dock"
+  },
+  "initialScreen": "scr_catalog",
+  "screens": [
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Shop",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_shop_search",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "shop-search",
+          "title": "Search the collection",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_shop_products",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "shop-products",
+          "title": "New in",
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_shop_all",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "shop-all",
+          "title": "Browse everything",
+          "cta": {
+            "label": "Browse everything",
+            "screen": "scr_catalog"
+          },
+          "layout": "grid"
+        },
+        {
+          "id": "sec_fx_shop_title",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "shop-title",
+          "title": "Yarmouth Oilskins Est.",
+          "follows": {
+            "title": "tagline"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "More",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

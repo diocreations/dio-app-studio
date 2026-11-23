@@ -1,0 +1,528 @@
+PASS yarmouth · owner review page renders
+PASS yarmouth · saved catalogue is readable — 74 items
+PASS yarmouth · owner correction saves
+PASS yarmouth · correction is recorded as owner data
+PASS yarmouth · correction is not upgraded to website-verified
+PASS yarmouth · dated source trail is stored
+PASS yarmouth · website reading is kept beside the correction
+PASS yarmouth · original evidence keeps its own validated flag
+PASS yarmouth · review states the correction is the owner’s
+PASS yarmouth · review shows the earlier website reading
+PASS yarmouth · customer app carries no provenance
+PASS yarmouth · the customer payload publishes the owner’s value — 40.37
+PASS yarmouth · the rendered customer card shows the published value — 5
+PASS yarmouth · saving twice adds no duplicate
+PASS yarmouth · saving twice keeps the first correction
+PASS yarmouth · a repeated edit keeps the first source reading
+PASS yarmouth · a repeated edit updates the owner time
+PASS yarmouth · an owner-created row is entirely the owner’s
+PASS yarmouth · deleting a row removes it
+PASS yarmouth · restoring the row keeps owner provenance
+PASS yarmouth · the closed session is rejected
+PASS yarmouth · a fresh session opens the review
+PASS yarmouth · the catalogue survives a fresh session
+PASS yarmouth · the correction survives a fresh session
+PASS yarmouth · owner provenance survives a fresh session
+PASS yarmouth · the original evidence survives a fresh session
+PASS yarmouth · the item is still not website-verified
+PASS yarmouth · fresh review shows the correction and its date
+PASS yarmouth · a concept preview writes nothing
+PASS yarmouth · customer payload exists for minimal
+PASS yarmouth · concept payload carries no evidence
+PASS yarmouth · concept HTML exposes no internal review wording
+PASS yarmouth · rejected rows are not customer catalogue rows
+PASS yarmouth · variant options reach the customer app
+PASS yarmouth · variant pricing is published
+PASS yarmouth · source photography is published
+PASS yarmouth · cart and fulfilment controls are present
+PASS yarmouth · an order is accepted — 201
+PASS yarmouth · the order keeps the variant price
+PASS yarmouth · the order reaches the owner dashboard
+PASS yarmouth · business information correction saves
+PASS yarmouth · business information survives the session
+PASS yarmouth · saved catalogue is readable — 74 items
+PASS yarmouth · owner correction saves
+PASS yarmouth · correction is recorded as owner data
+PASS yarmouth · correction is not upgraded to website-verified
+PASS yarmouth · dated source trail is stored
+PASS yarmouth · website reading is kept beside the correction
+PASS yarmouth · original evidence keeps its own validated flag
+PASS yarmouth · review states the correction is the owner’s
+PASS yarmouth · review shows the earlier website reading
+PASS yarmouth · customer app carries no provenance
+PASS yarmouth · the customer payload publishes the owner’s value — 39.00
+PASS yarmouth · the rendered customer card shows the published value — 5
+PASS yarmouth · saving twice adds no duplicate
+PASS yarmouth · saving twice keeps the first correction
+PASS yarmouth · a repeated edit keeps the first source reading
+PASS yarmouth · a repeated edit updates the owner time
+PASS yarmouth · an owner-created row is entirely the owner’s
+PASS yarmouth · deleting a row removes it
+PASS yarmouth · restoring the row keeps owner provenance
+PASS yarmouth · the closed session is rejected
+PASS yarmouth · a fresh session opens the review
+PASS yarmouth · the catalogue survives a fresh session
+PASS yarmouth · the correction survives a fresh session
+PASS yarmouth · owner provenance survives a fresh session
+PASS yarmouth · the original evidence survives a fresh session
+PASS yarmouth · the item is still not website-verified
+PASS yarmouth · fresh review shows the correction and its date
+PASS yarmouth · a concept preview writes nothing
+PASS yarmouth · customer payload exists for editorial
+PASS yarmouth · concept payload carries no evidence
+PASS yarmouth · concept HTML exposes no internal review wording
+PASS yarmouth · rejected rows are not customer catalogue rows
+PASS yarmouth · saved catalogue is readable — 74 items
+PASS yarmouth · owner correction saves
+PASS yarmouth · correction is recorded as owner data
+PASS yarmouth · correction is not upgraded to website-verified
+PASS yarmouth · dated source trail is stored
+PASS yarmouth · website reading is kept beside the correction
+PASS yarmouth · original evidence keeps its own validated flag
+PASS yarmouth · review states the correction is the owner’s
+PASS yarmouth · review shows the earlier website reading
+PASS yarmouth · customer app carries no provenance
+PASS yarmouth · the customer payload publishes the owner’s value — 39.00
+PASS yarmouth · the rendered customer card shows the published value — 5
+PASS yarmouth · saving twice adds no duplicate
+PASS yarmouth · saving twice keeps the first correction
+PASS yarmouth · a repeated edit keeps the first source reading
+PASS yarmouth · a repeated edit updates the owner time
+PASS yarmouth · an owner-created row is entirely the owner’s
+PASS yarmouth · deleting a row removes it
+PASS yarmouth · restoring the row keeps owner provenance
+PASS yarmouth · the closed session is rejected
+PASS yarmouth · a fresh session opens the review
+PASS yarmouth · the catalogue survives a fresh session
+PASS yarmouth · the correction survives a fresh session
+PASS yarmouth · owner provenance survives a fresh session
+PASS yarmouth · the original evidence survives a fresh session
+PASS yarmouth · the item is still not website-verified
+PASS yarmouth · fresh review shows the correction and its date
+PASS yarmouth · a concept preview writes nothing
+PASS yarmouth · customer payload exists for lifestyle
+PASS yarmouth · concept payload carries no evidence
+PASS yarmouth · concept HTML exposes no internal review wording
+PASS yarmouth · rejected rows are not customer catalogue rows
+PASS padella · owner review page renders
+PASS padella · saved catalogue is readable — 0 items
+PASS padella · an empty catalogue states the recovery honestly
+PASS padella · owner can add content to an empty catalogue
+PASS padella · owner correction saves
+PASS padella · correction is recorded as owner data
+PASS padella · correction is not upgraded to website-verified
+PASS padella · dated source trail is stored
+PASS padella · a row with no website reading invents none
+PASS padella · review states the correction is the owner’s
+PASS padella · customer app carries no provenance
+PASS padella · the customer payload publishes the owner’s value — 16.00
+PASS padella · the rendered customer card shows the published value — 16
+PASS padella · saving twice adds no duplicate
+PASS padella · saving twice keeps the first correction
+PASS padella · a repeated edit keeps the first source reading
+PASS padella · a repeated edit updates the owner time
+PASS padella · an owner-created row is entirely the owner’s
+PASS padella · deleting a row removes it
+PASS padella · restoring the row keeps owner provenance
+PASS padella · the closed session is rejected
+PASS padella · a fresh session opens the review
+PASS padella · the catalogue survives a fresh session
+PASS padella · the correction survives a fresh session
+PASS padella · owner provenance survives a fresh session
+PASS padella · the original evidence survives a fresh session
+PASS padella · the item is still not website-verified
+PASS padella · fresh review shows the correction and its date
+PASS padella · a concept preview writes nothing
+PASS padella · customer payload exists for editorial
+PASS padella · concept payload carries no evidence
+PASS padella · concept HTML exposes no internal review wording
+PASS padella · rejected rows are not customer catalogue rows
+PASS padella · kept restaurant information is reachable
+PASS padella · owner-created dishes reach the customer
+PASS padella · reservation controls are present
+PASS padella · a reservation request is accepted — 201
+PASS padella · the reservation reaches the dashboard
+PASS padella · business information correction saves
+PASS padella · business information survives the session
+PASS padella · saved catalogue is readable — 0 items
+PASS padella · an empty catalogue states the recovery honestly
+PASS padella · owner can add content to an empty catalogue
+PASS padella · owner correction saves
+PASS padella · correction is recorded as owner data
+PASS padella · correction is not upgraded to website-verified
+PASS padella · dated source trail is stored
+PASS padella · a row with no website reading invents none
+PASS padella · review states the correction is the owner’s
+PASS padella · customer app carries no provenance
+PASS padella · the customer payload publishes the owner’s value — 16.00
+PASS padella · the rendered customer card shows the published value — 16
+PASS padella · saving twice adds no duplicate
+PASS padella · saving twice keeps the first correction
+PASS padella · a repeated edit keeps the first source reading
+PASS padella · a repeated edit updates the owner time
+PASS padella · an owner-created row is entirely the owner’s
+PASS padella · deleting a row removes it
+PASS padella · restoring the row keeps owner provenance
+PASS padella · the closed session is rejected
+PASS padella · a fresh session opens the review
+PASS padella · the catalogue survives a fresh session
+PASS padella · the correction survives a fresh session
+PASS padella · owner provenance survives a fresh session
+PASS padella · the original evidence survives a fresh session
+PASS padella · the item is still not website-verified
+PASS padella · fresh review shows the correction and its date
+PASS padella · a concept preview writes nothing
+PASS padella · customer payload exists for modern
+PASS padella · concept payload carries no evidence
+PASS padella · concept HTML exposes no internal review wording
+PASS padella · rejected rows are not customer catalogue rows
+PASS padella · saved catalogue is readable — 0 items
+PASS padella · an empty catalogue states the recovery honestly
+PASS padella · owner can add content to an empty catalogue
+PASS padella · owner correction saves
+PASS padella · correction is recorded as owner data
+PASS padella · correction is not upgraded to website-verified
+PASS padella · dated source trail is stored
+PASS padella · a row with no website reading invents none
+PASS padella · review states the correction is the owner’s
+PASS padella · customer app carries no provenance
+PASS padella · the customer payload publishes the owner’s value — 16.00
+PASS padella · the rendered customer card shows the published value — 16
+PASS padella · saving twice adds no duplicate
+PASS padella · saving twice keeps the first correction
+PASS padella · a repeated edit keeps the first source reading
+PASS padella · a repeated edit updates the owner time
+PASS padella · an owner-created row is entirely the owner’s
+PASS padella · deleting a row removes it
+PASS padella · restoring the row keeps owner provenance
+PASS padella · the closed session is rejected
+PASS padella · a fresh session opens the review
+PASS padella · the catalogue survives a fresh session
+PASS padella · the correction survives a fresh session
+PASS padella · owner provenance survives a fresh session
+PASS padella · the original evidence survives a fresh session
+PASS padella · the item is still not website-verified
+PASS padella · fresh review shows the correction and its date
+PASS padella · a concept preview writes nothing
+PASS padella · customer payload exists for luxe
+PASS padella · concept payload carries no evidence
+PASS padella · concept HTML exposes no internal review wording
+PASS padella · rejected rows are not customer catalogue rows
+PASS pelirocco · owner review page renders
+PASS pelirocco · saved catalogue is readable — 0 items
+PASS pelirocco · an empty catalogue states the recovery honestly
+PASS pelirocco · owner can add content to an empty catalogue
+PASS pelirocco · owner correction saves
+PASS pelirocco · correction is recorded as owner data
+PASS pelirocco · correction is not upgraded to website-verified
+PASS pelirocco · dated source trail is stored
+PASS pelirocco · a row with no website reading invents none
+PASS pelirocco · review states the correction is the owner’s
+PASS pelirocco · customer app carries no provenance
+PASS pelirocco · the customer payload publishes the owner’s value — 167.50
+PASS pelirocco · the rendered customer card shows the published value — 167.50
+PASS pelirocco · saving twice adds no duplicate
+PASS pelirocco · saving twice keeps the first correction
+PASS pelirocco · a repeated edit keeps the first source reading
+PASS pelirocco · a repeated edit updates the owner time
+PASS pelirocco · an owner-created row is entirely the owner’s
+PASS pelirocco · deleting a row removes it
+PASS pelirocco · restoring the row keeps owner provenance
+PASS pelirocco · the closed session is rejected
+PASS pelirocco · a fresh session opens the review
+PASS pelirocco · the catalogue survives a fresh session
+PASS pelirocco · the correction survives a fresh session
+PASS pelirocco · owner provenance survives a fresh session
+PASS pelirocco · the original evidence survives a fresh session
+PASS pelirocco · the item is still not website-verified
+PASS pelirocco · fresh review shows the correction and its date
+PASS pelirocco · a concept preview writes nothing
+PASS pelirocco · customer payload exists for minimal
+PASS pelirocco · concept payload carries no evidence
+PASS pelirocco · concept HTML exposes no internal review wording
+PASS pelirocco · rejected rows are not customer catalogue rows
+PASS pelirocco · hotel policies and press stay as information
+PASS pelirocco · owner-created rooms reach the customer
+PASS pelirocco · a stay request is accepted — 201
+PASS pelirocco · the stay is priced from the saved room rate
+PASS pelirocco · the stay records two nights
+PASS pelirocco · the stay reaches the dashboard
+PASS pelirocco · business information correction saves
+PASS pelirocco · business information survives the session
+PASS pelirocco · saved catalogue is readable — 0 items
+PASS pelirocco · an empty catalogue states the recovery honestly
+PASS pelirocco · owner can add content to an empty catalogue
+PASS pelirocco · owner correction saves
+PASS pelirocco · correction is recorded as owner data
+PASS pelirocco · correction is not upgraded to website-verified
+PASS pelirocco · dated source trail is stored
+PASS pelirocco · a row with no website reading invents none
+PASS pelirocco · review states the correction is the owner’s
+PASS pelirocco · customer app carries no provenance
+PASS pelirocco · the customer payload publishes the owner’s value — 167.50
+PASS pelirocco · the rendered customer card shows the published value — 167.50
+PASS pelirocco · saving twice adds no duplicate
+PASS pelirocco · saving twice keeps the first correction
+PASS pelirocco · a repeated edit keeps the first source reading
+PASS pelirocco · a repeated edit updates the owner time
+PASS pelirocco · an owner-created row is entirely the owner’s
+PASS pelirocco · deleting a row removes it
+PASS pelirocco · restoring the row keeps owner provenance
+PASS pelirocco · the closed session is rejected
+PASS pelirocco · a fresh session opens the review
+PASS pelirocco · the catalogue survives a fresh session
+PASS pelirocco · the correction survives a fresh session
+PASS pelirocco · owner provenance survives a fresh session
+PASS pelirocco · the original evidence survives a fresh session
+PASS pelirocco · the item is still not website-verified
+PASS pelirocco · fresh review shows the correction and its date
+PASS pelirocco · a concept preview writes nothing
+PASS pelirocco · customer payload exists for editorial
+PASS pelirocco · concept payload carries no evidence
+PASS pelirocco · concept HTML exposes no internal review wording
+PASS pelirocco · rejected rows are not customer catalogue rows
+PASS pelirocco · saved catalogue is readable — 0 items
+PASS pelirocco · an empty catalogue states the recovery honestly
+PASS pelirocco · owner can add content to an empty catalogue
+PASS pelirocco · owner correction saves
+PASS pelirocco · correction is recorded as owner data
+PASS pelirocco · correction is not upgraded to website-verified
+PASS pelirocco · dated source trail is stored
+PASS pelirocco · a row with no website reading invents none
+PASS pelirocco · review states the correction is the owner’s
+PASS pelirocco · customer app carries no provenance
+PASS pelirocco · the customer payload publishes the owner’s value — 167.50
+PASS pelirocco · the rendered customer card shows the published value — 167.50
+PASS pelirocco · saving twice adds no duplicate
+PASS pelirocco · saving twice keeps the first correction
+PASS pelirocco · a repeated edit keeps the first source reading
+PASS pelirocco · a repeated edit updates the owner time
+PASS pelirocco · an owner-created row is entirely the owner’s
+PASS pelirocco · deleting a row removes it
+PASS pelirocco · restoring the row keeps owner provenance
+PASS pelirocco · the closed session is rejected
+PASS pelirocco · a fresh session opens the review
+PASS pelirocco · the catalogue survives a fresh session
+PASS pelirocco · the correction survives a fresh session
+PASS pelirocco · owner provenance survives a fresh session
+PASS pelirocco · the original evidence survives a fresh session
+PASS pelirocco · the item is still not website-verified
+PASS pelirocco · fresh review shows the correction and its date
+PASS pelirocco · a concept preview writes nothing
+PASS pelirocco · customer payload exists for luxe
+PASS pelirocco · concept payload carries no evidence
+PASS pelirocco · concept HTML exposes no internal review wording
+PASS pelirocco · rejected rows are not customer catalogue rows
+PASS bluetit · owner review page renders
+PASS bluetit · saved catalogue is readable — 82 items
+PASS bluetit · owner correction saves
+PASS bluetit · correction is recorded as owner data
+PASS bluetit · correction is not upgraded to website-verified
+PASS bluetit · dated source trail is stored
+PASS bluetit · website reading is kept beside the correction
+PASS bluetit · original evidence keeps its own validated flag
+PASS bluetit · review states the correction is the owner’s
+PASS bluetit · review shows the earlier website reading
+PASS bluetit · customer app carries no provenance
+PASS bluetit · the customer payload publishes the owner’s value — 60.00
+PASS bluetit · the rendered customer card shows the published value — 60
+PASS bluetit · saving twice adds no duplicate
+PASS bluetit · saving twice keeps the first correction
+PASS bluetit · a repeated edit keeps the first source reading
+PASS bluetit · a repeated edit updates the owner time
+PASS bluetit · an owner-created row is entirely the owner’s
+PASS bluetit · deleting a row removes it
+PASS bluetit · restoring the row keeps owner provenance
+PASS bluetit · the closed session is rejected
+PASS bluetit · a fresh session opens the review
+PASS bluetit · the catalogue survives a fresh session
+PASS bluetit · the correction survives a fresh session
+PASS bluetit · owner provenance survives a fresh session
+PASS bluetit · the original evidence survives a fresh session
+PASS bluetit · the item is still not website-verified
+PASS bluetit · fresh review shows the correction and its date
+PASS bluetit · a concept preview writes nothing
+PASS bluetit · customer payload exists for minimal
+PASS bluetit · concept payload carries no evidence
+PASS bluetit · concept HTML exposes no internal review wording
+PASS bluetit · rejected rows are not customer catalogue rows
+PASS bluetit · the 82-treatment catalogue is present — 82
+PASS bluetit · the unverified price gaps remain unpriced
+PASS bluetit · missing treatment imagery stays missing, not stock
+PASS bluetit · every treatment reaches the app
+PASS bluetit · the owner can upload a treatment photo — 200
+PASS bluetit · the owner’s treatment photo reaches the customer
+PASS bluetit · the review still marks the price as the owner’s
+PASS bluetit · business information correction saves
+PASS bluetit · business information survives the session
+PASS bluetit · saved catalogue is readable — 82 items
+PASS bluetit · owner correction saves
+PASS bluetit · correction is recorded as owner data
+PASS bluetit · correction is not upgraded to website-verified
+PASS bluetit · dated source trail is stored
+PASS bluetit · website reading is kept beside the correction
+PASS bluetit · original evidence keeps its own validated flag
+PASS bluetit · review states the correction is the owner’s
+PASS bluetit · review shows the earlier website reading
+PASS bluetit · customer app carries no provenance
+PASS bluetit · the customer payload publishes the owner’s value — 60.00
+PASS bluetit · the rendered customer card shows the published value — 60
+PASS bluetit · saving twice adds no duplicate
+PASS bluetit · saving twice keeps the first correction
+PASS bluetit · a repeated edit keeps the first source reading
+PASS bluetit · a repeated edit updates the owner time
+PASS bluetit · an owner-created row is entirely the owner’s
+PASS bluetit · deleting a row removes it
+PASS bluetit · restoring the row keeps owner provenance
+PASS bluetit · the closed session is rejected
+PASS bluetit · a fresh session opens the review
+PASS bluetit · the catalogue survives a fresh session
+PASS bluetit · the correction survives a fresh session
+PASS bluetit · owner provenance survives a fresh session
+PASS bluetit · the original evidence survives a fresh session
+PASS bluetit · the item is still not website-verified
+PASS bluetit · fresh review shows the correction and its date
+PASS bluetit · a concept preview writes nothing
+PASS bluetit · customer payload exists for editorial
+PASS bluetit · concept payload carries no evidence
+PASS bluetit · concept HTML exposes no internal review wording
+PASS bluetit · rejected rows are not customer catalogue rows
+PASS bluetit · saved catalogue is readable — 82 items
+PASS bluetit · owner correction saves
+PASS bluetit · correction is recorded as owner data
+PASS bluetit · correction is not upgraded to website-verified
+PASS bluetit · dated source trail is stored
+PASS bluetit · website reading is kept beside the correction
+PASS bluetit · original evidence keeps its own validated flag
+PASS bluetit · review states the correction is the owner’s
+PASS bluetit · review shows the earlier website reading
+PASS bluetit · customer app carries no provenance
+PASS bluetit · the customer payload publishes the owner’s value — 60.00
+PASS bluetit · the rendered customer card shows the published value — 60
+PASS bluetit · saving twice adds no duplicate
+PASS bluetit · saving twice keeps the first correction
+PASS bluetit · a repeated edit keeps the first source reading
+PASS bluetit · a repeated edit updates the owner time
+PASS bluetit · an owner-created row is entirely the owner’s
+PASS bluetit · deleting a row removes it
+PASS bluetit · restoring the row keeps owner provenance
+PASS bluetit · the closed session is rejected
+PASS bluetit · a fresh session opens the review
+PASS bluetit · the catalogue survives a fresh session
+PASS bluetit · the correction survives a fresh session
+PASS bluetit · owner provenance survives a fresh session
+PASS bluetit · the original evidence survives a fresh session
+PASS bluetit · the item is still not website-verified
+PASS bluetit · fresh review shows the correction and its date
+PASS bluetit · a concept preview writes nothing
+PASS bluetit · customer payload exists for luxe
+PASS bluetit · concept payload carries no evidence
+PASS bluetit · concept HTML exposes no internal review wording
+PASS bluetit · rejected rows are not customer catalogue rows
+PASS afl · owner review page renders
+PASS afl · saved catalogue is readable — 1 items
+PASS afl · owner correction saves
+PASS afl · correction is recorded as owner data
+PASS afl · correction is not upgraded to website-verified
+PASS afl · dated source trail is stored
+PASS afl · a row with no website reading invents none
+PASS afl · review states the correction is the owner’s
+PASS afl · customer app carries no provenance
+PASS afl · the customer payload publishes the owner’s value — 44.00
+PASS afl · the rendered customer card shows the published value — 44
+PASS afl · saving twice adds no duplicate
+PASS afl · saving twice keeps the first correction
+PASS afl · a repeated edit keeps the first source reading
+PASS afl · a repeated edit updates the owner time
+PASS afl · an owner-created row is entirely the owner’s
+PASS afl · deleting a row removes it
+PASS afl · restoring the row keeps owner provenance
+PASS afl · the closed session is rejected
+PASS afl · a fresh session opens the review
+PASS afl · the catalogue survives a fresh session
+PASS afl · the correction survives a fresh session
+PASS afl · owner provenance survives a fresh session
+PASS afl · the original evidence survives a fresh session
+PASS afl · the item is still not website-verified
+PASS afl · fresh review shows the correction and its date
+PASS afl · a concept preview writes nothing
+PASS afl · customer payload exists for classic
+PASS afl · concept payload carries no evidence
+PASS afl · concept HTML exposes no internal review wording
+PASS afl · rejected rows are not customer catalogue rows
+PASS afl · the build service is a service
+PASS afl · six website projects are suggestions until the owner publishes them
+PASS afl · an unpublishing suggestion never reaches the customer
+PASS afl · the owner can publish all six projects
+PASS afl · the portfolio now reports six live entries
+PASS afl · an owner can edit a project title
+PASS afl · the title saves and is marked owner-provided
+PASS afl · the portfolio title reaches the customer
+PASS afl · portfolio work is never priced or booked
+PASS afl · services and portfolio are separate blocks
+PASS afl · a proposal enquiry is accepted — 201
+PASS afl · the enquiry reaches the dashboard
+PASS afl · business information correction saves
+PASS afl · business information survives the session
+PASS afl · saved catalogue is readable — 1 items
+PASS afl · owner correction saves
+PASS afl · correction is recorded as owner data
+PASS afl · correction is not upgraded to website-verified
+PASS afl · dated source trail is stored
+PASS afl · a row with no website reading invents none
+PASS afl · review states the correction is the owner’s
+PASS afl · customer app carries no provenance
+PASS afl · the customer payload publishes the owner’s value — 44.00
+PASS afl · the rendered customer card shows the published value — 44
+PASS afl · saving twice adds no duplicate
+PASS afl · saving twice keeps the first correction
+PASS afl · a repeated edit keeps the first source reading
+PASS afl · a repeated edit updates the owner time
+PASS afl · an owner-created row is entirely the owner’s
+PASS afl · deleting a row removes it
+PASS afl · restoring the row keeps owner provenance
+PASS afl · the closed session is rejected
+PASS afl · a fresh session opens the review
+PASS afl · the catalogue survives a fresh session
+PASS afl · the correction survives a fresh session
+PASS afl · owner provenance survives a fresh session
+PASS afl · the original evidence survives a fresh session
+PASS afl · the item is still not website-verified
+PASS afl · fresh review shows the correction and its date
+PASS afl · a concept preview writes nothing
+PASS afl · customer payload exists for minimal
+PASS afl · concept payload carries no evidence
+PASS afl · concept HTML exposes no internal review wording
+PASS afl · rejected rows are not customer catalogue rows
+PASS afl · saved catalogue is readable — 1 items
+PASS afl · owner correction saves
+PASS afl · correction is recorded as owner data
+PASS afl · correction is not upgraded to website-verified
+PASS afl · dated source trail is stored
+PASS afl · a row with no website reading invents none
+PASS afl · review states the correction is the owner’s
+PASS afl · customer app carries no provenance
+PASS afl · the customer payload publishes the owner’s value — 44.00
+PASS afl · the rendered customer card shows the published value — 44
+PASS afl · saving twice adds no duplicate
+PASS afl · saving twice keeps the first correction
+PASS afl · a repeated edit keeps the first source reading
+PASS afl · a repeated edit updates the owner time
+PASS afl · an owner-created row is entirely the owner’s
+PASS afl · deleting a row removes it
+PASS afl · restoring the row keeps owner provenance
+PASS afl · the closed session is rejected
+PASS afl · a fresh session opens the review
+PASS afl · the catalogue survives a fresh session
+PASS afl · the correction survives a fresh session
+PASS afl · owner provenance survives a fresh session
+PASS afl · the original evidence survives a fresh session
+PASS afl · the item is still not website-verified
+PASS afl · fresh review shows the correction and its date
+PASS afl · a concept preview writes nothing
+PASS afl · customer payload exists for editorial
+PASS afl · concept payload carries no evidence
+PASS afl · concept HTML exposes no internal review wording
+PASS afl · rejected rows are not customer catalogue rows
+
+526 passed, 0 failed -> docs/qa/lifecycle-authentication-2026-11-22/results.json

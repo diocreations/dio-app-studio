@@ -1051,6 +1051,8 @@ export type SiteInfo = {
    *  on the build as a private review record, never rendered in the app. */
   priceConflicts?: PriceConflict[]
   priceDecisions?: PriceDecision[]
+  /** A prompt-supplied sample catalogue, not a source read. */
+  sample?: boolean
 }
 
 /** A free-text category, kept short and never markup. */
@@ -1268,6 +1270,7 @@ export function buildSpec(input: {
     ...(sourceReview ? { sourceReview } : {}),
     ...(projects.length ? { projects } : {}),
     ...(currencyCode ? { currency: currencyCode } : {}),
+    ...(site.sample === true ? { sample: true } : {}),
     ...(currencyCode && site.currencyEvidence && site.currencyEvidence.code === currencyCode
       ? {
           currencySource: {

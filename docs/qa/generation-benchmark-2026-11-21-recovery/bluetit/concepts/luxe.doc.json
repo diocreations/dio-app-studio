@@ -1,0 +1,142 @@
+{
+  "v": 2,
+  "accent": "#0d6efd",
+  "design": {
+    "direction": "luxe",
+    "nav": "bar"
+  },
+  "initialScreen": "scr_home",
+  "screens": [
+    {
+      "id": "scr_home",
+      "kind": "home",
+      "name": "Home",
+      "icon": "home",
+      "nav": true,
+      "hidden": false,
+      "sections": [
+        {
+          "id": "sec_fx_salon_title",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "salon-title",
+          "title": "Blue Tit is a group of award-winning boutique hair salons in London.",
+          "text": "Blue Tit London",
+          "follows": {
+            "title": "tagline",
+            "text": "name"
+          },
+          "layout": "split"
+        },
+        {
+          "id": "sec_fx_salon_services",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "salon-services",
+          "title": "Choose a treatment",
+          "layout": "list"
+        },
+        {
+          "id": "sec_fx_salon_action",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "salon-action",
+          "title": "Book an appointment",
+          "cta": {
+            "label": "Book an appointment",
+            "screen": "scr_book"
+          },
+          "layout": "list"
+        },
+        {
+          "id": "sec_fx_salon_dates",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "salon-dates",
+          "title": "Choose a day"
+        },
+        {
+          "id": "sec_fx_salon_staff",
+          "kind": "flagship",
+          "style": {},
+          "responsive": {
+            "hideOn": []
+          },
+          "hidden": false,
+          "variant": "salon-staff",
+          "text": "With the team"
+        }
+      ]
+    },
+    {
+      "id": "scr_catalog",
+      "kind": "catalog",
+      "name": "Services",
+      "icon": "catalog",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_book",
+      "kind": "book",
+      "name": "Book",
+      "icon": "calendar",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_more",
+      "kind": "more",
+      "name": "Visit",
+      "icon": "dots",
+      "nav": true,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_search",
+      "kind": "search",
+      "name": "Search",
+      "icon": "search",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_saved",
+      "kind": "saved",
+      "name": "Saved",
+      "icon": "heart",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    },
+    {
+      "id": "scr_detail",
+      "kind": "detail",
+      "name": "Details",
+      "icon": "chevron",
+      "nav": false,
+      "hidden": false,
+      "sections": []
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import { appCss } from './appCss'
-import { blueprintFor } from './blueprints'
+import { blueprintFor, blueprintFromStructure } from './blueprints'
+import { mix } from './design'
 import {
   appScreenId,
   homeSections,
@@ -7,6 +8,7 @@ import {
   navScreens,
   normalizeDoc,
   screenFor,
+  type ConceptTokens,
   type Doc,
   type DocNode,
   type ScreenKind,
@@ -1468,6 +1470,30 @@ function moreBlock(ctx: Ctx): string {
  * radius, light or dark. That pairing is what makes a rebuilt app feel like
  * theirs without copying a byte of their markup.
  */
+/** A generated concept replaces the trade's palette and type outright. The
+ *  values were validated when the document was sanitised, so this only applies
+ *  them; it does not decide whether they are usable. */
+function applyConceptTokens(base: Theme, tokens: ConceptTokens): Theme {
+  return {
+    ...base,
+    bg: tokens.palette.bg,
+    surface: tokens.palette.surface,
+    surface2: tokens.palette.surface2,
+    ink: tokens.palette.ink,
+    muted: tokens.palette.muted,
+    line: mix(tokens.palette.ink, tokens.palette.bg, 0.12),
+    dark: tokens.palette.dark,
+    display: tokens.display,
+    body: tokens.body,
+    priceFont: tokens.priceFont,
+    weight: tokens.weight,
+    tracking: tokens.tracking,
+    radius: tokens.radius,
+    accentStyle: tokens.accentStyle,
+    motif: tokens.motif,
+  }
+}
+
 function resolveTheme(base: Theme, design: AppSpec['design']): Theme {
   if (!design) return base
   // Colours only when they are really the site's: a theme that fell back to the
@@ -1897,9 +1923,13 @@ export function renderApp(
   const withType = doc?.design?.typography
     ? { ...themed, ...typographyTheme(doc.design.typography) }
     : themed
+  // A concept's own tokens win over the direction and over the palette read
+  // from the customer's site: the concept is the design the owner chose.
+  const tokens = doc?.design?.concept?.tokens
+  const withConcept = tokens ? applyConceptTokens(withType, tokens) : withType
   const theme = resolveTheme(
-    doc?.design?.nav ? { ...withType, nav: doc.design.nav } : withType,
-    spec.design,
+    doc?.design?.nav ? { ...withConcept, nav: doc.design.nav } : withConcept,
+    tokens ? undefined : spec.design,
   )
   const shell: ShellId = theme.shell ?? 'standard'
   // A saved document that predates the flagship composition stays on the
@@ -1911,7 +1941,12 @@ export function renderApp(
   // The concept is structural, not a palette. Every screen reads these axes so
   // the catalogue, detail page and chrome belong to the concept the owner saw
   // before choosing it.
-  const concept = flagship ? blueprintFor(spec) : null
+  const authored = doc?.design?.concept?.structure
+  const concept = flagship
+    ? authored
+      ? blueprintFromStructure(authored)
+      : blueprintFor(spec)
+    : null
   // A restaurant opens on its menu, a listings app on search. Home is optional.
   // With an application document, the owner chooses the initial screen.
   const initial = options.screen
@@ -2159,7 +2194,7 @@ ${live ? '<link rel="manifest" href="./manifest.webmanifest" />' : ''}
 ${live ? '<link rel="icon" href="./icon.svg" type="image/svg+xml" />' : ''}
 <style>${CSS(ctx)}${presetCss(preset)}${DOC_CSS}${flagship ? flagshipCss() : ''}</style>
 </head>
-<body data-trade="${vertical.id}" data-layout="${theme.layout}" data-shell="${shell}" data-variant="${variant}" data-density="${density}" data-corners="${corners}" data-media="${media}" data-nav="${drawer ? 'drawer' : theme.nav}" data-hero="${hero}" data-order="${order}" data-hero-scale="${heroScale}" data-accent-style="${theme.accentStyle}" data-theme="${theme.dark ? 'dark' : 'light'}"${look ? ` data-direction="${look.id}"` : ''}${doc?.design?.typography ? ` data-type="${doc.design.typography}"` : ''}${buttons ? ` data-buttons="${buttons}"` : ''}${cards ? ` data-cards="${cards}"` : ''}${preset ? ` data-preset="${preset}"` : ''}${flagship ? ' data-flagship="1"' : ''}${concept ? ` data-concept="${concept.id}" data-header="${concept.architecture.header}" data-catalog="${concept.architecture.catalog}" data-card="${concept.architecture.cards}" data-detail="${concept.architecture.detail}" data-imagery="${concept.architecture.imagery}" data-concept-type="${concept.architecture.type}"` : ''}${options.editor ? ' data-editor="1"' : ''}>
+<body data-trade="${vertical.id}" data-layout="${theme.layout}" data-shell="${shell}" data-variant="${variant}" data-density="${density}" data-corners="${corners}" data-media="${media}" data-nav="${drawer ? 'drawer' : theme.nav}" data-hero="${hero}" data-order="${order}" data-hero-scale="${heroScale}" data-accent-style="${theme.accentStyle}" data-theme="${theme.dark ? 'dark' : 'light'}"${look ? ` data-direction="${look.id}"` : ''}${doc?.design?.typography ? ` data-type="${doc.design.typography}"` : ''}${buttons ? ` data-buttons="${buttons}"` : ''}${cards ? ` data-cards="${cards}"` : ''}${preset ? ` data-preset="${preset}"` : ''}${flagship ? ' data-flagship="1"' : ''}${concept ? ` data-concept="${authored ? authored.id : concept.id}" data-header="${concept.architecture.header}" data-catalog="${concept.architecture.catalog}" data-card="${concept.architecture.cards}" data-detail="${concept.architecture.detail}" data-imagery="${concept.architecture.imagery}" data-concept-type="${concept.architecture.type}"` : ''}${options.editor ? ' data-editor="1"' : ''}>
   <div class="app">
     <div class="grain" aria-hidden="true"></div>
     <div class="offline" data-offline hidden>Offline — showing what is already stored</div>

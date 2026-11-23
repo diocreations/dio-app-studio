@@ -1,0 +1,65 @@
+{
+  "site": {
+    "id": "padella",
+    "url": "https://www.padella.co/",
+    "model": "Restaurant",
+    "why": "Fresh-pasta restaurant with HTML menus, prices, locations and walk-in workflow"
+  },
+  "diversity": {
+    "ok": true,
+    "pairs": [
+      {
+        "a": "editorial",
+        "b": "modern",
+        "score": 0.1,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same block set"
+        ]
+      },
+      {
+        "a": "editorial",
+        "b": "luxe",
+        "score": 0.25,
+        "sameInitial": true,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same opening screen",
+          "same block set"
+        ]
+      },
+      {
+        "a": "modern",
+        "b": "luxe",
+        "score": 0.25,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same tabs",
+          "same block set"
+        ]
+      }
+    ]
+  },
+  "concepts": [
+    {
+      "id": "editorial",
+      "name": "Editorial dining",
+      "note": "Photo-led, generous, serif-led · Image first"
+    },
+    {
+      "id": "modern",
+      "name": "Modern casual",
+      "note": "Fast, friendly, two-column menu · Catalogue first"
+    },
+    {
+      "id": "luxe",
+      "name": "Premium luxury",
+      "note": "Dark, quiet, reservations first · Narrative lead"
+    }
+  ]
+}

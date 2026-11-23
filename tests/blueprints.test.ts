@@ -5,7 +5,7 @@ import {
   blueprintFor,
   structureOf,
   validateConcepts,
-  type BlueprintId,
+  type ConceptBlueprintId,
 } from '../src/worker/blueprints'
 import { directionsFor } from '../src/worker/directions'
 import { flagshipDocFromSpec, homeSections } from '../src/worker/doc'
@@ -62,7 +62,7 @@ describe('structural blueprints', () => {
   })
 
   test('which direction gets which structure rotates with the business', () => {
-    const samples: BlueprintId[][] = []
+    const samples: ConceptBlueprintId[][] = []
     for (let index = 0; index < 24 && samples.length < 2; index += 1) {
       const base = specFor('shop', `Business ${index}`)
       const ids = directionsFor('shop').map(

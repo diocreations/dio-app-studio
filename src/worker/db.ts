@@ -20,6 +20,7 @@ import {
 } from './pricing'
 import type { Doc } from './doc'
 import type { VideoLink } from './types'
+import { QUOTA_SCHEMA_SQL } from './ai/quotas'
 import { verticalFor } from './verticals'
 import { ensurePlatformSchema } from './platform/schema'
 
@@ -271,6 +272,9 @@ const SCHEMA = [
     payload TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL
   )`,
+  // The shared free-tier ledger (migrations/0001_ai_quota.sql). Kept in the
+  // runtime schema too, so a deployment never depends on a manual migration.
+  QUOTA_SCHEMA_SQL,
   `CREATE INDEX IF NOT EXISTS notes_by_project ON notes (project_id, created_at)`,
   `CREATE INDEX IF NOT EXISTS media_by_project ON media (project_id, created_at)`,
   `CREATE INDEX IF NOT EXISTS orders_by_project ON orders (project_id, created_at)`,

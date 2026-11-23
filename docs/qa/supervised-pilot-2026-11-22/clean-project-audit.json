@@ -1,0 +1,737 @@
+{
+  "generatedAt": "2026-11-22T09:40:13.339Z",
+  "origin": "http://127.0.0.1:5173",
+  "apps": 12,
+  "passed": 12,
+  "report": [
+    {
+      "site": "padella",
+      "direction": "editorial",
+      "ok": true,
+      "name": "Padella",
+      "vertical": "restaurant",
+      "status": "in_review",
+      "sourceReview": "empty",
+      "contact": {
+        "phone": "",
+        "email": "",
+        "address": ""
+      },
+      "items": 0,
+      "sections": 0,
+      "priced": 0,
+      "withPhoto": 0,
+      "missing": [
+        "dish names and prices",
+        "phone number",
+        "email address",
+        "street address",
+        "opening hours",
+        "a menu page or dish list"
+      ],
+      "questions": [
+        "Catalogue",
+        "Contact details"
+      ],
+      "found": [
+        "0 dishes published — the menu pages did not contain a usable dish list",
+        "5 policy and location rows kept as information, not as dishes",
+        "business name: Padella",
+        "category: Restaurant",
+        "brand story and 2 social links",
+        "three restaurant locations read from their own pages"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "immersive",
+        "expectedCallToAction": "Request a table",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 496809
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "padella",
+      "direction": "modern",
+      "ok": true,
+      "name": "Padella",
+      "vertical": "restaurant",
+      "status": "in_review",
+      "sourceReview": "empty",
+      "contact": {
+        "phone": "",
+        "email": "",
+        "address": ""
+      },
+      "items": 0,
+      "sections": 0,
+      "priced": 0,
+      "withPhoto": 0,
+      "missing": [
+        "dish names and prices",
+        "phone number",
+        "email address",
+        "street address",
+        "opening hours",
+        "a menu page or dish list"
+      ],
+      "questions": [
+        "Catalogue",
+        "Contact details"
+      ],
+      "found": [
+        "0 dishes published — the menu pages did not contain a usable dish list",
+        "5 policy and location rows kept as information, not as dishes",
+        "business name: Padella",
+        "category: Restaurant",
+        "brand story and 2 social links",
+        "three restaurant locations read from their own pages"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "index",
+        "expectedCallToAction": "Request a table",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 496520
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "padella",
+      "direction": "luxe",
+      "ok": true,
+      "name": "Padella",
+      "vertical": "restaurant",
+      "status": "in_review",
+      "sourceReview": "empty",
+      "contact": {
+        "phone": "",
+        "email": "",
+        "address": ""
+      },
+      "items": 0,
+      "sections": 0,
+      "priced": 0,
+      "withPhoto": 0,
+      "missing": [
+        "dish names and prices",
+        "phone number",
+        "email address",
+        "street address",
+        "opening hours",
+        "a menu page or dish list"
+      ],
+      "questions": [
+        "Catalogue",
+        "Contact details"
+      ],
+      "found": [
+        "0 dishes published — the menu pages did not contain a usable dish list",
+        "5 policy and location rows kept as information, not as dishes",
+        "business name: Padella",
+        "category: Restaurant",
+        "brand story and 2 social links",
+        "three restaurant locations read from their own pages"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "lead",
+        "expectedCallToAction": "Request a table",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 496556
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "bluetit",
+      "direction": "minimal",
+      "ok": true,
+      "name": "Blue Tit London",
+      "vertical": "salon",
+      "status": "in_review",
+      "sourceReview": "partial",
+      "contact": {
+        "phone": "01702412486",
+        "email": "",
+        "address": ""
+      },
+      "items": 82,
+      "sections": 1,
+      "priced": 7,
+      "withPhoto": 0,
+      "missing": [
+        "email address",
+        "street address",
+        "opening hours",
+        "75 treatment prices",
+        "82 treatment photographs"
+      ],
+      "questions": [
+        "Treatment prices",
+        "Treatment photographs"
+      ],
+      "found": [
+        "82 treatments in 1 section, read from 15 pages",
+        "7 treatments had a published price",
+        "business name: Blue Tit London",
+        "category: Salon & spa",
+        "phone 01702412486",
+        "3 social links"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "index",
+        "expectedCallToAction": "Request appointment",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 532867
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "bluetit",
+      "direction": "editorial",
+      "ok": true,
+      "name": "Blue Tit London",
+      "vertical": "salon",
+      "status": "in_review",
+      "sourceReview": "partial",
+      "contact": {
+        "phone": "01702412486",
+        "email": "",
+        "address": ""
+      },
+      "items": 82,
+      "sections": 1,
+      "priced": 7,
+      "withPhoto": 0,
+      "missing": [
+        "email address",
+        "street address",
+        "opening hours",
+        "75 treatment prices",
+        "82 treatment photographs"
+      ],
+      "questions": [
+        "Treatment prices",
+        "Treatment photographs"
+      ],
+      "found": [
+        "82 treatments in 1 section, read from 15 pages",
+        "7 treatments had a published price",
+        "business name: Blue Tit London",
+        "category: Salon & spa",
+        "phone 01702412486",
+        "3 social links"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "immersive",
+        "expectedCallToAction": "Request appointment",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 524871
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "bluetit",
+      "direction": "luxe",
+      "ok": true,
+      "name": "Blue Tit London",
+      "vertical": "salon",
+      "status": "in_review",
+      "sourceReview": "partial",
+      "contact": {
+        "phone": "01702412486",
+        "email": "",
+        "address": ""
+      },
+      "items": 82,
+      "sections": 1,
+      "priced": 7,
+      "withPhoto": 0,
+      "missing": [
+        "email address",
+        "street address",
+        "opening hours",
+        "75 treatment prices",
+        "82 treatment photographs"
+      ],
+      "questions": [
+        "Treatment prices",
+        "Treatment photographs"
+      ],
+      "found": [
+        "82 treatments in 1 section, read from 15 pages",
+        "7 treatments had a published price",
+        "business name: Blue Tit London",
+        "category: Salon & spa",
+        "phone 01702412486",
+        "3 social links"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "lead",
+        "expectedCallToAction": "Request appointment",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 524578
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "yarmouth",
+      "direction": "minimal",
+      "ok": true,
+      "name": "Yarmouth Oilskins",
+      "vertical": "shop",
+      "status": "in_review",
+      "sourceReview": "complete",
+      "contact": {
+        "phone": "",
+        "email": "",
+        "address": ""
+      },
+      "items": 74,
+      "sections": 13,
+      "priced": 74,
+      "withPhoto": 74,
+      "missing": [
+        "phone number",
+        "email address",
+        "street address",
+        "opening hours"
+      ],
+      "questions": [
+        "Business name",
+        "Contact details"
+      ],
+      "found": [
+        "74 products in 13 sections, read from 2 pages",
+        "business name read from the site as “yarmouthoilskins”; display name “Yarmouth Oilskins” comes from its own story",
+        "category: Clothing shop",
+        "brand story and 2 social links",
+        "74 product photographs published with the products",
+        "prices in GBP from the £ labels the shop publishes beside its variants"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "index",
+        "expectedCallToAction": "Add to cart",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 680534
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "yarmouth",
+      "direction": "editorial",
+      "ok": true,
+      "name": "Yarmouth Oilskins",
+      "vertical": "shop",
+      "status": "in_review",
+      "sourceReview": "complete",
+      "contact": {
+        "phone": "",
+        "email": "",
+        "address": ""
+      },
+      "items": 74,
+      "sections": 13,
+      "priced": 74,
+      "withPhoto": 74,
+      "missing": [
+        "phone number",
+        "email address",
+        "street address",
+        "opening hours"
+      ],
+      "questions": [
+        "Business name",
+        "Contact details"
+      ],
+      "found": [
+        "74 products in 13 sections, read from 2 pages",
+        "business name read from the site as “yarmouthoilskins”; display name “Yarmouth Oilskins” comes from its own story",
+        "category: Clothing shop",
+        "brand story and 2 social links",
+        "74 product photographs published with the products",
+        "prices in GBP from the £ labels the shop publishes beside its variants"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "immersive",
+        "expectedCallToAction": "Add to cart",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 665885
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "yarmouth",
+      "direction": "lifestyle",
+      "ok": true,
+      "name": "Yarmouth Oilskins",
+      "vertical": "shop",
+      "status": "in_review",
+      "sourceReview": "complete",
+      "contact": {
+        "phone": "",
+        "email": "",
+        "address": ""
+      },
+      "items": 74,
+      "sections": 13,
+      "priced": 74,
+      "withPhoto": 74,
+      "missing": [
+        "phone number",
+        "email address",
+        "street address",
+        "opening hours"
+      ],
+      "questions": [
+        "Business name",
+        "Contact details"
+      ],
+      "found": [
+        "74 products in 13 sections, read from 2 pages",
+        "business name read from the site as “yarmouthoilskins”; display name “Yarmouth Oilskins” comes from its own story",
+        "category: Clothing shop",
+        "brand story and 2 social links",
+        "74 product photographs published with the products",
+        "prices in GBP from the £ labels the shop publishes beside its variants"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "lead",
+        "expectedCallToAction": "Add to cart",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 666315
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "afl",
+      "direction": "classic",
+      "ok": true,
+      "name": "Architecture for London",
+      "vertical": "professional",
+      "status": "in_review",
+      "sourceReview": "partial",
+      "contact": {
+        "phone": "+442036374236",
+        "email": "mail@architectureforlondon.com",
+        "address": ""
+      },
+      "items": 1,
+      "sections": 1,
+      "priced": 0,
+      "withPhoto": 0,
+      "missing": [
+        "street address",
+        "a price or starting price for Build",
+        "photographs for the suggested case studies"
+      ],
+      "questions": [
+        "Opening hours",
+        "Project work"
+      ],
+      "found": [
+        "1 service published from the site",
+        "7 journal case studies read but kept out of the service catalogue; they can be added as portfolio work",
+        "business name: Architecture for London",
+        "category: Professional services",
+        "phone +442036374236",
+        "email mail@architectureforlondon.com",
+        "opening hours Mon–Fri 09:00–18:30 · Sat–Sun 00:00–00:00"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "lead",
+        "expectedCallToAction": "Request a proposal",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 498043
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "afl",
+      "direction": "minimal",
+      "ok": true,
+      "name": "Architecture for London",
+      "vertical": "professional",
+      "status": "in_review",
+      "sourceReview": "partial",
+      "contact": {
+        "phone": "+442036374236",
+        "email": "mail@architectureforlondon.com",
+        "address": ""
+      },
+      "items": 1,
+      "sections": 1,
+      "priced": 0,
+      "withPhoto": 0,
+      "missing": [
+        "street address",
+        "a price or starting price for Build",
+        "photographs for the suggested case studies"
+      ],
+      "questions": [
+        "Opening hours",
+        "Project work"
+      ],
+      "found": [
+        "1 service published from the site",
+        "7 journal case studies read but kept out of the service catalogue; they can be added as portfolio work",
+        "business name: Architecture for London",
+        "category: Professional services",
+        "phone +442036374236",
+        "email mail@architectureforlondon.com",
+        "opening hours Mon–Fri 09:00–18:30 · Sat–Sun 00:00–00:00"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "index",
+        "expectedCallToAction": "Request a proposal",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 498678
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    },
+    {
+      "site": "afl",
+      "direction": "editorial",
+      "ok": true,
+      "name": "Architecture for London",
+      "vertical": "professional",
+      "status": "in_review",
+      "sourceReview": "partial",
+      "contact": {
+        "phone": "+442036374236",
+        "email": "mail@architectureforlondon.com",
+        "address": ""
+      },
+      "items": 1,
+      "sections": 1,
+      "priced": 0,
+      "withPhoto": 0,
+      "missing": [
+        "street address",
+        "a price or starting price for Build",
+        "photographs for the suggested case studies"
+      ],
+      "questions": [
+        "Opening hours",
+        "Project work"
+      ],
+      "found": [
+        "1 service published from the site",
+        "7 journal case studies read but kept out of the service catalogue; they can be added as portfolio work",
+        "business name: Architecture for London",
+        "category: Professional services",
+        "phone +442036374236",
+        "email mail@architectureforlondon.com",
+        "opening hours Mon–Fri 09:00–18:30 · Sat–Sun 00:00–00:00"
+      ],
+      "preview": {
+        "status": 200,
+        "concept": "immersive",
+        "expectedCallToAction": "Request a proposal",
+        "hasCallToAction": true,
+        "noIndex": true,
+        "bannedCopy": [],
+        "bytes": 498074
+      },
+      "ownerReview": {
+        "status": 200,
+        "hasFound": true,
+        "hasMissing": true,
+        "hasChecklist": true,
+        "hasDirectCatalogueLink": true
+      },
+      "workspace": {
+        "status": 200,
+        "hasChecklist": true,
+        "hasReviewLink": true
+      },
+      "dashboard": {
+        "status": 200
+      }
+    }
+  ]
+}

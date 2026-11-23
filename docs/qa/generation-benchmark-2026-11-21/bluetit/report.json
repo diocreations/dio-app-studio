@@ -1,0 +1,602 @@
+{
+  "id": "bluetit",
+  "url": "https://www.bluetitlondon.com/",
+  "model": "Appointment-based business",
+  "why": "Hair salon group with service pages, tiered prices and online appointment booking",
+  "source": "https://bluetitlondon.com/",
+  "host": "bluetitlondon.com",
+  "images": {
+    "products": 82,
+    "withImage": 0,
+    "withoutImage": 82,
+    "methods": {},
+    "rejected": [],
+    "ambiguous": []
+  },
+  "quality": {
+    "discovered": 82,
+    "kept": 82,
+    "dropped": [],
+    "suspectPrices": [],
+    "duplicates": 0,
+    "categories": [
+      "Services"
+    ]
+  },
+  "pages": 15,
+  "site": {
+    "name": "Blue Tit London",
+    "tagline": "Blue Tit is a group of award-winning boutique hair salons in London.",
+    "story": "Blue Tit is a group of award-winning boutique hair salons in London. We believe your haircut should be an experience, make us your London hairdressers.",
+    "vertical": "salon",
+    "verticalConfidence": "detected",
+    "category": "Salon & spa",
+    "categoryBasis": "the nearest trade, from “salon”",
+    "accent": "#0d6efd",
+    "logo": "",
+    "logoImage": {
+      "url": "https://bluetitlondon.com/wp-content/uploads/2022/09/Blue-Tit-Sticker-Logo.png",
+      "alt": "Blue Tit London logo"
+    },
+    "phone": "01702412486",
+    "email": "",
+    "address": "",
+    "hours": "",
+    "website": "https://bluetitlondon.com",
+    "currency": "GBP",
+    "socials": [
+      {
+        "label": "Facebook",
+        "url": "https://www.facebook.com/bluetitlondon/"
+      },
+      {
+        "label": "X",
+        "url": "https://x.com/bluetitlondon"
+      },
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/bluetitlondon/"
+      }
+    ],
+    "menu": [
+      {
+        "name": "Salon & spa",
+        "items": [
+          {
+            "name": "Rebuilding M+",
+            "desc": "OWAY Rebuilding M+ is a treatment for damaged or brittle hair. Choose between two…",
+            "price": 2600,
+            "priceEvidence": {
+              "method": "json-ld",
+              "source": "https://bluetitlondon.com/services/rebuilding/",
+              "raw": "26",
+              "currency": "GBP",
+              "validated": true
+            }
+          },
+          {
+            "name": "Back to Back Highlights - Full Head",
+            "desc": "Colouring hair using a back-to-back foiling technique for maximum coverage. (3 hrs)",
+            "price": 0
+          },
+          {
+            "name": "Back to Back Highlights - Half Head",
+            "desc": "Colouring the top half of hair using a back-to-back foiling technique for maximum…",
+            "price": 0
+          },
+          {
+            "name": "Highlights - Full Head",
+            "desc": "Colouring a full head of hair using foils. (2.5 hrs)",
+            "price": 0
+          },
+          {
+            "name": "Highlights - Half Head",
+            "desc": "Colouring the top half of hair using foils. (2.5 hrs)",
+            "price": 0
+          },
+          {
+            "name": "Highlights - T-Section",
+            "desc": "Colouring the parting and hairline using foils. (1 hr 45min)",
+            "price": 0
+          },
+          {
+            "name": "Face Framing",
+            "desc": "Colouring the hairline to frame the face using foils. (1 hr 45min)",
+            "price": 0
+          },
+          {
+            "name": "Balayage - Full Head",
+            "desc": "Lightening the ends of a full head of hair creating a dark to light fade. (2hrs 30)",
+            "price": 0
+          },
+          {
+            "name": "Balayage - Half Head",
+            "desc": "Lightening the ends of the top section of hair creating a dark to light fade. (2hrs)",
+            "price": 0
+          },
+          {
+            "name": "Balayage - T-section",
+            "desc": "Lightening the ends of the parting and hairline creating a dark to light fade. (1hr 45)",
+            "price": 0
+          },
+          {
+            "name": "Reverse Balayage",
+            "desc": "Darkening the roots and fading colour into the ends (no lightening). (2hr)",
+            "price": 0
+          },
+          {
+            "name": "Root Tint – Balayage Add-on",
+            "desc": "Tinting roots add-on in combination with our balayage services. (30 emins)",
+            "price": 0
+          },
+          {
+            "name": "Virgin Bleach - Long/thick",
+            "desc": "Bleaching a full head of natural or partly lightened hair, that is thick or below the…",
+            "price": 0
+          },
+          {
+            "name": "Virgin Bleach - Medium",
+            "desc": "Bleaching a full head of natural or partly lightened hair that is shoulder length. (2hr…",
+            "price": 0
+          },
+          {
+            "name": "Virgin Bleach - Short",
+            "desc": "Bleaching a full head of natural or partly lightened hair, that is above the shoulder in…",
+            "price": 0
+          },
+          {
+            "name": "Bleach Roots - 8 weeks+",
+            "desc": "Bleaching roots that are over 8 weeks long.",
+            "price": 0
+          },
+          {
+            "name": "Bleach Roots - 6 to 8 weeks",
+            "desc": "Bleaching roots that are 6 – 8 weeks long (we do not recommend doing so in under 6…",
+            "price": 0
+          },
+          {
+            "name": "Bleach Panel",
+            "desc": "Bleaching a section of the hair. (2hr)",
+            "price": 0
+          },
+          {
+            "name": "Full Head Tint - Long/Thick",
+            "desc": "Applying permanent colour to coloured or natural hair that is thick or below the shoulder…",
+            "price": 0
+          },
+          {
+            "name": "Full Head Tint - Medium",
+            "desc": "Applying permanent colour to coloured or natural hair that is shoulder length, to enhance…",
+            "price": 0
+          },
+          {
+            "name": "Full Head Tint - Short",
+            "desc": "Applying permanent colour to coloured or natural hair that is above the shoulder in…",
+            "price": 0
+          },
+          {
+            "name": "Full Head HNectar",
+            "desc": "A luxury, ammonia-free alternative to our regular Full Head Tint that plumps, hydrates…",
+            "price": 0
+          },
+          {
+            "name": "Root Tint",
+            "desc": "Applying permanent colour to roots 6 – 12 weeks long (any later and we recommend a full…",
+            "price": 0
+          },
+          {
+            "name": "Root Tint HNectar",
+            "desc": "A luxury, ammonia-free alternative to our regular Root Tint that plumps, hydrates and…",
+            "price": 0
+          },
+          {
+            "name": "Full Head Gloss",
+            "desc": "Applying semi-permanent colour to coloured or natural hair, and add volume, nourishment…",
+            "price": 0
+          },
+          {
+            "name": "HNectar Toner",
+            "desc": "A luxury, ammonia-free alternative to our regular toner that plumps, hydrates and…",
+            "price": 0
+          },
+          {
+            "name": "Toner",
+            "desc": "Our signature colour-balancing service using Hcolor or Agricolor to neutralise tones and…",
+            "price": 0
+          },
+          {
+            "name": "Creative Toner",
+            "desc": "Applying Hmelt vivid semi-permanent colour to pre-lightened hair. (30 mins)",
+            "price": 0
+          },
+          {
+            "name": "Root Blend Toner",
+            "desc": "Applying a semi-permanent root shadow to pre-lightened hair. (30 mins)",
+            "price": 0
+          },
+          {
+            "name": "CC - Lightening",
+            "desc": "Lightning pre-coloured hair. (3hr)",
+            "price": 0
+          },
+          {
+            "name": "CC - Darkening",
+            "desc": "Darkening pre-lightened hair. (2hr)",
+            "price": 0
+          },
+          {
+            "name": "Cut & Finish",
+            "desc": "The perfect way to freshen up your style while keeping the shape you love. We’ll refine…",
+            "price": 0
+          },
+          {
+            "name": "Cut & Finish - Long/Thick",
+            "desc": "For those with extra length or volume, we take the time to cut your hair in a way that…",
+            "price": 0
+          },
+          {
+            "name": "Cut & Finish - Restyle",
+            "desc": "If you’re ready for a change, this one’s for you. With every big transformation, we’ll…",
+            "price": 0
+          },
+          {
+            "name": "Cut & Finish - Type 3c to 4c Hair",
+            "desc": "Whether you want to define your shape, remove weight, or enhance your natural texture, we…",
+            "price": 0
+          },
+          {
+            "name": "Cut & Finish – Type 3c to 4c Hair – Restyle",
+            "desc": "If you’re ready for a change, this one’s for you. With every big transformation, we’ll…",
+            "price": 0
+          },
+          {
+            "name": "Short Cut",
+            "desc": "A tailored cut for hair clean above the ear, using a combination of scissor and clipper…",
+            "price": 0
+          },
+          {
+            "name": "Back & Sides – Refresh",
+            "desc": "A quick tidy-up for the back and sides of your existing short haircut, keeping everything…",
+            "price": 0
+          },
+          {
+            "name": "Short Cut – Type 3c to 4c Hair",
+            "desc": "A precision cut for short curly or coily hair, shaped to enhance your natural texture…",
+            "price": 0
+          },
+          {
+            "name": "Back & Sides – Type 3c to 4c Hair – Refresh",
+            "desc": "A refresh of the back and sides for curly or coily hair, maintaining your shape while…",
+            "price": 0
+          },
+          {
+            "name": "Child’s Cut",
+            "desc": "A cut for clients under 13 years old. (45 mins)",
+            "price": 0
+          },
+          {
+            "name": "Child’s Cut – Type 3c to 4c Hair",
+            "desc": "A cut for clients under 13 years old. (1hr 15)",
+            "price": 0
+          },
+          {
+            "name": "Toddler's Cut",
+            "desc": "A cut for clients under 5 years old. (30 mins)",
+            "price": 0
+          },
+          {
+            "name": "Fringe Trim",
+            "desc": "A trim of an existing fringe, not bookable online. Please note, we offer this as a…",
+            "price": 0
+          },
+          {
+            "name": "RebuildingM+ Deep Reconstruction Treatment",
+            "desc": "An intensive rebuilding treatment designed to restore strength, structure, and vitality…",
+            "price": 0
+          },
+          {
+            "name": "Oway Tailored Treatment",
+            "desc": "A personalised scalp and hair treatment that begins with an in-depth analysis, followed…",
+            "price": 0
+          },
+          {
+            "name": "RebuildingM+ Express Treatment",
+            "desc": "A quick yet powerful boost that delivers instant cosmetic results and structural support.…",
+            "price": 0
+          },
+          {
+            "name": "Olaplex Treatment",
+            "desc": "A strengthening, rebuilding and protective treatment for colour-treated or heat-damaged…",
+            "price": 0
+          },
+          {
+            "name": "Bonds – Full Head",
+            "desc": "A full-head application of Great Lengths keratin bond extensions. This service provides…",
+            "price": 0
+          },
+          {
+            "name": "Bonds – Half Head",
+            "desc": "A half-head application of Great Lengths keratin bond extensions. This service provides…",
+            "price": 0
+          },
+          {
+            "name": "Bonds – Thickening",
+            "desc": "Additional Great Lengths keratin bonds applied to existing extensions to add extra…",
+            "price": 0
+          },
+          {
+            "name": "Bonds - Removal",
+            "desc": "Safe removal of Great Lengths keratin bond extensions, followed by a wash and condition,…",
+            "price": 0
+          },
+          {
+            "name": "Tapes - Full Head",
+            "desc": "A full-head application of Great Lengths tape extensions. This service provides immediate…",
+            "price": 0
+          },
+          {
+            "name": "Tapes - Half Head",
+            "desc": "A half-head application of Great Lengths tape extensions. This service provides immediate…",
+            "price": 0
+          },
+          {
+            "name": "Tapes - Thickening",
+            "desc": "A full-head application of Great Lengths tape extensions. This service provides immediate…",
+            "price": 0
+          },
+          {
+            "name": "Tapes - Removal & Retape",
+            "desc": "Safe removal of Great Lengths tape extensions, and reapplying of tape adhesive ready for…",
+            "price": 0
+          },
+          {
+            "name": "Tapes - Removal",
+            "desc": "Safe removal of Great Lengths tape extensions, followed by a wash, condition and quick…",
+            "price": 0
+          },
+          {
+            "name": "Blow Dry",
+            "desc": "Smoothing, volumising, curl-enhancing and heat styling. (from 45 mins)",
+            "price": 0
+          },
+          {
+            "name": "Twist Out",
+            "desc": "Wash and style designed for type 3 and 4 hair textures to help with curl definition and…",
+            "price": 0
+          },
+          {
+            "name": "Flexi Rod Set",
+            "desc": "Wash and style designed for any hair type using flexi rods. (1hr 30)",
+            "price": 0
+          },
+          {
+            "name": "Silk Press",
+            "desc": "Wash, conditioning treatment, smoothing and heat styling for any hair type. (1hr 30)",
+            "price": 0
+          },
+          {
+            "name": "Texture Release - Elongation, Versatile or Ultimate Straight",
+            "desc": "Wash, conditioning treatment, smoothing and heat styling. (3hr 15)",
+            "price": 0
+          },
+          {
+            "name": "Texture Release - Elongation",
+            "desc": "Heat activated moisturising treatment. (2hr 30)",
+            "price": 0
+          },
+          {
+            "name": "Brazilian Blow Dry",
+            "desc": "Chemical smoothening treatment (available in Brixton, East Village, Streatham, Woolwich,…",
+            "price": 0
+          },
+          {
+            "name": "Extension Blow Dry",
+            "desc": "Smoothing, volumising and heat styling hair with extensions. (1hr)",
+            "price": 0
+          },
+          {
+            "name": "Olaplex Blow Dry",
+            "desc": "A strengthening, rebuilding and protective treatment for colour-treated or heat-damaged…",
+            "price": 0
+          },
+          {
+            "name": "Hair Therapy Blow Dry",
+            "desc": "Our most intensive and restorative treatment, tailored to your specific hair needs and…",
+            "price": 0
+          },
+          {
+            "name": "Scalp Therapy Blow Dry",
+            "desc": "A rebalancing and soothing treatment tailored to those experiencing hair loss, dryness,…",
+            "price": 0
+          },
+          {
+            "name": "Hair Up",
+            "desc": "Styling hair up, i.e. with pins, in a bun or with braiding. (1hr)",
+            "price": 0
+          },
+          {
+            "name": "Colour Cleanse",
+            "desc": "Removing old tones or colour build-up. (30 mins)",
+            "price": 0
+          },
+          {
+            "name": "Hair Therapy",
+            "desc": "Our most intensive and restorative treatment, tailored to your specific hair needs and…",
+            "price": 0
+          },
+          {
+            "name": "Scalp Therapy",
+            "desc": "A rebalancing and soothing treatment tailored to those experiencing hair loss, dryness,…",
+            "price": 0
+          },
+          {
+            "name": "Oway Treatment",
+            "desc": "A protective and hydrating treatment, keeping hair moisturised and adding softness to all…",
+            "price": 0
+          },
+          {
+            "name": "Blow Dry after Colour",
+            "desc": "Smoothing, volumising, curl-enhancing and heat styling. (45 mins)",
+            "price": 0
+          },
+          {
+            "name": "Silk Press after Cut or Colour",
+            "desc": "Wash, conditioning treatment, smoothing and heat styling for any hair type. (1hr 15)",
+            "price": 0
+          },
+          {
+            "name": "Quick dry after Colour",
+            "desc": "Encouraging the hair’s natural texture. (15 mins)",
+            "price": 0
+          },
+          {
+            "name": "Rebalancing",
+            "desc": "OWAY Rebalancing is a treatment for greasy hair. This 20-minute greasy hair treatment…",
+            "price": 4000,
+            "priceEvidence": {
+              "method": "json-ld",
+              "source": "https://bluetitlondon.com/services/rebalancing/",
+              "raw": "40",
+              "currency": "GBP",
+              "validated": true
+            }
+          },
+          {
+            "name": "Hair loss",
+            "desc": "OWAY Hair Loss is a treatment for thinning hair. This 20-minute hair treatment involves…",
+            "price": 4000,
+            "priceEvidence": {
+              "method": "json-ld",
+              "source": "https://bluetitlondon.com/services/hair-loss/",
+              "raw": "40",
+              "currency": "GBP",
+              "validated": true
+            }
+          },
+          {
+            "name": "Herbs & clay peeling cleansing",
+            "desc": "Oway Herbs & Clay Peeling Cleanser is a holistic beauty and wellness detox treatment for…",
+            "price": 4000,
+            "priceEvidence": {
+              "method": "json-ld",
+              "source": "https://bluetitlondon.com/services/herbs-clay-peeling-cleansing/",
+              "raw": "40",
+              "currency": "GBP",
+              "validated": true
+            }
+          },
+          {
+            "name": "Soothing",
+            "desc": "OWAY Soothing is a treatment for a sensitive scalp. This 20-minute hair treatment…",
+            "price": 4000,
+            "priceEvidence": {
+              "method": "json-ld",
+              "source": "https://bluetitlondon.com/services/soothing/",
+              "raw": "40",
+              "currency": "GBP",
+              "validated": true
+            }
+          },
+          {
+            "name": "Oway Flowerfall treatment",
+            "desc": "Deeply rooted in traditional Ayurvedic medicine. Hydro-dhara provides a gentle flow of…",
+            "price": 4000,
+            "priceEvidence": {
+              "method": "json-ld",
+              "source": "https://bluetitlondon.com/services/oway-flowerfall-treatment/",
+              "raw": "40",
+              "currency": "GBP",
+              "validated": true
+            }
+          },
+          {
+            "name": "Purifying",
+            "desc": "OWAY Purifying is a scalp treatment for dandruff. This 20-minute hair treatment involves…",
+            "price": 4000,
+            "priceEvidence": {
+              "method": "json-ld",
+              "source": "https://bluetitlondon.com/services/purifying/",
+              "raw": "40",
+              "currency": "GBP",
+              "validated": true
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+      "catalog",
+      "booking",
+      "offers"
+    ],
+    "design": {
+      "bg": "#fdf4f6",
+      "surface": "#f5ebee",
+      "surface2": "#ebe1e4",
+      "ink": "#2b1922",
+      "muted": "#72636a",
+      "radius": 4,
+      "display": "",
+      "fontLabel": "",
+      "dark": false,
+      "palette": false,
+      "basis": "4px corners"
+    },
+    "structure": {
+      "nav": "tabs",
+      "stickyHeader": false,
+      "navLabels": [
+        "Salons",
+        "Services",
+        "Cutting",
+        "Colouring",
+        "Treatment"
+      ],
+      "hero": "none",
+      "basis": "nav in a row · Salons, Services, Cutting · hero none"
+    }
+  },
+  "found": [
+    "82 catalogue entries in 1 section, read from 15 pages",
+    "their sitemap listed the product pages the home page did not link to",
+    "name: Blue Tit London",
+    "their logo — taken from the image the site itself declares as its mark",
+    "category: Salon & spa — from the nearest trade, from “salon”",
+    "a one-line description",
+    "brand colour #0d6efd",
+    "their look: 4px corners",
+    "their layout: nav in a row · Salons, Services, Cutting · hero none",
+    "phone 01702412486",
+    "3 social links"
+  ],
+  "missing": [
+    "email",
+    "address",
+    "opening hours",
+    "82 product photographs — the site publishes none for those items"
+  ],
+  "notes": [
+    "The crawl is capped at 10 pages to keep the brief quick, so a large shop may still have aisles left — add anything missing in the app editor.",
+    "Their look is measured, not copied: the palette, typeface and corner radius are read from their stylesheet and applied to an app we build. Their markup, scripts and images stay on their server — a packaged copy would be their copyright, and it would break the first time it went offline or they redeployed.",
+    "Photos are not copied from the site: they usually belong to the owner or their supplier, and hotlinking them breaks the offline app. The build uses its own generated artwork until real images are uploaded."
+  ],
+  "pagesRead": [
+    "/",
+    "/services/",
+    "/service-type/cutting/",
+    "/service-type/styling/",
+    "/service-type/colouring/",
+    "/service-type/hair-treatments/",
+    "/services/rebuilding/",
+    "/services/rebalancing/",
+    "/services/hair-loss/",
+    "/services/herbs-clay-peeling-cleansing/",
+    "/services/soothing/",
+    "/services/oway-flowerfall-treatment/",
+    "/services/purifying/",
+    "/services/blow-dry/",
+    "/services/brazilian-blow-dry/"
+  ],
+  "pagesFailed": [],
+  "usedSitemap": true
+}

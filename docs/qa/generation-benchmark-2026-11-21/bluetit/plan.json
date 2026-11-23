@@ -1,0 +1,65 @@
+{
+  "site": {
+    "id": "bluetit",
+    "url": "https://www.bluetitlondon.com/",
+    "model": "Appointment-based business",
+    "why": "Hair salon group with service pages, tiered prices and online appointment booking"
+  },
+  "diversity": {
+    "ok": true,
+    "pairs": [
+      {
+        "a": "luxe",
+        "b": "minimal",
+        "score": 0.25,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same tabs",
+          "same block set"
+        ]
+      },
+      {
+        "a": "luxe",
+        "b": "editorial",
+        "score": 0.25,
+        "sameInitial": true,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same opening screen",
+          "same block set"
+        ]
+      },
+      {
+        "a": "minimal",
+        "b": "editorial",
+        "score": 0.1,
+        "sameInitial": false,
+        "sameOrder": false,
+        "axesDifferent": 7,
+        "reasons": [
+          "same block set"
+        ]
+      }
+    ]
+  },
+  "concepts": [
+    {
+      "id": "luxe",
+      "name": "Luxury beauty",
+      "note": "Dark, poised, appointment-led · Narrative lead"
+    },
+    {
+      "id": "minimal",
+      "name": "Modern minimal",
+      "note": "Calm list, no decoration · Catalogue first"
+    },
+    {
+      "id": "editorial",
+      "name": "Editorial wellness",
+      "note": "Warm serif, generous spacing · Image first"
+    }
+  ]
+}

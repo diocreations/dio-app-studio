@@ -160,6 +160,24 @@ function firstFamily(value: string): string {
   return parts.find((part) => !GENERIC.test(part)) ?? ''
 }
 
+/**
+ * A type stack a generated design may use: a real family we know, quoted, with
+ * fallbacks. Arbitrary CSS never passes, so a model cannot inject rules through
+ * a font value. `ui-serif`-only stacks are refused: no family means no intent.
+ */
+export function isKnownFontStack(value: string): boolean {
+  if (typeof value !== 'string' || value.length < 2 || value.length > 220) return false
+  if (!/^[\w\s"',.\-()]+$/.test(value)) return false
+  return Boolean(stackFor(firstFamily(value)))
+}
+
+/** Resolve a family a model named ("Fraunces") to a stack that works offline.
+ *  Returns undefined rather than inventing a fallback: an unknown family is a
+ *  design decision the renderer cannot honour. */
+export function fontStackFor(family: string): string | undefined {
+  return stackFor(family)?.display
+}
+
 /** A font family the site declares, from its markup or its stylesheet. */
 function fontOf(html: string, css: string): { display: string; label: string } | undefined {
   const google = /fonts\.googleapis\.com\/css2?\?[^"'\s>]*family=([^"'&:>]+)/i.exec(html)
