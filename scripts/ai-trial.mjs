@@ -44,6 +44,7 @@ import {
   trialStatus,
 } from '../src/worker/ai/trial.ts'
 import { runTrialGeneration } from '../src/worker/ai/trialRun.ts'
+import { exitCodeFor, runMatrix } from './ai-trial-matrix.ts'
 import { briefFor, designSetFor, trialBusinesses } from '../tests/aiTrialFixtures.ts'
 import { copySetFor } from '../tests/freeAiMock.ts'
 
@@ -185,6 +186,19 @@ if (!live) {
     const answer = stage === 'understand' ? brief : stage === 'design' ? set : copySetFor(set)
     const armId =
       url.hostname === 'api.groq.com' ? 'groq' : pinned ? 'openrouter-groq' : 'openrouter'
+    // Test-only seam, reachable only inside a mocked run: it lets a regression
+    // test prove the matrix stops at the first failed generation. A live run
+    // never installs this fetch and never reads this variable.
+    const injected = process.env.PLATTR_AI_TRIAL_MOCK_FAIL
+    if (
+      injected &&
+      (injected === `${activeBusiness.id}:${armId}` || injected === `${activeBusiness.id}:*`)
+    ) {
+      return new Response(
+        JSON.stringify({ error: 'injected failure for the fail-fast regression test' }),
+        { status: 400, headers: { 'content-type': 'application/json' } },
+      )
+    }
     const provider = TRIAL_PROVIDERS.find((entry) => entry.id === armId)
     const promptTokens = stage === 'design' ? 2_100 : 900
     const completionTokens = stage === 'design' ? 1_400 : 400
@@ -356,84 +370,135 @@ function capture(htmlPath, pngPath) {
 const startedAt = new Date().toISOString()
 const businesses = await trialBusinesses()
 const store = live ? d1TrialStore(new LocalD1('.chrome-qa/ai-trial-spend.sqlite')) : memoryTrialStore()
-const runs = []
 const artefacts = []
 let captureFailure = null
 
-for (const business of businesses) {
+/**
+ * One cell of the matrix: the generation, its score and its screenshots.
+ *
+ * The whole record is returned, including a failed generation's charges and
+ * retained reservations, so a stopped matrix still reports what it spent.
+ */
+async function generate(business, provider, generation) {
   activeBusiness = business
-  for (const provider of TRIAL_PROVIDERS) {
-    const run = await runTrialGeneration({
-      providerId: provider.id,
-      spec: business.spec,
-      dossier: business.dossier,
-      env,
-      store,
-    })
-    runs.push({
-      business: { id: business.id, label: business.label, type: business.businessType, source: business.source, fixture: business.fixture },
-      provider: {
-        id: provider.id,
-        arm: provider.arm,
-        label: provider.label,
-        model: provider.model,
-        keyEnv: provider.keyEnv,
-        routingLabel: provider.routingLabel,
-        expectedProvider: provider.expectedProvider,
-      },
-      status: run.status,
-      reason: run.reason,
-      detail: run.detail,
-      costUsd: Number(run.costUsd.toFixed(6)),
-      latencyMs: run.latencyMs,
-      /** Which endpoint the gateway said served each call. */
-      servedProviders: run.servedProviders,
-      /** Every attempt, including one that failed and was retried. */
-      attempts: run.attempts,
-      verification: run.verification,
-      budget: run.budget,
-      issues: run.issues.map((issue) => ({ code: issue.code, message: issue.message })),
-      score: run.status === 'ai' ? scoreRun(run, business) : null,
-    })
-
-    if (shots) {
-      await mkdir(join(OUT, business.id), { recursive: true })
-      for (const concept of run.concepts) {
-        const name = `${provider.id}-${concept.id}`
-        const token = `trial-${business.id}-${name}`
-        const html = renderApp(business.spec, {
-          token,
-          live: false,
-          flagship: true,
-          doc: concept.doc,
-        })
-        const htmlPath = join(OUT, business.id, `${name}.html`)
-        await writeFile(htmlPath, html)
-        const pngPath = join(OUT, business.id, `${name}.png`)
-        const shot = capture(htmlPath, pngPath)
-        if (!shot.ok && !captureFailure) captureFailure = shot.reason
-        artefacts.push({
-          business: business.id,
-          provider: provider.id,
-          concept: concept.id,
-          html: htmlPath,
-          png: shot.ok ? pngPath : null,
-          captured: shot.ok,
-        })
-      }
-    }
+  const run = await runTrialGeneration({
+    providerId: provider.id,
+    spec: business.spec,
+    dossier: business.dossier,
+    env,
+    store,
+  })
+  const record = {
+    generation,
+    business: {
+      id: business.id,
+      label: business.label,
+      type: business.businessType,
+      source: business.source,
+      fixture: business.fixture,
+    },
+    provider: {
+      id: provider.id,
+      arm: provider.arm,
+      label: provider.label,
+      model: provider.model,
+      keyEnv: provider.keyEnv,
+      routingLabel: provider.routingLabel,
+      expectedProvider: provider.expectedProvider,
+    },
+    status: run.status,
+    reason: run.reason,
+    detail: run.detail,
+    costUsd: Number(run.costUsd.toFixed(6)),
+    latencyMs: run.latencyMs,
+    /** Which endpoint the gateway said served each call. */
+    servedProviders: run.servedProviders,
+    /** Every attempt, including one that failed and was retried. */
+    attempts: run.attempts,
+    verification: run.verification,
+    budget: run.budget,
+    issues: run.issues.map((issue) => ({ code: issue.code, message: issue.message })),
+    score: run.status === 'ai' ? scoreRun(run, business) : null,
   }
   const spend = await store.read(TRIAL_ID, TRIAL_LIMITS.totalUsd)
   console.log(
-    `${business.id.padEnd(10)} ${business.businessType.padEnd(22)} ${spend.generations} generation(s) so far · pool remaining $${spend.remainingUsd.toFixed(2)}`,
+    `${String(generation).padStart(2)} ${business.id.padEnd(9)} ${provider.id.padEnd(15)} ${run.status}${run.reason ? ` (${run.reason})` : ''} · charged $${record.costUsd.toFixed(4)} · retained $${record.verification.retainedUsd.toFixed(4)} · pool remaining $${spend.remainingUsd.toFixed(2)}`,
   )
+
+  // A failed generation has no concepts to render, and the matrix stops after
+  // it, so the screenshot pass only runs for a completed generation.
+  if (shots && run.status === 'ai') {
+    await mkdir(join(OUT, business.id), { recursive: true })
+    for (const concept of run.concepts) {
+      const name = `${provider.id}-${concept.id}`
+      const token = `trial-${business.id}-${name}`
+      const html = renderApp(business.spec, {
+        token,
+        live: false,
+        flagship: true,
+        doc: concept.doc,
+      })
+      const htmlPath = join(OUT, business.id, `${name}.html`)
+      await writeFile(htmlPath, html)
+      const pngPath = join(OUT, business.id, `${name}.png`)
+      const shot = capture(htmlPath, pngPath)
+      if (!shot.ok && !captureFailure) captureFailure = shot.reason
+      artefacts.push({
+        business: business.id,
+        provider: provider.id,
+        concept: concept.id,
+        html: htmlPath,
+        png: shot.ok ? pngPath : null,
+        captured: shot.ok,
+      })
+    }
+  }
+
+  return record
 }
+
+// Fail-fast: the matrix stops at the first generation that does not finish, so
+// a broken key or a refused answer cannot be repeated across the remaining
+// cells, where each failure would still book a charge or a retained
+// reservation.
+const matrix = await runMatrix({
+  businesses,
+  providers: TRIAL_PROVIDERS,
+  runGeneration: generate,
+})
+const runs = matrix.runs
 
 const totalCost = runs.reduce((sum, run) => sum + run.costUsd, 0)
 const latencies = runs.filter((run) => run.score).map((run) => run.latencyMs)
 const report = {
   mode: live ? 'live' : 'mocked',
   comparable: live,
+  /** False when the matrix stopped at a failed generation. */
+  complete: matrix.complete,
+  runStatus: matrix.complete ? 'complete' : 'interrupted',
+  plan: {
+    businesses: businesses.length,
+    arms: TRIAL_PROVIDERS.length,
+    planned: matrix.planned,
+    completed: runs.filter((run) => run.status === 'ai').length,
+    failed: matrix.failed ? 1 : 0,
+    skipped: matrix.skipped.length,
+  },
+  interrupted: matrix.failed
+    ? {
+        generation: matrix.failed.generation,
+        business: matrix.failed.business.id,
+        provider: matrix.failed.provider.id,
+        status: matrix.failed.status,
+        reason: matrix.failed.reason,
+        detail: matrix.failed.detail,
+        costUsd: matrix.failed.costUsd,
+        chargedUsd: matrix.failed.verification.chargedUsd,
+        retainedUsd: matrix.failed.verification.retainedUsd,
+        poolRemainingUsd: matrix.failed.budget.remainingUsd,
+      }
+    : null,
+  skipped: matrix.skipped,
   generatedAt: startedAt,
   comparison: {
     kind: 'provider-routing and gateway comparison',
@@ -480,7 +545,16 @@ await mkdir(OUT, { recursive: true })
 await writeFile(join(OUT, 'report.json'), JSON.stringify(report, null, 2))
 await writeFile(join(OUT, 'REPORT.md'), markdown(report))
 console.log(`\n${report.notice}`)
+if (matrix.complete) {
+  console.log(`complete: all ${matrix.planned} planned generations ran`)
+} else {
+  console.log(
+    `interrupted: generation ${matrix.failed.generation} (${matrix.failed.business.id} / ${matrix.failed.provider.id}) failed; ${matrix.skipped.length} generation(s) skipped and not run`,
+  )
+}
 console.log(`wrote ${join(OUT, 'REPORT.md')} and ${join(OUT, 'report.json')}`)
+// A stopped matrix must not look like a successful run to a shell or CI step.
+process.exitCode = exitCodeFor(matrix.complete)
 
 function markdown(data) {
   const lines = []
@@ -489,6 +563,7 @@ function markdown(data) {
   lines.push(`- Generated: ${data.generatedAt}`)
   lines.push(`- Mode: **${data.mode}**${data.comparable ? '' : ' — not comparable'}`)
   lines.push(`- Gate: ${data.gate}`)
+  lines.push(`- Run: **${data.complete ? 'complete' : 'interrupted'}**${data.complete ? '' : ` — stopped at generation ${data.interrupted.generation}; ${data.plan.skipped} generation(s) skipped`}`)
   lines.push(`- Same model on every arm: \`${TRIAL_PROVIDERS[0].model}\``)
   lines.push('- Comparison type: **provider-routing and gateway**, not gateway-only. The primary arms compare direct Groq with OpenRouter routing to the cheapest eligible endpoint; the controlled arm pins OpenRouter to its Groq endpoint with fallbacks disabled.')
   lines.push('- The serving endpoint is recorded from each response; a pinned call served by anything else is refused, and an unpinned call that does not report its endpoint is not treated as a known vendor.');
@@ -507,6 +582,28 @@ function markdown(data) {
     lines.push(`| ${provider.arm === 'controlled' ? 'controlled' : 'primary'} | ${provider.label} | \`${provider.keyEnv}\` | \`${row.model}\` | $${row.inputPerMillion.toFixed(3)} | $${row.outputPerMillion.toFixed(3)} | ${provider.routingLabel} | ${provider.pricing} |`)
   }
   lines.push('')
+  lines.push('## Run status')
+  lines.push('')
+  lines.push(`- Planned generations: ${data.plan.planned} (${data.plan.businesses} businesses × ${data.plan.arms} arms)`)
+  lines.push(`- Completed: ${data.plan.completed}`)
+  lines.push(`- Failed: ${data.plan.failed}`)
+  lines.push(`- Skipped after the failure: ${data.plan.skipped}`)
+  lines.push('')
+  if (data.interrupted) {
+    const failed = data.interrupted
+    lines.push('## Interrupted run')
+    lines.push('')
+    lines.push(`Generation ${failed.generation} — **${failed.business} / ${failed.provider}** — ${failed.status}${failed.reason ? ` (${failed.reason})` : ''}`)
+    lines.push('')
+    lines.push(`- Detail: ${failed.detail ?? 'no detail'}`)
+    lines.push(`- Charged: $${failed.chargedUsd.toFixed(6)} · Retained (uncertain): $${failed.retainedUsd.toFixed(6)} · Pool remaining: $${failed.poolRemainingUsd.toFixed(2)}`)
+    lines.push('- The matrix stopped at this generation. No later generation was sent, and the completed results above are preserved.')
+    lines.push('')
+    for (const cell of data.skipped) {
+      lines.push(`- skipped: generation ${cell.generation} — ${cell.business} / ${cell.provider}`)
+    }
+    lines.push('')
+  }
   lines.push('## Runs')
   lines.push('')
   lines.push('| Business | Type | Arm | Status | Served by | Latency (ms) | Cost (USD) | Concepts | Diversity | Min axes | Nodes | Editable (missing/unknown) |')
