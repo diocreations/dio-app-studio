@@ -1,7 +1,7 @@
 {
   "mode": "mocked",
   "comparable": false,
-  "generatedAt": "2026-11-23T16:26:15.918Z",
+  "generatedAt": "2026-11-23T17:05:59.806Z",
   "comparison": {
     "kind": "provider-routing and gateway comparison",
     "note": "The primary arms are not gateway-only: direct Groq is compared with OpenRouter routing to the cheapest eligible endpoint of the same model, and OpenRouter chooses that endpoint. The controlled arm pins OpenRouter to its Groq endpoint with fallbacks disabled, isolating the gateway for the same model and endpoint.",
@@ -86,11 +86,11 @@
   "totalCostUsd": 0.012771,
   "businesses": [
     {
-      "id": "geestores",
-      "label": "GeeStores",
-      "type": "Jewellery retail",
-      "source": "https://geestores.example/",
-      "fixture": "tests/freeAiMock.ts site fixture (importer fixture suite)"
+      "id": "yarmouth",
+      "label": "Yarmouth Oilskins",
+      "type": "Clothing retail",
+      "source": "https://yarmouthoilskins.com/",
+      "fixture": "docs/qa/generation-benchmark-2026-11-21/yarmouth (saved crawl)"
     },
     {
       "id": "padella",
@@ -110,11 +110,11 @@
   "runs": [
     {
       "business": {
-        "id": "geestores",
-        "label": "GeeStores",
-        "type": "Jewellery retail",
-        "source": "https://geestores.example/",
-        "fixture": "tests/freeAiMock.ts site fixture (importer fixture suite)"
+        "id": "yarmouth",
+        "label": "Yarmouth Oilskins",
+        "type": "Clothing retail",
+        "source": "https://yarmouthoilskins.com/",
+        "fixture": "docs/qa/generation-benchmark-2026-11-21/yarmouth (saved crawl)"
       },
       "provider": {
         "id": "groq",
@@ -126,7 +126,7 @@
       },
       "status": "ai",
       "costUsd": 0.001905,
-      "latencyMs": 8,
+      "latencyMs": 10,
       "servedProviders": [
         "groq"
       ],
@@ -134,7 +134,7 @@
         {
           "stage": "understand",
           "attempt": 1,
-          "reservedUsd": 0.0015871499999999998,
+          "reservedUsd": 0.0016308,
           "costUsd": 0.000375,
           "retainedUsd": 0,
           "billing": "billed",
@@ -143,7 +143,7 @@
         {
           "stage": "design",
           "attempt": 1,
-          "reservedUsd": 0.0072352499999999995,
+          "reservedUsd": 0.0072793499999999995,
           "costUsd": 0.0011549999999999998,
           "retainedUsd": 0,
           "billing": "billed",
@@ -152,7 +152,7 @@
         {
           "stage": "copy",
           "attempt": 1,
-          "reservedUsd": 0.0022475999999999998,
+          "reservedUsd": 0.0022911,
           "costUsd": 0.000375,
           "retainedUsd": 0,
           "billing": "billed",
@@ -164,12 +164,12 @@
         "hardCapUsd": 0.4,
         "attemptsMade": 3,
         "retried": false,
-        "reservedUsd": 0.01107,
+        "reservedUsd": 0.01120125,
         "chargedUsd": 0.0019049999999999996,
         "retainedUsd": 0,
         "accountedUsd": 0.0019049999999999996,
         "uncertainAttempts": 0,
-        "maxAttemptReservedUsd": 0.0072352499999999995,
+        "maxAttemptReservedUsd": 0.0072793499999999995,
         "withinHardCap": true,
         "chargedWithinReservation": true,
         "overReservedUsd": 0,
@@ -194,7 +194,7 @@
           "invented": 0
         },
         "businessRelevance": {
-          "catalogueEntries": 3,
+          "catalogueEntries": 74,
           "catalogueScreens": 3,
           "workflows": [
             "browse",
@@ -258,24 +258,24 @@
             [
               "home",
               "catalog",
-              "search",
-              "more"
+              "more",
+              "search"
             ]
           ],
-          "nodes": 15,
+          "nodes": 12,
           "components": 9,
           "editability": {
-            "missing": 3,
+            "missing": 0,
             "unknown": 0,
-            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
+            "note": "every visible node reached the rendered page under its own id"
           }
         },
         "latency": {
-          "totalMs": 8,
+          "totalMs": 10,
           "byStage": [
             {
               "stage": "understand",
-              "ms": 1
+              "ms": 2
             },
             {
               "stage": "design",
@@ -302,11 +302,11 @@
     },
     {
       "business": {
-        "id": "geestores",
-        "label": "GeeStores",
-        "type": "Jewellery retail",
-        "source": "https://geestores.example/",
-        "fixture": "tests/freeAiMock.ts site fixture (importer fixture suite)"
+        "id": "yarmouth",
+        "label": "Yarmouth Oilskins",
+        "type": "Clothing retail",
+        "source": "https://yarmouthoilskins.com/",
+        "fixture": "docs/qa/generation-benchmark-2026-11-21/yarmouth (saved crawl)"
       },
       "provider": {
         "id": "openrouter",
@@ -318,7 +318,7 @@
       },
       "status": "ai",
       "costUsd": 0.000447,
-      "latencyMs": 2,
+      "latencyMs": 1,
       "servedProviders": [
         "MockedCheapestEndpoint"
       ],
@@ -326,7 +326,7 @@
         {
           "stage": "understand",
           "attempt": 1,
-          "reservedUsd": 0.00271335,
+          "reservedUsd": 0.0028152,
           "costUsd": 0.000087,
           "retainedUsd": 0,
           "billing": "billed",
@@ -335,7 +335,7 @@
         {
           "stage": "design",
           "attempt": 1,
-          "reservedUsd": 0.011707249999999999,
+          "reservedUsd": 0.011810149999999998,
           "costUsd": 0.00027299999999999997,
           "retainedUsd": 0,
           "billing": "billed",
@@ -344,7 +344,7 @@
         {
           "stage": "copy",
           "attempt": 1,
-          "reservedUsd": 0.0038043999999999994,
+          "reservedUsd": 0.0039058999999999995,
           "costUsd": 0.000087,
           "retainedUsd": 0,
           "billing": "billed",
@@ -356,12 +356,12 @@
         "hardCapUsd": 0.4,
         "attemptsMade": 3,
         "retried": false,
-        "reservedUsd": 0.018224999999999998,
+        "reservedUsd": 0.01853125,
         "chargedUsd": 0.00044699999999999997,
         "retainedUsd": 0,
         "accountedUsd": 0.00044699999999999997,
         "uncertainAttempts": 0,
-        "maxAttemptReservedUsd": 0.011707249999999999,
+        "maxAttemptReservedUsd": 0.011810149999999998,
         "withinHardCap": true,
         "chargedWithinReservation": true,
         "overReservedUsd": 0,
@@ -386,7 +386,7 @@
           "invented": 0
         },
         "businessRelevance": {
-          "catalogueEntries": 3,
+          "catalogueEntries": 74,
           "catalogueScreens": 3,
           "workflows": [
             "browse",
@@ -450,20 +450,20 @@
             [
               "home",
               "catalog",
-              "search",
-              "more"
+              "more",
+              "search"
             ]
           ],
-          "nodes": 15,
+          "nodes": 12,
           "components": 9,
           "editability": {
-            "missing": 3,
+            "missing": 0,
             "unknown": 0,
-            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
+            "note": "every visible node reached the rendered page under its own id"
           }
         },
         "latency": {
-          "totalMs": 2,
+          "totalMs": 1,
           "byStage": [
             {
               "stage": "understand",
@@ -494,11 +494,11 @@
     },
     {
       "business": {
-        "id": "geestores",
-        "label": "GeeStores",
-        "type": "Jewellery retail",
-        "source": "https://geestores.example/",
-        "fixture": "tests/freeAiMock.ts site fixture (importer fixture suite)"
+        "id": "yarmouth",
+        "label": "Yarmouth Oilskins",
+        "type": "Clothing retail",
+        "source": "https://yarmouthoilskins.com/",
+        "fixture": "docs/qa/generation-benchmark-2026-11-21/yarmouth (saved crawl)"
       },
       "provider": {
         "id": "openrouter-groq",
@@ -519,7 +519,7 @@
         {
           "stage": "understand",
           "attempt": 1,
-          "reservedUsd": 0.0015871499999999998,
+          "reservedUsd": 0.0016308,
           "costUsd": 0.000375,
           "retainedUsd": 0,
           "billing": "billed",
@@ -528,7 +528,7 @@
         {
           "stage": "design",
           "attempt": 1,
-          "reservedUsd": 0.0072352499999999995,
+          "reservedUsd": 0.0072793499999999995,
           "costUsd": 0.0011549999999999998,
           "retainedUsd": 0,
           "billing": "billed",
@@ -537,7 +537,7 @@
         {
           "stage": "copy",
           "attempt": 1,
-          "reservedUsd": 0.0022475999999999998,
+          "reservedUsd": 0.0022911,
           "costUsd": 0.000375,
           "retainedUsd": 0,
           "billing": "billed",
@@ -549,12 +549,12 @@
         "hardCapUsd": 0.4,
         "attemptsMade": 3,
         "retried": false,
-        "reservedUsd": 0.01107,
+        "reservedUsd": 0.01120125,
         "chargedUsd": 0.0019049999999999996,
         "retainedUsd": 0,
         "accountedUsd": 0.0019049999999999996,
         "uncertainAttempts": 0,
-        "maxAttemptReservedUsd": 0.0072352499999999995,
+        "maxAttemptReservedUsd": 0.0072793499999999995,
         "withinHardCap": true,
         "chargedWithinReservation": true,
         "overReservedUsd": 0,
@@ -579,7 +579,7 @@
           "invented": 0
         },
         "businessRelevance": {
-          "catalogueEntries": 3,
+          "catalogueEntries": 74,
           "catalogueScreens": 3,
           "workflows": [
             "browse",
@@ -643,16 +643,16 @@
             [
               "home",
               "catalog",
-              "search",
-              "more"
+              "more",
+              "search"
             ]
           ],
-          "nodes": 15,
+          "nodes": 12,
           "components": 9,
           "editability": {
-            "missing": 3,
+            "missing": 0,
             "unknown": 0,
-            "note": "a node the app renderer omits because this business has no data for that section; it stays in the document and is editable in the editor"
+            "note": "every visible node reached the rendered page under its own id"
           }
         },
         "latency": {
@@ -664,7 +664,7 @@
             },
             {
               "stage": "design",
-              "ms": 0
+              "ms": 1
             },
             {
               "stage": "copy",
@@ -853,7 +853,7 @@
           "byStage": [
             {
               "stage": "understand",
-              "ms": 1
+              "ms": 0
             },
             {
               "stage": "design",
@@ -896,7 +896,7 @@
       },
       "status": "ai",
       "costUsd": 0.000447,
-      "latencyMs": 1,
+      "latencyMs": 2,
       "servedProviders": [
         "MockedCheapestEndpoint"
       ],
@@ -1042,11 +1042,11 @@
           }
         },
         "latency": {
-          "totalMs": 1,
+          "totalMs": 2,
           "byStage": [
             {
               "stage": "understand",
-              "ms": 0
+              "ms": 1
             },
             {
               "stage": "design",
@@ -1054,7 +1054,7 @@
             },
             {
               "stage": "copy",
-              "ms": 1
+              "ms": 0
             }
           ],
           "note": "mocked fetch, so latency is the pipeline overhead only"
@@ -1090,7 +1090,7 @@
       },
       "status": "ai",
       "costUsd": 0.001905,
-      "latencyMs": 2,
+      "latencyMs": 1,
       "servedProviders": [
         "Groq"
       ],
@@ -1236,15 +1236,15 @@
           }
         },
         "latency": {
-          "totalMs": 2,
+          "totalMs": 1,
           "byStage": [
             {
               "stage": "understand",
-              "ms": 1
+              "ms": 0
             },
             {
               "stage": "design",
-              "ms": 0
+              "ms": 1
             },
             {
               "stage": "copy",
@@ -1283,7 +1283,7 @@
       },
       "status": "ai",
       "costUsd": 0.001905,
-      "latencyMs": 1,
+      "latencyMs": 2,
       "servedProviders": [
         "groq"
       ],
@@ -1429,7 +1429,7 @@
           }
         },
         "latency": {
-          "totalMs": 1,
+          "totalMs": 2,
           "byStage": [
             {
               "stage": "understand",
@@ -1476,7 +1476,7 @@
       },
       "status": "ai",
       "costUsd": 0.000447,
-      "latencyMs": 2,
+      "latencyMs": 1,
       "servedProviders": [
         "MockedCheapestEndpoint"
       ],
@@ -1622,7 +1622,7 @@
           }
         },
         "latency": {
-          "totalMs": 2,
+          "totalMs": 1,
           "byStage": [
             {
               "stage": "understand",
@@ -1824,7 +1824,7 @@
             },
             {
               "stage": "design",
-              "ms": 1
+              "ms": 0
             },
             {
               "stage": "copy",
@@ -1848,75 +1848,75 @@
   ],
   "artefacts": [
     {
-      "business": "geestores",
+      "business": "yarmouth",
       "provider": "groq",
       "concept": "ledger",
-      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-ledger.html",
-      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-ledger.png",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/groq-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/groq-ledger.png",
       "captured": true
     },
     {
-      "business": "geestores",
+      "business": "yarmouth",
       "provider": "groq",
       "concept": "index",
-      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-index.html",
-      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-index.png",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/groq-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/groq-index.png",
       "captured": true
     },
     {
-      "business": "geestores",
+      "business": "yarmouth",
       "provider": "groq",
       "concept": "season",
-      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-season.html",
-      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/groq-season.png",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/groq-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/groq-season.png",
       "captured": true
     },
     {
-      "business": "geestores",
+      "business": "yarmouth",
       "provider": "openrouter",
       "concept": "ledger",
-      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-ledger.html",
-      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-ledger.png",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-ledger.png",
       "captured": true
     },
     {
-      "business": "geestores",
+      "business": "yarmouth",
       "provider": "openrouter",
       "concept": "index",
-      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-index.html",
-      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-index.png",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-index.png",
       "captured": true
     },
     {
-      "business": "geestores",
+      "business": "yarmouth",
       "provider": "openrouter",
       "concept": "season",
-      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-season.html",
-      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-season.png",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-season.png",
       "captured": true
     },
     {
-      "business": "geestores",
+      "business": "yarmouth",
       "provider": "openrouter-groq",
       "concept": "ledger",
-      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-ledger.html",
-      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-ledger.png",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-groq-ledger.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-groq-ledger.png",
       "captured": true
     },
     {
-      "business": "geestores",
+      "business": "yarmouth",
       "provider": "openrouter-groq",
       "concept": "index",
-      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-index.html",
-      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-index.png",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-groq-index.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-groq-index.png",
       "captured": true
     },
     {
-      "business": "geestores",
+      "business": "yarmouth",
       "provider": "openrouter-groq",
       "concept": "season",
-      "html": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-season.html",
-      "png": "docs/qa/ai-trial-2026-11-23/mocked/geestores/openrouter-groq-season.png",
+      "html": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-groq-season.html",
+      "png": "docs/qa/ai-trial-2026-11-23/mocked/yarmouth/openrouter-groq-season.png",
       "captured": true
     },
     {
@@ -2068,8 +2068,8 @@
   "mockedCalls": 27,
   "latency": {
     "minMs": 1,
-    "maxMs": 8,
-    "medianMs": 2
+    "maxMs": 10,
+    "medianMs": 1
   },
   "notice": "Mocked deterministic stand-in answers. Neither provider was contacted, no money was spent, and the columns are not a quality comparison. The pinned control and the served-endpoint records are exercised with stand-in endpoint names. Set both keys and --approve-trial for the real run."
 }

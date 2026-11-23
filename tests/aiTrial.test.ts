@@ -220,6 +220,88 @@ describe('the paid trial is closed until the owner opens it', () => {
   })
 })
 
+describe('the live trial uses only real saved crawls', () => {
+  test('Yarmouth Oilskins replaces the synthetic GeeStores fixture', async () => {
+    const { trialBusinesses } = await import('./aiTrialFixtures')
+    const businesses = await trialBusinesses()
+    expect(businesses.map((business) => business.id)).toEqual(['yarmouth', 'padella', 'afl'])
+
+    const yarmouth = businesses[0]
+    expect(yarmouth.label).toBe('Yarmouth Oilskins')
+    expect(yarmouth.source).toBe('https://yarmouthoilskins.com/')
+    expect(yarmouth.fixture).toContain('yarmouth (saved crawl)')
+    expect(yarmouth.spec.website).toBe('https://yarmouthoilskins.com/')
+    expect(yarmouth.dossier.sample).toBe(false)
+    expect(yarmouth.dossier.catalogue).toEqual(
+      expect.objectContaining({ entries: 74, priced: 74, withPhotograph: 74, currency: 'GBP' }),
+    )
+    expect(yarmouth.dossier.workflows).toEqual(['browse', 'buy'])
+
+    const summary = (
+      yarmouth.spec as {
+        importSummary?: { products?: number; withImage?: number; priced?: number; currency?: string }
+      }
+    ).importSummary
+    expect(summary).toEqual(
+      expect.objectContaining({ products: 74, withImage: 74, priced: 74, currency: 'GBP' }),
+    )
+    const items = yarmouth.spec.menu.flatMap((section) => section.items)
+    expect(items).toHaveLength(74)
+    expect(items.every((item) => item.price > 0)).toBe(true)
+    expect(items.every((item) => item.image?.url.startsWith('https://cdn.shopify.com/'))).toBe(true)
+
+    // The former synthetic retail fixture must not enter any trial input.
+    expect(JSON.stringify(businesses)).not.toMatch(/geestores|\.example/i)
+    for (const business of businesses) {
+      expect(business.fixture).toContain('saved crawl')
+      expect(business.source).toMatch(/^https:\/\//)
+      expect(business.source).not.toContain('.example')
+    }
+  })
+
+  test('all three arms receive the same Yarmouth prompts, schemas and limits', async () => {
+    const { trialBusinesses, briefFor, designSetFor } = await import('./aiTrialFixtures')
+    const yarmouth = (await trialBusinesses()).find((business) => business.id === 'yarmouth')
+    expect(yarmouth).toBeDefined()
+    if (!yarmouth) return
+
+    const brief = briefFor(yarmouth.dossier)
+    const set = designSetFor(yarmouth.dossier, brief, yarmouth.spec)
+    const requests: Array<Array<Record<string, unknown>>> = []
+    for (const provider of TRIAL_PROVIDERS) {
+      const { fetch, calls } = trialFetch({ brief, set })
+      globalThis.fetch = fetch
+      const run = await runTrialGeneration({
+        providerId: provider.id,
+        spec: yarmouth.spec,
+        dossier: yarmouth.dossier,
+        env: trialEnv(),
+        store: memoryTrialStore(),
+      })
+      expect(run.status).toBe('ai')
+      requests.push(
+        calls.bodies.map((raw) => {
+          const body = JSON.parse(raw) as Record<string, unknown>
+          const reasoning = body.reasoning as { effort?: unknown } | undefined
+          return {
+            model: body.model,
+            messages: body.messages,
+            // Groq names the completion ceiling and effort one way; OpenRouter
+            // names the same logical values another way.
+            maxOutputTokens: body.max_tokens ?? body.max_completion_tokens,
+            response_format: body.response_format,
+            reasoningEffort: reasoning?.effort ?? body.reasoning_effort,
+          }
+        }),
+      )
+    }
+
+    expect(requests[0]).toHaveLength(3)
+    expect(requests[1]).toEqual(requests[0])
+    expect(requests[2]).toEqual(requests[0])
+  })
+})
+
 describe('Groq and OpenRouter run the same generation', () => {
   test('each side contacts only its own gateway with its own key and the same model', async () => {
     const { spec, dossier } = await crawlSpec()
@@ -473,7 +555,9 @@ describe('concept navigation reaches the document in every trade', () => {
     const { compileConcept } = await import('../src/worker/ai/compile')
     const { validateConcepts } = await import('../src/worker/blueprints')
     const { trialBusinesses, briefFor, designSetFor } = await import('./aiTrialFixtures')
-    const businesses = (await trialBusinesses()).filter((business) => business.id !== 'geestores')
+    const businesses = (await trialBusinesses()).filter(
+      (business) => business.id === 'padella' || business.id === 'afl',
+    )
     expect(businesses).toHaveLength(2)
     for (const business of businesses) {
       const brief = briefFor(business.dossier)

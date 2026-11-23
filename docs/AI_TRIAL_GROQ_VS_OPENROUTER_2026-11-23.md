@@ -7,7 +7,30 @@ approved run, what it costs, and exactly what still needs the keys.
 
 Generated: 2026-11-23. Revision 2 adds endpoint attribution and a controlled
 pinned arm. This document replaces the earlier trial drafts, which named the
-wrong provider.
+wrong provider. Revision 3 replaces the synthetic GeeStores retail fixture with
+the real saved Yarmouth Oilskins crawl.
+
+### Trial businesses and provenance
+
+The nine generations use three real saved crawls. No scenario uses the
+synthetic GeeStores `.example` fixture or any invented product, price, policy or
+workflow.
+
+| Scenario | Business | Source | Saved crawl | Facts carried into the trial |
+| --- | --- | --- | --- | --- |
+| Product retail | Yarmouth Oilskins | <https://yarmouthoilskins.com/> | `docs/qa/generation-benchmark-2026-11-21/yarmouth` | 74 products; 74 priced; 74 with photographs; GBP; `browse`/`buy` |
+| Professional services | Architecture for London | <https://www.architectureforlondon.com/> | `docs/qa/generation-benchmark-2026-11-21/afl` | Saved service/journal crawl; GBP; `browse`/`book`/`quote` |
+| Bookings | Padella | <https://www.padella.co/> | `docs/qa/generation-benchmark-2026-11-21/padella` | Saved restaurant/location crawl; GBP; `browse`/`buy`/`book`; no menu or prices were captured |
+
+The Yarmouth spec is the `editorial` saved concept. Its crawl records the
+business name as `yarmouthoilskins`; the trial labels the scenario **Yarmouth
+Oilskins**. The lowercase app heading is a known discovery artifact from that
+source, not a fabricated fact. The trial harness sends the same saved `AppSpec`
+and dossier to every arm; only provider routing differs.
+
+The deterministic `designSetFor` template remains a **mock-only** stand-in for
+mocked runs. It is not a `TrialBusiness` and is never passed to a live provider
+as business input.
 
 ## 1. What is being compared
 
@@ -34,7 +57,7 @@ Every response's serving endpoint is recorded per stage and per generation
 does not report its endpoint is not attributed to a vendor; a pinned call served
 by anything other than Groq is refused as `provider_mismatch` and still charged.
 
-`scripts/ai-trial.mjs` runs three businesses × three arms = nine generations.
+`scripts/ai-trial.mjs` runs the three saved-crawl businesses × three arms = nine generations.
 
 ## 2. Model IDs and prices (read 2026-11-23)
 
@@ -198,6 +221,8 @@ second document format, renderer or save path.
 
 - **factual grounding** — brief validated against the dossier, design issue
   codes listed, invented/ungrounded count;
+- **input provenance** — the Yarmouth, AFL and Padella specs are the saved
+  crawls named above; no `.example` or GeeStores input enters the trial;
 - **business relevance** — catalogue entries, catalogue screens, workflows;
 - **concept diversity** — pairwise axis differences and per-pair verdicts;
 - **visual structure** — distinct palettes, type/hierarchy pairings, navigation
@@ -255,9 +280,13 @@ customer-facing generation route.
 
 ## 9. Test coverage
 
-`tests/aiTrial.test.ts` (31 tests):
+`tests/aiTrial.test.ts` (33 tests):
 
 - closed without keys: zero provider calls;
+- the live inputs are Yarmouth Oilskins, Architecture for London and Padella
+  saved crawls; the synthetic GeeStores fixture and `.example` data are absent;
+- all three arms receive the same Yarmouth prompts, JSON schemas, output limits
+  and reasoning effort;
 - keys without approval still closed, for four approval spellings;
 - a comparison needs both keys; one key alone names the missing one;
 - Groq contacts only `api.groq.com`, OpenRouter only `openrouter.ai`, each with

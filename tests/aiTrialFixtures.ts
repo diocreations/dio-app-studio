@@ -1,17 +1,19 @@
 /**
  * The evaluation's three businesses, as fixed inputs.
  *
- * GeeStores is the importer fixture used by the rest of the suite. Padella
- * (restaurant) and Architecture for London (professional services) are saved
- * crawls from `docs/qa/generation-benchmark-2026-11-21`: the same spec the
- * deterministic pipeline produced from those sites, so a trial run sees real
- * catalogue shape without contacting any business.
+ * Yarmouth Oilskins (clothing retail), Padella (restaurant) and Architecture
+ * for London (professional services) are saved crawls from
+ * `docs/qa/generation-benchmark-2026-11-21`: the same specs the deterministic
+ * pipeline produced from those real sites, so a trial run sees real catalogue
+ * shape and sourced facts without contacting any business. The former
+ * synthetic GeeStores `.example` fixture is not a trial input.
  *
  * `designSetFor` is the *mock* model answer. It is a deterministic stand-in
  * built from three reviewed directions, and every evaluation that uses it is
  * labelled `comparable: false`. It exists so the harness, the validator, the
  * compiler and the screenshots can be exercised before a key is supplied; it is
- * not evidence that a model produced these concepts.
+ * not evidence that a model produced these concepts, and it is not a live
+ * business input.
  */
 
 import { readFileSync } from 'node:fs'
@@ -21,10 +23,9 @@ import { composeDoc } from '../src/worker/blueprints'
 import { dossierFromSpec, type Dossier } from '../src/worker/ai/dossier'
 import type { AppSpec, VerticalId } from '../src/worker/types'
 import type { BusinessBrief, ConceptSpec, DesignSet } from '../src/worker/ai/contracts'
-import { crawlSpec } from './freeAiMock'
 
 export type TrialBusiness = {
-  id: 'geestores' | 'padella' | 'afl'
+  id: 'yarmouth' | 'padella' | 'afl'
   label: string
   businessType: string
   trade: VerticalId
@@ -40,19 +41,21 @@ function savedSpec(path: string): AppSpec {
 }
 
 export async function trialBusinesses(): Promise<TrialBusiness[]> {
-  const geestores = await crawlSpec()
+  const yarmouth = savedSpec(
+    '../docs/qa/generation-benchmark-2026-11-21/yarmouth/concepts/editorial.spec.json',
+  )
   const padella = savedSpec('../docs/qa/generation-benchmark-2026-11-21/padella/concepts/editorial.spec.json')
   const afl = savedSpec('../docs/qa/generation-benchmark-2026-11-21/afl/concepts/classic.spec.json')
   return [
     {
-      id: 'geestores',
-      label: 'GeeStores',
-      businessType: 'Jewellery retail',
-      trade: 'shop',
-      source: 'https://geestores.example/',
-      fixture: 'tests/freeAiMock.ts site fixture (importer fixture suite)',
-      spec: geestores.spec,
-      dossier: geestores.dossier,
+      id: 'yarmouth',
+      label: 'Yarmouth Oilskins',
+      businessType: 'Clothing retail',
+      trade: yarmouth.vertical,
+      source: 'https://yarmouthoilskins.com/',
+      fixture: 'docs/qa/generation-benchmark-2026-11-21/yarmouth (saved crawl)',
+      spec: yarmouth,
+      dossier: dossierFromSpec(yarmouth, { source: 'https://yarmouthoilskins.com/' }),
     },
     {
       id: 'padella',
@@ -110,6 +113,8 @@ export function briefFor(dossier: Dossier): BusinessBrief {
   }
 }
 
+// Mock-only design template. It is deliberately not used to create a live
+// TrialBusiness; live inputs come only from the three saved crawls above.
 const TEMPLATE = JSON.parse(
   readFileSync(new URL('../docs/p1-ai-proposal/geestores.design-set.json', import.meta.url).pathname, 'utf8'),
 ) as DesignSet

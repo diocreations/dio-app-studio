@@ -1,6 +1,6 @@
 # Plattr AI trial: Groq vs OpenRouter
 
-- Generated: 2026-11-23T16:26:15.918Z
+- Generated: 2026-11-23T17:05:59.806Z
 - Mode: **mocked** — not comparable
 - Gate: simulated (mocked mode)
 - Same model on every arm: `openai/gpt-oss-120b`
@@ -24,14 +24,14 @@
 
 | Business | Type | Arm | Status | Served by | Latency (ms) | Cost (USD) | Concepts | Diversity | Min axes | Nodes | Editable (missing/unknown) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| GeeStores | Jewellery retail | groq | ai | groq | 8 | 0.0019 | 3 | distinct | 7 | 15 | 3/0 |
-| GeeStores | Jewellery retail | openrouter | ai | MockedCheapestEndpoint | 2 | 0.0004 | 3 | distinct | 7 | 15 | 3/0 |
-| GeeStores | Jewellery retail | openrouter-groq (control) | ai | Groq | 1 | 0.0019 | 3 | distinct | 7 | 15 | 3/0 |
+| Yarmouth Oilskins | Clothing retail | groq | ai | groq | 10 | 0.0019 | 3 | distinct | 7 | 12 | 0/0 |
+| Yarmouth Oilskins | Clothing retail | openrouter | ai | MockedCheapestEndpoint | 1 | 0.0004 | 3 | distinct | 7 | 12 | 0/0 |
+| Yarmouth Oilskins | Clothing retail | openrouter-groq (control) | ai | Groq | 1 | 0.0019 | 3 | distinct | 7 | 12 | 0/0 |
 | Padella | Restaurant | groq | ai | groq | 2 | 0.0019 | 3 | distinct | 7 | 12 | 0/0 |
-| Padella | Restaurant | openrouter | ai | MockedCheapestEndpoint | 1 | 0.0004 | 3 | distinct | 7 | 12 | 0/0 |
-| Padella | Restaurant | openrouter-groq (control) | ai | Groq | 2 | 0.0019 | 3 | distinct | 7 | 12 | 0/0 |
-| Architecture for London | Professional services | groq | ai | groq | 1 | 0.0019 | 3 | distinct | 7 | 18 | 3/0 |
-| Architecture for London | Professional services | openrouter | ai | MockedCheapestEndpoint | 2 | 0.0004 | 3 | distinct | 7 | 18 | 3/0 |
+| Padella | Restaurant | openrouter | ai | MockedCheapestEndpoint | 2 | 0.0004 | 3 | distinct | 7 | 12 | 0/0 |
+| Padella | Restaurant | openrouter-groq (control) | ai | Groq | 1 | 0.0019 | 3 | distinct | 7 | 12 | 0/0 |
+| Architecture for London | Professional services | groq | ai | groq | 2 | 0.0019 | 3 | distinct | 7 | 18 | 3/0 |
+| Architecture for London | Professional services | openrouter | ai | MockedCheapestEndpoint | 1 | 0.0004 | 3 | distinct | 7 | 18 | 3/0 |
 | Architecture for London | Professional services | openrouter-groq (control) | ai | Groq | 1 | 0.0019 | 3 | distinct | 7 | 18 | 3/0 |
 
 ## Routing, charged cost and the cap
@@ -40,9 +40,9 @@ Every HTTP attempt is reserved before it is sent and settled with its charge, in
 
 | Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Reserved (USD) | Charged (USD) | Retained (uncertain) | Accounted (USD) | Hard reservation (USD) | Within reservation | Charged ≤ reservation | Over reservation (USD) | Uncertain attempts | Retried |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| GeeStores | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011070 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
-| GeeStores | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018225 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0.000000 | 0 | no |
-| GeeStores | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011070 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| Yarmouth Oilskins | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011201 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| Yarmouth Oilskins | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018531 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| Yarmouth Oilskins | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011201 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
 | Padella | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011142 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
 | Padella | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018392 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0.000000 | 0 | no |
 | Padella | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011142 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
@@ -54,17 +54,17 @@ The hard figure is a reservation/budget ceiling, not an absolute provider invoic
 
 ## Screenshots
 
-### GeeStores (Jewellery retail)
+### Yarmouth Oilskins (Clothing retail)
 
-- **groq / ledger** ![groq-ledger](geestores/groq-ledger.png)
-- **groq / index** ![groq-index](geestores/groq-index.png)
-- **groq / season** ![groq-season](geestores/groq-season.png)
-- **openrouter / ledger** ![openrouter-ledger](geestores/openrouter-ledger.png)
-- **openrouter / index** ![openrouter-index](geestores/openrouter-index.png)
-- **openrouter / season** ![openrouter-season](geestores/openrouter-season.png)
-- **openrouter-groq / ledger** ![openrouter-groq-ledger](geestores/openrouter-groq-ledger.png)
-- **openrouter-groq / index** ![openrouter-groq-index](geestores/openrouter-groq-index.png)
-- **openrouter-groq / season** ![openrouter-groq-season](geestores/openrouter-groq-season.png)
+- **groq / ledger** ![groq-ledger](yarmouth/groq-ledger.png)
+- **groq / index** ![groq-index](yarmouth/groq-index.png)
+- **groq / season** ![groq-season](yarmouth/groq-season.png)
+- **openrouter / ledger** ![openrouter-ledger](yarmouth/openrouter-ledger.png)
+- **openrouter / index** ![openrouter-index](yarmouth/openrouter-index.png)
+- **openrouter / season** ![openrouter-season](yarmouth/openrouter-season.png)
+- **openrouter-groq / ledger** ![openrouter-groq-ledger](yarmouth/openrouter-groq-ledger.png)
+- **openrouter-groq / index** ![openrouter-groq-index](yarmouth/openrouter-groq-index.png)
+- **openrouter-groq / season** ![openrouter-groq-season](yarmouth/openrouter-groq-season.png)
 
 ### Padella (Restaurant)
 
