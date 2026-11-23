@@ -8,10 +8,11 @@
 --
 -- Micro-dollars are integers so the arithmetic never drifts.
 --
--- Apply locally with:
+-- Apply locally only if you deliberately run the trial's D1 store:
 --   wrangler d1 execute plattr-studio --local --file migrations/0002_ai_trial_spend.sql
--- The running application also creates this table through `ensureSchema`, and
--- no deployment or production database is touched by this trial.
+-- The CLI uses its own local SQLite file and creates this table itself. The
+-- running application does not create it, so a deployment does not add an
+-- unused trial table to production.
 
 CREATE TABLE IF NOT EXISTS ai_trial_spend (
   trial_id TEXT PRIMARY KEY,

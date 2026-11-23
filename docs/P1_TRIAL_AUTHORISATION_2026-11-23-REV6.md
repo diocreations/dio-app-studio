@@ -32,12 +32,14 @@ model, `openai/gpt-oss-120b`. Architecture and pricing detail:
 | --- | --- |
 | Total trial | $30.00 |
 | Soft, per generation | $0.18 |
-| Hard, per generation | $0.40 |
+| Hard reservation ceiling, per generation | $0.40 |
 | Top-ups | none; there is no code path that purchases credit |
 
 A generation reserves its $0.40 ceiling against the pool before its first call
 and settles to the actual charge afterwards. A generation that cannot reserve is
-refused without contacting a provider. A charge that cannot be established — a
+refused without contacting a provider. The $0.40 figure is a reservation and
+budget ceiling, not an absolute invoice cap: a provider charge above it is still
+recorded, shown in the report and counted against the pool. A charge that cannot be established — a
 timeout, dropped connection, non-2xx without billing information, or an answer
 without usage — keeps its reservation as spent instead of being refunded, so an
 uncertain attempt can never silently increase the remaining budget.

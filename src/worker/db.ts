@@ -21,7 +21,6 @@ import {
 import type { Doc } from './doc'
 import type { VideoLink } from './types'
 import { QUOTA_INDEX_SQL, QUOTA_SCHEMA_SQL } from './ai/quotas'
-import { TRIAL_SCHEMA_SQL } from './ai/trial'
 import { verticalFor } from './verticals'
 import { ensurePlatformSchema } from './platform/schema'
 
@@ -277,8 +276,6 @@ const SCHEMA = [
   // runtime schema too, so a deployment never depends on a manual migration.
   QUOTA_SCHEMA_SQL,
   QUOTA_INDEX_SQL,
-  // The approved paid trial's $30 pool (migrations/0002_ai_trial_spend.sql).
-  TRIAL_SCHEMA_SQL,
   // The three AI concepts a URL-first run offered. They are review material:
   // the customer previews each one on the real app, and the chosen document is
   // saved through the normal document API. Keeping them here means a preview
@@ -417,10 +414,12 @@ const MIGRATIONS = [
 ]
 
 const ready = new WeakMap<D1Database, Promise<void>>()
-/** 3 added `ai_quota` and `design_options`; 4 adds the paid trial's spend pool.
- *  A database warmed from older metadata re-runs the additive schema, so a new
+/** 3 added `ai_quota` and `design_options`. The paid trial's spend pool is
+ *  deliberately not part of the production schema: the CLI keeps it in its own
+ *  local SQLite file, so no deployment creates an unused trial table. A
+ *  database warmed from older metadata re-runs the additive schema, so a new
  *  table cannot be skipped just because the process already had a schema. */
-const SCHEMA_VERSION = '4'
+const SCHEMA_VERSION = '3'
 
 export function ensureSchema(db: D1Database): Promise<void> {
   const existing = ready.get(db)
@@ -1056,6 +1055,7 @@ export async function deleteProject(db: D1Database, id: string): Promise<void> {
     db.prepare('DELETE FROM media_cleanup_log WHERE project_id = ?').bind(id),
     db.prepare('DELETE FROM media WHERE project_id = ?').bind(id),
     db.prepare('DELETE FROM owner_sessions WHERE project_id = ?').bind(id),
+    db.prepare('DELETE FROM design_options WHERE project_id = ?').bind(id),
     db.prepare('DELETE FROM doc_versions WHERE project_id = ?').bind(id),
     db.prepare('DELETE FROM notes WHERE project_id = ?').bind(id),
     db.prepare('DELETE FROM activity WHERE project_id = ?').bind(id),

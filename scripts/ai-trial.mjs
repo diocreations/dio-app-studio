@@ -493,7 +493,8 @@ function markdown(data) {
   lines.push('- Comparison type: **provider-routing and gateway**, not gateway-only. The primary arms compare direct Groq with OpenRouter routing to the cheapest eligible endpoint; the controlled arm pins OpenRouter to its Groq endpoint with fallbacks disabled.')
   lines.push('- The serving endpoint is recorded from each response; a pinned call served by anything else is refused, and an unpinned call that does not report its endpoint is not treated as a known vendor.');
   lines.push(`- Spend${data.comparable ? '' : ' (simulated)'}: $${data.totalCostUsd.toFixed(4)} of $${TRIAL_LIMITS.totalUsd.toFixed(2)}`)
-  lines.push(`- Limits: soft $${TRIAL_LIMITS.softUsd.toFixed(2)} / hard $${TRIAL_LIMITS.hardUsd.toFixed(2)} per generation, no top-up`)
+  lines.push(`- Limits: soft $${TRIAL_LIMITS.softUsd.toFixed(2)} / hard reservation $${TRIAL_LIMITS.hardUsd.toFixed(2)} per generation, no top-up`)
+  lines.push('- Scope: this is an initial nine-generation screening comparison (one sample per business and arm), not a winner determination. Mocked evidence is plumbing evidence, not model quality; live results are observations that may justify a larger run.')
   lines.push('')
   lines.push(`> ${data.notice}`)
   lines.push('')
@@ -522,15 +523,17 @@ function markdown(data) {
   lines.push('')
   lines.push('Every HTTP attempt is reserved before it is sent and settled with its charge, including an attempt that failed and was retried. `served` is what the gateway reported, not what the routing asked for. A timeout, dropped connection, 429/5xx, or an answer without usable billing information keeps its reservation as `retained` instead of refunding it.')
   lines.push('')
-  lines.push('| Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Reserved (USD) | Charged (USD) | Retained (uncertain) | Accounted (USD) | Hard cap (USD) | Within cap | Charged ≤ reservation | Uncertain attempts | Retried |')
+  lines.push('| Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Reserved (USD) | Charged (USD) | Retained (uncertain) | Accounted (USD) | Hard reservation (USD) | Within reservation | Charged ≤ reservation | Over reservation (USD) | Uncertain attempts | Retried |')
   lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |')
   for (const run of data.runs) {
     const verification = run.verification
     const expected = run.provider.expectedProvider ? `; pinned to ${run.provider.expectedProvider}` : ''
     lines.push(
-      `| ${run.business.label} | ${run.provider.id} | ${run.provider.routingLabel}${expected} | ${run.servedProviders?.join(', ') || '—'} | ${verification.attemptsMade} | ${verification.reservedUsd.toFixed(6)} | ${verification.chargedUsd.toFixed(6)} | ${verification.retainedUsd.toFixed(6)} | ${verification.accountedUsd.toFixed(6)} | ${verification.hardCapUsd.toFixed(2)} | ${verification.withinHardCap ? 'yes' : 'NO'} | ${verification.chargedWithinReservation ? 'yes' : 'NO'} | ${verification.uncertainAttempts} | ${verification.retried ? 'yes' : 'no'} |`,
+      `| ${run.business.label} | ${run.provider.id} | ${run.provider.routingLabel}${expected} | ${run.servedProviders?.join(', ') || '—'} | ${verification.attemptsMade} | ${verification.reservedUsd.toFixed(6)} | ${verification.chargedUsd.toFixed(6)} | ${verification.retainedUsd.toFixed(6)} | ${verification.accountedUsd.toFixed(6)} | ${verification.hardCapUsd.toFixed(2)} | ${verification.withinHardCap ? 'yes' : 'NO'} | ${verification.chargedWithinReservation ? 'yes' : 'NO'} | ${verification.overReservedUsd.toFixed(6)} | ${verification.uncertainAttempts} | ${verification.retried ? 'yes' : 'no'} |`,
     )
   }
+  lines.push('')
+  lines.push('The hard figure is a reservation/budget ceiling, not an absolute provider invoice cap. A reported charge above an attempt reservation is still booked; `Over reservation` and `Within reservation` expose any such overspend rather than clamping it.')
   lines.push('')
   const failures = data.runs.filter((run) => run.status !== 'ai')
   if (failures.length) {

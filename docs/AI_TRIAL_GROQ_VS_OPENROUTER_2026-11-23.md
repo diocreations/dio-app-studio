@@ -104,12 +104,19 @@ three, and that each gateway receives only its own key.
 | --- | --- | --- |
 | Whole trial | $30.00 | atomic claim in `ai_trial_spend` |
 | Soft limit per generation | $0.18 | before the optional copy pass |
-| Hard limit per generation | $0.40 | in-process ledger, before each attempt |
+| Hard reservation ceiling per generation | $0.40 | in-process ledger, before each attempt |
+
+The CLI keeps this pool in `.chrome-qa/ai-trial-spend.sqlite`; `ai_trial_spend` is
+not part of the production runtime schema. `migrations/0002_ai_trial_spend.sql`
+is only for a deliberate local D1 store, not for a deployment.
 
 Before a generation starts, it reserves its hard ceiling against the pool in one
 statement whose `WHERE` carries the $30 total. On every exit path — success,
 validation failure, crash — the reservation is replaced with the actual charge.
-There is no top-up code and no credit purchase.
+There is no top-up code and no credit purchase. The $0.40 figure is a reservation
+and budget ceiling, **not an absolute provider invoice cap**: a provider-reported
+charge above an attempt's reservation is still booked and shown in the report,
+`overReservedUsd` records the excess and `withinHardCap` becomes false.
 
 Worst-case ceiling for one full generation at these token ceilings:
 
@@ -147,9 +154,11 @@ retry. A 5xx or 4xx body that does report `usage.cost` is charged before it is
 classified, and OpenRouter's `no choices` branch now preserves a reported
 `usage.cost` before throwing.
 
-The $0.40 generation cap and the $30 pool are enforced against the ledger that
-includes retained amounts, so an uncertain charge consumes budget exactly as a
-worst-case reservation would. A successful generation settles the persistent
+The $0.40 reservation ceiling and the $30 pool are enforced against the ledger
+that includes retained amounts, so an uncertain charge consumes budget exactly
+as a worst-case reservation would. The report shows actual provider-reported
+charges, retained reservations, any `overReservedUsd`, and whether the
+reservation ceiling was met; it does not claim that an invoice cannot exceed it. A successful generation settles the persistent
 pool with the ledger's accounted amount — confirmed charges **plus** retained
 reservations — not with the sum of the calls that happened to succeed. A
 first attempt that times out and is then retried successfully therefore keeps
@@ -220,6 +229,17 @@ It is not a quality comparison.
 The same tables with real answers, real latency, real reported cost and any
 refusals. Written to `docs/qa/ai-trial-2026-11-23/live/`.
 
+### Scope of the nine-generation run
+
+Nine generations — one sample per business per arm — is an **initial screening
+comparison**, not a winner determination. It can reveal large gateway, routing,
+latency or accounting differences, but it cannot support a general quality
+claim about a provider or model. Mocked screenshots and tables are labelled
+`mocked` / `comparable: false`; they prove the pipeline, not model output. A
+live result should be reported as observations, with the sample size, serving
+endpoints and refusal rate stated, and should be repeated or expanded before any
+provider is chosen on quality grounds.
+
 ## 8. What still needs your keys
 
 1. `GROQ_API_KEY` in `.dev.vars` (the same variable the free route uses; the
@@ -273,5 +293,5 @@ customer-facing generation route.
 - restaurant and practice compile three distinct journeys;
 - the catalogue is two primary arms plus one controlled arm at verified prices.
 
-Full suite: 879 tests, 0 failing (31 of them this trial); typecheck and
+Full suite: 880 tests, 0 failing (31 of them this trial); typecheck and
 production build clean.

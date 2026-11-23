@@ -1,13 +1,14 @@
 # Plattr AI trial: Groq vs OpenRouter
 
-- Generated: 2026-11-23T15:22:23.073Z
+- Generated: 2026-11-23T16:26:15.918Z
 - Mode: **mocked** — not comparable
 - Gate: simulated (mocked mode)
 - Same model on every arm: `openai/gpt-oss-120b`
 - Comparison type: **provider-routing and gateway**, not gateway-only. The primary arms compare direct Groq with OpenRouter routing to the cheapest eligible endpoint; the controlled arm pins OpenRouter to its Groq endpoint with fallbacks disabled.
 - The serving endpoint is recorded from each response; a pinned call served by anything else is refused, and an unpinned call that does not report its endpoint is not treated as a known vendor.
 - Spend (simulated): $0.0128 of $30.00
-- Limits: soft $0.18 / hard $0.40 per generation, no top-up
+- Limits: soft $0.18 / hard reservation $0.40 per generation, no top-up
+- Scope: this is an initial nine-generation screening comparison (one sample per business and arm), not a winner determination. Mocked evidence is plumbing evidence, not model quality; live results are observations that may justify a larger run.
 
 > Mocked deterministic stand-in answers. Neither provider was contacted, no money was spent, and the columns are not a quality comparison. The pinned control and the served-endpoint records are exercised with stand-in endpoint names. Set both keys and --approve-trial for the real run.
 
@@ -24,30 +25,32 @@
 | Business | Type | Arm | Status | Served by | Latency (ms) | Cost (USD) | Concepts | Diversity | Min axes | Nodes | Editable (missing/unknown) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | GeeStores | Jewellery retail | groq | ai | groq | 8 | 0.0019 | 3 | distinct | 7 | 15 | 3/0 |
-| GeeStores | Jewellery retail | openrouter | ai | MockedCheapestEndpoint | 1 | 0.0004 | 3 | distinct | 7 | 15 | 3/0 |
-| GeeStores | Jewellery retail | openrouter-groq (control) | ai | Groq | 2 | 0.0019 | 3 | distinct | 7 | 15 | 3/0 |
+| GeeStores | Jewellery retail | openrouter | ai | MockedCheapestEndpoint | 2 | 0.0004 | 3 | distinct | 7 | 15 | 3/0 |
+| GeeStores | Jewellery retail | openrouter-groq (control) | ai | Groq | 1 | 0.0019 | 3 | distinct | 7 | 15 | 3/0 |
 | Padella | Restaurant | groq | ai | groq | 2 | 0.0019 | 3 | distinct | 7 | 12 | 0/0 |
 | Padella | Restaurant | openrouter | ai | MockedCheapestEndpoint | 1 | 0.0004 | 3 | distinct | 7 | 12 | 0/0 |
 | Padella | Restaurant | openrouter-groq (control) | ai | Groq | 2 | 0.0019 | 3 | distinct | 7 | 12 | 0/0 |
-| Architecture for London | Professional services | groq | ai | groq | 2 | 0.0019 | 3 | distinct | 7 | 18 | 3/0 |
-| Architecture for London | Professional services | openrouter | ai | MockedCheapestEndpoint | 1 | 0.0004 | 3 | distinct | 7 | 18 | 3/0 |
+| Architecture for London | Professional services | groq | ai | groq | 1 | 0.0019 | 3 | distinct | 7 | 18 | 3/0 |
+| Architecture for London | Professional services | openrouter | ai | MockedCheapestEndpoint | 2 | 0.0004 | 3 | distinct | 7 | 18 | 3/0 |
 | Architecture for London | Professional services | openrouter-groq (control) | ai | Groq | 1 | 0.0019 | 3 | distinct | 7 | 18 | 3/0 |
 
 ## Routing, charged cost and the cap
 
 Every HTTP attempt is reserved before it is sent and settled with its charge, including an attempt that failed and was retried. `served` is what the gateway reported, not what the routing asked for. A timeout, dropped connection, 429/5xx, or an answer without usable billing information keeps its reservation as `retained` instead of refunding it.
 
-| Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Reserved (USD) | Charged (USD) | Retained (uncertain) | Accounted (USD) | Hard cap (USD) | Within cap | Charged ≤ reservation | Uncertain attempts | Retried |
+| Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Reserved (USD) | Charged (USD) | Retained (uncertain) | Accounted (USD) | Hard reservation (USD) | Within reservation | Charged ≤ reservation | Over reservation (USD) | Uncertain attempts | Retried |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| GeeStores | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011070 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
-| GeeStores | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018225 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0 | no |
-| GeeStores | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011070 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
-| Padella | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011142 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
-| Padella | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018392 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0 | no |
-| Padella | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011142 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
-| Architecture for London | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011232 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
-| Architecture for London | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018603 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0 | no |
-| Architecture for London | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011232 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0 | no |
+| GeeStores | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011070 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| GeeStores | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018225 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| GeeStores | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011070 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| Padella | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011142 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| Padella | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018392 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| Padella | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011142 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| Architecture for London | groq | direct to GroqCloud; no gateway in between | groq | 3 | 0.011232 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| Architecture for London | openrouter | OpenRouter price-sorted routing over same-model endpoints with fallbacks allowed; the serving endpoint is unspecified until the response reports it | MockedCheapestEndpoint | 3 | 0.018603 | 0.000447 | 0.000000 | 0.000447 | 0.40 | yes | yes | 0.000000 | 0 | no |
+| Architecture for London | openrouter-groq | OpenRouter pinned to its Groq endpoint (provider.only=["Groq"]) with fallbacks disabled; a response served by any other endpoint is refused; pinned to Groq | Groq | 3 | 0.011232 | 0.001905 | 0.000000 | 0.001905 | 0.40 | yes | yes | 0.000000 | 0 | no |
+
+The hard figure is a reservation/budget ceiling, not an absolute provider invoice cap. A reported charge above an attempt reservation is still booked; `Over reservation` and `Within reservation` expose any such overspend rather than clamping it.
 
 ## Screenshots
 

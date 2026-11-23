@@ -45,7 +45,8 @@ export const TRIAL_LIMITS = {
   totalUsd: 30,
   /** After this, a generation keeps its design and skips the copy pass. */
   softUsd: 0.18,
-  /** No single generation may commit more than this. */
+  /** The reservation ceiling per generation. A provider charge above an
+   *  attempt's reservation is still booked and reported, not clamped. */
   hardUsd: 0.4,
 } as const
 
