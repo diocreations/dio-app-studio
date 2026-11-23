@@ -607,6 +607,44 @@ describe('an uncertain charge keeps its reservation', () => {
     expect(ledger.spentUsd()).toBeGreaterThan(0)
   })
 
+  test('an attempt with no billing classification is unknown and retained', async () => {
+    const { spec, dossier } = await crawlSpec()
+    const store = memoryTrialStore()
+    const provider: AiProvider = {
+      name: 'groq',
+      modelFor: () => 'openai/gpt-oss-120b',
+      priceFor: () => GROQ_PRICE,
+      reservationPriceFor: () => GROQ_PRICE,
+      generate: async () => {
+        // A failure outside the provider error type: no billing classification.
+        throw new Error('socket reset before billing could be read')
+      },
+    }
+    const run = await runTrialGeneration({
+      providerId: 'groq',
+      spec,
+      dossier,
+      env: trialEnv(),
+      store,
+      provider,
+    })
+    expect(run.status).toBe('failed')
+    expect(run.reason).toBe('generation_failed')
+    expect(run.attempts).toHaveLength(1)
+    expect(run.attempts[0].billing).toBe('unknown')
+    expect(run.attempts[0].retainedUsd).toBeGreaterThan(0)
+    expect(run.attempts[0].costUsd).toBe(0)
+    expect(run.verification.uncertainAttempts).toBe(1)
+    expect(run.verification.retainedUsd).toBeGreaterThan(0)
+    expect(run.verification.chargedUsd).toBe(0)
+    expect(run.verification.accountedUsd).toBeCloseTo(run.verification.retainedUsd, 9)
+    expect(run.costUsd).toBeCloseTo(run.verification.accountedUsd, 9)
+    // The persistent pool keeps the reservation instead of refunding it.
+    const pool = await store.read(TRIAL_ID, TRIAL_LIMITS.totalUsd)
+    expect(pool.spentUsd).toBeCloseTo(run.verification.accountedUsd, 9)
+    expect(pool.remainingUsd).toBeCloseTo(TRIAL_LIMITS.totalUsd - pool.spentUsd, 9)
+  })
+
   test('a 5xx after inference is charged when the body reports usage.cost', async () => {
     const { spec, dossier } = await crawlSpec()
     const { fetch, calls } = trialFetch({

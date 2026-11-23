@@ -171,7 +171,9 @@ async function callStage(
       //    usable billing information) keeps the reservation as spent. A
       //    provider may have received and billed a request we never saw finish,
       //    so an unknown charge is never refunded.
-      const billing: BillingState = result?.billing ?? 'billed'
+      // No classification means the charge is not established, not that it is
+      // confirmed: label it unknown so the attempt is counted as uncertain.
+      const billing: BillingState = result?.billing ?? 'unknown'
       const charged =
         typeof result?.costUsd === 'number' && Number.isFinite(result.costUsd) && result.costUsd >= 0
           ? result.costUsd

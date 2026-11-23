@@ -17,6 +17,7 @@ import { createLedger } from './ledger'
 import type { BusinessBrief, ConceptSpec } from './contracts'
 import type { Dossier } from './dossier'
 import { runDesignPipeline, PipelineError, type AttemptRecord, type CallRecord } from './pipeline'
+import type { AiProvider } from './provider'
 import type { Issue } from './validate'
 import {
   TRIAL_ID,
@@ -218,6 +219,9 @@ export async function runTrialGeneration(input: {
   dossier: Dossier
   env: Record<string, string | undefined>
   store: TrialSpendStore
+  /** Injecting a provider is for tests of the accounting path; the trial arm's
+   *  gate, budget and settlement are unchanged. */
+  provider?: AiProvider
   now?: Date
 }): Promise<TrialRun> {
   const provider = trialProviderById(input.providerId)
@@ -279,7 +283,7 @@ export async function runTrialGeneration(input: {
   const apiKey = (input.env[provider.keyEnv] ?? '').trim()
   try {
     const run = await runDesignPipeline({
-      provider: trialProvider(provider, apiKey),
+      provider: input.provider ?? trialProvider(provider, apiKey),
       dossier: input.dossier,
       spec: input.spec,
       ledger,

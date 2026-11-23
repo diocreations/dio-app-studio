@@ -136,7 +136,7 @@ An attempt is classified before its reservation is settled:
 | --- | --- | --- |
 | Usage and a charge are known (reported `usage.cost`, or reported tokens priced at the published rate) | `billed` | Settle the confirmed charge |
 | The request was refused locally, before it was sent (for example a missing key) | `not_billed` | Release the reservation |
-| Timeout, dropped connection, unreadable response, any non-2xx without billing information (including 4xx), or a 2xx body with no usable usage | `unknown` | **Keep the reservation as spent** |
+| Timeout, dropped connection, unreadable response, any non-2xx without billing information (including 4xx), a 2xx body with no usable usage, or an attempt with no billing classification at all | `unknown` | **Keep the reservation as spent** |
 
 A timeout or dropped connection may have reached the provider and been billed;
 an answer without usage cannot be priced. In both cases the reservation is
@@ -235,7 +235,7 @@ customer-facing generation route.
 
 ## 9. Test coverage
 
-`tests/aiTrial.test.ts` (30 tests):
+`tests/aiTrial.test.ts` (31 tests):
 
 - closed without keys: zero provider calls;
 - keys without approval still closed, for four approval spellings;
@@ -258,6 +258,8 @@ customer-facing generation route.
 - a successful retry settles the persistent pool with the retained first attempt
   as well as the confirmed charge, while a run with no uncertain attempts keeps
   normal accounting unchanged;
+- an attempt with no billing classification is recorded as uncertain, keeps its
+  reservation and settles it against the persistent pool;
 - Groq cost comes from its published rate; OpenRouter from `usage.cost`;
 - reservations are non-zero for a model that is also on the free allowlist;
 - the $30 pool refuses the claim that would cross it;
@@ -271,5 +273,5 @@ customer-facing generation route.
 - restaurant and practice compile three distinct journeys;
 - the catalogue is two primary arms plus one controlled arm at verified prices.
 
-Full suite: 878 tests, 0 failing (30 of them this trial); typecheck and
+Full suite: 879 tests, 0 failing (31 of them this trial); typecheck and
 production build clean.
