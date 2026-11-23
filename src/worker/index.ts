@@ -9,7 +9,9 @@ import {
   createProject,
   deleteBriefDraft,
   deleteProject,
+  getDesignOption,
   readBriefDraft,
+  replaceDesignOptions,
   saveBriefDraft,
   getDocVersion,
   getProject,
@@ -762,7 +764,15 @@ function conceptPreview(url: URL, vertical: VerticalId) {
 app.get('/p/:token/app', async (c) => {
   const project = await loadProject(c)
   if (!project) return c.text('Not found', 404)
-  const concept = conceptPreview(new URL(c.req.url), project.spec.vertical)
+  const url = new URL(c.req.url)
+  const concept = conceptPreview(url, project.spec.vertical)
+  // An AI concept is previewed from the document the model compiled, stored
+  // beside the build when the customer was offered it. The lookup is scoped to
+  // this project, so a review link can never show another build's concept.
+  const designId = (url.searchParams.get('design') ?? '').trim()
+  const designOption = /^[a-z0-9][a-z0-9-]{0,39}$/i.test(designId)
+    ? await getDesignOption(c.env.DB, project.id, designId)
+    : null
   c.header('Cache-Control', 'no-store')
   c.header('X-Robots-Tag', project.spec.indexable ? 'index, follow' : 'noindex, nofollow')
   const photos = project.spec.sample ? NO_PHOTOS : await photosFor(project.spec.vertical, c.env)
@@ -770,7 +780,11 @@ app.get('/p/:token/app', async (c) => {
   // A concept review must pass its direction into the spec as well as the
   // document. Blueprints are selected from the spec, so without this every
   // concept would keep the saved build's structure and only change its theme.
-  const renderSpec = concept ? { ...project.spec, direction: concept.direction } : project.spec
+  const renderSpec = designOption
+    ? designOption.spec
+    : concept
+      ? { ...project.spec, direction: concept.direction }
+      : project.spec
   return c.html(
     withoutStockPhotography(renderApp(renderSpec, {
       token: project.token,
@@ -780,17 +794,19 @@ app.get('/p/:token/app', async (c) => {
       noindex: !project.spec.indexable,
       // Published and preview surfaces render the same saved document. The
       // editor bridge is the only difference. A concept review is the one
-      // exception: it shows the seeded composition the three designs come from,
-      // with the owner's own catalogue, and saves nothing.
-      // A concept review renders that concept's own document, not the saved
+      // exception: it shows the composition that concept was offered as, with
+      // the owner's own catalogue, and saves nothing.
+      // An AI concept renders the document the model compiled, not the saved
       // one with a different palette: the three structures are the choice.
-      doc: concept
-        ? FLAGSHIP_TRADES.has(project.spec.vertical) && !project.spec.sample
-          ? flagshipDocFromSpec(renderSpec)
-          : docFromSpec(renderSpec)
-        : project.spec.sample
-          ? docFromSpec(renderSpec)
-          : starterDoc(project),
+      doc: designOption
+        ? normalizeDoc(designOption.doc, designOption.spec)
+        : concept
+          ? FLAGSHIP_TRADES.has(project.spec.vertical) && !project.spec.sample
+            ? flagshipDocFromSpec(renderSpec)
+            : docFromSpec(renderSpec)
+          : project.spec.sample
+            ? docFromSpec(renderSpec)
+            : starterDoc(project),
       flagship: FLAGSHIP_TRADES.has(project.spec.vertical) && !project.spec.sample,
       payments: capability.enabled
         ? { payOrders: capability.payOrders, payBookings: capability.payBookings, provider: capability.provider ?? '' }
@@ -798,12 +814,12 @@ app.get('/p/:token/app', async (c) => {
       editor: c.req.query('editor') === '1',
       // A concept is judged on its home screen; the app itself may open on the
       // catalogue, so the review names the screen explicitly.
-      screen: concept
+      screen: designOption || concept
         ? 'home'
         : c.req.query('editor') === '1'
           ? c.req.query('screen')?.slice(0, 40)
           : undefined,
-      preview: concept,
+      preview: designOption ? { direction: designOption.direction } : concept,
     }), renderSpec),
   )
 })
@@ -1261,7 +1277,12 @@ const importRoute = (mode: 'import' | 'discover') => async (c: Context) => {
         env: c.env as unknown as Record<string, string | undefined>,
         quota: createQuotaLedger(d1QuotaStore(c.env.DB)),
       })
-      if (design.status === 'ai')
+      if (design.status === 'ai') {
+        // Stored so each concept can be previewed on the real app and the
+        // chosen one saved through the existing document API. The deterministic
+        // plan is untouched: this is the offer shown beside it, never instead
+        // of it.
+        await replaceDesignOptions(c.env.DB, project.id, design.concepts)
         await log(
           c.env.DB,
           project.id,
@@ -1269,6 +1290,7 @@ const importRoute = (mode: 'import' | 'discover') => async (c: Context) => {
           'Drafted three concepts on free models',
           `${design.models.understand} + ${design.models.design} + ${design.models.copy}, $${design.costUsd.toFixed(2)}`,
         )
+      }
       return c.json({
         source: report.source,
         host: report.host,

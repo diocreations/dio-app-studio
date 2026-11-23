@@ -1,5 +1,5 @@
 import { costUsd, estimateTokens, type Usage } from './pricing'
-import type { QuotaLedger } from './quotas'
+import type { QuotaLedger, QuotaReservation } from './quotas'
 import { assertZeroCost, neuronsFor, PaidRequestRefused, type FreeModel } from './zeroCost'
 
 /**
@@ -527,21 +527,22 @@ export type ZeroCostOptions = {
   timeoutMs?: number
 }
 
-/** Tokens reserved for a call: prompt + schema + a fixed margin, and the billed
- *  output ceiling. Deliberately an upper bound; settlement uses the provider's
- *  reported usage. */
+/** Tokens reserved for a call: prompt + schema + a fixed margin for the input
+ *  half, and the billed output ceiling for the other. Deliberately an upper
+ *  bound; settlement uses the provider's reported usage. The two halves stay
+ *  separate because an output token costs more than twice an input token on
+ *  Cloudflare's Neuron table. */
 function reserveTokens(
   system: string,
   user: string,
   schema: Record<string, unknown>,
   outputTokens: number,
-): number {
-  return (
-    estimateTokens(`${system}\n${user}`) +
-    estimateTokens(JSON.stringify(schema)) +
-    900 +
-    Math.max(0, outputTokens)
-  )
+): { inputTokens: number; outputTokens: number } {
+  return {
+    inputTokens:
+      estimateTokens(`${system}\n${user}`) + estimateTokens(JSON.stringify(schema)) + 900,
+    outputTokens: Math.max(0, outputTokens),
+  }
 }
 
 function chatCompletionUsage(body: Record<string, unknown>): Usage {
@@ -556,20 +557,84 @@ function chatCompletionUsage(body: Record<string, unknown>): Usage {
   }
 }
 
-/** One OpenAI-compatible chat completion, parsed the same way for Groq and
- *  Workers AI so a provider swap cannot change what Plattr accepts. */
-function readChatCompletion(body: Record<string, unknown>, label: string): { json: unknown; usage: Usage } {
+/**
+ * What the response body establishes before any judgement about its content.
+ *
+ * Usage is read first because it decides the settlement even when the answer is
+ * unusable: a truncated, malformed or refused answer still consumed tokens the
+ * provider counted. The problem is returned rather than thrown, so the adapter
+ * can settle the attempt before it fails. One parser serves Groq and Workers AI.
+ */
+function auditChatCompletion(
+  body: Record<string, unknown>,
+  label: string,
+): { usage: Usage; json?: unknown; problem?: ProviderError } {
+  const usage = chatCompletionUsage(body)
   const choices = Array.isArray(body?.choices) ? (body.choices as Record<string, unknown>[]) : []
   const choice = choices[0]
-  if (!choice) throw new ProviderError('parse', messageOf(body, `${label} returned no choices.`))
+  if (!choice) {
+    return { usage, problem: new ProviderError('parse', messageOf(body, `${label} returned no choices.`)) }
+  }
   if (choice.finish_reason === 'length') {
-    throw new ProviderError('truncated', 'The design answer was cut off at the token limit.')
+    return { usage, problem: new ProviderError('truncated', 'The design answer was cut off at the token limit.') }
   }
   if (choice.finish_reason === 'error' || choice.finish_reason === 'content_filter') {
-    throw new ProviderError('refused', messageOf(choice, 'The provider stopped the answer.'))
+    return { usage, problem: new ProviderError('refused', messageOf(choice, 'The provider stopped the answer.')) }
   }
-  const json = parseJson(messageText(choice.message as Record<string, unknown> | undefined))
-  return { json, usage: chatCompletionUsage(body) }
+  try {
+    return { usage, json: parseJson(messageText(choice.message as Record<string, unknown> | undefined)) }
+  } catch (error) {
+    return {
+      usage,
+      problem:
+        error instanceof ProviderError
+          ? error
+          : new ProviderError('parse', 'The provider answer could not be read.'),
+    }
+  }
+}
+
+/**
+ * Settle one attempt against what the provider says it consumed.
+ *
+ * Reported usage is authoritative even when the answer was refused: those
+ * tokens were spent. With no usage at all the reservation stands untouched —
+ * returning it would hand back allowance that was very likely consumed.
+ */
+async function settleAttempt(
+  quota: QuotaLedger,
+  reservation: QuotaReservation,
+  spec: FreeModel,
+  usage: Usage,
+): Promise<void> {
+  const reported = usage.inputTokens + usage.outputTokens
+  if (reported <= 0) return
+  await quota.settle(reservation, {
+    tokens: reported,
+    neurons: neuronsFor(spec, usage.inputTokens, usage.outputTokens),
+  })
+}
+
+/**
+ * The reservation's fate when no answer arrives at all.
+ *
+ * An HTTP status means the provider answered and refused that attempt, so the
+ * reservation is given back. A timeout or a dropped connection is different:
+ * the request may already have been counted at the provider. In that case the
+ * reservation is deliberately kept, over-stating the day rather than silently
+ * releasing quota that may have been used.
+ */
+async function abandonAttempt(
+  quota: QuotaLedger,
+  spec: FreeModel,
+  reservation: QuotaReservation,
+  error: unknown,
+): Promise<void> {
+  if (!(error instanceof ProviderError) || error.status === undefined) return
+  if (error.status === 429) {
+    await quota.noteRateLimit(spec, new Date(Date.now() + (error.retryAfterMs ?? 60_000)))
+  }
+  await quota.release(reservation)
 }
 
 /**
@@ -602,7 +667,8 @@ export function groqProvider(
       const outputTokens = reserveFor(request.stage, request.maxOutputTokens)
       const started = Date.now()
       // Input and output both count against the ceiling, so the reservation is
-      // the same upper bound the request is built from.
+      // the same upper bound the request is built from, at the output ceiling
+      // this call is allowed to use.
       const reserved = reserveTokens(request.system, request.user, request.schema, outputTokens)
       const actualReservation = options.quota ? await options.quota.reserve(spec, reserved) : null
       const effort = effortFor(request.stage)
@@ -628,26 +694,20 @@ export function groqProvider(
           'Groq',
         )
       } catch (error) {
-        if (actualReservation && options.quota) {
-          if (error instanceof ProviderError && error.status === 429) {
-            await options.quota.noteRateLimit(
-              spec,
-              new Date(Date.now() + (error.retryAfterMs ?? 60_000)),
-            )
-          }
-          await options.quota.release(actualReservation)
-        }
+        if (actualReservation && options.quota)
+          await abandonAttempt(options.quota, spec, actualReservation, error)
         throw error
       }
-      const { json, usage } = readChatCompletion(body ?? {}, 'Groq')
-      if (actualReservation && options.quota) {
-        await options.quota.settle(actualReservation, {
-          tokens: usage.inputTokens + usage.outputTokens,
-          neurons: 0,
-        })
-      }
+      // The response arrived, so parsing and validation happen inside the
+      // settlement lifecycle: whatever the body is, the attempt is accounted
+      // for before the caller sees a result or an error.
+      const audited = auditChatCompletion(body ?? {}, 'Groq')
+      if (actualReservation && options.quota)
+        await settleAttempt(options.quota, actualReservation, spec, audited.usage)
+      if (audited.problem) throw audited.problem
+      const { usage } = audited
       return {
-        json,
+        json: audited.json,
         usage,
         model,
         modelServed: typeof body?.model === 'string' ? body.model : undefined,
@@ -722,23 +782,19 @@ export function workersAiProvider(
           'Cloudflare Workers AI',
         )
       } catch (error) {
-        if (reservation && options.quota) {
-          if (error instanceof ProviderError && error.status === 429) {
-            await options.quota.noteRateLimit(spec, new Date(Date.now() + (error.retryAfterMs ?? 60_000)))
-          }
-          await options.quota.release(reservation)
-        }
+        if (reservation && options.quota)
+          await abandonAttempt(options.quota, spec, reservation, error)
         throw error
       }
-      const { json, usage } = readChatCompletion(body ?? {}, 'Cloudflare Workers AI')
-      if (reservation && options.quota) {
-        await options.quota.settle(reservation, {
-          tokens: usage.inputTokens + usage.outputTokens,
-          neurons: neuronsFor(spec, usage.inputTokens, usage.outputTokens),
-        })
-      }
+      // Parsed and settled together: a refusal, an empty answer or a truncated
+      // one is charged what the provider reported, never left half-accounted.
+      const audited = auditChatCompletion(body ?? {}, 'Cloudflare Workers AI')
+      if (reservation && options.quota)
+        await settleAttempt(options.quota, reservation, spec, audited.usage)
+      if (audited.problem) throw audited.problem
+      const { usage } = audited
       return {
-        json,
+        json: audited.json,
         usage,
         model,
         modelServed: typeof body?.model === 'string' ? body.model : undefined,

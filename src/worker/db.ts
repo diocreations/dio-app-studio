@@ -20,7 +20,7 @@ import {
 } from './pricing'
 import type { Doc } from './doc'
 import type { VideoLink } from './types'
-import { QUOTA_SCHEMA_SQL } from './ai/quotas'
+import { QUOTA_INDEX_SQL, QUOTA_SCHEMA_SQL } from './ai/quotas'
 import { verticalFor } from './verticals'
 import { ensurePlatformSchema } from './platform/schema'
 
@@ -275,6 +275,23 @@ const SCHEMA = [
   // The shared free-tier ledger (migrations/0001_ai_quota.sql). Kept in the
   // runtime schema too, so a deployment never depends on a manual migration.
   QUOTA_SCHEMA_SQL,
+  QUOTA_INDEX_SQL,
+  // The three AI concepts a URL-first run offered. They are review material:
+  // the customer previews each one on the real app, and the chosen document is
+  // saved through the normal document API. Keeping them here means a preview
+  // is a stored document, not a second copy of the renderer in the browser.
+  `CREATE TABLE IF NOT EXISTS design_options (
+    project_id TEXT NOT NULL,
+    option_id TEXT NOT NULL,
+    name TEXT NOT NULL DEFAULT '',
+    direction TEXT NOT NULL DEFAULT '',
+    spec TEXT NOT NULL DEFAULT '{}',
+    doc TEXT NOT NULL DEFAULT '{}',
+    source TEXT NOT NULL DEFAULT 'ai',
+    created_at TEXT NOT NULL,
+    PRIMARY KEY(project_id, option_id)
+  )`,
+  `CREATE INDEX IF NOT EXISTS design_options_by_project ON design_options (project_id)`,
   `CREATE INDEX IF NOT EXISTS notes_by_project ON notes (project_id, created_at)`,
   `CREATE INDEX IF NOT EXISTS media_by_project ON media (project_id, created_at)`,
   `CREATE INDEX IF NOT EXISTS orders_by_project ON orders (project_id, created_at)`,
@@ -397,7 +414,10 @@ const MIGRATIONS = [
 ]
 
 const ready = new WeakMap<D1Database, Promise<void>>()
-const SCHEMA_VERSION = '2'
+/** Bumped to 3 for `ai_quota` and `design_options`. A version-2 database that
+ *  is warmed from its cached metadata re-runs the additive schema, so the quota
+ *  table cannot be skipped just because the process already had a schema. */
+const SCHEMA_VERSION = '3'
 
 export function ensureSchema(db: D1Database): Promise<void> {
   const existing = ready.get(db)
@@ -481,6 +501,98 @@ export async function saveBriefDraft(db: D1Database, id: string, data: string): 
 export async function deleteBriefDraft(db: D1Database, id: string): Promise<void> {
   await ensureSchema(db)
   await db.prepare('DELETE FROM brief_drafts WHERE id = ?').bind(id).run()
+}
+
+/** One concept offered by the free design step, addressable by the customer's
+ *  preview link. The document is the whole application, so the preview is the
+ *  real renderer over a stored document. */
+export type DesignOption = {
+  id: string
+  name: string
+  direction: string
+  spec: AppSpec
+  doc: Doc
+  source: string
+  createdAt: string
+}
+
+type DesignOptionRow = {
+  option_id: string
+  name: string
+  direction: string
+  spec: string
+  doc: string
+  source: string
+  created_at: string
+}
+
+/** Replaces the offer for one build. A re-run of the design step replaces its
+ *  predecessor instead of accumulating stale concepts on the same project. */
+export async function replaceDesignOptions(
+  db: D1Database,
+  projectId: string,
+  options: {
+    id: string
+    name: string
+    direction: string
+    spec: AppSpec
+    doc: unknown
+    source?: string
+  }[],
+): Promise<void> {
+  await ensureSchema(db)
+  const createdAt = new Date().toISOString()
+  await db.prepare('DELETE FROM design_options WHERE project_id = ?').bind(projectId).run()
+  for (const option of options) {
+    await db
+      .prepare(
+        `INSERT OR REPLACE INTO design_options
+           (project_id, option_id, name, direction, spec, doc, source, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .bind(
+        projectId,
+        option.id,
+        option.name,
+        option.direction,
+        JSON.stringify(option.spec),
+        JSON.stringify(option.doc),
+        option.source ?? 'ai',
+        createdAt,
+      )
+      .run()
+  }
+}
+
+/** Scoped to the project, so one build can never preview another's concept, and
+ *  null on unreadable stored JSON rather than a half-applied document. */
+export async function getDesignOption(
+  db: D1Database,
+  projectId: string,
+  optionId: string,
+): Promise<DesignOption | null> {
+  await ensureSchema(db)
+  const row = await db
+    .prepare(
+      `SELECT option_id, name, direction, spec, doc, source, created_at
+         FROM design_options WHERE project_id = ? AND option_id = ?`,
+    )
+    .bind(projectId, optionId)
+    .first<DesignOptionRow>()
+  if (!row) return null
+  try {
+    return {
+      id: row.option_id,
+      name: row.name,
+      direction: row.direction,
+      spec: JSON.parse(row.spec) as AppSpec,
+      doc: JSON.parse(row.doc) as Doc,
+      source: row.source,
+      createdAt: row.created_at,
+    }
+  } catch {
+    return null
+  }
 }
 
 function parseJson<T>(value: string, fallback: T): T {

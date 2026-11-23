@@ -1,0 +1,104 @@
+{
+  "startedAt": "2026-11-23T14:00:07.172Z",
+  "ok": true,
+  "origin": "http://127.0.0.1:60103",
+  "steps": [
+    {
+      "step": "url-to-concepts",
+      "profile": {
+        "title": "GeeStores — Marketplace",
+        "name": "GeeStores",
+        "category": "Marketplace",
+        "tagline": "Jewellery shop.",
+        "catalogue": "3 items",
+        "facts": "Read from https://geestores.example/ · 4 pages · 3 catalogue entries · 0 photographs"
+      },
+      "cards": [
+        {
+          "id": "vault",
+          "title": "The Vault",
+          "note": "Free models · editorial",
+          "preview": "/p/481785ce4f6c98f61981db35/app?design=vault"
+        },
+        {
+          "id": "counter",
+          "title": "The Counter",
+          "note": "Free models · minimal",
+          "preview": "/p/481785ce4f6c98f61981db35/app?design=counter"
+        },
+        {
+          "id": "festival",
+          "title": "Festival",
+          "note": "Free models · lifestyle",
+          "preview": "/p/481785ce4f6c98f61981db35/app?design=festival"
+        }
+      ],
+      "expectedIds": [
+        "vault",
+        "counter",
+        "festival"
+      ],
+      "expectedTitles": [
+        "The Vault",
+        "The Counter",
+        "Festival"
+      ]
+    },
+    {
+      "step": "selection",
+      "chosen": "counter",
+      "chooseLabel": "Open The Counter",
+      "selectedPreview": {
+        "ok": true,
+        "accent": "#8a1c2b"
+      }
+    },
+    {
+      "step": "edit-save-reload",
+      "versionBefore": "GeeStores · build v2",
+      "versionAfter": "GeeStores · build v3",
+      "afterReload": {
+        "title": "GeeStores · build v3",
+        "tagline": "Pieces kept for a lifetime"
+      },
+      "stillChosen": true
+    },
+    {
+      "step": "approve-publish",
+      "published": {
+        "link": "http://127.0.0.1:60103/p/481785ce4f6c98f61981db35/app",
+        "text": "Put it online\nPublished\n\nThe customer app is live at a stable link. Edits saved from the editor appear on this same link; use Unpublish to take it offline without deleting anything.\n\nhttp://127.0.0.1:60103/p/481785ce4f6c98f61981db35/app\n\nCopy live link\nUnpublish"
+      }
+    },
+    {
+      "step": "published-preview",
+      "publicView": {
+        "title": "GeeStores · Marketplace",
+        "text": "GE GeeStores MARKETPLACE GE Search SHOP 3 Showing 3 of 3 items All Featured FEATURED 3 Chain ₹1,299 Gold band ₹2,499 Stone ring ₹1,899 SERVICES HOME CONTACT Your order Nothing here yet. Add something from the shop.",
+        "accent": "#8a1c2b",
+        "notPublished": false
+      }
+    }
+  ],
+  "screenshots": [
+    "docs/qa/zero-cost-journey-2026-11-23/concepts-desktop.png",
+    "docs/qa/zero-cost-journey-2026-11-23/concepts-mobile.png",
+    "docs/qa/zero-cost-journey-2026-11-23/workspace-desktop.png",
+    "docs/qa/zero-cost-journey-2026-11-23/published-desktop.png",
+    "docs/qa/zero-cost-journey-2026-11-23/published-mobile.png"
+  ],
+  "consoleErrors": [],
+  "pageExceptions": [],
+  "networkFailures": [],
+  "providerCalls": {
+    "groq": 2,
+    "cloudflare": 1,
+    "hosts": [
+      "geestores.example",
+      "api.groq.com",
+      "api.cloudflare.com"
+    ]
+  },
+  "error": null,
+  "finishedAt": "2026-11-23T14:00:13.175Z"
+}

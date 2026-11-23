@@ -140,13 +140,15 @@ describe('quota ledger', () => {
     // Three in-flight requests of 60k tokens fill 200k/day. They stay reserved,
     // exactly like concurrent requests from different users would.
     for (let index = 0; index < 3; index += 1) {
-      await ledger.reserve(groq, 60_000, AT)
+      await ledger.reserve(groq, { inputTokens: 60_000, outputTokens: 0 }, AT)
     }
     const before = await store.read(`groq:${GROQ}:day:2026-11-23`)
     expect(before).toMatchObject({ requests: 3, tokens: 180_000 })
 
     // The fourth would exceed 200k. It must throw, and add nothing anywhere.
-    await expect(ledger.reserve(groq, 60_000, AT)).rejects.toBeInstanceOf(QuotaExhaustedError)
+    await expect(
+      ledger.reserve(groq, { inputTokens: 60_000, outputTokens: 0 }, AT),
+    ).rejects.toBeInstanceOf(QuotaExhaustedError)
     const after = await store.read(`groq:${GROQ}:day:2026-11-23`)
     expect(after).toMatchObject({ requests: 3, tokens: 180_000 })
     const minute = await store.read(`groq:${GROQ}:minute:2026-11-23T10:15`)
@@ -160,7 +162,7 @@ describe('quota ledger', () => {
     try {
       // Groq's free plan allows 8,000 tokens/minute: the full design call does
       // not fit, which is why the design stage runs on Workers AI.
-      await ledger.reserve(groq, 15_000, AT)
+      await ledger.reserve(groq, { inputTokens: 15_000, outputTokens: 0 }, AT)
       throw new Error('should have refused')
     } catch (error) {
       expect(error).toBeInstanceOf(QuotaExhaustedError)
@@ -177,7 +179,7 @@ describe('quota ledger', () => {
     const store = memoryQuotaStore()
     const ledger = createQuotaLedger(store)
     const cloudflare = spec(CF)
-    const reservation = await ledger.reserve(cloudflare, 5_000, AT)
+    const reservation = await ledger.reserve(cloudflare, { inputTokens: 5_000, outputTokens: 0 }, AT)
     const reserved = await ledger.usage(cloudflare, AT)
     expect(reserved.remaining.neurons).toBeLessThan(10_000)
     expect(reserved.remaining.neurons).toBeGreaterThan(9_000)
@@ -194,12 +196,14 @@ describe('quota ledger', () => {
     const ledger = createQuotaLedger(store)
     const groq = spec(GROQ)
     await ledger.noteRateLimit(groq, new Date('2026-11-23T10:20:00.000Z'), AT)
-    await expect(ledger.reserve(groq, 1_000, AT)).rejects.toBeInstanceOf(QuotaExhaustedError)
+    await expect(
+      ledger.reserve(groq, { inputTokens: 1_000, outputTokens: 0 }, AT),
+    ).rejects.toBeInstanceOf(QuotaExhaustedError)
     const state = await store.read(`groq:${GROQ}:day:2026-11-23`)
     expect(state.rateLimits).toBe(1)
     // Once the block passes, the same ledger works again.
     const later = new Date('2026-11-23T10:21:00.000Z')
-    await expect(ledger.reserve(groq, 1_000, later)).resolves.toBeTruthy()
+    await expect(ledger.reserve(groq, { inputTokens: 1_000, outputTokens: 0 }, later)).resolves.toBeTruthy()
   })
 
   test('a store that cannot answer is a refusal, not an optimistic attempt', async () => {
@@ -214,7 +218,9 @@ describe('quota ledger', () => {
       async noteRateLimit() {},
     }
     const ledger = createQuotaLedger(broken)
-    await expect(ledger.reserve(spec(GROQ), 100, AT)).rejects.toThrow('D1 unavailable')
+    await expect(
+      ledger.reserve(spec(GROQ), { inputTokens: 100, outputTokens: 0 }, AT),
+    ).rejects.toThrow('D1 unavailable')
   })
 
   test('the SQL itself refuses the extra concurrent reservation', () => {
@@ -250,10 +256,10 @@ describe('quota ledger', () => {
     const ledger = createQuotaLedger(store)
     const cloudflare = spec(CF)
     // 10,000 neurons / (5,000 input at 31,818/M) ≈ 159 neurons per reservation.
-    const reservation = await ledger.reserve(cloudflare, 120_000, AT)
+    const reservation = await ledger.reserve(cloudflare, { inputTokens: 120_000, outputTokens: 0 }, AT)
     await ledger.settle(reservation, { tokens: 120_000, neurons: 9_900 }, AT)
     try {
-      await ledger.reserve(cloudflare, 10_000, AT)
+      await ledger.reserve(cloudflare, { inputTokens: 10_000, outputTokens: 0 }, AT)
       throw new Error('should have refused')
     } catch (error) {
       expect(error).toBeInstanceOf(QuotaExhaustedError)
@@ -278,7 +284,7 @@ describe('quota ledger', () => {
       // Both ledgers read the same total.
       const usage = await first.usage(spec(GROQ), AT)
       expect(usage.day.requests).toBe(0)
-      expect(await second.reserve(spec(GROQ), 1, AT)).toBeTruthy()
+      expect(await second.reserve(spec(GROQ), { inputTokens: 1, outputTokens: 0 }, AT)).toBeTruthy()
     } finally {
       rmSync(dir, { recursive: true, force: true })
     }
