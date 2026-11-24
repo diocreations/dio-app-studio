@@ -20,6 +20,7 @@ import {
   type AttemptGuard,
   type BillingState,
   type GenerateResult,
+  type ProviderDiagnostics,
 } from './provider'
 import { fatal, parseBrief, parseCopy, parseDesignSet, type Issue } from './validate'
 
@@ -82,6 +83,10 @@ export type AttemptRecord = {
   ok: boolean
   /** The upstream endpoint, when the gateway reported one for this attempt. */
   servedProvider?: string
+  /** Why the provider refused this attempt: HTTP status, its own error
+   *  classification and a bounded, sanitized body. Absent for a successful
+   *  attempt and for a failure raised locally. */
+  diagnostics?: ProviderDiagnostics
 }
 
 export type DesignRun = {
@@ -197,6 +202,7 @@ async function callStage(
         entry.retainedUsd = retained
         entry.ok = result?.ok ?? false
         entry.servedProvider = result?.servedProvider
+        entry.diagnostics = result?.diagnostics
       }
     },
   }

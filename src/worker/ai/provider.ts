@@ -63,6 +63,47 @@ export type GenerateResult = {
  */
 export type BillingState = 'billed' | 'not_billed' | 'unknown'
 
+/**
+ * Why a provider refused a call, kept for the trial report.
+ *
+ * A refusal is measured as carefully as an answer. The status, the provider's
+ * own error classification and a bounded, sanitized excerpt of the body are what
+ * make a failure diagnosable after the fact without storing credentials or an
+ * unbounded payload. `request` records what the call was allowed to generate,
+ * which is how a failure can be told apart from a truncation after the run.
+ */
+export type ProviderDiagnostics = {
+  status: number
+  /** The provider's machine-readable classification, e.g. `json_validate_failed`. */
+  code?: string
+  /** The provider's error family, e.g. `invalid_request_error`. */
+  type?: string
+  /** Bounded, sanitized excerpt of the approved error fields only: `code`,
+   *  `type`, and `param` when it is a valid parameter path. Free provider prose
+   *  such as `message` is never kept. */
+  bodyExcerpt?: string
+  /** Bounded, sanitized `failed_generation`, when the provider returned one.
+   *  This is provider-supplied diagnostic content: redaction is pattern-based
+   *  and is not a guarantee that every sensitive value is gone. */
+  failedGeneration?: string
+  /** Whether the failed response carried usage, which decides billing certainty. */
+  usageReported: boolean
+  /** What this attempt was allowed to generate. */
+  request: {
+    maxOutputTokens: number
+    reasoningEffort?: ReasoningEffort
+    /** SHA-256 of the JSON schema; the schema itself is code, not report data. */
+    schemaDigest: string
+  }
+}
+
+/** The request facts recorded on a failed call. The schema is hashed, not stored. */
+export type DiagnosticFacts = {
+  maxOutputTokens: number
+  reasoningEffort?: ReasoningEffort
+  schema: Record<string, unknown>
+}
+
 export type AiProvider = {
   name: ProviderName
   modelFor(stage: AiStage): string
@@ -101,6 +142,9 @@ export class ProviderError extends Error {
   billing: BillingState = 'unknown'
   /** The confirmed charge attached to a failed attempt, when there is one. */
   costUsd?: number
+  /** Why the provider refused, bounded and sanitized. Present on an HTTP
+   *  failure; absent when the failure happened locally. */
+  diagnostics?: ProviderDiagnostics
 
   constructor(
     code: ProviderErrorCode,
@@ -111,6 +155,7 @@ export class ProviderError extends Error {
       retryAfterMs?: number
       billing?: BillingState
       costUsd?: number
+      diagnostics?: ProviderDiagnostics
     } = {},
   ) {
     super(message)
@@ -121,6 +166,7 @@ export class ProviderError extends Error {
     this.retryAfterMs = options.retryAfterMs
     this.billing = options.billing ?? 'unknown'
     this.costUsd = options.costUsd
+    this.diagnostics = options.diagnostics
   }
 }
 
@@ -171,12 +217,156 @@ function retryAfterMsOf(value: string | null): number | undefined {
   return undefined
 }
 
+/** The longest diagnostic string the report will carry, including its marker. */
+export const DIAGNOSTIC_EXCERPT_LIMIT = 2000
+const TRUNCATION_MARK = '…[truncated]'
+
+/**
+ * Credential shapes that could appear in a provider body. Request headers are
+ * never read into diagnostics; this scrubs what a gateway might echo back.
+ */
+const SECRET_PATTERNS: [RegExp, string][] = [
+  [/\bBearer\s+[A-Za-z0-9._~+/=-]{8,}/gi, 'Bearer [redacted]'],
+  [/\bgsk-[A-Za-z0-9_-]{8,}/gi, '[redacted]'],
+  [/\bsk-[A-Za-z0-9_-]{8,}/gi, '[redacted]'],
+  [
+    /(["']?(?:authorization|x-api-key|api[_-]?key|access[_-]?token|secret)["']?\s*[:=]\s*)["']?[^\s"',}]+/gi,
+    '$1[redacted]',
+  ],
+]
+
+/**
+ * A bounded, sanitized excerpt of provider data for the report.
+ *
+ * Never a key, never an unbounded body: the result is at most `limit`
+ * characters, and a secret-looking value is replaced before it is returned.
+ */
+export function sanitizeExcerpt(value: unknown, limit = DIAGNOSTIC_EXCERPT_LIMIT): string | undefined {
+  if (value === undefined || value === null) return undefined
+  let text: string
+  try {
+    text = typeof value === 'string' ? value : (JSON.stringify(value) ?? '')
+  } catch {
+    text = String(value)
+  }
+  if (!text) return undefined
+  for (const [pattern, replacement] of SECRET_PATTERNS) text = text.replace(pattern, replacement)
+  // Control characters would break a markdown table or a one-line summary.
+  text = text.replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, ' ')
+  if (text.length <= limit) return text
+  return `${text.slice(0, Math.max(0, limit - TRUNCATION_MARK.length))}${TRUNCATION_MARK}`
+}
+
+/** SHA-256 of the schema a call was sent, so a failure can be tied to it. */
+async function schemaDigestOf(schema: Record<string, unknown>): Promise<string> {
+  const bytes = new TextEncoder().encode(JSON.stringify(schema))
+  const digest = await crypto.subtle.digest('SHA-256', bytes)
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
+/**
+ * The only provider error fields the report may carry. Everything else — an
+ * unknown key, a nested object, an echoed request — is dropped rather than
+ * sanitized, so a field nobody approved can never reach the report. `message` is
+ * deliberately absent: it is free provider prose that can echo the request or a
+ * credential, and no redaction pattern makes arbitrary prose safe.
+ */
+const APPROVED_ERROR_FIELDS = ['code', 'type'] as const
+
+/** A JSON parameter path: dotted names and numeric indexes, nothing else. */
+const PARAM_PATH = /^[A-Za-z0-9_.\[\]-]{1,200}$/
+
+/** Classification strings are short by nature; anything longer is noise. */
+const DIAGNOSTIC_FIELD_LIMIT = 120
+
+/** A classification is one identifier: letters, digits, `_` and `-`, nothing else. */
+const CLASSIFICATION_ID = /^[A-Za-z0-9_-]+$/
+/** A segment this long is an opaque key, not a word in a classification. */
+const CLASSIFICATION_SEGMENT_LIMIT = 40
+/** Credential prefixes that are never a classification, whatever else they match. */
+const CREDENTIAL_PREFIX = /^(?:gh[pousr]_|github_pat_|xox[baprs]-|AKIA|ASIA|AIza|eyJ|sk[-_]|gsk[-_]|sk-or-|sk-ant-)/i
+
+/** A provider classification (`json_validate_failed`, `invalid_request_error`) or
+ *  nothing at all. Prose, whitespace, URLs, JSON, opaque keys and anything that
+ *  looks like a credential are omitted, never sanitized into a classification. */
+function classificationField(value: unknown): string | undefined {
+  if (typeof value !== 'string' || !value || value.length > DIAGNOSTIC_FIELD_LIMIT) return undefined
+  if (!CLASSIFICATION_ID.test(value)) return undefined
+  if (CREDENTIAL_PREFIX.test(value)) return undefined
+  if (value.split(/[_-]+/).some((segment) => segment.length > CLASSIFICATION_SEGMENT_LIMIT)) {
+    return undefined
+  }
+  const sanitized = sanitizeExcerpt(value, DIAGNOSTIC_FIELD_LIMIT)
+  // Defence in depth: if redaction touched it, it was not a classification.
+  return sanitized === value ? sanitized : undefined
+}
+
+/** `param` is kept only when it is a conservative parameter path. Prose, URLs,
+ *  embedded keys, newlines and oversized values are omitted entirely rather
+ *  than sanitized into something that looks like a path. */
+function paramField(value: unknown): string | undefined {
+  if (typeof value !== 'string' || !PARAM_PATH.test(value)) return undefined
+  const sanitized = sanitizeExcerpt(value)
+  // A path never needs redaction; if the sanitizer changed it, it was not a path.
+  return sanitized === value ? sanitized : undefined
+}
+
+/** Only the approved fields, each sanitized and bounded. Nested values are not
+ *  copied even when their key looks familiar. */
+function approvedErrorFields(error: Record<string, unknown> | undefined): Record<string, string> {
+  const approved: Record<string, string> = {}
+  if (!error) return approved
+  for (const field of APPROVED_ERROR_FIELDS) {
+    const value = classificationField(error[field])
+    if (value) approved[field] = value
+  }
+  const param = paramField(error.param)
+  if (param) approved.param = param
+  return approved
+}
+
+/**
+ * Everything a failed response can tell us, without the credentials and without
+ * an unbounded body. Only allow-listed fields are copied out of the provider's
+ * error object; `failed_generation` is kept separately so a gateway's partial
+ * output stays readable in the report.
+ */
+async function diagnosticsOf(
+  parsed: Record<string, unknown> | null,
+  status: number,
+  facts: DiagnosticFacts,
+): Promise<ProviderDiagnostics> {
+  const rawError = parsed?.error
+  const error =
+    rawError && typeof rawError === 'object' ? (rawError as Record<string, unknown>) : undefined
+  const code = classificationField(error?.code) ?? classificationField(parsed?.code)
+  const type = classificationField(error?.type)
+  const failedGeneration = sanitizeExcerpt(error?.failed_generation ?? parsed?.failed_generation)
+  // Nothing is copied wholesale: the excerpt is rebuilt from approved fields.
+  const approved = approvedErrorFields(error)
+  const bodyExcerpt = Object.keys(approved).length ? sanitizeExcerpt(approved) : undefined
+  return {
+    status,
+    ...(code ? { code } : {}),
+    ...(type ? { type } : {}),
+    ...(bodyExcerpt ? { bodyExcerpt } : {}),
+    ...(failedGeneration ? { failedGeneration } : {}),
+    usageReported: Boolean(parsed?.usage && typeof parsed.usage === 'object'),
+    request: {
+      maxOutputTokens: facts.maxOutputTokens,
+      ...(facts.reasoningEffort ? { reasoningEffort: facts.reasoningEffort } : {}),
+      schemaDigest: await schemaDigestOf(facts.schema),
+    },
+  }
+}
+
 async function postJson(
   url: string,
   body: Record<string, unknown>,
   headers: Record<string, string>,
   timeoutMs: number,
   label: string,
+  facts?: DiagnosticFacts,
 ): Promise<Record<string, unknown> | null> {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
@@ -214,6 +404,9 @@ async function postJson(
       retryAfterMs: retryAfterMsOf(response.headers.get('retry-after')),
       billing: reported !== undefined ? 'billed' : 'unknown',
       costUsd: reported,
+      // What the provider said about its own refusal: status, classification and
+      // a bounded, sanitized body. Recorded so a stopped run stays diagnosable.
+      diagnostics: facts ? await diagnosticsOf(parsed, response.status, facts) : undefined,
     })
   }
   return parsed
@@ -292,6 +485,7 @@ export function anthropicProvider(
         { 'x-api-key': apiKey, 'anthropic-version': '2026-10-21' },
         timeoutMs,
         'Anthropic',
+        { maxOutputTokens: request.maxOutputTokens, schema: request.schema },
       )
       if (body?.stop_reason === 'max_tokens') {
         throw new ProviderError('truncated', 'The design answer was cut off at the token limit.')
@@ -358,6 +552,7 @@ export function openaiProvider(
         { authorization: `Bearer ${apiKey}` },
         timeoutMs,
         'OpenAI',
+        { maxOutputTokens: request.maxOutputTokens, schema: request.schema },
       )
       if (body?.status === 'incomplete') {
         throw new ProviderError('truncated', 'The design answer was cut off at the token limit.')
@@ -499,6 +694,7 @@ export function openRouterProvider(
         { authorization: `Bearer ${apiKey}` },
         timeoutMs,
         'OpenRouter',
+        { maxOutputTokens: maxTokens, reasoningEffort: effort, schema: request.schema },
       )
       const choices = Array.isArray(body?.choices) ? (body.choices as Record<string, unknown>[]) : []
       const choice = choices[0]
@@ -794,6 +990,7 @@ export function groqProvider(
           { authorization: `Bearer ${apiKey}` },
           timeoutMs,
           'Groq',
+          { maxOutputTokens: outputTokens, reasoningEffort: effort, schema: request.schema },
         )
       } catch (error) {
         if (actualReservation && options.quota)
@@ -879,6 +1076,11 @@ export function groqPaidProvider(
         { authorization: `Bearer ${apiKey}` },
         timeoutMs,
         'Groq',
+        {
+          maxOutputTokens: reserveFor(request.stage, request.maxOutputTokens),
+          reasoningEffort: effort,
+          schema: request.schema,
+        },
       )
       const audited = auditChatCompletion(body ?? {}, 'Groq')
       const usedTokens =
@@ -975,6 +1177,7 @@ export function workersAiProvider(
           { authorization: `Bearer ${auth.apiToken}` },
           timeoutMs,
           'Cloudflare Workers AI',
+          { maxOutputTokens: outputTokens, reasoningEffort: effort, schema: request.schema },
         )
       } catch (error) {
         if (reservation && options.quota)
@@ -1065,6 +1268,8 @@ export type AttemptGuard = {
     billing?: BillingState
     ok?: boolean
     servedProvider?: string
+    /** Why a failed attempt failed, when the provider said why. */
+    diagnostics?: ProviderDiagnostics
   }): void
 }
 
@@ -1090,6 +1295,7 @@ export async function generateWithRetry(
         billing,
         ok: false,
         servedProvider: (error as { providerServed?: string }).providerServed,
+        diagnostics: error instanceof ProviderError ? error.diagnostics : undefined,
       })
       const retryable = error instanceof ProviderError && error.retryable
       if (!retryable || attempt >= retries) throw error

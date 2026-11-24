@@ -625,15 +625,15 @@ function markdown(data) {
   lines.push('')
   lines.push('## Routing, charged cost and the cap')
   lines.push('')
-  lines.push('Every HTTP attempt is reserved before it is sent and settled with its charge, including an attempt that failed and was retried. `served` is what the gateway reported, not what the routing asked for. A timeout, dropped connection, 429/5xx, or an answer without usable billing information keeps its reservation as `retained` instead of refunding it.')
+  lines.push('Every HTTP attempt is reserved before it is sent and settled with its charge, including an attempt that failed and was retried. `served` is what the gateway reported, not what the routing asked for. A timeout, dropped connection, 429/5xx, or an answer without usable billing information keeps its reservation as `retained` instead of refunding it. `Attempts` counts every HTTP request; `Failed calls` counts attempts that produced no call; `Retried` is yes only when one stage called the provider more than once, so three successful stages in one generation is not a retry.')
   lines.push('')
-  lines.push('| Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Reserved (USD) | Charged (USD) | Retained (uncertain) | Accounted (USD) | Hard reservation (USD) | Within reservation | Charged ≤ reservation | Over reservation (USD) | Uncertain attempts | Retried |')
-  lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |')
+  lines.push('| Business | Arm | Routing asked for | Endpoint(s) served | Attempts | Failed calls | Reserved (USD) | Charged (USD) | Retained (uncertain) | Accounted (USD) | Hard reservation (USD) | Within reservation | Charged ≤ reservation | Over reservation (USD) | Uncertain attempts | Retried |')
+  lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |')
   for (const run of data.runs) {
     const verification = run.verification
     const expected = run.provider.expectedProvider ? `; pinned to ${run.provider.expectedProvider}` : ''
     lines.push(
-      `| ${run.business.label} | ${run.provider.id} | ${run.provider.routingLabel}${expected} | ${run.servedProviders?.join(', ') || '—'} | ${verification.attemptsMade} | ${verification.reservedUsd.toFixed(6)} | ${verification.chargedUsd.toFixed(6)} | ${verification.retainedUsd.toFixed(6)} | ${verification.accountedUsd.toFixed(6)} | ${verification.hardCapUsd.toFixed(2)} | ${verification.withinHardCap ? 'yes' : 'NO'} | ${verification.chargedWithinReservation ? 'yes' : 'NO'} | ${verification.overReservedUsd.toFixed(6)} | ${verification.uncertainAttempts} | ${verification.retried ? 'yes' : 'no'} |`,
+      `| ${run.business.label} | ${run.provider.id} | ${run.provider.routingLabel}${expected} | ${run.servedProviders?.join(', ') || '—'} | ${verification.attemptsMade} | ${verification.failedCalls ?? 0} | ${verification.reservedUsd.toFixed(6)} | ${verification.chargedUsd.toFixed(6)} | ${verification.retainedUsd.toFixed(6)} | ${verification.accountedUsd.toFixed(6)} | ${verification.hardCapUsd.toFixed(2)} | ${verification.withinHardCap ? 'yes' : 'NO'} | ${verification.chargedWithinReservation ? 'yes' : 'NO'} | ${verification.overReservedUsd.toFixed(6)} | ${verification.uncertainAttempts} | ${verification.retried ? 'yes' : 'no'} |`,
     )
   }
   lines.push('')
@@ -645,6 +645,23 @@ function markdown(data) {
     lines.push('')
     for (const run of failures) {
       lines.push(`- **${run.business.label} / ${run.provider.id}** — ${run.status}: ${run.detail ?? run.reason ?? 'no detail'}`)
+      const failedAttempts = (run.attempts ?? []).filter((attempt) => !attempt.ok && attempt.diagnostics)
+      for (const attempt of failedAttempts) {
+        const diagnostics = attempt.diagnostics
+        const effort = diagnostics.request.reasoningEffort ? ` · effort ${diagnostics.request.reasoningEffort}` : ''
+        lines.push(
+          `  - attempt ${attempt.attempt} (${attempt.stage}) — HTTP ${diagnostics.status}${diagnostics.code ? ` · \`${diagnostics.code}\`` : ''}${diagnostics.type ? ` · ${diagnostics.type}` : ''} · usage reported: ${diagnostics.usageReported ? 'yes' : 'no'} · ceiling ${diagnostics.request.maxOutputTokens}${effort} · schema ${diagnostics.request.schemaDigest.slice(0, 12)}…`,
+        )
+        if (diagnostics.failedGeneration) {
+          lines.push('')
+          lines.push('    Provider `failed_generation` (bounded, sanitized):')
+          lines.push('')
+          lines.push('```json')
+          lines.push(diagnostics.failedGeneration.replace(/```/g, '` ` `'))
+          lines.push('```')
+          lines.push('')
+        }
+      }
     }
     lines.push('')
   }
@@ -676,6 +693,7 @@ function markdown(data) {
   lines.push('- **Completeness and editability** — concepts, screens, document nodes, components, and a coverage audit: every visible node must reach the rendered page under its own id, or it is not editable from the same document.')
   lines.push('- **Latency** — wall clock for the whole generation and per stage. Mocked mode measures pipeline overhead only; the live run measures the gateways.')
   lines.push('- **Cost and routing** — OpenRouter settles from its reported `usage.cost`; Groq is priced at its published rate from reported tokens. The endpoint that served each call is recorded, every attempt is reconciled against its reservation and the $0.40 cap, and a retried or failed attempt is counted rather than hidden. A charge that cannot be established (timeout, dropped connection, 429/5xx, no usage) is conservatively retained: it is never released as free and never disappears from the budget.')
+  lines.push('- **Provider refusals** — a failed HTTP call keeps its status, the provider\'s error code and type, the output ceiling, reasoning effort and schema digest it was sent, and a bounded (2,000-character), sanitized body excerpt including `failed_generation` when the gateway returns one. Keys, Bearer tokens and key-like values are redacted before anything reaches this report.')
   lines.push('')
   lines.push('## Worst case per generation')
   lines.push('')

@@ -17,7 +17,7 @@ import { createLedger } from './ledger'
 import type { BusinessBrief, ConceptSpec } from './contracts'
 import type { Dossier } from './dossier'
 import { runDesignPipeline, PipelineError, type AttemptRecord, type CallRecord } from './pipeline'
-import type { AiProvider } from './provider'
+import { ProviderError, type AiProvider } from './provider'
 import type { Issue } from './validate'
 import {
   TRIAL_ID,
@@ -29,6 +29,21 @@ import {
   type TrialProviderId,
   type TrialSpendStore,
 } from './trial'
+
+/**
+ * What a failed generation reports about itself. A provider's own free-text
+ * message is never copied here: it can echo the request or a credential, and
+ * the report only carries the classification the adapter allow-listed.
+ */
+function failureDetail(error: unknown): string {
+  if (error instanceof ProviderError) {
+    const diagnostics = error.diagnostics
+    const classification = [diagnostics?.code, diagnostics?.type].filter(Boolean).join(' · ')
+    const status = error.status !== undefined ? `HTTP ${error.status}` : error.code
+    return `The provider refused the request (${status})${classification ? `: ${classification}` : ''}.`
+  }
+  return error instanceof Error ? error.message : 'The generation failed.'
+}
 
 export type TrialConcept = {
   id: string
@@ -57,7 +72,11 @@ export type TrialRunVerification = {
   hardCapUsd: number
   /** Every HTTP attempt, including failed and retried ones. */
   attemptsMade: number
+  /** True only when a stage called the provider more than once. Several stages
+   *  or a failed call in one stage are not retries. */
   retried: boolean
+  /** Attempts that failed and produced no call record. */
+  failedCalls: number
   /** Sum of per-attempt reservations (released as each attempt settles). */
   reservedUsd: number
   /** Sum actually charged across successful and failed attempts. */
@@ -184,7 +203,8 @@ function verificationOf(
     poolClaimUsd,
     hardCapUsd: TRIAL_LIMITS.hardUsd,
     attemptsMade: attempts.length,
-    retried: attempts.length > calls.length,
+    retried: attempts.some((attempt) => attempt.attempt > 1),
+    failedCalls: attempts.filter((attempt) => !attempt.ok).length,
     reservedUsd,
     chargedUsd: Math.max(0, confirmedUsd),
     retainedUsd,
@@ -345,7 +365,7 @@ export async function runTrialGeneration(input: {
       ...base,
       status: reasonCode === 'budget' ? 'over_budget' : 'failed',
       reason: reasonCode,
-      detail: error instanceof Error ? error.message : 'The generation failed.',
+      detail: failureDetail(error),
       concepts: [],
       calls,
       attempts,

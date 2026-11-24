@@ -158,8 +158,34 @@ nine generations cost cents against the $30 pool.
 Every HTTP attempt, including a failed or retried one, reserves separately and
 is reconciled in the report: `reservedUsd`, `chargedUsd`, `retainedUsd`,
 `accountedUsd`, `maxAttemptReservedUsd`, `withinHardCap`,
-`chargedWithinReservation`, `uncertainAttempts` and `retried`. A truncated or
-wrongly-routed answer is charged before it fails, so a refusal cannot look free.
+`chargedWithinReservation`, `uncertainAttempts`, `retried` and `failedCalls`. A
+truncated or wrongly-routed answer is charged before it fails, so a refusal
+cannot look free. `retried` means one stage called the provider more than once;
+`failedCalls` counts attempts that produced no call, so three successful stages
+in one generation is not a retry.
+
+A failed HTTP call keeps why it failed: the status, an allow-listed subset of
+the provider's error object (`code`, `type`, and `param` when it is a parameter
+path), the output ceiling, reasoning effort and schema digest it was sent, and a
+bounded (2,000-character), sanitized excerpt including `failed_generation` when
+the gateway returns one. Unknown and nested provider fields are dropped, not
+sanitized, so nothing the adapter did not approve can reach the report.
+Free provider prose is not kept at all: `message` is excluded even though it is
+usually the most descriptive field, because provider text can echo the request
+or a credential and no pattern makes arbitrary prose safe. `code` and `type` are
+kept only when each is a single classification identifier — letters, digits, `_`
+and `-`, at most 120 characters, no segment longer than 40 — so prose,
+whitespace, newlines, URLs, JSON and credential-shaped values are omitted rather
+than sanitized into something that reads like a classification. `param` is kept
+only when it matches a conservative parameter-path character set (letters,
+digits, `_`, `.`, `[`, `]`, `-`, up to 200 characters); anything else is omitted.
+Credentials, Bearer tokens and key-like values are redacted before anything is
+written, and no excerpt is longer than its limit.
+
+A retained `failed_generation` is provider-supplied diagnostic content. It is
+sanitized and capped, but pattern-based redaction is not a guarantee that every
+sensitive value has been removed, so treat a report that contains one as
+sensitive material.
 
 ### Uncertain charges are never refunded
 
