@@ -3,6 +3,7 @@ import { Database } from 'bun:sqlite'
 import { readFileSync } from 'node:fs'
 import { createProject } from '../src/worker/db'
 import {
+  QUOTA_INDEX_SQL,
   QUOTA_SCHEMA_SQL,
   createQuotaLedger,
   d1QuotaStore,
@@ -35,7 +36,7 @@ function specOf(model: string) {
 const GROQ = specOf('openai/gpt-oss-120b')
 const CF = specOf('@cf/openai/gpt-oss-120b')
 
-function localD1(db: Database): D1Like {
+function sqliteD1(db: Database): D1Like {
   return {
     prepare(sql: string) {
       let values: unknown[] = []
@@ -47,14 +48,27 @@ function localD1(db: Database): D1Like {
         async first<T = unknown>(): Promise<T | null> {
           return (db.prepare(sql).get(...(values as never[])) as T | undefined) ?? null
         },
+        async all<T = unknown>(): Promise<{ results: T[] }> {
+          return { results: db.prepare(sql).all(...(values as never[])) as T[] }
+        },
         async run(): Promise<unknown> {
-          db.prepare(sql).run(...(values as never[]))
-          return { success: true }
+          const result = db.prepare(sql).run(...(values as never[]))
+          return { success: true, meta: { changes: Number(result.changes) } }
         },
       }
       return api
     },
   }
+}
+
+function indexesOf(db: Database): [string, string][] {
+  return (
+    db
+      .prepare(
+        "SELECT name, sql FROM sqlite_master WHERE type = 'index' AND tbl_name = 'ai_quota' AND name NOT LIKE 'sqlite_%'",
+      )
+      .all() as { name: string; sql: string }[]
+  ).map((row) => [row.name, row.sql])
 }
 
 function columnsOf(db: Database): string[] {
@@ -88,19 +102,80 @@ describe('ai_quota migration on a local database', () => {
     migrated.exec(MIGRATION)
     const runtime = new Database(':memory:')
     runtime.exec(QUOTA_SCHEMA_SQL)
+    runtime.exec(QUOTA_INDEX_SQL)
     expect(columnsOf(migrated)).toEqual(columnsOf(runtime))
+    expect(indexesOf(migrated)).toEqual(indexesOf(runtime))
+    expect(indexesOf(migrated).map(([name]) => name)).toEqual(['ai_quota_by_updated'])
+  })
+
+  test('a database already at schema version 2 gains the quota table on its next open', async () => {
+    const db = new Database(':memory:')
+    const d1 = () => sqliteD1(db)
+    // Bring the database up the way the shipped version-2 Worker did, then put
+    // it back into exactly that state: every table present, `schema_meta`
+    // already claiming the schema is complete, and no `ai_quota`.
+    await createProject(d1() as never, {
+      name: 'GeeStores',
+      contact: '',
+      email: '',
+      vertical: 'shop',
+      accent: '#b8863f',
+      logo: 'GS',
+      features: ['catalog'],
+      platforms: ['pwa'],
+      plan: 'onetime',
+    })
+    db.exec('DROP TABLE ai_quota')
+    db.prepare("UPDATE schema_meta SET value = '2' WHERE key = 'schema_version'").run()
+    expect(
+      db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'ai_quota'").get(),
+    ).toBeNull()
+
+    // A new Worker process opens the same database. A cached version-2 marker
+    // must not let it skip the additive schema.
+    const project = await createProject(d1() as never, {
+      name: 'GeeStores',
+      contact: '',
+      email: '',
+      vertical: 'shop',
+      accent: '#b8863f',
+      logo: 'GS',
+      features: ['catalog'],
+      platforms: ['pwa'],
+      plan: 'onetime',
+    })
+    expect(project.token).toBeTruthy()
+    expect(
+      db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'ai_quota'").get(),
+    ).toEqual({ name: 'ai_quota' })
+    expect(indexesOf(db).map(([name]) => name)).toEqual(['ai_quota_by_updated'])
+    const version = db
+      .prepare("SELECT value FROM schema_meta WHERE key = 'schema_version'")
+      .get() as { value: string }
+    expect(version.value).toBe('3')
+    // The paid trial's spend pool is local to the CLI; a deployment must not
+    // create an unused trial table in the production schema.
+    expect(
+      db.prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'ai_trial_spend'").get(),
+    ).toBeNull()
+
+    // Usable, not merely present.
+    const ledger = createQuotaLedger(d1QuotaStore(d1()))
+    const reservation = await ledger.reserve(GROQ, { inputTokens: 1_000, outputTokens: 0 }, AT)
+    expect(reservation.legs.length).toBeGreaterThan(0)
+    expect((await ledger.usage(GROQ, AT)).day.requests).toBe(1)
   })
 
   test('concurrent callers cannot both take the last unit of allowance', async () => {
     const db = new Database(':memory:')
     db.exec(MIGRATION)
-    const ledger = createQuotaLedger(d1QuotaStore(localD1(db)))
+    const ledger = createQuotaLedger(d1QuotaStore(sqliteD1(db)))
     // The minute window is the tight one on the free plan: two requests of
     // half its allowance fit, and SQL must refuse every other concurrent one.
     const tokens = Math.floor(GROQ.limits.tokensPerMinute / 2)
     const outcomes = await Promise.all(
       Array.from({ length: 12 }, () =>
-        ledger.reserve(GROQ, tokens, AT).then(
+        ledger.reserve(GROQ, { inputTokens: tokens, outputTokens: 0 }, AT).then(
           () => 'reserved' as const,
           () => 'refused' as const,
         ),
@@ -117,8 +192,8 @@ describe('ai_quota migration on a local database', () => {
   test('settlement replaces the reservation and release never goes below zero', async () => {
     const db = new Database(':memory:')
     db.exec(MIGRATION)
-    const ledger = createQuotaLedger(d1QuotaStore(localD1(db)))
-    const reservation = await ledger.reserve(CF, 9_500, AT)
+    const ledger = createQuotaLedger(d1QuotaStore(sqliteD1(db)))
+    const reservation = await ledger.reserve(CF, { inputTokens: 9_500, outputTokens: 0 }, AT)
     expect((await ledger.usage(CF, AT)).pool?.neurons).toBeGreaterThan(0)
 
     await ledger.settle(reservation, { tokens: 1_020, neurons: 42 }, AT)
@@ -146,7 +221,7 @@ describe('ai_quota migration on a local database', () => {
       plan: 'onetime',
     })
     const ledger = createQuotaLedger(d1QuotaStore(db as never))
-    const reservation = await ledger.reserve(GROQ, 1_000, AT)
+    const reservation = await ledger.reserve(GROQ, { inputTokens: 1_000, outputTokens: 0 }, AT)
     expect(reservation.legs.length).toBeGreaterThan(0)
     expect((await ledger.usage(GROQ, AT)).day.tokens).toBe(1_000)
   })

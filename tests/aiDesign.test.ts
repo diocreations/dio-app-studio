@@ -86,6 +86,7 @@ const brief: BusinessBrief = {
   brand: { personality: ['ceremonial', 'ornate'], formality: 'formal', energy: 'calm' },
   vocabulary: { catalog: 'Collection', item: 'Piece', buy: 'Add to bag', enquire: 'Ask about this piece' },
   constraints: { mustNotInvent: ['prices', 'materials'] },
+  assumptions: [],
   questions: [{ id: 'q1', question: 'Who buys most often?', why: 'decides the hierarchy', skippable: true }],
 }
 

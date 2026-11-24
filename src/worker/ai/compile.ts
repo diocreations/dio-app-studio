@@ -152,6 +152,26 @@ export function compileConcept(input: {
   const home = base.screens.find((screen) => screen.kind === 'home')
   if (!home) throw new CompileError('no_home', 'The seeded document has no home screen.')
 
+  // Navigation is part of the concept, not of the trade's default shell. Until
+  // this ran, a restaurant or professional concept inherited the blueprint's
+  // tabs, so three concepts that promised different journeys compiled to the
+  // same one. The screens are still all present and editable; only which ones
+  // are tabs, and which opens first, follows the concept.
+  const byKind = new Map<ScreenKind, (typeof base.screens)[number]>()
+  for (const screen of base.screens) {
+    if (screen.hidden || screen.kind === 'detail' || byKind.has(screen.kind)) continue
+    byKind.set(screen.kind, screen)
+  }
+  const visible: string[] = []
+  for (const kind of concept.nav.tabs) {
+    const screen = byKind.get(kind as ScreenKind)
+    if (screen && !visible.includes(screen.id)) visible.push(screen.id)
+  }
+  if (!visible.includes(home.id)) visible.push(home.id)
+  for (const screen of base.screens) screen.nav = visible.includes(screen.id)
+  base.initialScreen = byKind.get(concept.nav.initialScreen as ScreenKind)?.id ?? home.id
+  base.design = { ...(base.design ?? {}), nav: concept.nav.model }
+
   const headings = new Map(
     concept.content.headings
       .filter((heading) => heading.basis === 'structural')

@@ -257,7 +257,7 @@ describe('the discover route runs the free design pipeline', () => {
     expect(groq.day.tokens).toBe(understand.inputTokens + understand.outputTokens)
   })
 
-  test('a timeout releases its reservation instead of charging the day', async () => {
+  test('an uncertain timeout keeps its reservation instead of returning quota it may have spent', async () => {
     const quota = createQuotaLedger(memoryQuotaStore())
     let attempts = 0
     globalThis.fetch = (async () => {
@@ -280,9 +280,11 @@ describe('the discover route runs the free design pipeline', () => {
       }),
     ).rejects.toThrow()
     expect(attempts).toBe(1)
+    // A timeout cannot show whether the provider counted the request, so the
+    // reservation stands. The day is over-stated rather than silently refunded.
     const usage = await quota.usage(freeModelFor('groq', 'openai/gpt-oss-120b')!)
-    expect(usage.day.requests).toBe(0)
-    expect(usage.day.tokens).toBe(0)
+    expect(usage.day.requests).toBe(1)
+    expect(usage.day.tokens).toBeGreaterThan(100)
   })
 
   test('a malformed design answer is refused rather than compiled', async () => {

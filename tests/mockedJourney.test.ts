@@ -69,6 +69,35 @@ describe('one mocked journey from a URL to a published preview', () => {
         cookie,
       }
 
+      /* 1b. Each AI concept previews on the real app before anything is chosen. */
+      const previews = new Map<string, string>()
+      for (const concept of discovered.design.concepts) {
+        const previewResponse = await app.request(
+          `https://plattr.example/p/${token}/app?design=${concept.id}`,
+          { headers: { cookie } },
+          env,
+        )
+        expect(previewResponse.status).toBe(200)
+        previews.set(concept.id, await previewResponse.text())
+      }
+      expect(new Set(previews.values()).size).toBe(3)
+      for (const concept of discovered.design.concepts) {
+        const designed = set.concepts.find((entry) => entry.id === concept.id)!
+        expect(previews.get(concept.id)).toContain(`--accent: ${designed.palette.accent}`)
+      }
+      // An unknown option is not guessed into some other build.
+      const unknown = await app.request(
+        `https://plattr.example/p/${token}/app?design=not-a-concept`,
+        { headers: { cookie } },
+        env,
+      )
+      expect(unknown.status).toBe(200)
+      // It falls back to the saved build, not to some other stored concept.
+      const otherAccent = set.concepts.find(
+        (entry) => entry.id === discovered.design.concepts[1].id,
+      )!.palette.accent
+      expect(await unknown.text()).not.toContain(`--accent: ${otherAccent}`)
+
       /* 2. Selection: the owner keeps the second concept. */
       const chosen = discovered.design.concepts[1]
       const selectResponse = await app.request(

@@ -34,15 +34,18 @@ export type IssueCode =
   | 'concepts_not_distinct'
   | 'concept_duplicate'
   | 'copy_failed'
+  | 'invented_assumption'
+  | 'soft_limit'
   | 'owner_approval'
 
 export type Issue = { code: IssueCode; message: string; conceptId?: string }
 
 export type Validated<T> = { value?: T; issues: Issue[] }
 
-/** `owner_approval` is a note, not a refusal: the owner decides. */
+/** `owner_approval` is a note, not a refusal: the owner decides. A soft-limit
+ *  stop is a budget note too: the design it interrupted is still complete. */
 export function fatal(issues: Issue[]): Issue[] {
-  return issues.filter((issue) => issue.code !== 'owner_approval')
+  return issues.filter((issue) => issue.code !== 'owner_approval' && issue.code !== 'soft_limit')
 }
 
 function schemaIssues(error: { issues: { path: PropertyKey[]; message: string }[] }): Issue[] {
@@ -92,6 +95,18 @@ export function parseBrief(raw: unknown, dossier: Dossier): Validated<BusinessBr
   }
   if (brief.questions.length > 3) {
     issues.push({ code: 'question', message: 'More than three questions were asked.' })
+  }
+  // An assumption is where a model is allowed to be wrong on purpose. It is
+  // still not allowed to become a fact: a number, a price or a claim here would
+  // reach the owner as if the source had said it.
+  for (const assumption of brief.assumptions) {
+    const risks = claimRisk(assumption.claim)
+    if (risks.length) {
+      issues.push({
+        code: 'invented_assumption',
+        message: `The assumption “${assumption.claim}” contains ${risks.join(', ')}; an assumption may not state a fact.`,
+      })
+    }
   }
   return { value: brief, issues }
 }
